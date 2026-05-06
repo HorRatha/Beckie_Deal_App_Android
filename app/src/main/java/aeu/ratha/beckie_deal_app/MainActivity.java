@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
@@ -40,40 +41,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeMockData() {
-        // Initialize products with modern tech items
+        // Initialize products with modern tech items and real images
         products = new ArrayList<>();
         products.add(new Product(
                 "MacBook Air M2",
                 "$1,199.00",
                 "4.9 (1.2k)",
-                true
+                true,
+                "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"
         ));
         products.add(new Product(
                 "iPhone 15 Pro",
                 "$999.00",
                 "4.8 (2.5k)",
-                false
+                false,
+                "https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop"
         ));
         products.add(new Product(
                 "ASUS ROG Strix",
                 "$1,499.00",
                 "4.7 (840)",
-                false
+                false,
+                "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop"
         ));
         products.add(new Product(
                 "Samsung S24 Ultra",
                 "$1,299.00",
                 "4.9 (3.1k)",
-                false
+                false,
+                "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop"
         ));
 
-        // Initialize categories
+        // Initialize categories with new Material Design icons
         categories = new ArrayList<>();
-        categories.add(new Category("Laptops", android.R.drawable.ic_menu_gallery, false));
-        categories.add(new Category("Phones", android.R.drawable.ic_menu_camera, false));
-        categories.add(new Category("Accessories", android.R.drawable.ic_menu_gallery, false));
-        categories.add(new Category("Gaming", android.R.drawable.ic_menu_slideshow, true)); // Highlighted
-        categories.add(new Category("Wearables", android.R.drawable.ic_menu_today, false));
+        categories.add(new Category("Laptops", R.drawable.ic_cat_laptops, false));
+        categories.add(new Category("Phones", R.drawable.ic_cat_phones, false));
+        categories.add(new Category("Accessories", R.drawable.ic_cat_accessories, false));
+        categories.add(new Category("Gaming", R.drawable.ic_cat_gaming, true)); // Highlighted
+        categories.add(new Category("Wearables", R.drawable.ic_cat_wearables, false));
     }
 
     private void setupTopBar() {
@@ -122,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
             if (category.isHighlighted) {
                 categoryCard.setCardBackgroundColor(0xFFFEF2F2); // Light red background
                 categoryCard.setStrokeColor(0xFFFECACA); // Red border
-                categoryIcon.setColorFilter(0xFFEF4444); // Red icon
             }
 
             categoryView.setOnClickListener(v -> {
@@ -151,6 +155,14 @@ public class MainActivity extends AppCompatActivity {
             productName.setText(product.name);
             productPrice.setText(product.price);
             productRating.setText(product.rating);
+
+            // Load product image using Glide
+            Glide.with(this)
+                    .load(product.imageUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.placeholder_image)
+                    .into(productImage);
 
             // Set favorite icon based on state
             if (product.isFavorite) {
@@ -255,12 +267,14 @@ public class MainActivity extends AppCompatActivity {
         String price;
         String rating;
         boolean isFavorite;
+        String imageUrl;
 
-        Product(String name, String price, String rating, boolean isFavorite) {
+        Product(String name, String price, String rating, boolean isFavorite, String imageUrl) {
             this.name = name;
             this.price = price;
             this.rating = rating;
             this.isFavorite = isFavorite;
+            this.imageUrl = imageUrl;
         }
     }
 

@@ -40,6 +40,13 @@ dependencies {
     // Add CardView for product cards
     implementation("androidx.cardview:cardview:1.0.0")
 
+    // Glide - Image loading library for product images (Latest version)
+    implementation("com.github.bumptech.glide:glide:5.0.0-rc01")
+    annotationProcessor("com.github.bumptech.glide:compiler:5.0.0-rc01")
+
+    // Material Design (Latest compatible version)
+    implementation("com.google.android.material:material:1.13.0-alpha03")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Background rectangle -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M0,0h200v200h-200z" />
+
+    <!-- Profile icon -->
+    <path
+        android:fillColor="#9E9E9E"
+        android:pathData="M100,60c11.05,0 20,8.95 20,20s-8.95,20 -20,20 -20,-8.95 -20,-20 8.95,-20 20,-20zM100,120c18.28,0 30,8.28 30,15v20H70v-20c0,-6.72 11.72,-15 30,-15z" />
+</vector>
