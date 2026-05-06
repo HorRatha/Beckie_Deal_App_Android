@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="primary">#F97316</color>
+    <color name="primary_container">#F97316</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_primary_container">#582200</color>
+
+    <!-- Secondary Colors -->
+    <color name="secondary">#8F4D27</color>
+    <color name="secondary_container">#FDA77A</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="on_secondary_container">#773A16</color>
+
+    <!-- Background Colors -->
+    <color name="background">#FFF8F6</color>
+    <color name="on_background">#251913</color>
+    <color name="surface">#FFF8F6</color>
+    <color name="on_surface">#251913</color>
+    <color name="surface_variant">#F6DED3</color>
+    <color name="on_surface_variant">#584237</color>
+
+    <!-- Outline Colors -->
+    <color name="outline">#8C7164</color>
+    <color name="outline_variant">#E0C0B1</color>
+
+    <!-- Container Colors -->
+    <color name="surface_container">#FFEAE0</color>
+    <color name="surface_container_high">#F6DED3</color>
+    <color name="surface_container_highest">#F6DED3</color>
+    <color name="surface_container_low">#FFF1EB</color>
+    <color name="surface_container_lowest">#FFFFFF</color>
+
+    <!-- Tertiary Colors -->
+    <color name="tertiary">#006398</color>
+    <color name="tertiary_container">#00A2F4</color>
+    <color name="on_tertiary">#FFFFFF</color>
+
+    <!-- Error Colors -->
+    <color name="error">#BA1A1A</color>
+    <color name="error_container">#FFDAD6</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="on_error_container">#93000A</color>
+
+    <!-- Additional Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="yellow_star">#FFC107</color>
+    <color name="red_favorite">#EF4444</color>
+    <color name="red_light">#FEF2F2</color>
+    <color name="red_border">#FECACA</color>
+    <color name="dark_bg">#1E293B</color>
+    <color name="dark_text">#94A3B8</color>
+</resources>

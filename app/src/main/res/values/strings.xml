@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tech Store</string>
+    <string name="search_hint">Search by brand, type, model...</string>
+    <string name="brands_title">BRANDS</string>
+    <string name="new_arrival">NEW ARRIVAL</string>
+    <string name="view_all">View all</string>
+    <string name="best_selling">BEST SELLING</string>
+    <string name="trending">TRENDING</string>
+    <string name="home">HOME</string>
+    <string name="about">ABOUT</string>
+    <string name="contact">CONTACT</string>
+    <string name="login">LOGIN</string>
+    <string name="profile">PROFILE</string>
+</resources>
