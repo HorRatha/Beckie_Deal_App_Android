@@ -54,10 +54,14 @@ public class ProfileActivity extends AppCompatActivity {
                 overridePendingTransition(0, 0);
                 finish();
                 return true;
+            } else if (itemId == R.id.nav_about) {
+                startActivity(new Intent(this, AboutActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
             } else if (itemId == R.id.nav_account) {
                 return true;
             }
-            // Handle other items as needed
             return false;
         });
     }

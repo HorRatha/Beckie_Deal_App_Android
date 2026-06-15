@@ -2,6 +2,7 @@ package aeu.ratha.beckie_deal_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,13 +26,13 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void setupTopBar() {
         ImageView backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> finish());
+        if (backButton != null) backButton.setOnClickListener(v -> finish());
 
         ImageView shareIcon = findViewById(R.id.shareIcon);
-        shareIcon.setOnClickListener(v -> Toast.makeText(this, "Share clicked", Toast.LENGTH_SHORT).show());
+        if (shareIcon != null) shareIcon.setOnClickListener(v -> Toast.makeText(this, "Share clicked", Toast.LENGTH_SHORT).show());
 
         ImageView cartIcon = findViewById(R.id.cartIcon);
-        cartIcon.setOnClickListener(v -> Toast.makeText(this, "Cart clicked", Toast.LENGTH_SHORT).show());
+        if (cartIcon != null) cartIcon.setOnClickListener(v -> Toast.makeText(this, "Cart clicked", Toast.LENGTH_SHORT).show());
     }
 
     private void loadProductData() {
@@ -45,11 +46,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         TextView ratingText = findViewById(R.id.detailProductRating);
         ImageView productImage = findViewById(R.id.detailProductImage);
 
-        if (name != null) nameText.setText(name);
-        if (price != null) priceText.setText(price);
-        if (rating != null) ratingText.setText(rating);
+        if (nameText != null && name != null) nameText.setText(name);
+        if (priceText != null && price != null) priceText.setText(price);
+        if (ratingText != null && rating != null) ratingText.setText(rating);
 
-        if (imageUrl != null) {
+        if (productImage != null && imageUrl != null) {
             Glide.with(this)
                     .load(imageUrl)
                     .placeholder(R.drawable.placeholder_image)
@@ -59,35 +60,49 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void setupActions() {
         Button addToCartButton = findViewById(R.id.addToCartButton);
-        addToCartButton.setOnClickListener(v -> {
-            Toast.makeText(this, "Added to cart!", Toast.LENGTH_SHORT).show();
-        });
+        if (addToCartButton != null) {
+            addToCartButton.setOnClickListener(v -> {
+                Toast.makeText(this, "Added to cart!", Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        findViewById(R.id.favoriteButton).setOnClickListener(v -> {
-            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
-        });
+        View favButton = findViewById(R.id.favoriteButton);
+        if (favButton != null) {
+            favButton.setOnClickListener(v -> {
+                Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
 
-        // In detail page, we don't necessarily highlight a specific tab 
-        // unless it belongs to one of the categories. Usually we keep it neutral.
-        bottomNav.setSelectedItemId(0); 
-
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {
                 startActivity(new Intent(this, MainActivity.class));
+                overridePendingTransition(0, 0);
                 finish();
                 return true;
             } else if (itemId == R.id.nav_categories) {
                 startActivity(new Intent(this, CategoriesActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavoritesActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_about) {
+                startActivity(new Intent(this, AboutActivity.class));
+                overridePendingTransition(0, 0);
                 finish();
                 return true;
             } else if (itemId == R.id.nav_account) {
                 startActivity(new Intent(this, ProfileActivity.class));
+                overridePendingTransition(0, 0);
                 finish();
                 return true;
             }

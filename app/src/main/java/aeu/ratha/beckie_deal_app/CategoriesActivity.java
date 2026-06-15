@@ -119,6 +119,11 @@ public class CategoriesActivity extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.nav_categories) {
                 return true;
+            } else if (itemId == R.id.nav_about) {
+                startActivity(new Intent(this, AboutActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
             } else if (itemId == R.id.nav_account) {
                 startActivity(new Intent(this, ProfileActivity.class));
                 overridePendingTransition(0, 0);

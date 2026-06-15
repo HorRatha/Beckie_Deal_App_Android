@@ -27,10 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize data
         initializeMockData();
-
-        // Setup UI components
         setupTopBar();
         setupSearchBar();
         setupHeroBanner();
@@ -42,34 +39,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeMockData() {
         products = new ArrayList<>();
-        products.add(new Product(
-                "MacBook Air M2",
-                "$1,199.00",
-                "4.9",
-                true,
-                "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"
-        ));
-        products.add(new Product(
-                "iPhone 15 Pro",
-                "$999.00",
-                "4.8",
-                false,
-                "https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop"
-        ));
-        products.add(new Product(
-                "ASUS ROG Strix",
-                "$1,499.00",
-                "4.7",
-                false,
-                "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop"
-        ));
-        products.add(new Product(
-                "Samsung S24 Ultra",
-                "$1,299.00",
-                "4.9",
-                false,
-                "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop"
-        ));
+        products.add(new Product("MacBook Air M2", "$1,199.00", "4.9", true, "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"));
+        products.add(new Product("iPhone 15 Pro", "$999.00", "4.8", false, "https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop"));
+        products.add(new Product("ASUS ROG Strix", "$1,499.00", "4.7", false, "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop"));
+        products.add(new Product("Samsung S24 Ultra", "$1,299.00", "4.9", false, "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop"));
 
         categories = new ArrayList<>();
         categories.add(new Category("Laptops", R.drawable.ic_cat_laptops, false));
@@ -82,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private void setupTopBar() {
         ImageView menuIcon = findViewById(R.id.menuIcon);
         ImageView cartIcon = findViewById(R.id.cartIcon);
-
         menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu opened", Toast.LENGTH_SHORT).show());
         cartIcon.setOnClickListener(v -> Toast.makeText(this, "Shopping Cart", Toast.LENGTH_SHORT).show());
     }
@@ -195,10 +167,20 @@ public class MainActivity extends AppCompatActivity {
             if (itemId == R.id.nav_home) {
                 return true;
             } else if (itemId == R.id.nav_categories) {
-                startActivity(new Intent(MainActivity.this, CategoriesActivity.class));
+                startActivity(new Intent(this, CategoriesActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (itemId == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavoritesActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (itemId == R.id.nav_about) {
+                startActivity(new Intent(this, AboutActivity.class));
+                overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.nav_account) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                startActivity(new Intent(this, ProfileActivity.class));
+                overridePendingTransition(0, 0);
                 return true;
             }
             return false;
