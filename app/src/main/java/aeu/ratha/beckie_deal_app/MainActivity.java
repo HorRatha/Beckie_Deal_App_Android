@@ -37,9 +37,16 @@ public class MainActivity extends AppCompatActivity {
         setupBottomNavigation();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh products UI in case favorites changed elsewhere
+        setupProducts();
+    }
+
     private void initializeMockData() {
         products = new ArrayList<>();
-        products.add(new Product("MacBook Air M2", "$1,199.00", "4.9", true, "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"));
+        products.add(new Product("MacBook Air M2", "$1,199.00", "4.9", false, "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"));
         products.add(new Product("iPhone 15 Pro", "$999.00", "4.8", false, "https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop"));
         products.add(new Product("ASUS ROG Strix", "$1,499.00", "4.7", false, "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop"));
         products.add(new Product("Samsung S24 Ultra", "$1,299.00", "4.9", false, "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop"));
@@ -109,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < products.size(); i++) {
             Product product = products.get(i);
+            // Sync with FavoriteManager
+            product.isFavorite = FavoriteManager.getInstance().isFavorite(product);
+
             View productView = LayoutInflater.from(this).inflate(R.layout.product_card, productsGrid, false);
 
             ImageView productImage = productView.findViewById(R.id.productImage);
@@ -124,8 +134,11 @@ public class MainActivity extends AppCompatActivity {
             Glide.with(this).load(product.imageUrl).centerCrop().placeholder(R.drawable.placeholder_image).into(productImage);
 
             if (product.isFavorite) {
-                favoriteIcon.setImageResource(android.R.drawable.btn_star_big_on);
+                favoriteIcon.setImageResource(R.drawable.ic_favorite);
                 favoriteIcon.setColorFilter(0xFFEF4444);
+            } else {
+                favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
+                favoriteIcon.setColorFilter(0xFF8C7164);
             }
 
             final int position = i;
@@ -135,17 +148,22 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("product_price", products.get(position).price);
                 intent.putExtra("product_image", products.get(position).imageUrl);
                 intent.putExtra("product_rating", products.get(position).rating);
+                intent.putExtra("is_favorite", products.get(position).isFavorite);
                 startActivity(intent);
             });
 
             favoriteIcon.setOnClickListener(v -> {
-                products.get(position).isFavorite = !products.get(position).isFavorite;
-                if (products.get(position).isFavorite) {
-                    favoriteIcon.setImageResource(android.R.drawable.btn_star_big_on);
+                product.isFavorite = !product.isFavorite;
+                if (product.isFavorite) {
+                    FavoriteManager.getInstance().addFavorite(product);
+                    favoriteIcon.setImageResource(R.drawable.ic_favorite);
                     favoriteIcon.setColorFilter(0xFFEF4444);
+                    Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show();
                 } else {
-                    favoriteIcon.setImageResource(android.R.drawable.btn_star_big_off);
+                    FavoriteManager.getInstance().removeFavorite(product);
+                    favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
                     favoriteIcon.setColorFilter(0xFF8C7164);
+                    Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -187,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private static class Product {
+    public static class Product {
         String name, price, rating, imageUrl;
         boolean isFavorite;
         Product(String n, String p, String r, boolean f, String i) { name=n; price=p; rating=r; isFavorite=f; imageUrl=i; }

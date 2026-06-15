@@ -13,6 +13,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
+    private boolean isFavorite = false;
+    private ImageView detailFavoriteIcon;
+    private MainActivity.Product currentProduct;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +44,17 @@ public class ProductDetailActivity extends AppCompatActivity {
         String price = getIntent().getStringExtra("product_price");
         String imageUrl = getIntent().getStringExtra("product_image");
         String rating = getIntent().getStringExtra("product_rating");
+        
+        // Construct a temporary product object for lookup/management
+        currentProduct = new MainActivity.Product(name, price, rating, false, imageUrl);
+        isFavorite = FavoriteManager.getInstance().isFavorite(currentProduct);
 
         TextView nameText = findViewById(R.id.detailProductName);
         TextView priceText = findViewById(R.id.detailProductPrice);
         TextView ratingText = findViewById(R.id.detailProductRating);
         ImageView productImage = findViewById(R.id.detailProductImage);
+        ImageView brandLogo = findViewById(R.id.detailBrandLogo);
+        detailFavoriteIcon = findViewById(R.id.detailFavoriteIcon);
 
         if (nameText != null && name != null) nameText.setText(name);
         if (priceText != null && price != null) priceText.setText(price);
@@ -56,6 +66,24 @@ public class ProductDetailActivity extends AppCompatActivity {
                     .placeholder(R.drawable.placeholder_image)
                     .into(productImage);
         }
+
+        // Load Official Brand Logo
+        if (brandLogo != null && name != null) {
+            String brandLogoUrl = "";
+            if (name.contains("MacBook") || name.contains("iPhone")) {
+                brandLogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1665px-Apple_logo_black.svg.png";
+            } else if (name.contains("ASUS") || name.contains("ROG")) {
+                brandLogoUrl = "https://logos-world.net/wp-content/uploads/2020/11/ROG-Logo.png";
+            } else if (name.contains("Samsung")) {
+                brandLogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/2560px-Samsung_Logo.svg.png";
+            }
+
+            if (!brandLogoUrl.isEmpty()) {
+                Glide.with(this).load(brandLogoUrl).into(brandLogo);
+            }
+        }
+        
+        updateFavoriteUI();
     }
 
     private void setupActions() {
@@ -66,11 +94,38 @@ public class ProductDetailActivity extends AppCompatActivity {
             });
         }
 
+        Button buyNowButton = findViewById(R.id.buyNowButton);
+        if (buyNowButton != null) {
+            buyNowButton.setOnClickListener(v -> {
+                Toast.makeText(this, "Proceeding to checkout...", Toast.LENGTH_SHORT).show();
+            });
+        }
+
         View favButton = findViewById(R.id.favoriteButton);
         if (favButton != null) {
             favButton.setOnClickListener(v -> {
-                Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+                isFavorite = !isFavorite;
+                if (isFavorite) {
+                    FavoriteManager.getInstance().addFavorite(currentProduct);
+                } else {
+                    FavoriteManager.getInstance().removeFavorite(currentProduct);
+                }
+                updateFavoriteUI();
+                String msg = isFavorite ? "Added to favorites" : "Removed from favorites";
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
             });
+        }
+    }
+
+    private void updateFavoriteUI() {
+        if (detailFavoriteIcon != null) {
+            if (isFavorite) {
+                detailFavoriteIcon.setImageResource(R.drawable.ic_favorite);
+                detailFavoriteIcon.setColorFilter(0xFFEF4444);
+            } else {
+                detailFavoriteIcon.setImageResource(R.drawable.ic_favorite_border);
+                detailFavoriteIcon.setColorFilter(0xFF251913);
+            }
         }
     }
 

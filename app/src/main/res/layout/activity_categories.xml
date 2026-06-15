@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#F8FAFC"
     tools:context=".CategoriesActivity">
 
-    <!-- Top App Bar with Centered Logo -->
+    <!-- Top App Bar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:background="#FFFFFF"
-        android:elevation="4dp"
+        app:elevation="0dp"
         app:contentInsetStart="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -29,10 +29,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:src="@android:drawable/ic_menu_sort_by_size"
-                android:contentDescription="Menu"
-                android:tint="#584237" />
+                app:tint="#584237" />
 
-            <!-- Centered Logo -->
             <ImageView
                 android:id="@+id/logoImage"
                 android:layout_width="120dp"
@@ -54,20 +52,16 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:src="@android:drawable/ic_menu_search"
-                    android:contentDescription="Search"
-                    android:tint="#8C7164" />
+                    app:tint="#8C7164" />
 
                 <ImageView
                     android:id="@+id/cartIcon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_add"
-                    android:contentDescription="Cart"
-                    android:tint="#F97316" />
+                    app:tint="#F97316" />
             </LinearLayout>
-
         </RelativeLayout>
-
     </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.core.widget.NestedScrollView
@@ -81,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,30 +89,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Explore our premium collection by hardware type."
-                android:textColor="#8C7164"
+                android:text="Discover our premium hardware collection."
+                android:textColor="#64748B"
                 android:textSize="14sp" />
 
-            <!-- Laptops Section -->
+            <!-- Featured Brands Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="32dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_cat_laptops"
-                    android:tint="#F97316" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    android:text="Laptops"
+                    android:text="Laptop Brands"
                     android:textColor="#251913"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -127,7 +114,7 @@
                     android:id="@+id/viewAllLaptops"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="View All >"
+                    android:text="See All"
                     android:textColor="#F97316"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -138,20 +125,16 @@
                 android:id="@+id/laptopBrandsGrid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:columnCount="3"
-                android:useDefaultMargins="false">
+                android:alignmentMode="alignMargins" />
 
-                <!-- Brand items will be added here -->
-
-            </GridLayout>
-
-            <!-- All Categories Section -->
+            <!-- Main Categories Grid -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="All Categories"
+                android:layout_marginTop="40dp"
+                android:text="Main Categories"
                 android:textColor="#251913"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -161,27 +144,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:columnCount="2">
-
-                <!-- Category items will be added here -->
-
-            </GridLayout>
+                android:columnCount="2"
+                android:alignmentMode="alignMargins" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="32dp" />
+                android:layout_height="40dp" />
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
-        app:elevation="8dp"
+        app:elevation="16dp"
         app:itemIconTint="@color/bottom_nav_color"
         app:itemTextColor="@color/bottom_nav_color"
         app:labelVisibilityMode="labeled"

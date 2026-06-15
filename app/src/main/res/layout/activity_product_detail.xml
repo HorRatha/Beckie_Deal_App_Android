@@ -30,7 +30,7 @@
                 android:src="@android:drawable/ic_menu_revert"
                 android:contentDescription="Back"
                 android:rotation="180"
-                android:tint="#251913" />
+                app:tint="#251913" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -54,14 +54,14 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:src="@android:drawable/ic_menu_share"
-                    android:tint="#251913" />
+                    app:tint="#251913" />
 
                 <ImageView
                     android:id="@+id/cartIcon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_add"
-                    android:tint="#F97316" />
+                    app:tint="#F97316" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -128,7 +128,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="MacBook Air M2"
+                        android:text="Product Name"
                         android:textColor="#251913"
                         android:textSize="24sp"
                         android:textStyle="bold" />
@@ -136,7 +136,7 @@
                         android:id="@+id/detailProductPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="$1,199"
+                        android:text="$0.00"
                         android:textColor="#F97316"
                         android:textSize="22sp"
                         android:textStyle="bold" />
@@ -152,7 +152,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:src="@android:drawable/btn_star_big_on"
-                        android:tint="#FFC107" />
+                        app:tint="#FFC107" />
                     <TextView
                         android:id="@+id/detailProductRating"
                         android:layout_width="wrap_content"
@@ -179,59 +179,35 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
+                <!-- Official Brand Logo -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="#F8FAFC"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#F1F5F9">
+                    <ImageView
+                        android:id="@+id/detailBrandLogo"
+                        android:layout_width="80dp"
+                        android:layout_height="32dp"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter" />
+                </com.google.android.material.card.MaterialCardView>
+
                 <TextView
                     android:id="@+id/detailProductDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Supercharged by M2, the MacBook Air features a strikingly thin design and exceptional speed. Designed for portability, it provides a silent, fanless experience with up to 18 hours of battery life."
+                    android:text="Product Description placeholder. This item is designed for premium performance and durability."
                     android:textColor="#584237"
                     android:textSize="15sp"
                     android:lineSpacingExtra="4dp" />
 
-                <!-- Tags -->
-                <com.google.android.material.chip.ChipGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Apple M2 Chip"
-                        style="@style/Widget.MaterialComponents.Chip.Action"
-                        app:chipBackgroundColor="#FFF1EB"
-                        app:chipCornerRadius="8dp"
-                        android:textColor="#F97316"
-                        app:chipStrokeWidth="0dp" />
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="13.6 inch Liquid Retina"
-                        style="@style/Widget.MaterialComponents.Chip.Action"
-                        app:chipBackgroundColor="#F1F5F9"
-                        app:chipCornerRadius="8dp"
-                        android:textColor="#475569"
-                        app:chipStrokeWidth="0dp" />
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="8GB Unified Memory"
-                        style="@style/Widget.MaterialComponents.Chip.Action"
-                        app:chipBackgroundColor="#F1F5F9"
-                        app:chipCornerRadius="8dp"
-                        android:textColor="#475569"
-                        app:chipStrokeWidth="0dp" />
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="256GB SSD"
-                        style="@style/Widget.MaterialComponents.Chip.Action"
-                        app:chipBackgroundColor="#F1F5F9"
-                        app:chipCornerRadius="8dp"
-                        android:textColor="#475569"
-                        app:chipStrokeWidth="0dp" />
-                </com.google.android.material.chip.ChipGroup>
-
+                <!-- Tech Specs Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -241,15 +217,12 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <!-- Tech Specs Grid -->
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:columnCount="2"
                     android:useDefaultMargins="true">
-
-                    <!-- Chip Card -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -268,26 +241,25 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@android:drawable/ic_dialog_info"
-                                android:tint="#F97316" />
+                                app:tint="#F97316" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="CHIP"
+                                android:text="QUALITY"
                                 android:textColor="#94A3B8"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Apple M2"
+                                android:text="Premium"
                                 android:textColor="#251913"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Memory Card -->
+                    
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -306,204 +278,26 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@android:drawable/ic_menu_agenda"
-                                android:tint="#F97316" />
+                                app:tint="#F97316" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="MEMORY"
+                                android:text="WARRANTY"
                                 android:textColor="#94A3B8"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="8GB Unified"
+                                android:text="12 Months"
                                 android:textColor="#251913"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Storage Card -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="#F1F5F9">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@android:drawable/ic_menu_save"
-                                android:tint="#F97316" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="STORAGE"
-                                android:textColor="#94A3B8"
-                                android:textSize="10sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="256GB SSD"
-                                android:textColor="#251913"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Display Card -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="#F1F5F9">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@android:drawable/ic_menu_gallery"
-                                android:tint="#F97316" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="DISPLAY"
-                                android:textColor="#94A3B8"
-                                android:textSize="10sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="13.6 inch Retina"
-                                android:textColor="#251913"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
                 </GridLayout>
-
-                <!-- Spec Table -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="#F8FAFC">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-                        
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="12dp">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="CPU"
-                                android:textColor="#64748B" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="8-Core CPU"
-                                android:textColor="#251913"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                        
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="12dp">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="GPU"
-                                android:textColor="#64748B" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="8-Core GPU"
-                                android:textColor="#251913"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="12dp">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Camera"
-                                android:textColor="#64748B" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="1080p FaceTime HD"
-                                android:textColor="#251913"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="12dp">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Weight"
-                                android:textColor="#64748B" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="2.7 Pounds"
-                                android:textColor="#251913"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
             </LinearLayout>
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -527,24 +321,41 @@
             app:strokeWidth="1dp"
             app:strokeColor="#F1F5F9">
             <ImageView
+                android:id="@+id/detailFavoriteIcon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:src="@android:drawable/btn_star_big_off"
-                android:tint="#251913" />
+                android:src="@drawable/ic_favorite_border"
+                app:tint="#251913" />
         </com.google.android.material.card.MaterialCardView>
 
         <Button
             android:id="@+id/addToCartButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="12dp"
             android:layout_weight="1"
-            android:backgroundTint="#F97316"
+            android:backgroundTint="#F8FAFC"
             android:text="Add to Cart"
             android:textAllCaps="false"
+            android:textColor="#251913"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#F1F5F9" />
+
+        <Button
+            android:id="@+id/buyNowButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1.2"
+            android:backgroundTint="#F97316"
+            android:text="Buy Now"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             app:cornerRadius="16dp" />
 

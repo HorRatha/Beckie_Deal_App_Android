@@ -37,6 +37,9 @@
         <activity
             android:name=".FavoritesActivity"
             android:exported="false" />
+        <activity
+            android:name=".AllBrandsActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

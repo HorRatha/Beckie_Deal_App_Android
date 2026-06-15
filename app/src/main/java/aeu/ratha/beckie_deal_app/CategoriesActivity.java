@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
@@ -41,28 +42,52 @@ public class CategoriesActivity extends AppCompatActivity {
 
     private void setupLaptopBrands() {
         GridLayout brandsGrid = findViewById(R.id.laptopBrandsGrid);
+        TextView viewAllLaptops = findViewById(R.id.viewAllLaptops);
+        
+        if (viewAllLaptops != null) {
+            viewAllLaptops.setOnClickListener(v -> {
+                Intent intent = new Intent(this, AllBrandsActivity.class);
+                startActivity(intent);
+            });
+        }
+
         if (brandsGrid == null) return;
         
         List<Brand> brands = new ArrayList<>();
-        brands.add(new Brand("ASUS", "ASUS", false));
-        brands.add(new Brand("ROG", "ROG", true));
-        brands.add(new Brand("MacBook", "iOS", false));
-        brands.add(new Brand("TUF", "TUF", false));
-        brands.add(new Brand("Dell", "Dell", false));
-        brands.add(new Brand("HP", "HP", false));
+        brands.add(new Brand("ASUS", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/ASUS_Logo.svg/2560px-ASUS_Logo.svg.png", false));
+        brands.add(new Brand("ROG", "https://logos-world.net/wp-content/uploads/2020/11/ROG-Logo.png", true));
+        brands.add(new Brand("Apple", "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1665px-Apple_logo_black.svg.png", false));
+        brands.add(new Brand("Dell", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Dell_logo_2016.svg/1200px-Dell_logo_2016.svg.png", false));
+        brands.add(new Brand("HP", "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/HP_logo_2012.svg/1200px-HP_logo_2012.svg.png", false));
+        brands.add(new Brand("MSI", "https://upload.wikimedia.org/wikipedia/en/thumb/f/ff/MSI_Dragon_Logo.svg/1200px-MSI_Dragon_Logo.svg.png", false));
 
+        brandsGrid.removeAllViews();
         for (Brand brand : brands) {
             View view = LayoutInflater.from(this).inflate(R.layout.item_brand_square, brandsGrid, false);
             
             MaterialCardView card = view.findViewById(R.id.brandCard);
+            ImageView brandIcon = view.findViewById(R.id.brandIcon);
             TextView iconText = view.findViewById(R.id.brandIconText);
             TextView nameText = view.findViewById(R.id.brandName);
 
-            iconText.setText(brand.iconText);
+            if (brand.imageUrl != null && !brand.imageUrl.isEmpty()) {
+                brandIcon.setVisibility(View.VISIBLE);
+                iconText.setVisibility(View.GONE);
+                Glide.with(this)
+                        .load(brand.imageUrl)
+                        .placeholder(R.drawable.placeholder_image)
+                        .into(brandIcon);
+            } else {
+                brandIcon.setVisibility(View.GONE);
+                iconText.setVisibility(View.VISIBLE);
+                iconText.setText(brand.name.substring(0, Math.min(brand.name.length(), 2)).toUpperCase());
+            }
+            
             nameText.setText(brand.name);
 
             if (brand.isSelected) {
                 card.setCardBackgroundColor(0xFFF97316); // Orange
+                brandIcon.setColorFilter(Color.WHITE);
                 iconText.setTextColor(Color.WHITE);
                 nameText.setTextColor(Color.WHITE);
                 card.setStrokeWidth(0);
@@ -84,6 +109,7 @@ public class CategoriesActivity extends AppCompatActivity {
         categories.add(new CategoryItem("Gaming", "167 Items", R.drawable.ic_cat_gaming, false));
         categories.add(new CategoryItem("Wearables", "54 Items", R.drawable.ic_cat_wearables, false));
 
+        allCategoriesGrid.removeAllViews();
         for (CategoryItem item : categories) {
             View view = LayoutInflater.from(this).inflate(R.layout.item_category_grid, allCategoriesGrid, false);
             
@@ -119,6 +145,11 @@ public class CategoriesActivity extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.nav_categories) {
                 return true;
+            } else if (itemId == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavoritesActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
             } else if (itemId == R.id.nav_about) {
                 startActivity(new Intent(this, AboutActivity.class));
                 overridePendingTransition(0, 0);
@@ -134,14 +165,14 @@ public class CategoriesActivity extends AppCompatActivity {
         });
     }
 
-    private static class Brand {
+    public static class Brand {
         String name;
-        String iconText;
+        String imageUrl;
         boolean isSelected;
 
-        Brand(String name, String iconText, boolean isSelected) {
+        Brand(String name, String imageUrl, boolean isSelected) {
             this.name = name;
-            this.iconText = iconText;
+            this.imageUrl = imageUrl;
             this.isSelected = isSelected;
         }
     }
