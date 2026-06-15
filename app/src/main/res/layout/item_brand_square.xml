@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/brandCard"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#F1F5F9">
+
+    <LinearLayout
+        android:id="@+id/brandLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/brandIconText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ASUS"
+            android:textColor="#F97316"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/brandName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="ASUS"
+            android:textColor="#251913"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

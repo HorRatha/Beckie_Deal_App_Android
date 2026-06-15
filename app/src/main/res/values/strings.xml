@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Tech Store</string>
+    <string name="app_name">Beckie Deal</string>
     <string name="search_hint">Search by brand, type, model...</string>
     <string name="brands_title">BRANDS</string>
     <string name="new_arrival">NEW ARRIVAL</string>
