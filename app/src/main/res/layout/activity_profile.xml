@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA"
+    android:background="@color/background"
+    android:fitsSystemWindows="true"
     tools:context=".ProfileActivity">
 
     <!-- Top App Bar -->
@@ -12,7 +13,7 @@
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="#FFFFFF"
+        android:background="@color/surface"
         android:elevation="4dp"
         app:contentInsetStart="0dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,7 +31,7 @@
                 android:layout_centerVertical="true"
                 android:src="@android:drawable/ic_menu_sort_by_size"
                 android:contentDescription="Menu"
-                android:tint="#584237" />
+                app:tint="@color/text_primary" />
 
             <ImageView
                 android:id="@+id/logoImage"
@@ -48,7 +49,7 @@
                 android:layout_centerVertical="true"
                 android:src="@android:drawable/ic_menu_add"
                 android:contentDescription="Cart"
-                android:tint="#F97316" />
+                app:tint="@color/primary" />
 
         </RelativeLayout>
 
@@ -79,13 +80,13 @@
                     android:layout_height="100dp"
                     app:cardCornerRadius="50dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#EDF2F7">
+                    app:cardBackgroundColor="@color/card_bg_secondary">
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_account"
-                        android:tint="#A0AEC0" />
+                        app:tint="@color/text_muted" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
@@ -93,15 +94,15 @@
                     android:layout_height="32dp"
                     android:layout_gravity="bottom|end"
                     app:cardCornerRadius="16dp"
-                    app:cardBackgroundColor="#F97316"
+                    app:cardBackgroundColor="@color/primary"
                     app:strokeWidth="2dp"
-                    app:strokeColor="#FFFFFF">
+                    app:strokeColor="@color/surface">
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_account"
-                        android:tint="#FFFFFF" />
+                        app:tint="@color/white_fixed" />
                 </com.google.android.material.card.MaterialCardView>
             </FrameLayout>
 
@@ -110,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Guest User"
-                android:textColor="#251913"
+                android:textColor="@color/text_primary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -119,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Sign in to sync your wishlist and orders"
-                android:textColor="#718096"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
             <!-- Action Buttons -->
@@ -128,11 +129,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="32dp"
-                android:backgroundTint="#F97316"
+                android:backgroundTint="@color/primary"
                 android:text="Login"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:textColor="@color/white_fixed"
                 app:cornerRadius="16dp" />
 
             <Button
@@ -143,11 +145,11 @@
                 android:layout_marginTop="12dp"
                 android:text="Register"
                 android:textAllCaps="false"
-                android:textColor="#F97316"
+                android:textColor="@color/primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:cornerRadius="16dp"
-                app:strokeColor="#F97316" />
+                app:strokeColor="@color/primary" />
 
             <!-- Tech Rewards Card -->
             <com.google.android.material.card.MaterialCardView
@@ -157,7 +159,8 @@
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#E2E8F0">
+                app:strokeColor="@color/border_color"
+                app:cardBackgroundColor="@color/surface">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -168,14 +171,14 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         app:cardCornerRadius="12dp"
-                        app:cardBackgroundColor="#FFF1EB"
+                        app:cardBackgroundColor="@color/badge_bg"
                         app:cardElevation="0dp">
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@android:drawable/ic_menu_agenda"
-                            android:tint="#F97316" />
+                            app:tint="@color/primary" />
                     </com.google.android.material.card.MaterialCardView>
                     <LinearLayout
                         android:layout_width="0dp"
@@ -187,14 +190,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Tech Rewards"
-                            android:textColor="#2D3748"
+                            android:textColor="@color/text_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Join our loyalty program to earn 5% back in credits on every flagship purchase."
-                            android:textColor="#718096"
+                            android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -207,7 +210,9 @@
                 android:layout_marginTop="24dp"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardBackgroundColor="@color/surface"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_color">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -224,33 +229,33 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_menu_compass"
-                            android:tint="#F97316" />
+                            app:tint="@color/primary" />
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="16dp"
                             android:text="Language"
-                            android:textColor="#2D3748"
+                            android:textColor="@color/text_primary"
                             android:textSize="15sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="English"
-                            android:textColor="#A0AEC0"
+                            android:textColor="@color/text_muted"
                             android:textSize="13sp" />
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:layout_marginStart="8dp"
                             android:src="@android:drawable/ic_media_play"
-                            android:tint="#CBD5E0" />
+                            app:tint="@color/text_muted" />
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F7FAFC" android:layout_marginHorizontal="16dp" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border_color" android:layout_marginHorizontal="16dp" />
 
-                    <!-- Dark Mode -->
+                    <!-- Dark Mode Toggle Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="64dp"
@@ -260,22 +265,25 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_lock_idle_lock"
-                            android:tint="#718096" />
+                            app:tint="@color/text_secondary" />
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="16dp"
                             android:text="Dark Mode"
-                            android:textColor="#2D3748"
+                            android:textColor="@color/text_primary"
                             android:textSize="15sp"
                             android:textStyle="bold" />
                         <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/darkModeSwitch"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:thumbTint="@color/primary"
+                            app:trackTint="@color/border_color" />
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F7FAFC" android:layout_marginHorizontal="16dp" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border_color" android:layout_marginHorizontal="16dp" />
 
                     <!-- Privacy Policy -->
                     <LinearLayout
@@ -287,24 +295,24 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_lock_lock"
-                            android:tint="#718096" />
+                            app:tint="@color/text_secondary" />
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="16dp"
                             android:text="Privacy Policy"
-                            android:textColor="#2D3748"
+                            android:textColor="@color/text_primary"
                             android:textSize="15sp"
                             android:textStyle="bold" />
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:src="@android:drawable/ic_media_play"
-                            android:tint="#CBD5E0" />
+                            app:tint="@color/text_muted" />
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F7FAFC" android:layout_marginHorizontal="16dp" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border_color" android:layout_marginHorizontal="16dp" />
 
                     <!-- Terms of Service -->
                     <LinearLayout
@@ -316,21 +324,21 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_menu_edit"
-                            android:tint="#718096" />
+                            app:tint="@color/text_secondary" />
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="16dp"
                             android:text="Terms of Service"
-                            android:textColor="#2D3748"
+                            android:textColor="@color/text_primary"
                             android:textSize="15sp"
                             android:textStyle="bold" />
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:src="@android:drawable/ic_media_play"
-                            android:tint="#CBD5E0" />
+                            app:tint="@color/text_muted" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -343,6 +351,7 @@
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp">
                 <ImageView
+                    android:id="@+id/bottomBanner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
@@ -355,7 +364,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="32dp"
                 android:text="TechStore Version 4.2.0-stable"
-                android:textColor="#CBD5E0"
+                android:textColor="@color/text_muted"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -366,7 +375,7 @@
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/surface"
         app:elevation="8dp"
         app:itemIconTint="@color/bottom_nav_color"
         app:itemTextColor="@color/bottom_nav_color"

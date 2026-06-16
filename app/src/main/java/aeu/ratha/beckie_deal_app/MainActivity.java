@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
@@ -40,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Refresh products UI in case favorites changed elsewhere
         setupProducts();
     }
 
@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
         products.add(new Product("iPhone 15 Pro", "$999.00", "4.8", false, "https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop"));
         products.add(new Product("ASUS ROG Strix", "$1,499.00", "4.7", false, "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop"));
         products.add(new Product("Samsung S24 Ultra", "$1,299.00", "4.9", false, "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop"));
+
+        for (Product p : products) {
+            if (p.isFavorite) FavoriteManager.getInstance().addFavorite(p);
+        }
 
         categories = new ArrayList<>();
         categories.add(new Category("Laptops", R.drawable.ic_cat_laptops, false));
@@ -62,17 +66,18 @@ public class MainActivity extends AppCompatActivity {
     private void setupTopBar() {
         ImageView menuIcon = findViewById(R.id.menuIcon);
         ImageView cartIcon = findViewById(R.id.cartIcon);
-        menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu opened", Toast.LENGTH_SHORT).show());
-        cartIcon.setOnClickListener(v -> Toast.makeText(this, "Shopping Cart", Toast.LENGTH_SHORT).show());
+        if (menuIcon != null) menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu opened", Toast.LENGTH_SHORT).show());
+        if (cartIcon != null) cartIcon.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
     }
 
     private void setupSearchBar() {
-        findViewById(R.id.searchBar).setOnClickListener(v -> Toast.makeText(this, "Search products...", Toast.LENGTH_SHORT).show());
+        View searchBar = findViewById(R.id.searchBar);
+        if (searchBar != null) searchBar.setOnClickListener(v -> Toast.makeText(this, "Search products...", Toast.LENGTH_SHORT).show());
     }
 
     private void setupHeroBanner() {
         Button shopNowButton = findViewById(R.id.shopNowButton);
-        shopNowButton.setOnClickListener(v -> Toast.makeText(this, "Opening Summer Sale!", Toast.LENGTH_SHORT).show());
+        if (shopNowButton != null) shopNowButton.setOnClickListener(v -> Toast.makeText(this, "Opening Summer Sale!", Toast.LENGTH_SHORT).show());
     }
 
     private void setupCategories() {
@@ -82,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         LinearLayout categoriesContainer = findViewById(R.id.categoriesContainer);
+        if (categoriesContainer == null) return;
         categoriesContainer.removeAllViews();
 
         for (Category category : categories) {
@@ -94,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
             categoryName.setText(category.name);
 
             if (category.isHighlighted) {
-                categoryCard.setCardBackgroundColor(0xFFFEF2F2);
-                categoryCard.setStrokeColor(0xFFFECACA);
+                categoryCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.badge_bg));
+                categoryCard.setStrokeColor(ContextCompat.getColor(this, R.color.primary));
             }
 
             categoryView.setOnClickListener(v -> {
@@ -112,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupProducts() {
         GridLayout productsGrid = findViewById(R.id.productsGrid);
+        if (productsGrid == null) return;
         productsGrid.removeAllViews();
 
         for (int i = 0; i < products.size(); i++) {
             Product product = products.get(i);
-            // Sync with FavoriteManager
             product.isFavorite = FavoriteManager.getInstance().isFavorite(product);
 
             View productView = LayoutInflater.from(this).inflate(R.layout.product_card, productsGrid, false);
@@ -135,10 +141,10 @@ public class MainActivity extends AppCompatActivity {
 
             if (product.isFavorite) {
                 favoriteIcon.setImageResource(R.drawable.ic_favorite);
-                favoriteIcon.setColorFilter(0xFFEF4444);
+                favoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.red_error));
             } else {
                 favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
-                favoriteIcon.setColorFilter(0xFF8C7164);
+                favoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_secondary));
             }
 
             final int position = i;
@@ -157,12 +163,12 @@ public class MainActivity extends AppCompatActivity {
                 if (product.isFavorite) {
                     FavoriteManager.getInstance().addFavorite(product);
                     favoriteIcon.setImageResource(R.drawable.ic_favorite);
-                    favoriteIcon.setColorFilter(0xFFEF4444);
+                    favoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.red_error));
                     Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show();
                 } else {
                     FavoriteManager.getInstance().removeFavorite(product);
                     favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
-                    favoriteIcon.setColorFilter(0xFF8C7164);
+                    favoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_secondary));
                     Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -173,11 +179,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupNewArrivalsBanner() {
         Button discoverButton = findViewById(R.id.discoverButton);
-        discoverButton.setOnClickListener(v -> Toast.makeText(this, "Discover New Arrivals!", Toast.LENGTH_SHORT).show());
+        if (discoverButton != null) discoverButton.setOnClickListener(v -> Toast.makeText(this, "Discover New Arrivals!", Toast.LENGTH_SHORT).show());
     }
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        if (bottomNav == null) return;
         bottomNav.setSelectedItemId(R.id.nav_home);
 
         bottomNav.setOnItemSelectedListener(item -> {

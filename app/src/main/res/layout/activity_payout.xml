@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC"
+    android:background="@color/background"
     android:fitsSystemWindows="true"
     tools:context=".PayoutActivity">
 
@@ -13,7 +13,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/surface"
         app:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -38,14 +38,14 @@
                     android:padding="12dp"
                     android:src="@android:drawable/ic_menu_revert"
                     android:rotation="180"
-                    app:tint="#251913" />
+                    app:tint="@color/text_primary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="Checkout"
-                    android:textColor="#251913"
+                    android:textColor="@color/text_primary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Shipping Address"
-                android:textColor="#251913"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -83,7 +83,8 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#F1F5F9">
+                app:strokeColor="@color/border_color"
+                app:cardBackgroundColor="@color/surface">
                 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -98,7 +99,7 @@
                         android:background="@drawable/form_field_background"
                         android:padding="10dp"
                         android:src="@android:drawable/ic_dialog_map"
-                        app:tint="#F97316" />
+                        app:tint="@color/primary" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -110,13 +111,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Home Address"
-                            android:textColor="#251913"
+                            android:textColor="@color/text_primary"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="123 Tech Avenue, Silicon Valley, CA"
-                            android:textColor="#64748B"
+                            android:textColor="@color/text_muted"
                             android:textSize="13sp" />
                     </LinearLayout>
 
@@ -124,7 +125,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@android:drawable/ic_menu_edit"
-                        app:tint="#64748B" />
+                        app:tint="@color/text_muted" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -134,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Payment Method"
-                android:textColor="#251913"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -145,7 +146,8 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#F1F5F9">
+                app:strokeColor="@color/border_color"
+                app:cardBackgroundColor="@color/surface">
                 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -160,7 +162,7 @@
                         android:background="@drawable/form_field_background"
                         android:padding="10dp"
                         android:src="@android:drawable/ic_menu_agenda"
-                        app:tint="#F97316" />
+                        app:tint="@color/primary" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -172,13 +174,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Credit Card"
-                            android:textColor="#251913"
+                            android:textColor="@color/text_primary"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="**** **** **** 4582"
-                            android:textColor="#64748B"
+                            android:textColor="@color/text_muted"
                             android:textSize="13sp" />
                     </LinearLayout>
 
@@ -186,7 +188,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:buttonTint="#F97316" />
+                        android:buttonTint="@color/primary" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -196,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Order Summary"
-                android:textColor="#251913"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -206,7 +208,7 @@
                 android:layout_marginTop="12dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardBackgroundColor="@color/surface">
                 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -224,13 +226,13 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Subtotal"
-                            android:textColor="#64748B" />
+                            android:textColor="@color/text_muted" />
                         <TextView
                             android:id="@+id/summarySubtotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$0.00"
-                            android:textColor="#251913"
+                            android:textColor="@color/text_primary"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -244,19 +246,19 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Shipping Fee"
-                            android:textColor="#64748B" />
+                            android:textColor="@color/text_muted" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$15.00"
-                            android:textColor="#22C55E"
+                            android:textColor="@color/green_stock"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <View 
                         android:layout_width="match_parent" 
                         android:layout_height="1dp" 
-                        android:background="#F1F5F9"
+                        android:background="@color/border_color"
                         android:layout_marginBottom="12dp" />
 
                     <LinearLayout
@@ -268,7 +270,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Total"
-                            android:textColor="#251913"
+                            android:textColor="@color/text_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                         <TextView
@@ -276,7 +278,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$15.00"
-                            android:textColor="#F97316"
+                            android:textColor="@color/primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -293,12 +295,12 @@
         android:layout_height="wrap_content"
         app:cardElevation="24dp"
         app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/surface"
         app:layout_constraintBottom_toBottomOf="parent">
         
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -306,10 +308,10 @@
                 android:id="@+id/confirmPaymentButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:backgroundTint="#F97316"
+                android:backgroundTint="@color/primary"
                 android:text="Confirm Payment"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white_fixed"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:cornerRadius="16dp" />
@@ -317,12 +319,12 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Processing Overlay (Hidden by default) -->
+    <!-- Processing Overlay -->
     <FrameLayout
         android:id="@+id/processingOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#CCFFFFFF"
+        android:background="#CC000000"
         android:elevation="100dp"
         android:visibility="gone"
         android:clickable="true"
@@ -338,14 +340,14 @@
             <ProgressBar
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:indeterminateTint="#F97316" />
+                android:indeterminateTint="@color/primary" />
             
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Processing Payout..."
-                android:textColor="#251913"
+                android:textColor="@color/white_fixed"
                 android:textSize="18sp"
                 android:textStyle="bold" />
                 
@@ -354,16 +356,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Please wait a moment."
-                android:textColor="#64748B" />
+                android:textColor="@color/white_fixed"
+                android:alpha="0.7" />
         </LinearLayout>
     </FrameLayout>
 
-    <!-- Success View (Hidden by default) -->
+    <!-- Success View -->
     <LinearLayout
         android:id="@+id/successView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
+        android:background="@color/surface"
         android:elevation="101dp"
         android:gravity="center"
         android:orientation="vertical"
@@ -374,14 +377,14 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:src="@android:drawable/checkbox_on_background"
-            app:tint="#22C55E" />
+            app:tint="@color/green_stock" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Payment Successful!"
-            android:textColor="#251913"
+            android:textColor="@color/text_primary"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -391,7 +394,7 @@
             android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="Your order has been placed. We'll notify you when it's on the way."
-            android:textColor="#64748B"
+            android:textColor="@color/text_muted"
             android:textSize="16sp" />
 
         <Button
@@ -399,9 +402,10 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="48dp"
-            android:backgroundTint="#F97316"
+            android:backgroundTint="@color/primary"
             android:text="Back to Home"
             android:textAllCaps="false"
+            android:textColor="@color/white_fixed"
             app:cornerRadius="16dp" />
 
     </LinearLayout>

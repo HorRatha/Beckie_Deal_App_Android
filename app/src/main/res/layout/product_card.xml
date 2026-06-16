@@ -8,19 +8,19 @@
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
-    app:strokeColor="#F1F5F9">
+    app:strokeColor="@color/border_color"
+    app:cardBackgroundColor="@color/surface">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
         android:orientation="vertical">
 
         <!-- Image Container with Favorite Button -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:background="#F8FAFC"
+            android:background="@color/card_bg_secondary"
             android:padding="16dp">
 
             <ImageView
@@ -38,7 +38,7 @@
                 android:background="@drawable/favorite_background"
                 android:padding="6dp"
                 android:src="@drawable/ic_favorite_border"
-                app:tint="#8C7164" />
+                app:tint="@color/text_secondary" />
 
         </FrameLayout>
 
@@ -56,7 +56,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Product Name"
-                android:textColor="#251913"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="$999.00"
-                android:textColor="#F97316"
+                android:textColor="@color/primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -81,7 +81,7 @@
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:src="@android:drawable/btn_star_big_on"
-                    app:tint="#FFC107" />
+                    app:tint="@color/yellow_star" />
 
                 <TextView
                     android:id="@+id/productRating"
@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:text="4.9 (1.2k)"
-                    android:textColor="#8C7164"
+                    android:textColor="@color/text_secondary"
                     android:textSize="10sp" />
 
             </LinearLayout>

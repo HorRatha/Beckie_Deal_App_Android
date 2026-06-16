@@ -14,12 +14,12 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="2dp"
         app:strokeWidth="1dp"
-        app:strokeColor="#F6DED3">
+        app:strokeColor="@color/border_color"
+        app:cardBackgroundColor="@color/surface">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/categoryIcon"
@@ -27,7 +27,7 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:src="@android:drawable/ic_menu_gallery"
-                android:tint="#F97316" />
+                app:tint="@color/primary" />
 
         </FrameLayout>
 
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Category"
-        android:textColor="#584237"
+        android:textColor="@color/text_primary"
         android:textSize="11sp" />
 
 </LinearLayout>

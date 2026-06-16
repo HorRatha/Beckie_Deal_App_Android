@@ -8,12 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
     private boolean isFavorite = false;
+    private int cartCount = 0;
     private ImageView detailFavoriteIcon;
     private TextView cartBadge;
     private MainActivity.Product currentProduct;
@@ -100,6 +102,13 @@ public class ProductDetailActivity extends AppCompatActivity {
             if (!brandLogoUrl.isEmpty()) {
                 brandLogo.setVisibility(View.VISIBLE);
                 Glide.with(this).load(brandLogoUrl).into(brandLogo);
+                // Apply a white tint in dark mode if the logo is black
+                int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+                if (currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
+                    brandLogo.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
+                } else {
+                    brandLogo.clearColorFilter();
+                }
             } else {
                 brandLogo.setVisibility(View.GONE);
             }
@@ -161,10 +170,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (detailFavoriteIcon != null) {
             if (isFavorite) {
                 detailFavoriteIcon.setImageResource(R.drawable.ic_favorite);
-                detailFavoriteIcon.setColorFilter(0xFFEF4444);
+                detailFavoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.red_error));
             } else {
                 detailFavoriteIcon.setImageResource(R.drawable.ic_favorite_border);
-                detailFavoriteIcon.setColorFilter(0xFF251913);
+                detailFavoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_primary));
             }
         }
     }

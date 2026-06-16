@@ -6,16 +6,16 @@
     android:layout_columnWeight="1"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/surface">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#FFFFFF"
         android:padding="12dp">
 
-        <!-- Badge (BEST SELLING / TRENDING) -->
+        <!-- Badge -->
         <TextView
             android:id="@+id/productBadge"
             android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="4dp"
             android:text="BEST SELLING"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white_fixed"
             android:textSize="10sp"
             android:textStyle="bold"
             android:visibility="gone" />
@@ -45,7 +45,8 @@
             android:layout_height="24dp"
             android:layout_gravity="end"
             android:layout_marginTop="8dp"
-            android:src="@android:drawable/btn_star_big_off" />
+            android:src="@android:drawable/btn_star_big_off"
+            app:tint="@color/text_secondary" />
 
         <!-- Product Name -->
         <TextView
@@ -54,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="PRODUCT NAME"
-            android:textColor="#000000"
+            android:textColor="@color/text_primary"
             android:textSize="12sp"
             android:textStyle="bold"
             android:maxLines="2"
@@ -72,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$999"
-                android:textColor="#000000"
+                android:textColor="@color/primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -82,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="$1299"
-                android:textColor="#999999"
+                android:textColor="@color/text_muted"
                 android:textSize="12sp"
                 android:layout_gravity="center_vertical" />
 

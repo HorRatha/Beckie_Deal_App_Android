@@ -1,12 +1,15 @@
 package aeu.ratha.beckie_deal_app;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -17,6 +20,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         setupTopBar();
         setupActionButtons();
+        setupDarkModeSwitch();
         setupBottomNavigation();
     }
 
@@ -45,6 +49,25 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(new Intent(this, RegisterActivity.class));
             });
         }
+    }
+
+    private void setupDarkModeSwitch() {
+        SwitchMaterial darkModeSwitch = findViewById(R.id.darkModeSwitch);
+        if (darkModeSwitch == null) return;
+
+        // Set current state based on system configuration
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        darkModeSwitch.setChecked(currentNightMode == Configuration.UI_MODE_NIGHT_YES);
+
+        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                Toast.makeText(this, "Dark Mode Enabled", Toast.LENGTH_SHORT).show();
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                Toast.makeText(this, "Light Mode Enabled", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupBottomNavigation() {
