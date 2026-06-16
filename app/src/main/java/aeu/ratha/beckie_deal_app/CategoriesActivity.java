@@ -37,7 +37,9 @@ public class CategoriesActivity extends AppCompatActivity {
 
         if (menuIcon != null) menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
         if (searchIcon != null) searchIcon.setOnClickListener(v -> Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show());
-        if (cartIcon != null) cartIcon.setOnClickListener(v -> Toast.makeText(this, "Cart", Toast.LENGTH_SHORT).show());
+        if (cartIcon != null) cartIcon.setOnClickListener(v -> {
+            startActivity(new Intent(this, CartActivity.class));
+        });
     }
 
     private void setupLaptopBrands() {
@@ -93,6 +95,12 @@ public class CategoriesActivity extends AppCompatActivity {
                 card.setStrokeWidth(0);
             }
 
+            // Make brand card clickable
+            view.setOnClickListener(v -> {
+                Toast.makeText(this, "Showing products for " + brand.name, Toast.LENGTH_SHORT).show();
+                // Future: startActivity(new Intent(this, ProductListActivity.class).putExtra("brand", brand.name));
+            });
+
             brandsGrid.addView(view);
         }
     }
@@ -125,6 +133,12 @@ public class CategoriesActivity extends AppCompatActivity {
             if (item.isHot) {
                 hotBadge.setVisibility(View.VISIBLE);
             }
+
+            // Make category card clickable
+            view.setOnClickListener(v -> {
+                Toast.makeText(this, "Opening " + item.name + " category", Toast.LENGTH_SHORT).show();
+                // Future: startActivity(new Intent(this, ProductListActivity.class).putExtra("category", item.name));
+            });
 
             allCategoriesGrid.addView(view);
         }
