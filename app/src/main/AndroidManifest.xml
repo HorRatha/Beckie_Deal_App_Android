@@ -40,6 +40,9 @@
         <activity
             android:name=".AllBrandsActivity"
             android:exported="false" />
+        <activity
+            android:name=".CartActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
