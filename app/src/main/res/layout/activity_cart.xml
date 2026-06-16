@@ -67,13 +67,14 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Empty State (Shown by default) -->
+            <!-- Empty State -->
             <LinearLayout
                 android:id="@+id/emptyState"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="120dp"
@@ -109,6 +110,14 @@
                     android:backgroundTint="#F97316"/>
             </LinearLayout>
 
+            <!-- Cart Items Grid -->
+            <GridLayout
+                android:id="@+id/cartItemsGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alignmentMode="alignMargins"
+                android:columnCount="2" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -117,7 +126,6 @@
         android:id="@+id/checkoutSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:cardElevation="24dp"
         app:cardCornerRadius="0dp"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -142,7 +150,7 @@
                     android:textColor="#64748B"
                     android:textSize="14sp" />
                 <TextView
-                    android:id="@+id/totalPrice"
+                    android:id="@+id/totalPriceText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$0.00"

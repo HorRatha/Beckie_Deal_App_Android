@@ -14,7 +14,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class ProductDetailActivity extends AppCompatActivity {
 
     private boolean isFavorite = false;
-    private int cartCount = 0;
     private ImageView detailFavoriteIcon;
     private TextView cartBadge;
     private MainActivity.Product currentProduct;
@@ -28,6 +27,12 @@ public class ProductDetailActivity extends AppCompatActivity {
         loadProductData();
         setupActions();
         setupBottomNavigation();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateCartUI();
     }
 
     private void setupTopBar() {
@@ -110,11 +115,11 @@ public class ProductDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "Redirecting to secure checkout...", Toast.LENGTH_SHORT).show());
         }
 
-        // Add to Cart Button Logic
+        // Add to Cart Button Logic using CartManager
         View addToCartButton = findViewById(R.id.addToCartButton);
         if (addToCartButton != null) {
             addToCartButton.setOnClickListener(v -> {
-                cartCount++;
+                CartManager.getInstance().addToCart(currentProduct);
                 updateCartUI();
                 Toast.makeText(this, nameText() + " added to cart!", Toast.LENGTH_SHORT).show();
             });
@@ -142,8 +147,9 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void updateCartUI() {
         if (cartBadge != null) {
-            if (cartCount > 0) {
-                cartBadge.setText(String.valueOf(cartCount));
+            int count = CartManager.getInstance().getCartCount();
+            if (count > 0) {
+                cartBadge.setText(String.valueOf(count));
                 cartBadge.setVisibility(View.VISIBLE);
             } else {
                 cartBadge.setVisibility(View.GONE);
