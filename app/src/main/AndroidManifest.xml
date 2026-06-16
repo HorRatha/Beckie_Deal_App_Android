@@ -43,6 +43,9 @@
         <activity
             android:name=".CartActivity"
             android:exported="false" />
+        <activity
+            android:name=".PayoutActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

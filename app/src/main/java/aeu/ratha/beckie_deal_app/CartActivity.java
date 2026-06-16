@@ -22,12 +22,23 @@ public class CartActivity extends AppCompatActivity {
 
         setupTopBar();
         displayCartItems();
+        setupCheckoutButton();
     }
 
     private void setupTopBar() {
         ImageView backButton = findViewById(R.id.backButton);
         if (backButton != null) {
             backButton.setOnClickListener(v -> finish());
+        }
+    }
+
+    private void setupCheckoutButton() {
+        View checkoutButton = findViewById(R.id.checkoutButton);
+        if (checkoutButton != null) {
+            checkoutButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, PayoutActivity.class);
+                startActivity(intent);
+            });
         }
     }
 
@@ -68,20 +79,11 @@ public class CartActivity extends AppCompatActivity {
 
                 Glide.with(this).load(product.imageUrl).centerCrop().placeholder(R.drawable.placeholder_image).into(productImage);
 
-                // Setup favorite icon state
-                boolean isFav = FavoriteManager.getInstance().isFavorite(product);
-                if (isFav) {
-                    favoriteIcon.setImageResource(R.drawable.ic_favorite);
-                    favoriteIcon.setColorFilter(0xFFEF4444);
-                } else {
-                    favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
-                    favoriteIcon.setColorFilter(0xFF8C7164);
-                }
+                // Setup behavior: remove from cart
+                favoriteIcon.setImageResource(android.R.drawable.ic_menu_delete);
+                favoriteIcon.setColorFilter(0xFFEF4444);
 
                 final int position = i;
-                // Change favorite behavior to "remove from cart" for this specific screen? 
-                // No, let's keep it as favorite, but maybe add a delete button?
-                // For now, let's make clicking the favorite icon remove it from cart just to have a "remove" function
                 favoriteIcon.setOnClickListener(v -> {
                     CartManager.getInstance().removeFromCart(cartItems.get(position));
                     displayCartItems();
