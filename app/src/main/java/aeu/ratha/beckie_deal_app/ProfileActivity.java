@@ -25,15 +25,26 @@ public class ProfileActivity extends AppCompatActivity {
         ImageView cartIcon = findViewById(R.id.cartIcon);
 
         if (menuIcon != null) menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
-        if (cartIcon != null) cartIcon.setOnClickListener(v -> Toast.makeText(this, "Cart", Toast.LENGTH_SHORT).show());
+        if (cartIcon != null) cartIcon.setOnClickListener(v -> {
+            startActivity(new Intent(this, CartActivity.class));
+        });
     }
 
     private void setupActionButtons() {
         Button loginButton = findViewById(R.id.loginButton);
         Button registerButton = findViewById(R.id.registerButton);
 
-        if (loginButton != null) loginButton.setOnClickListener(v -> Toast.makeText(this, "Login clicked", Toast.LENGTH_SHORT).show());
-        if (registerButton != null) registerButton.setOnClickListener(v -> Toast.makeText(this, "Register clicked", Toast.LENGTH_SHORT).show());
+        if (loginButton != null) {
+            loginButton.setOnClickListener(v -> {
+                startActivity(new Intent(this, LoginActivity.class));
+            });
+        }
+        
+        if (registerButton != null) {
+            registerButton.setOnClickListener(v -> {
+                startActivity(new Intent(this, RegisterActivity.class));
+            });
+        }
     }
 
     private void setupBottomNavigation() {
@@ -56,6 +67,11 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.nav_about) {
                 startActivity(new Intent(this, AboutActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavoritesActivity.class));
                 overridePendingTransition(0, 0);
                 finish();
                 return true;
