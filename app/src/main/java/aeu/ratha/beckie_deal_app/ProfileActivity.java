@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.materialswitch.MaterialSwitch;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -40,19 +40,20 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (loginButton != null) {
             loginButton.setOnClickListener(v -> {
-                startActivity(new Intent(this, LoginActivity.class));
+                // Login action
             });
         }
         
         if (registerButton != null) {
             registerButton.setOnClickListener(v -> {
-                startActivity(new Intent(this, RegisterActivity.class));
+                // Register action
             });
         }
     }
 
     private void setupDarkModeSwitch() {
-        SwitchMaterial darkModeSwitch = findViewById(R.id.darkModeSwitch);
+        // Changed to MaterialSwitch to match activity_profile.xml and fix compilation
+        MaterialSwitch darkModeSwitch = findViewById(R.id.darkModeSwitch);
         if (darkModeSwitch == null) return;
 
         // Set current state based on system configuration
@@ -62,10 +63,8 @@ public class ProfileActivity extends AppCompatActivity {
         darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                Toast.makeText(this, "Dark Mode Enabled", Toast.LENGTH_SHORT).show();
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                Toast.makeText(this, "Light Mode Enabled", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -89,6 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (itemId == R.id.nav_about) {
+                // Mapping about navigation to AboutActivity
                 startActivity(new Intent(this, AboutActivity.class));
                 overridePendingTransition(0, 0);
                 finish();

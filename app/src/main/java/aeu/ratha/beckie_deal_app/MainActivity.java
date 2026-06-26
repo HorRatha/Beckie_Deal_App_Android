@@ -179,7 +179,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupNewArrivalsBanner() {
         Button discoverButton = findViewById(R.id.discoverButton);
-        if (discoverButton != null) discoverButton.setOnClickListener(v -> Toast.makeText(this, "Discover New Arrivals!", Toast.LENGTH_SHORT).show());
+        if (discoverButton != null) {
+            discoverButton.setOnClickListener(v -> Toast.makeText(this, "Discover New Arrivals!", Toast.LENGTH_SHORT).show());
+        }
     }
 
     private void setupBottomNavigation() {

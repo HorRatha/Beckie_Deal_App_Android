@@ -1,78 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="20dp"
+    android:layout_width="0dp"
+    android:layout_height="160dp"
+    android:layout_columnWeight="1"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/border_color"
-    app:cardBackgroundColor="@color/surface">
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="#1A1A2E">
 
+    <!-- Background image (loaded via Glide in code) -->
+    <ImageView
+        android:id="@+id/categoryBgImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <!-- Dark gradient overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/category_card_gradient" />
+
+    <!-- HOT badge top-left -->
+    <TextView
+        android:id="@+id/hotBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="10dp"
+        android:background="@drawable/badge_pill"
+        android:backgroundTint="@color/primary"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="3dp"
+        android:text="HOT"
+        android:textColor="@color/white_fixed"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <!-- Category icon top-right -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#33FFFFFF"
+        app:strokeWidth="0dp">
+        <ImageView
+            android:id="@+id/categorySmallIcon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_cat_laptops"
+            app:tint="@android:color/white" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Title + count bottom-left -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:orientation="vertical"
-        android:padding="20dp">
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/badge_bg">
-            
-            <ImageView
-                android:id="@+id/categorySmallIcon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_cat_laptops"
-                app:tint="@color/primary" />
-        </com.google.android.material.card.MaterialCardView>
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp">
 
         <TextView
             android:id="@+id/categoryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="Laptops"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/categoryItemsCount"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/categoryItemsCount"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="124 Items"
-                android:textColor="@color/text_muted"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/hotBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/badge_pill"
-                android:backgroundTint="@color/red_error"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="2dp"
-                android:text="HOT"
-                android:textColor="@color/white_fixed"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-        </LinearLayout>
+            android:text="124 Items"
+            android:textColor="#CCFFFFFF"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

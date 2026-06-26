@@ -15,7 +15,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class ProductDetailActivity extends AppCompatActivity {
 
     private boolean isFavorite = false;
-    private int cartCount = 0;
     private ImageView detailFavoriteIcon;
     private TextView cartBadge;
     private MainActivity.Product currentProduct;
@@ -47,13 +46,10 @@ public class ProductDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "Link copied to clipboard", Toast.LENGTH_SHORT).show());
         }
 
-        // Initialize Cart UI components and redirect to CartActivity
         cartBadge = findViewById(R.id.cartBadge);
         View cartContainer = findViewById(R.id.cartContainer);
         if (cartContainer != null) {
-            cartContainer.setOnClickListener(v -> {
-                startActivity(new Intent(this, CartActivity.class));
-            });
+            cartContainer.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
         }
     }
 
@@ -63,7 +59,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         String imageUrl = getIntent().getStringExtra("product_image");
         String rating = getIntent().getStringExtra("product_rating");
         
-        // Construct a temporary product object for lookup/management
         currentProduct = new MainActivity.Product(name, price, rating, false, imageUrl);
         isFavorite = FavoriteManager.getInstance().isFavorite(currentProduct);
 
@@ -79,36 +74,25 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (ratingText != null) ratingText.setText(rating);
 
         if (productImage != null && imageUrl != null) {
-            Glide.with(this)
-                    .load(imageUrl)
-                    .centerInside()
-                    .placeholder(R.drawable.placeholder_image)
-                    .into(productImage);
+            Glide.with(this).load(imageUrl).centerInside().placeholder(R.drawable.placeholder_image).into(productImage);
         }
 
-        // Auto-load official brand logo based on product name
         if (brandLogo != null && name != null) {
-            String brandLogoUrl = "";
-            if (name.contains("MacBook") || name.contains("iPhone")) {
-                brandLogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1665px-Apple_logo_black.svg.png";
-            } else if (name.contains("ASUS") || name.contains("ROG")) {
-                brandLogoUrl = "https://logos-world.net/wp-content/uploads/2020/11/ROG-Logo.png";
-            } else if (name.contains("Samsung")) {
-                brandLogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/2560px-Samsung_Logo.svg.png";
-            } else if (name.contains("Dell")) {
-                brandLogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Dell_logo_2016.svg/1200px-Dell_logo_2016.svg.png";
-            }
-
-            if (!brandLogoUrl.isEmpty()) {
-                brandLogo.setVisibility(View.VISIBLE);
-                Glide.with(this).load(brandLogoUrl).into(brandLogo);
-                // Apply a white tint in dark mode if the logo is black
-                int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
-                if (currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
-                    brandLogo.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
-                } else {
-                    brandLogo.clearColorFilter();
-                }
+            String lowerName = name.toLowerCase();
+            brandLogo.setVisibility(View.VISIBLE);
+            
+            if (lowerName.contains("asus")) {
+                brandLogo.setImageResource(R.drawable.ic_brand_asus);
+            } else if (lowerName.contains("apple") || lowerName.contains("macbook") || lowerName.contains("iphone")) {
+                brandLogo.setImageResource(R.drawable.ic_brand_apple);
+            } else if (lowerName.contains("msi")) {
+                brandLogo.setImageResource(R.drawable.ic_brand_msi);
+            } else if (lowerName.contains("rog")) {
+                brandLogo.setImageResource(R.drawable.ic_brand_rog);
+            } else if (lowerName.contains("samsung")) {
+                brandLogo.setImageResource(R.drawable.ic_brand_samsung);
+            } else if (lowerName.contains("dell")) {
+                brandLogo.setImageResource(R.drawable.ic_brand_dell);
             } else {
                 brandLogo.setVisibility(View.GONE);
             }
@@ -118,19 +102,12 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void setupActions() {
-        Button buyNowButton = findViewById(R.id.buyNowButton);
-        if (buyNowButton != null) {
-            buyNowButton.setOnClickListener(v -> 
-                Toast.makeText(this, "Redirecting to secure checkout...", Toast.LENGTH_SHORT).show());
-        }
-
-        // Add to Cart Button Logic using CartManager
         View addToCartButton = findViewById(R.id.addToCartButton);
         if (addToCartButton != null) {
             addToCartButton.setOnClickListener(v -> {
                 CartManager.getInstance().addToCart(currentProduct);
                 updateCartUI();
-                Toast.makeText(this, nameText() + " added to cart!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Added to cart!", Toast.LENGTH_SHORT).show();
             });
         }
 
@@ -138,72 +115,40 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (favButton != null) {
             favButton.setOnClickListener(v -> {
                 isFavorite = !isFavorite;
-                if (isFavorite) {
-                    FavoriteManager.getInstance().addFavorite(currentProduct);
-                } else {
-                    FavoriteManager.getInstance().removeFavorite(currentProduct);
-                }
+                if (isFavorite) FavoriteManager.getInstance().addFavorite(currentProduct);
+                else FavoriteManager.getInstance().removeFavorite(currentProduct);
                 updateFavoriteUI();
-                Toast.makeText(this, isFavorite ? "Added to Wishlist" : "Removed from Wishlist", Toast.LENGTH_SHORT).show();
             });
         }
-    }
-
-    private String nameText() {
-        TextView nameText = findViewById(R.id.detailProductName);
-        return nameText != null ? nameText.getText().toString() : "Product";
     }
 
     private void updateCartUI() {
         if (cartBadge != null) {
             int count = CartManager.getInstance().getCartCount();
-            if (count > 0) {
-                cartBadge.setText(String.valueOf(count));
-                cartBadge.setVisibility(View.VISIBLE);
-            } else {
-                cartBadge.setVisibility(View.GONE);
-            }
+            cartBadge.setText(String.valueOf(count));
+            cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
         }
     }
 
     private void updateFavoriteUI() {
         if (detailFavoriteIcon != null) {
-            if (isFavorite) {
-                detailFavoriteIcon.setImageResource(R.drawable.ic_favorite);
-                detailFavoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.red_error));
-            } else {
-                detailFavoriteIcon.setImageResource(R.drawable.ic_favorite_border);
-                detailFavoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_primary));
-            }
+            detailFavoriteIcon.setImageResource(isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+            detailFavoriteIcon.setColorFilter(ContextCompat.getColor(this, isFavorite ? R.color.red_error : R.color.text_primary));
         }
     }
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
-
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            Intent intent = null;
-            if (itemId == R.id.nav_home) {
-                intent = new Intent(this, MainActivity.class);
-            } else if (itemId == R.id.nav_categories) {
-                intent = new Intent(this, CategoriesActivity.class);
-            } else if (itemId == R.id.nav_favorites) {
-                intent = new Intent(this, FavoritesActivity.class);
-            } else if (itemId == R.id.nav_about) {
-                intent = new Intent(this, AboutActivity.class);
-            } else if (itemId == R.id.nav_account) {
-                intent = new Intent(this, ProfileActivity.class);
-            }
-
-            if (intent != null) {
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-                finish();
-                return true;
-            }
-            return false;
+            if (itemId == R.id.nav_home) startActivity(new Intent(this, MainActivity.class));
+            else if (itemId == R.id.nav_categories) startActivity(new Intent(this, CategoriesActivity.class));
+            else if (itemId == R.id.nav_favorites) startActivity(new Intent(this, FavoritesActivity.class));
+            else if (itemId == R.id.nav_about) startActivity(new Intent(this, AboutActivity.class));
+            else if (itemId == R.id.nav_account) startActivity(new Intent(this, ProfileActivity.class));
+            finish();
+            return true;
         });
     }
 }

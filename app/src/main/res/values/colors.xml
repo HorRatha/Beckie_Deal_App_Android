@@ -18,7 +18,13 @@
     <color name="card_bg_secondary">#F8FAFC</color>
     <color name="badge_bg">#FFF1EB</color>
 
-    <!-- Fixed Colors (Dont change in dark mode) -->
+    <!-- Bottom Nav Custom Style (Light Mode) -->
+    <color name="nav_bg">#FFFFFF</color>
+    <color name="nav_active_pill">#FFF1EB</color>
+    <color name="nav_active_item">#F97316</color>
+    <color name="nav_inactive_item">#94A3B8</color>
+
+    <!-- Fixed Colors -->
     <color name="orange_main">#F97316</color>
     <color name="white_fixed">#FFFFFF</color>
     <color name="black_fixed">#000000</color>
@@ -26,19 +32,12 @@
     <color name="red_error">#EF4444</color>
     <color name="yellow_star">#FFC107</color>
     
-    <!-- Specific helper colors for dark components in light mode -->
     <color name="dark_bg">#1E293B</color>
     <color name="dark_text">#94A3B8</color>
 
-    <!-- Compatibility/Old colors -->
+    <!-- Compatibility -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="secondary">#8F4D27</color>
-    <color name="secondary_container">#FDA77A</color>
     <color name="on_secondary">#FFFFFF</color>
-    <color name="on_secondary_container">#773A16</color>
-    <color name="surface_variant">#F6DED3</color>
-    <color name="on_surface_variant">#584237</color>
-    <color name="outline">#8C7164</color>
-    <color name="outline_variant">#E0C0B1</color>
 </resources>
