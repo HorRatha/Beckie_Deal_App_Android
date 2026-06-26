@@ -187,8 +187,22 @@ public class MainActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
-        bottomNav.setSelectedItemId(R.id.nav_home);
 
+        // Force transparent — Material3 theme overrides XML backgroundTint via colorSurfaceContainer
+        bottomNav.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        bottomNav.setItemActiveIndicatorColor(
+                android.content.res.ColorStateList.valueOf(
+                        androidx.core.content.ContextCompat.getColor(this, R.color.badge_bg)));
+
+        // Also force the card container to pure white so no theme tint leaks through
+        com.google.android.material.card.MaterialCardView container =
+                findViewById(R.id.bottomNavigationContainer);
+        if (container != null) {
+            container.setCardBackgroundColor(
+                    androidx.core.content.ContextCompat.getColor(this, R.color.surface));
+        }
+
+        bottomNav.setSelectedItemId(R.id.nav_home);
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {

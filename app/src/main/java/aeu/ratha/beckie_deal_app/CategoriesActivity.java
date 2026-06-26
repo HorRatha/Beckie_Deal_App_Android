@@ -184,6 +184,11 @@ public class CategoriesActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
+
+        bottomNav.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        com.google.android.material.card.MaterialCardView container = findViewById(R.id.bottomNavigationContainer);
+        if (container != null) container.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.surface));
+
         bottomNav.setSelectedItemId(R.id.nav_categories);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();

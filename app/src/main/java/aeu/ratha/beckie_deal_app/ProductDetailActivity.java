@@ -140,6 +140,11 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
+
+        bottomNav.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        com.google.android.material.card.MaterialCardView container = findViewById(R.id.bottomNavigationContainer);
+        if (container != null) container.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.surface));
+
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) startActivity(new Intent(this, MainActivity.class));

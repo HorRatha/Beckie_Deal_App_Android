@@ -73,6 +73,10 @@ public class ProfileActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
 
+        bottomNav.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        com.google.android.material.card.MaterialCardView container = findViewById(R.id.bottomNavigationContainer);
+        if (container != null) container.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.surface));
+
         bottomNav.setSelectedItemId(R.id.nav_account);
 
         bottomNav.setOnItemSelectedListener(item -> {
@@ -88,7 +92,6 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (itemId == R.id.nav_about) {
-                // Mapping about navigation to AboutActivity
                 startActivity(new Intent(this, AboutActivity.class));
                 overridePendingTransition(0, 0);
                 finish();
