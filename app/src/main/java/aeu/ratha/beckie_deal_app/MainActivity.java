@@ -65,9 +65,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupTopBar() {
         ImageView menuIcon = findViewById(R.id.menuIcon);
-        ImageView cartIcon = findViewById(R.id.cartIcon);
+        View cartContainer = findViewById(R.id.cartContainer);
+        TextView cartBadge = findViewById(R.id.cartBadge);
+
         if (menuIcon != null) menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu opened", Toast.LENGTH_SHORT).show());
-        if (cartIcon != null) cartIcon.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
+        if (cartContainer != null) cartContainer.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
+        updateCartBadge(cartBadge);
+    }
+
+    private void updateCartBadge(TextView badge) {
+        if (badge == null) return;
+        int count = CartManager.getInstance().getTotalUnits();
+        badge.setText(String.valueOf(count));
+        badge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
     }
 
     private void setupSearchBar() {

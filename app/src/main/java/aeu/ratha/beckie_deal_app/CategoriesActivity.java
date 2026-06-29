@@ -37,17 +37,24 @@ public class CategoriesActivity extends AppCompatActivity {
     private void setupTopBar() {
         ImageView menuIcon = findViewById(R.id.menuIcon);
         ImageView searchIcon = findViewById(R.id.searchIcon);
-        ImageView cartIcon = findViewById(R.id.cartIcon);
+        View cartContainer = findViewById(R.id.cartContainer);
+        TextView cartBadge = findViewById(R.id.cartBadge);
         TextView viewAllBrands = findViewById(R.id.viewAllBrands);
 
         if (menuIcon != null) menuIcon.setOnClickListener(v ->
                 Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
         if (searchIcon != null) searchIcon.setOnClickListener(v ->
                 Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show());
-        if (cartIcon != null) cartIcon.setOnClickListener(v ->
+        if (cartContainer != null) cartContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, CartActivity.class)));
         if (viewAllBrands != null) viewAllBrands.setOnClickListener(v ->
                 startActivity(new Intent(this, AllBrandsActivity.class)));
+
+        int count = CartManager.getInstance().getTotalUnits();
+        if (cartBadge != null) {
+            cartBadge.setText(String.valueOf(count));
+            cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void initBrandsData() {

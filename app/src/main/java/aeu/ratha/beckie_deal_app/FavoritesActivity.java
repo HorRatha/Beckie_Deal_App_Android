@@ -32,10 +32,17 @@ public class FavoritesActivity extends AppCompatActivity {
 
     private void setupTopBar() {
         ImageView menuIcon = findViewById(R.id.menuIcon);
-        ImageView cartIcon = findViewById(R.id.cartIcon);
+        View cartContainer = findViewById(R.id.cartContainer);
+        TextView cartBadge = findViewById(R.id.cartBadge);
 
         if (menuIcon != null) menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
-        if (cartIcon != null) cartIcon.setOnClickListener(v -> Toast.makeText(this, "Cart", Toast.LENGTH_SHORT).show());
+        if (cartContainer != null) cartContainer.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
+
+        int count = CartManager.getInstance().getTotalUnits();
+        if (cartBadge != null) {
+            cartBadge.setText(String.valueOf(count));
+            cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void displayFavorites() {
