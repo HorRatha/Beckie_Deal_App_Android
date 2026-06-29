@@ -52,12 +52,13 @@ public class CategoriesActivity extends AppCompatActivity {
 
     private void initBrandsData() {
         brandsList.clear();
-        brandsList.add(new Brand("ASUS", R.drawable.ic_brand_asus, false));
-        brandsList.add(new Brand("ROG",  R.drawable.ic_brand_rog,  true));
-        brandsList.add(new Brand("MacBook", R.drawable.ic_brand_apple, false));
-        brandsList.add(new Brand("TUF",  R.drawable.ic_brand_asus, false));
-        brandsList.add(new Brand("Dell", R.drawable.ic_brand_dell, false));
-        brandsList.add(new Brand("HP",   R.drawable.ic_brand_hp,   false));
+        brandsList.add(new Brand("Apple",     R.drawable.ic_brand_apple,     false));
+        brandsList.add(new Brand("ASUS",      R.drawable.ic_brand_asus,      true));
+        brandsList.add(new Brand("Dell",      R.drawable.ic_brand_dell,      false));
+        brandsList.add(new Brand("HP",        R.drawable.ic_brand_hp,        false));
+        brandsList.add(new Brand("Lenovo",    R.drawable.ic_brand_lenovo,    false));
+        brandsList.add(new Brand("Acer",      R.drawable.ic_brand_acer,      false));
+        brandsList.add(new Brand("Microsoft", R.drawable.ic_brand_microsoft, false));
     }
 
     private void setupLaptopBrands() {
@@ -123,6 +124,13 @@ public class CategoriesActivity extends AppCompatActivity {
                 for (int j = 0; j < brandsList.size(); j++)
                     brandsList.get(j).isSelected = (j == index);
                 renderBrands();
+                // Open CategoryDetailActivity pre-filtered to this brand
+                Intent intent = new Intent(this, CategoryDetailActivity.class);
+                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,     "Laptops");
+                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE,   "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop");
+                intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT,   "124 Items");
+                intent.putExtra(CategoryDetailActivity.EXTRA_BRAND_FILTER, brand.name);
+                startActivity(intent);
             });
 
             brandsGrid.addView(view);

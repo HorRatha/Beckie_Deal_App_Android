@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Razer three-headed snake / triple slash mark -->
+    <path
+        android:fillColor="#00D700"
+        android:pathData="M15,20 L45,20 L85,80 L55,80 Z" />
+    <path
+        android:fillColor="#00D700"
+        android:pathData="M30,20 L60,20 L100,80 L70,80 Z"
+        android:fillAlpha="0.55"/>
+    <path
+        android:fillColor="#00D700"
+        android:pathData="M0,20 L30,20 L70,80 L40,80 Z"
+        android:fillAlpha="0.35"/>
+</vector>

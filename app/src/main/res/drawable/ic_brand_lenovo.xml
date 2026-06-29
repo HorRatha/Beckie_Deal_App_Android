@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Lenovo "e" logo mark — angular stylised lowercase e -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="
+M20,50
+C20,33 33,20 50,20
+C67,20 80,33 80,50
+C80,52 79.5,54 79,56
+L38,56
+C39,62 44,66 50,66
+C55,66 59,63 61,59
+L77,59
+C73,70 62,78 50,78
+C33,78 20,65 20,50Z
+M38,44 L67,44
+C65,37 58,32 50,32
+C42,32 40,37 38,44Z" />
+</vector>

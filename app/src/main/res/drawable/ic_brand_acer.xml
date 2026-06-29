@@ -1,0 +1,33 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Acer stylised "a" lettermark -->
+    <path
+        android:fillColor="#83B81A"
+        android:pathData="
+M50,15
+C31,15 15,31 15,50
+C15,69 31,85 50,85
+C69,85 85,69 85,50
+C85,31 69,15 50,15Z
+M50,25
+C64,25 75,36 75,50
+C75,64 64,75 50,75
+C36,75 25,64 25,50
+C25,36 36,25 50,25Z" />
+    <path
+        android:fillColor="#83B81A"
+        android:pathData="
+M50,34
+C42,34 36,40 36,50
+C36,56 39,61 44,64
+L44,55
+C42,53 41,52 41,50
+C41,43 45,39 50,39
+C55,39 59,43 59,50
+L59,64
+C64,61 64,56 64,50
+C64,40 58,34 50,34Z" />
+</vector>

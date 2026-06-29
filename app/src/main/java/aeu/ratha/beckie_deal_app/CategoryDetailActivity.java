@@ -25,6 +25,7 @@ public class CategoryDetailActivity extends AppCompatActivity {
     public static final String EXTRA_CATEGORY   = "category_name";
     public static final String EXTRA_HERO_IMAGE = "category_image_url";
     public static final String EXTRA_ITEM_COUNT = "category_item_count";
+    public static final String EXTRA_BRAND_FILTER = "brand_filter";
 
     private String currentBrandFilter = "All";
     private String currentCategoryName = "";
@@ -42,9 +43,11 @@ public class CategoryDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category_detail);
 
         currentCategoryName = getIntent().getStringExtra(EXTRA_CATEGORY);
-        String heroImageUrl = getIntent().getStringExtra(EXTRA_HERO_IMAGE);
-        String itemCount    = getIntent().getStringExtra(EXTRA_ITEM_COUNT);
+        String heroImageUrl  = getIntent().getStringExtra(EXTRA_HERO_IMAGE);
+        String itemCount     = getIntent().getStringExtra(EXTRA_ITEM_COUNT);
+        String brandFilter   = getIntent().getStringExtra(EXTRA_BRAND_FILTER);
         if (currentCategoryName == null) currentCategoryName = "Category";
+        if (brandFilter != null) currentBrandFilter = brandFilter;
 
         productsGrid         = findViewById(R.id.detailProductsGrid);
         resultsLabel         = findViewById(R.id.resultsLabel);
@@ -269,108 +272,136 @@ public class CategoryDetailActivity extends AppCompatActivity {
     private static Map<String, Map<String, List<MainActivity.Product>>> buildCatalogue() {
         Map<String, Map<String, List<MainActivity.Product>>> cat = new LinkedHashMap<>();
 
-        // ── LAPTOPS ──────────────────────────────────────────────────────────
+        // ── LAPTOPS — Apple, ASUS, Dell, HP, Lenovo, Acer, Microsoft ─────────
         Map<String, List<MainActivity.Product>> laptops = new LinkedHashMap<>();
         laptops.put("Apple", list(
-                p("MacBook Air M2",      "$1,199.00", "4.9", "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"),
-                p("MacBook Pro 14\"",    "$1,999.00", "4.8", "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&h=500&fit=crop"),
-                p("MacBook Pro M3 Max",  "$2,499.00", "5.0", "https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500&h=500&fit=crop")
+                p("MacBook Air M2",            "$1,199.00","4.9","https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"),
+                p("MacBook Pro 14\"",           "$1,999.00","4.8","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&h=500&fit=crop"),
+                p("MacBook Pro M3 Max",         "$2,499.00","5.0","https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500&h=500&fit=crop")
         ));
         laptops.put("ASUS", list(
-                p("ASUS ROG Strix G16",  "$1,499.00", "4.7", "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop"),
-                p("ASUS ZenBook 14",     "$849.00",   "4.6", "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=500&fit=crop"),
-                p("ASUS TUF Gaming A15", "$1,099.00", "4.5", "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&h=500&fit=crop")
+                p("ASUS ZenBook 14 OLED",       "$999.00", "4.7","https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=500&fit=crop"),
+                p("ASUS VivoBook 16X",           "$749.00", "4.5","https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&h=500&fit=crop"),
+                p("ASUS ProArt Studiobook",      "$1,799.00","4.8","https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=500&fit=crop")
         ));
         laptops.put("Dell", list(
-                p("Dell XPS 15",         "$1,749.00", "4.7", "https://images.unsplash.com/photo-1593642634367-d91a135587b5?w=500&h=500&fit=crop"),
-                p("Dell Inspiron 15",    "$699.00",   "4.4", "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=500&fit=crop")
+                p("Dell XPS 15",                "$1,749.00","4.7","https://images.unsplash.com/photo-1593642634367-d91a135587b5?w=500&h=500&fit=crop"),
+                p("Dell Inspiron 15 3000",       "$599.00", "4.3","https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=500&fit=crop"),
+                p("Dell Latitude 5540",          "$1,299.00","4.6","https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=500&h=500&fit=crop")
+        ));
+        laptops.put("HP", list(
+                p("HP Spectre x360 14",          "$1,449.00","4.7","https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"),
+                p("HP Pavilion 15",              "$679.00", "4.4","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&h=500&fit=crop"),
+                p("HP EliteBook 840 G10",        "$1,599.00","4.6","https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=500&fit=crop")
+        ));
+        laptops.put("Lenovo", list(
+                p("ThinkPad X1 Carbon Gen 11",   "$1,849.00","4.8","https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=500&h=500&fit=crop"),
+                p("IdeaPad Slim 5 Gen 8",        "$699.00", "4.5","https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=500&fit=crop"),
+                p("Lenovo Yoga 9i Gen 8",        "$1,299.00","4.7","https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500&h=500&fit=crop")
+        ));
+        laptops.put("Acer", list(
+                p("Acer Swift X 14",             "$999.00", "4.5","https://images.unsplash.com/photo-1593642634367-d91a135587b5?w=500&h=500&fit=crop"),
+                p("Acer Aspire 5",               "$549.00", "4.3","https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&h=500&fit=crop"),
+                p("Acer Predator Helios 16",     "$1,599.00","4.7","https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop")
+        ));
+        laptops.put("Microsoft", list(
+                p("Surface Laptop 5",            "$1,299.00","4.7","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&h=500&fit=crop"),
+                p("Surface Pro 9",               "$1,599.00","4.6","https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500&h=500&fit=crop"),
+                p("Surface Laptop Studio 2",     "$1,999.00","4.8","https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=500&h=500&fit=crop")
         ));
         cat.put("Laptops", laptops);
 
-        // ── SMARTPHONES ───────────────────────────────────────────────────────
+        // ── SMARTPHONES — Apple, Samsung, ASUS ───────────────────────────────
         Map<String, List<MainActivity.Product>> phones = new LinkedHashMap<>();
         phones.put("Apple", list(
-                p("iPhone 15 Pro",       "$999.00",   "4.9", "https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop"),
-                p("iPhone 15 Pro Max",   "$1,199.00", "4.9", "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=500&h=500&fit=crop"),
-                p("iPhone 14",           "$699.00",   "4.7", "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=500&h=500&fit=crop")
+                p("iPhone 15 Pro Max",          "$1,199.00","4.9","https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop"),
+                p("iPhone 15 Pro",              "$999.00",  "4.9","https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=500&h=500&fit=crop"),
+                p("iPhone 14",                  "$699.00",  "4.7","https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=500&h=500&fit=crop")
         ));
         phones.put("Samsung", list(
-                p("Samsung S24 Ultra",       "$1,299.00", "4.8", "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop"),
-                p("Samsung Galaxy Z Fold 5", "$1,799.00", "4.7", "https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=500&h=500&fit=crop"),
-                p("Samsung S24 FE",          "$599.00",   "4.5", "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500&h=500&fit=crop")
+                p("Samsung S24 Ultra",           "$1,299.00","4.8","https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop"),
+                p("Samsung Galaxy Z Fold 5",     "$1,799.00","4.7","https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=500&h=500&fit=crop"),
+                p("Samsung Galaxy A55",          "$449.00",  "4.5","https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500&h=500&fit=crop")
         ));
-        phones.put("Xiaomi", list(
-                p("Xiaomi 14 Ultra",     "$899.00",   "4.6", "https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=500&h=500&fit=crop"),
-                p("Redmi Note 13",       "$299.00",   "4.4", "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?w=500&h=500&fit=crop")
+        phones.put("ASUS", list(
+                p("ASUS ROG Phone 8 Pro",        "$1,099.00","4.7","https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=500&h=500&fit=crop"),
+                p("ASUS Zenfone 10",             "$699.00",  "4.6","https://images.unsplash.com/photo-1550399105-c4db5fb85c18?w=500&h=500&fit=crop")
         ));
         cat.put("Smartphones", phones);
 
-        // ── ACCESSORIES ───────────────────────────────────────────────────────
+        // ── ACCESSORIES — Microsoft, Dell, HP ────────────────────────────────
         Map<String, List<MainActivity.Product>> acc = new LinkedHashMap<>();
-        acc.put("Logitech", list(
-                p("MX Master 3S Mouse",    "$99.00",  "4.9", "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&h=500&fit=crop"),
-                p("G Pro X Keyboard",      "$149.00", "4.8", "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=500&h=500&fit=crop"),
-                p("C920 HD Webcam",        "$79.00",  "4.6", "https://images.unsplash.com/photo-1596558450268-9c27524ba856?w=500&h=500&fit=crop")
+        acc.put("Microsoft", list(
+                p("Microsoft Arc Mouse",        "$79.00",  "4.7","https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&h=500&fit=crop"),
+                p("Microsoft Ergonomic Kbd",    "$59.00",  "4.6","https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=500&h=500&fit=crop"),
+                p("Surface Dock 2",             "$259.00", "4.5","https://images.unsplash.com/photo-1625595339169-07bc2c10bb81?w=500&h=500&fit=crop")
         ));
-        acc.put("Samsung", list(
-                p("Samsung 65W USB-C Charger", "$49.00", "4.5", "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500&h=500&fit=crop"),
-                p("Samsung USB-C Hub",         "$69.00", "4.4", "https://images.unsplash.com/photo-1625595339169-07bc2c10bb81?w=500&h=500&fit=crop")
+        acc.put("Dell", list(
+                p("Dell 27 USB-C Monitor",      "$499.00", "4.6","https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=500&fit=crop"),
+                p("Dell Pro Webcam WB5023",     "$99.00",  "4.5","https://images.unsplash.com/photo-1596558450268-9c27524ba856?w=500&h=500&fit=crop"),
+                p("Dell WD19S USB-C Dock",      "$189.00", "4.4","https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=500&h=500&fit=crop")
         ));
-        acc.put("Anker", list(
-                p("Anker 10000mAh Power Bank",     "$39.00", "4.7", "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=500&h=500&fit=crop"),
-                p("Anker 140W GaN Charger",        "$55.00", "4.8", "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=500&h=500&fit=crop")
+        acc.put("HP", list(
+                p("HP 27f 4K Display",          "$449.00", "4.5","https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=500&h=500&fit=crop"),
+                p("HP Thunderbolt Dock G4",     "$219.00", "4.4","https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500&h=500&fit=crop")
         ));
         cat.put("Accessories", acc);
 
-        // ── AUDIO ─────────────────────────────────────────────────────────────
+        // ── AUDIO — Apple, Samsung, ASUS ─────────────────────────────────────
         Map<String, List<MainActivity.Product>> audio = new LinkedHashMap<>();
-        audio.put("Sony", list(
-                p("Sony WH-1000XM5",       "$349.00", "4.9", "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop"),
-                p("Sony WF-1000XM5",       "$299.00", "4.8", "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&h=500&fit=crop"),
-                p("Sony LinkBuds S",       "$149.00", "4.6", "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=500&fit=crop")
+        audio.put("Apple", list(
+                p("AirPods Pro 2nd Gen",        "$249.00", "4.9","https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&h=500&fit=crop"),
+                p("AirPods Max",                "$549.00", "4.8","https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop"),
+                p("AirPods 3rd Gen",            "$169.00", "4.7","https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=500&fit=crop")
         ));
-        audio.put("Bose", list(
-                p("Bose QuietComfort 45",  "$329.00", "4.8", "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=500&h=500&fit=crop"),
-                p("Bose SoundLink Flex",   "$149.00", "4.7", "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=500&fit=crop")
+        audio.put("Samsung", list(
+                p("Galaxy Buds 2 Pro",          "$229.00", "4.7","https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=500&h=500&fit=crop"),
+                p("Galaxy Buds FE",             "$99.00",  "4.5","https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&h=500&fit=crop")
         ));
-        audio.put("JBL", list(
-                p("JBL Charge 5",          "$179.00", "4.6", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop"),
-                p("JBL Tune 770NC",        "$99.00",  "4.5", "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&h=500&fit=crop")
+        audio.put("ASUS", list(
+                p("ROG Cetra True Wireless",    "$149.00", "4.6","https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop"),
+                p("ROG Delta S Wireless",       "$199.00", "4.7","https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=500&h=500&fit=crop")
         ));
         cat.put("Audio", audio);
 
-        // ── GAMING ────────────────────────────────────────────────────────────
+        // ── GAMING — ROG, MSI, Razer, Acer ───────────────────────────────────
         Map<String, List<MainActivity.Product>> gaming = new LinkedHashMap<>();
         gaming.put("ROG", list(
-                p("ROG Strix G16 2024",    "$1,799.00", "4.9", "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=500&h=500&fit=crop"),
-                p("ROG Ally Handheld",     "$699.00",   "4.7", "https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?w=500&h=500&fit=crop"),
-                p("ROG Swift OLED 27\"",   "$899.00",   "4.8", "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=500&fit=crop")
+                p("ROG Strix G16 2024",         "$1,799.00","4.9","https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=500&h=500&fit=crop"),
+                p("ROG Ally X Handheld",         "$799.00",  "4.8","https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?w=500&h=500&fit=crop"),
+                p("ROG Swift OLED 27\"",          "$899.00",  "4.8","https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=500&fit=crop")
         ));
         gaming.put("MSI", list(
-                p("MSI Titan GT77 HX",     "$2,299.00", "4.7", "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=500&h=500&fit=crop"),
-                p("MSI Raider GE78 HX",    "$1,899.00", "4.6", "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=500&h=500&fit=crop")
+                p("MSI Titan GT77 HX",           "$2,299.00","4.7","https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=500&h=500&fit=crop"),
+                p("MSI Raider GE78 HX",          "$1,899.00","4.6","https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=500&h=500&fit=crop"),
+                p("MSI Optix MAG274QRF",         "$399.00",  "4.5","https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=500&fit=crop")
         ));
         gaming.put("Razer", list(
-                p("Razer Blade 16",        "$2,799.00", "4.8", "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=500&fit=crop"),
-                p("Razer DeathAdder V3",   "$89.00",    "4.9", "https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=500&h=500&fit=crop"),
-                p("Razer BlackWidow V4",   "$139.00",   "4.7", "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=500&h=500&fit=crop")
+                p("Razer Blade 16 2024",         "$2,799.00","4.8","https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=500&fit=crop"),
+                p("Razer DeathAdder V3 Pro",     "$149.00",  "4.9","https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=500&h=500&fit=crop"),
+                p("Razer BlackWidow V4 Pro",     "$229.00",  "4.7","https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=500&h=500&fit=crop")
+        ));
+        gaming.put("Acer", list(
+                p("Acer Predator Helios 16",     "$1,599.00","4.7","https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop"),
+                p("Acer Nitro 5 AN515",          "$899.00",  "4.5","https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&h=500&fit=crop")
         ));
         cat.put("Gaming", gaming);
 
-        // ── WEARABLES ─────────────────────────────────────────────────────────
+        // ── WEARABLES — Apple, Samsung, Microsoft ────────────────────────────
         Map<String, List<MainActivity.Product>> wear = new LinkedHashMap<>();
         wear.put("Apple", list(
-                p("Apple Watch Ultra 2",   "$799.00", "4.9", "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop"),
-                p("Apple Watch Series 9",  "$399.00", "4.8", "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=500&h=500&fit=crop"),
-                p("Apple Watch SE Gen 2",  "$249.00", "4.6", "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&h=500&fit=crop")
+                p("Apple Watch Ultra 2",        "$799.00",  "4.9","https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop"),
+                p("Apple Watch Series 9",       "$399.00",  "4.8","https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=500&h=500&fit=crop"),
+                p("Apple Watch SE Gen 2",       "$249.00",  "4.6","https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&h=500&fit=crop")
         ));
         wear.put("Samsung", list(
-                p("Galaxy Watch 6 Classic","$399.00", "4.7", "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=500&h=500&fit=crop"),
-                p("Galaxy Watch 6",        "$299.00", "4.6", "https://images.unsplash.com/photo-1617043786394-f977fa12eddf?w=500&h=500&fit=crop")
+                p("Galaxy Watch 6 Classic",     "$399.00",  "4.7","https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=500&h=500&fit=crop"),
+                p("Galaxy Watch 6",             "$299.00",  "4.6","https://images.unsplash.com/photo-1617043786394-f977fa12eddf?w=500&h=500&fit=crop"),
+                p("Samsung Galaxy Fit 3",       "$99.00",   "4.4","https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=500&h=500&fit=crop")
         ));
-        wear.put("Garmin", list(
-                p("Garmin Fenix 7X Pro",   "$899.00", "4.8", "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&h=500&fit=crop"),
-                p("Garmin Venu 3",         "$449.00", "4.7", "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=500&h=500&fit=crop")
+        wear.put("Microsoft", list(
+                p("Surface Duo 2",              "$799.00",  "4.3","https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=500&h=500&fit=crop"),
+                p("Microsoft Band 2",           "$149.00",  "4.2","https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&h=500&fit=crop")
         ));
         cat.put("Wearables", wear);
 
