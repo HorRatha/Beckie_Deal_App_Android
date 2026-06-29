@@ -68,7 +68,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void updateCartUI() {
         if (cartBadgeView == null) return;
-        int count = CartManager.getInstance().getCartCount();
+        int count = CartManager.getInstance().getTotalUnits();
         cartBadgeView.setText(String.valueOf(count));
         cartBadgeView.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
     }
@@ -285,12 +285,38 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     // ── Actions ───────────────────────────────────────────────────────────────
 
+    // Tracks quantity chosen on the detail screen (resets each time the screen opens)
+    private int selectedQuantity = 1;
+
     private void setupActions() {
+        // ── Quantity stepper ──────────────────────────────────────────────────
+        TextView quantityValue = findViewById(R.id.quantityValue);
+        View decrement = findViewById(R.id.quantityDecrement);
+        View increment = findViewById(R.id.quantityIncrement);
+
+        if (quantityValue != null) quantityValue.setText(String.valueOf(selectedQuantity));
+
+        if (decrement != null) decrement.setOnClickListener(v -> {
+            if (selectedQuantity > 1) {
+                selectedQuantity--;
+                if (quantityValue != null) quantityValue.setText(String.valueOf(selectedQuantity));
+            }
+        });
+
+        if (increment != null) increment.setOnClickListener(v -> {
+            selectedQuantity++;
+            if (quantityValue != null) quantityValue.setText(String.valueOf(selectedQuantity));
+        });
+
+        // ── Add to cart ───────────────────────────────────────────────────────
         View addToCart = findViewById(R.id.addToCartButton);
         if (addToCart != null) addToCart.setOnClickListener(v -> {
-            CartManager.getInstance().addToCart(currentProduct);
+            CartManager.getInstance().addToCart(currentProduct, selectedQuantity);
             updateCartUI();
-            Toast.makeText(this, "Added to cart!", Toast.LENGTH_SHORT).show();
+            String msg = selectedQuantity == 1
+                    ? "Added to cart!"
+                    : selectedQuantity + "× added to cart!";
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         });
 
         View favBtn = findViewById(R.id.favoriteButton);

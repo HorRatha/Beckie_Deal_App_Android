@@ -110,13 +110,12 @@
                     android:backgroundTint="@color/primary"/>
             </LinearLayout>
 
-            <!-- Cart Items Grid -->
-            <GridLayout
-                android:id="@+id/cartItemsGrid"
+            <!-- Cart Items List -->
+            <LinearLayout
+                android:id="@+id/cartItemsList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alignmentMode="alignMargins"
-                android:columnCount="2" />
+                android:orientation="vertical" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

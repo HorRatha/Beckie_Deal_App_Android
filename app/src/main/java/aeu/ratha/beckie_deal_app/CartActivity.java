@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +19,6 @@ public class CartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-
         setupTopBar();
         displayCartItems();
         setupCheckoutButton();
@@ -27,73 +26,120 @@ public class CartActivity extends AppCompatActivity {
 
     private void setupTopBar() {
         ImageView backButton = findViewById(R.id.backButton);
-        if (backButton != null) {
-            backButton.setOnClickListener(v -> finish());
-        }
+        if (backButton != null) backButton.setOnClickListener(v -> finish());
     }
 
     private void setupCheckoutButton() {
         View checkoutButton = findViewById(R.id.checkoutButton);
         if (checkoutButton != null) {
-            checkoutButton.setOnClickListener(v -> {
-                Intent intent = new Intent(this, PayoutActivity.class);
-                startActivity(intent);
-            });
+            checkoutButton.setOnClickListener(v ->
+                    startActivity(new Intent(this, PayoutActivity.class)));
         }
     }
 
     private void displayCartItems() {
-        List<MainActivity.Product> cartItems = CartManager.getInstance().getCartItems();
-        GridLayout cartGrid = findViewById(R.id.cartItemsGrid);
-        View emptyState = findViewById(R.id.emptyState);
-        View checkoutSection = findViewById(R.id.checkoutSection);
-        TextView totalPriceText = findViewById(R.id.totalPriceText);
+        List<CartManager.CartItem> cartItems = CartManager.getInstance().getCartItems();
+        LinearLayout cartList = findViewById(R.id.cartItemsList);
+        View emptyState       = findViewById(R.id.emptyState);
+        View checkoutSection  = findViewById(R.id.checkoutSection);
+        TextView totalText    = findViewById(R.id.totalPriceText);
 
         if (cartItems.isEmpty()) {
             emptyState.setVisibility(View.VISIBLE);
-            cartGrid.setVisibility(View.GONE);
+            cartList.setVisibility(View.GONE);
             checkoutSection.setVisibility(View.GONE);
-            findViewById(R.id.startShoppingButton).setOnClickListener(v -> {
+            View shopBtn = findViewById(R.id.startShoppingButton);
+            if (shopBtn != null) shopBtn.setOnClickListener(v -> {
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
             });
         } else {
             emptyState.setVisibility(View.GONE);
-            cartGrid.setVisibility(View.VISIBLE);
+            cartList.setVisibility(View.VISIBLE);
             checkoutSection.setVisibility(View.VISIBLE);
-            cartGrid.removeAllViews();
+            cartList.removeAllViews();
 
-            for (int i = 0; i < cartItems.size(); i++) {
-                MainActivity.Product product = cartItems.get(i);
-                View productView = LayoutInflater.from(this).inflate(R.layout.product_card, cartGrid, false);
-
-                ImageView productImage = productView.findViewById(R.id.productImage);
-                ImageView favoriteIcon = productView.findViewById(R.id.favoriteIcon);
-                TextView productName = productView.findViewById(R.id.productName);
-                TextView productPrice = productView.findViewById(R.id.productPrice);
-                TextView productRating = productView.findViewById(R.id.productRating);
-
-                productName.setText(product.name);
-                productPrice.setText(product.price);
-                productRating.setText(product.rating + " (1.2k)");
-
-                Glide.with(this).load(product.imageUrl).centerCrop().placeholder(R.drawable.placeholder_image).into(productImage);
-
-                // Setup behavior: remove from cart
-                favoriteIcon.setImageResource(android.R.drawable.ic_menu_delete);
-                favoriteIcon.setColorFilter(0xFFEF4444);
-
-                final int position = i;
-                favoriteIcon.setOnClickListener(v -> {
-                    CartManager.getInstance().removeFromCart(cartItems.get(position));
-                    displayCartItems();
-                    Toast.makeText(this, "Removed from cart", Toast.LENGTH_SHORT).show();
-                });
-
-                cartGrid.addView(productView);
+            for (CartManager.CartItem item : cartItems) {
+                inflateCartItem(cartList, item);
             }
 
-            totalPriceText.setText(String.format(Locale.US, "$%.2f", CartManager.getInstance().getTotalPrice()));
+            updateTotal(totalText);
         }
+    }
+
+    private void inflateCartItem(LinearLayout parent, CartManager.CartItem item) {
+        View v = LayoutInflater.from(this).inflate(R.layout.item_cart, parent, false);
+
+        ImageView image       = v.findViewById(R.id.cartItemImage);
+        TextView  name        = v.findViewById(R.id.cartItemName);
+        TextView  unitPrice   = v.findViewById(R.id.cartItemUnitPrice);
+        TextView  quantityTv  = v.findViewById(R.id.cartItemQuantity);
+        TextView  subtotalTv  = v.findViewById(R.id.cartItemSubtotal);
+        ImageView decrement   = v.findViewById(R.id.cartItemDecrement);
+        ImageView increment   = v.findViewById(R.id.cartItemIncrement);
+        ImageView removeBtn   = v.findViewById(R.id.cartItemRemove);
+
+        // Bind static data
+        name.setText(item.product.name);
+        String priceLabel = item.product.price != null ? item.product.price + " / unit" : "";
+        unitPrice.setText(priceLabel);
+
+        Glide.with(this)
+                .load(item.product.imageUrl)
+                .centerCrop()
+                .placeholder(R.drawable.placeholder_image)
+                .into(image);
+
+        // Bind dynamic data
+        refreshItemRow(item, quantityTv, subtotalTv);
+
+        // ── Increment ──────────────────────────────────────────────────────
+        increment.setOnClickListener(btn -> {
+            CartManager.getInstance().incrementQuantity(item.product);
+            refreshItemRow(item, quantityTv, subtotalTv);
+            updateTotal(findViewById(R.id.totalPriceText));
+        });
+
+        // ── Decrement ──────────────────────────────────────────────────────
+        decrement.setOnClickListener(btn -> {
+            if (item.quantity <= 1) {
+                // Last unit — remove from cart entirely
+                CartManager.getInstance().removeFromCart(item.product);
+                Toast.makeText(this, "Removed from cart", Toast.LENGTH_SHORT).show();
+                displayCartItems();   // full re-render to handle empty state
+            } else {
+                CartManager.getInstance().decrementQuantity(item.product);
+                refreshItemRow(item, quantityTv, subtotalTv);
+                updateTotal(findViewById(R.id.totalPriceText));
+            }
+        });
+
+        // ── Remove ─────────────────────────────────────────────────────────
+        removeBtn.setOnClickListener(btn -> {
+            CartManager.getInstance().removeFromCart(item.product);
+            Toast.makeText(this, "Removed from cart", Toast.LENGTH_SHORT).show();
+            displayCartItems();
+        });
+
+        parent.addView(v);
+    }
+
+    /** Update the quantity label and subtotal for a single cart row (no full re-render). */
+    private void refreshItemRow(CartManager.CartItem item, TextView quantityTv, TextView subtotalTv) {
+        quantityTv.setText(String.valueOf(item.quantity));
+        try {
+            String priceStr = item.product.price.replace("$", "").replace(",", "");
+            double subtotal = Double.parseDouble(priceStr) * item.quantity;
+            subtotalTv.setText(String.format(Locale.US, "$%.2f", subtotal));
+        } catch (Exception e) {
+            subtotalTv.setText(item.product.price != null ? item.product.price : "");
+        }
+    }
+
+    /** Refresh the grand total text in the checkout bar. */
+    private void updateTotal(TextView totalText) {
+        if (totalText == null) return;
+        totalText.setText(String.format(Locale.US, "$%.2f",
+                CartManager.getInstance().getTotalPrice()));
     }
 }
