@@ -3,12 +3,14 @@ package aeu.ratha.beckie_deal_app;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -19,54 +21,56 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         setupTopBar();
-        setupActionButtons();
+        setupAuthButtons();
         setupDarkModeSwitch();
+        setupSettingsRows();
         setupBottomNavigation();
     }
 
     private void setupTopBar() {
         ImageView menuIcon = findViewById(R.id.menuIcon);
         ImageView cartIcon = findViewById(R.id.cartIcon);
-
-        if (menuIcon != null) menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
-        if (cartIcon != null) cartIcon.setOnClickListener(v -> {
-            startActivity(new Intent(this, CartActivity.class));
-        });
+        if (menuIcon != null) menuIcon.setOnClickListener(v ->
+                Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
+        if (cartIcon != null) cartIcon.setOnClickListener(v ->
+                startActivity(new Intent(this, CartActivity.class)));
     }
 
-    private void setupActionButtons() {
-        Button loginButton = findViewById(R.id.loginButton);
-        Button registerButton = findViewById(R.id.registerButton);
+    private void setupAuthButtons() {
+        MaterialButton loginButton    = findViewById(R.id.loginButton);
+        MaterialButton registerButton = findViewById(R.id.registerButton);
 
-        if (loginButton != null) {
-            loginButton.setOnClickListener(v -> {
-                // Login action
-            });
-        }
-        
-        if (registerButton != null) {
-            registerButton.setOnClickListener(v -> {
-                // Register action
-            });
-        }
+        if (loginButton != null) loginButton.setOnClickListener(v ->
+                startActivity(new Intent(this, LoginActivity.class)));
+        if (registerButton != null) registerButton.setOnClickListener(v ->
+                startActivity(new Intent(this, RegisterActivity.class)));
     }
 
     private void setupDarkModeSwitch() {
-        // Changed to MaterialSwitch to match activity_profile.xml and fix compilation
         MaterialSwitch darkModeSwitch = findViewById(R.id.darkModeSwitch);
         if (darkModeSwitch == null) return;
 
-        // Set current state based on system configuration
-        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        int currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
         darkModeSwitch.setChecked(currentNightMode == Configuration.UI_MODE_NIGHT_YES);
 
-        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            }
-        });
+        darkModeSwitch.setOnCheckedChangeListener((btn, isChecked) ->
+                AppCompatDelegate.setDefaultNightMode(isChecked
+                        ? AppCompatDelegate.MODE_NIGHT_YES
+                        : AppCompatDelegate.MODE_NIGHT_NO));
+    }
+
+    private void setupSettingsRows() {
+        LinearLayout languageRow = findViewById(R.id.languageRow);
+        LinearLayout privacyRow  = findViewById(R.id.privacyRow);
+        LinearLayout termsRow    = findViewById(R.id.termsRow);
+
+        if (languageRow != null) languageRow.setOnClickListener(v ->
+                Toast.makeText(this, "Language settings", Toast.LENGTH_SHORT).show());
+        if (privacyRow != null) privacyRow.setOnClickListener(v ->
+                Toast.makeText(this, "Privacy Policy", Toast.LENGTH_SHORT).show());
+        if (termsRow != null) termsRow.setOnClickListener(v ->
+                Toast.makeText(this, "Terms of Service", Toast.LENGTH_SHORT).show());
     }
 
     private void setupBottomNavigation() {
@@ -74,37 +78,27 @@ public class ProfileActivity extends AppCompatActivity {
         if (bottomNav == null) return;
 
         bottomNav.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-        com.google.android.material.card.MaterialCardView container = findViewById(R.id.bottomNavigationContainer);
-        if (container != null) container.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.surface));
+        MaterialCardView container = findViewById(R.id.bottomNavigationContainer);
+        if (container != null) container.setCardBackgroundColor(
+                androidx.core.content.ContextCompat.getColor(this, R.color.surface));
 
         bottomNav.setSelectedItemId(R.id.nav_account);
-
         bottomNav.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
                 startActivity(new Intent(this, MainActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_categories) {
+            } else if (id == R.id.nav_categories) {
                 startActivity(new Intent(this, CategoriesActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_about) {
-                startActivity(new Intent(this, AboutActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_favorites) {
+            } else if (id == R.id.nav_favorites) {
                 startActivity(new Intent(this, FavoritesActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_account) {
+            } else if (id == R.id.nav_about) {
+                startActivity(new Intent(this, AboutActivity.class));
+            } else {
                 return true;
             }
-            return false;
+            overridePendingTransition(0, 0);
+            finish();
+            return true;
         });
     }
 }

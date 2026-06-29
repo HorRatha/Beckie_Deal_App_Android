@@ -41,6 +41,9 @@
             android:name=".AllBrandsActivity"
             android:exported="false" />
         <activity
+            android:name=".CategoryDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".CartActivity"
             android:exported="false" />
         <activity

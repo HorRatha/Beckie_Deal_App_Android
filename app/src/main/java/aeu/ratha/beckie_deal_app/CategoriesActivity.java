@@ -175,8 +175,13 @@ public class CategoriesActivity extends AppCompatActivity {
                     .placeholder(R.drawable.placeholder_image)
                     .into(bgImage);
 
-            view.setOnClickListener(v ->
-                    Toast.makeText(this, "Opening " + item.name, Toast.LENGTH_SHORT).show());
+            view.setOnClickListener(v -> {
+                Intent intent = new Intent(this, CategoryDetailActivity.class);
+                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,   item.name);
+                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, item.imageUrl);
+                intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT, item.count);
+                startActivity(intent);
+            });
             allCategoriesGrid.addView(view);
         }
     }

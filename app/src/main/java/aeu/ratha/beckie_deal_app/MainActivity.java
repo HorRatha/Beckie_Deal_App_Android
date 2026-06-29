@@ -105,11 +105,20 @@ public class MainActivity extends AppCompatActivity {
             }
 
             categoryView.setOnClickListener(v -> {
-                if (category.name.equals("Laptops")) {
-                    startActivity(new Intent(MainActivity.this, CategoriesActivity.class));
-                } else {
-                    Toast.makeText(this, "Category: " + category.name, Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(MainActivity.this, CategoryDetailActivity.class);
+                String heroUrl = "";
+                if      (category.name.equals("Laptops"))     heroUrl = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop";
+                else if (category.name.equals("Phones"))      heroUrl = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop";
+                else if (category.name.equals("Accessories")) heroUrl = "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop";
+                else if (category.name.equals("Gaming"))      heroUrl = "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop";
+                else if (category.name.equals("Wearables"))   heroUrl = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop";
+
+                // Map home-screen category names to detail-page names
+                String detailName = category.name.equals("Phones") ? "Smartphones" : category.name;
+
+                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,   detailName);
+                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, heroUrl);
+                startActivity(intent);
             });
 
             categoriesContainer.addView(categoryView);
