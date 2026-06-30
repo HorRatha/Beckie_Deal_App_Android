@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         setupCategories();
         setupProducts();
         setupNewArrivalsBanner();
+        setupNewCollectionSection();
+        setupTopSellingSection();
         setupBottomNavigation();
     }
 
@@ -199,8 +202,130 @@ public class MainActivity extends AppCompatActivity {
     private void setupNewArrivalsBanner() {
         Button discoverButton = findViewById(R.id.discoverButton);
         if (discoverButton != null) {
-            discoverButton.setOnClickListener(v -> Toast.makeText(this, "Discover New Arrivals!", Toast.LENGTH_SHORT).show());
+            discoverButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ProductListActivity.class);
+                intent.putExtra(ProductListActivity.EXTRA_MODE, ProductListActivity.MODE_NEW_COLLECTION);
+                startActivity(intent);
+            });
         }
+    }
+
+    // ── New Collection horizontal scroll ──────────────────────────────────────
+
+    private void setupNewCollectionSection() {
+        TextView viewAll = findViewById(R.id.viewAllNewCollection);
+        if (viewAll != null) viewAll.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProductListActivity.class);
+            intent.putExtra(ProductListActivity.EXTRA_MODE, ProductListActivity.MODE_NEW_COLLECTION);
+            startActivity(intent);
+        });
+
+        LinearLayout container = findViewById(R.id.newCollectionContainer);
+        if (container == null) return;
+        container.removeAllViews();
+
+        // New Collection = high-end products (price >= $800), show first 5
+        List<Product> newItems = new ArrayList<>();
+        for (java.util.Map<String, List<Product>> brandMap
+                : CategoryDetailActivity.CATALOGUE.values()) {
+            for (List<Product> list : brandMap.values()) {
+                for (Product p : list) {
+                    double price = parsePrice(p.price);
+                    if (price >= 800) newItems.add(p);
+                }
+            }
+        }
+        // Sort by price descending (newest/flagship feel)
+        java.util.Collections.sort(newItems, (a, b) ->
+                Double.compare(parsePrice(b.price), parsePrice(a.price)));
+
+        int limit = Math.min(newItems.size(), 6);
+        for (int i = 0; i < limit; i++) {
+            addHorizontalProductCard(container, newItems.get(i));
+        }
+    }
+
+    // ── Top Selling horizontal scroll ─────────────────────────────────────────
+
+    private void setupTopSellingSection() {
+        TextView viewAll = findViewById(R.id.viewAllTopSelling);
+        if (viewAll != null) viewAll.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProductListActivity.class);
+            intent.putExtra(ProductListActivity.EXTRA_MODE, ProductListActivity.MODE_TOP_SELLING);
+            startActivity(intent);
+        });
+
+        LinearLayout container = findViewById(R.id.topSellingContainer);
+        if (container == null) return;
+        container.removeAllViews();
+
+        // Top Selling = rating >= 4.7, show first 6
+        List<Product> topItems = new ArrayList<>();
+        for (java.util.Map<String, List<Product>> brandMap
+                : CategoryDetailActivity.CATALOGUE.values()) {
+            for (List<Product> list : brandMap.values()) {
+                for (Product p : list) {
+                    if (Double.parseDouble(p.rating) >= 4.7) topItems.add(p);
+                }
+            }
+        }
+        // Sort by rating descending
+        java.util.Collections.sort(topItems, (a, b) ->
+                Double.compare(Double.parseDouble(b.rating), Double.parseDouble(a.rating)));
+
+        int limit = Math.min(topItems.size(), 6);
+        for (int i = 0; i < limit; i++) {
+            addHorizontalProductCard(container, topItems.get(i));
+        }
+    }
+
+    private void addHorizontalProductCard(LinearLayout container, Product product) {
+        View view = LayoutInflater.from(this)
+                .inflate(R.layout.item_product_horizontal, container, false);
+
+        ImageView imgView   = view.findViewById(R.id.productImage);
+        ImageView favIcon   = view.findViewById(R.id.favoriteIcon);
+        TextView  nameView  = view.findViewById(R.id.productName);
+        TextView  priceView = view.findViewById(R.id.productPrice);
+        TextView  ratingView= view.findViewById(R.id.productRating);
+
+        nameView.setText(product.name);
+        priceView.setText(product.price);
+        ratingView.setText(product.rating);
+
+        product.isFavorite = FavoriteManager.getInstance().isFavorite(product);
+        favIcon.setImageResource(product.isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+        favIcon.setColorFilter(ContextCompat.getColor(this,
+                product.isFavorite ? R.color.red_error : R.color.text_secondary));
+
+        Glide.with(this).load(product.imageUrl).centerCrop()
+             .placeholder(R.drawable.placeholder_image).into(imgView);
+
+        view.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProductDetailActivity.class);
+            intent.putExtra("product_name",   product.name);
+            intent.putExtra("product_price",  product.price);
+            intent.putExtra("product_image",  product.imageUrl);
+            intent.putExtra("product_rating", product.rating);
+            startActivity(intent);
+        });
+
+        favIcon.setOnClickListener(v -> {
+            product.isFavorite = !product.isFavorite;
+            if (product.isFavorite) FavoriteManager.getInstance().addFavorite(product);
+            else FavoriteManager.getInstance().removeFavorite(product);
+            favIcon.setImageResource(product.isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+            favIcon.setColorFilter(ContextCompat.getColor(this,
+                    product.isFavorite ? R.color.red_error : R.color.text_secondary));
+        });
+
+        container.addView(view);
+    }
+
+    private double parsePrice(String price) {
+        try {
+            return Double.parseDouble(price.replace("$", "").replace(",", ""));
+        } catch (NumberFormatException e) { return 0; }
     }
 
     private void setupBottomNavigation() {

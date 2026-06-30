@@ -4,11 +4,11 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
     <!--
-        MDI: watch  (mdi:watch)
-        Apache 2.0 — Pictogrammers / Material Design Icons
-        Path: https://pictogrammers.com/library/mdi/icon/watch/
+        Google Material Icons — watch (baseline)
+        Apache 2.0 License © Google
+        https://fonts.google.com/icons?icon.query=watch
     -->
     <path
         android:fillColor="#F97316"
-        android:pathData="M9,1H15L16,5H8L9,1M15,23H9L8,19H16L15,23M20,5H4A2,2 0 0,0 2,7V17A2,2 0 0,0 4,19H20A2,2 0 0,0 22,17V7A2,2 0 0,0 20,5M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12.5,12.25L15,13.69L14.25,14.91L11,13V8H12.5V12.25Z" />
+        android:pathData="M20,12c0,-2.54 -1.19,-4.81 -3.04,-6.27L16,2H8L7.04,5.73C5.19,7.19 4,9.46 4,12s1.19,4.81 3.04,6.27L8,22h8l0.96,-3.73C18.81,16.81 20,14.54 20,12zM12,17c-2.76,0 -5,-2.24 -5,-5s2.24,-5 5,-5s5,2.24 5,5S14.76,17 12,17zM12.5,12.25l2.5,1.44l-0.75,1.23L11,13V8h1.5V12.25z" />
 </vector>

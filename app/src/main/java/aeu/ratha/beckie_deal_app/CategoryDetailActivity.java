@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,13 @@ public class CategoryDetailActivity extends AppCompatActivity {
     private TextView cartBadge;
     private LinearLayout brandFilterContainer;
 
-    // Full catalogue: category → brand → product list
-    private static final Map<String, Map<String, List<MainActivity.Product>>> CATALOGUE = buildCatalogue();
+    // Filter state (from FilterBottomSheet)
+    private String currentSort     = FilterBottomSheet.SORT_DEFAULT;
+    private String currentYear     = "All";
+    private int    currentMaxPrice = 3000;
+
+    // Full catalogue: category → brand → product list (public so ProductListActivity can reuse it)
+    public static final Map<String, Map<String, List<MainActivity.Product>>> CATALOGUE = buildCatalogue();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +62,12 @@ public class CategoryDetailActivity extends AppCompatActivity {
         setupTopBar();
         setupHero(heroImageUrl, itemCount);
         setupBrandFilters();
-        loadProducts("All");
+
+        // Wire Filter & Sort button
+        View sortBtn = findViewById(R.id.sortButton);
+        if (sortBtn != null) sortBtn.setOnClickListener(v -> openFilterSheet());
+
+        loadProducts(currentBrandFilter);
         setupBottomNavigation();
     }
 
@@ -162,17 +173,80 @@ public class CategoryDetailActivity extends AppCompatActivity {
             }
         }
 
+        // Apply year filter (price-band simulation since products have no real year field)
+        if (!"All".equals(currentYear)) {
+            int y = Integer.parseInt(currentYear);
+            int minP = (y - 2010) * 100;
+            int maxP = minP + 400;
+            List<MainActivity.Product> yearFiltered = new ArrayList<>();
+            for (MainActivity.Product p : filtered) {
+                double price = parsePrice(p.price);
+                if (price >= minP && price <= maxP) yearFiltered.add(p);
+            }
+            if (!yearFiltered.isEmpty()) filtered = yearFiltered;
+        }
+
+        // Apply max price filter
+        List<MainActivity.Product> priceFiltered = new ArrayList<>();
+        for (MainActivity.Product p : filtered) {
+            if (parsePrice(p.price) <= currentMaxPrice) priceFiltered.add(p);
+        }
+        filtered = priceFiltered;
+
+        // Apply sort
+        switch (currentSort) {
+            case FilterBottomSheet.SORT_PRICE_LOW:
+                Collections.sort(filtered, (a, b) ->
+                        Double.compare(parsePrice(a.price), parsePrice(b.price)));
+                break;
+            case FilterBottomSheet.SORT_PRICE_HIGH:
+                Collections.sort(filtered, (a, b) ->
+                        Double.compare(parsePrice(b.price), parsePrice(a.price)));
+                break;
+            case FilterBottomSheet.SORT_TOP_RATED:
+                Collections.sort(filtered, (a, b) ->
+                        Double.compare(Double.parseDouble(b.rating), Double.parseDouble(a.rating)));
+                break;
+            default:
+                break;
+        }
+
         // Sync favorite state from FavoriteManager
         for (MainActivity.Product p : filtered)
             p.isFavorite = FavoriteManager.getInstance().isFavorite(p);
 
+        // Build results label
         if (resultsLabel != null) {
-            resultsLabel.setText("All".equals(brandFilter)
-                    ? "Showing all " + filtered.size() + " products"
-                    : filtered.size() + " products · " + brandFilter);
+            StringBuilder label = new StringBuilder();
+            label.append(filtered.size()).append(" products");
+            if (!"All".equals(brandFilter)) label.append(" · ").append(brandFilter);
+            if (!currentSort.equals(FilterBottomSheet.SORT_DEFAULT))
+                label.append(" · ").append(currentSort);
+            if (!currentYear.equals("All")) label.append(" · ").append(currentYear);
+            if (currentMaxPrice < 3000) label.append(" · ≤$").append(currentMaxPrice);
+            resultsLabel.setText(label.toString());
         }
 
         renderProducts(filtered);
+    }
+
+    /** Open the filter bottom sheet. */
+    private void openFilterSheet() {
+        FilterBottomSheet sheet = FilterBottomSheet.newInstance(
+                currentSort, currentYear, currentMaxPrice);
+        sheet.setFilterListener((sortBy, year, maxPrice) -> {
+            currentSort     = sortBy;
+            currentYear     = year;
+            currentMaxPrice = maxPrice;
+            loadProducts(currentBrandFilter);
+        });
+        sheet.show(getSupportFragmentManager(), "filter");
+    }
+
+    private double parsePrice(String price) {
+        try {
+            return Double.parseDouble(price.replace("$", "").replace(",", ""));
+        } catch (NumberFormatException e) { return 0; }
     }
 
     private void renderProducts(List<MainActivity.Product> products) {

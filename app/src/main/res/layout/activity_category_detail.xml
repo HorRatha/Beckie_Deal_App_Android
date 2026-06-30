@@ -179,12 +179,20 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/sortButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sort ↓"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:drawableStart="@drawable/ic_filter"
+                    android:drawablePadding="4dp"
+                    android:text="Filter &amp; Sort"
                     android:textColor="@color/primary"
                     android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="6dp"
+                    android:background="@drawable/chip_unselected" />
             </LinearLayout>
 
             <!-- Products grid -->
