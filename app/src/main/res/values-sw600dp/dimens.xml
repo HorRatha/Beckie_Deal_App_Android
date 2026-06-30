@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tablet overrides (>= 600dp smallest width — small tablet / large phone landscape) -->
+<resources>
+    <!-- Section headers — larger text -->
+    <dimen name="section_title_size">22sp</dimen>
+    <dimen name="section_subtitle_size">14sp</dimen>
+    <dimen name="page_title_size">28sp</dimen>
+
+    <!-- Hero banners — taller on tablets -->
+    <dimen name="hero_banner_height">260dp</dimen>
+    <dimen name="hero_banner_height_detail">220dp</dimen>
+    <dimen name="hero_banner_height_product">380dp</dimen>
+
+    <!-- Product grid — 3 columns on tablet -->
+    <dimen name="product_grid_columns">3</dimen>
+    <dimen name="product_image_height">200dp</dimen>
+    <dimen name="product_card_margin">8dp</dimen>
+
+    <!-- Horizontal scroll card — wider on tablet -->
+    <dimen name="h_card_width">210dp</dimen>
+    <dimen name="h_card_height">280dp</dimen>
+    <dimen name="h_card_image_height">150dp</dimen>
+
+    <!-- Category grid card -->
+    <dimen name="category_card_height">200dp</dimen>
+
+    <!-- Toolbar -->
+    <dimen name="toolbar_height">72dp</dimen>
+
+    <!-- Spacing -->
+    <dimen name="page_margin">24dp</dimen>
+    <dimen name="card_inner_padding">16dp</dimen>
+    <dimen name="section_spacing">32dp</dimen>
+
+    <!-- Bottom nav — wider margins on tablet -->
+    <dimen name="bottom_nav_side_margin">80dp</dimen>
+    <dimen name="bottom_nav_bottom_margin">24dp</dimen>
+    <dimen name="bottom_nav_corner_radius">36dp</dimen>
+</resources>

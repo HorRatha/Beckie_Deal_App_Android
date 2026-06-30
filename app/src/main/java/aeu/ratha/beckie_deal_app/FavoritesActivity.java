@@ -58,6 +58,8 @@ public class FavoritesActivity extends AppCompatActivity {
                 finish();
             });
         } else {
+            // Responsive column count
+            favoritesGrid.setColumnCount(ScreenUtils.productGridColumns(this));
             emptyState.setVisibility(View.GONE);
             favoritesGrid.setVisibility(View.VISIBLE);
             favoritesGrid.removeAllViews();

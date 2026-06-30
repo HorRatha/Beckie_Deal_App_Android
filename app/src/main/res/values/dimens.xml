@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Phone defaults (< 600dp smallest width) -->
+<resources>
+    <!-- Section headers -->
+    <dimen name="section_title_size">18sp</dimen>
+    <dimen name="section_subtitle_size">12sp</dimen>
+    <dimen name="page_title_size">22sp</dimen>
+
+    <!-- Hero banners -->
+    <dimen name="hero_banner_height">180dp</dimen>
+    <dimen name="hero_banner_height_detail">160dp</dimen>
+    <dimen name="hero_banner_height_product">280dp</dimen>
+
+    <!-- Product grid -->
+    <dimen name="product_grid_columns">2</dimen>   <!-- informational only, used in Java -->
+    <dimen name="product_image_height">150dp</dimen>
+    <dimen name="product_card_margin">6dp</dimen>
+
+    <!-- Horizontal scroll card -->
+    <dimen name="h_card_width">160dp</dimen>
+    <dimen name="h_card_height">220dp</dimen>
+    <dimen name="h_card_image_height">110dp</dimen>
+
+    <!-- Category grid card -->
+    <dimen name="category_card_height">150dp</dimen>
+
+    <!-- Toolbar -->
+    <dimen name="toolbar_height">64dp</dimen>
+
+    <!-- Spacing -->
+    <dimen name="page_margin">16dp</dimen>
+    <dimen name="card_inner_padding">12dp</dimen>
+    <dimen name="section_spacing">24dp</dimen>
+
+    <!-- Bottom nav pill margins -->
+    <dimen name="bottom_nav_side_margin">20dp</dimen>
+    <dimen name="bottom_nav_bottom_margin">20dp</dimen>
+    <dimen name="bottom_nav_corner_radius">36dp</dimen>
+</resources>

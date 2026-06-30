@@ -252,6 +252,8 @@ public class CategoryDetailActivity extends AppCompatActivity {
     private void renderProducts(List<MainActivity.Product> products) {
         if (productsGrid == null) return;
         productsGrid.removeAllViews();
+        // Responsive column count
+        productsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
 
         if (products.isEmpty()) {
             TextView empty = new TextView(this);

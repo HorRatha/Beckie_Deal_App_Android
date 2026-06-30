@@ -70,6 +70,8 @@ public class CategoriesActivity extends AppCompatActivity {
 
     private void setupLaptopBrands() {
         brandsGrid = findViewById(R.id.laptopBrandsGrid);
+        // Responsive column count
+        if (brandsGrid != null) brandsGrid.setColumnCount(ScreenUtils.brandsGridColumns(this));
         renderBrands();
     }
 
@@ -147,6 +149,8 @@ public class CategoriesActivity extends AppCompatActivity {
     private void setupAllCategories() {
         GridLayout allCategoriesGrid = findViewById(R.id.allCategoriesGrid);
         if (allCategoriesGrid == null) return;
+        // Responsive column count
+        allCategoriesGrid.setColumnCount(ScreenUtils.categoryGridColumns(this));
 
         List<CategoryItem> categories = new ArrayList<>();
         categories.add(new CategoryItem("Laptops",     "124 Items",

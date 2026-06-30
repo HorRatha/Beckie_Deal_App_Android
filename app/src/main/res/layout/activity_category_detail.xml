@@ -12,7 +12,7 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@color/surface"
         app:contentInsetStart="0dp"
         app:elevation="0dp"
@@ -100,7 +100,7 @@
             <!-- Hero banner: category image + name overlay -->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="160dp">
+                android:layout_height="@dimen/hero_banner_height_detail">
 
                 <ImageView
                     android:id="@+id/categoryHeroImage"
@@ -212,10 +212,10 @@
         android:id="@+id/bottomNavigationContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        app:cardCornerRadius="36dp"
+        android:layout_marginStart="@dimen/bottom_nav_side_margin"
+        android:layout_marginEnd="@dimen/bottom_nav_side_margin"
+        android:layout_marginBottom="@dimen/bottom_nav_bottom_margin"
+        app:cardCornerRadius="@dimen/bottom_nav_corner_radius"
         app:cardElevation="12dp"
         app:cardBackgroundColor="@color/surface"
         app:strokeWidth="0dp"

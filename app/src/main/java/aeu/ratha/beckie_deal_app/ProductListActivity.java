@@ -239,6 +239,8 @@ public class ProductListActivity extends AppCompatActivity
     private void renderProducts(List<MainActivity.Product> products) {
         if (productsGrid == null) return;
         productsGrid.removeAllViews();
+        // Responsive column count
+        productsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
 
         if (resultsLabel != null)
             resultsLabel.setText("Showing " + products.size() + " products");

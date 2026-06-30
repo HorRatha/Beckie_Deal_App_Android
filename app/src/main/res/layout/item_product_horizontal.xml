@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Compact horizontal-scroll product card used in home page sections -->
+<!-- Compact horizontal-scroll product card — sizes driven by dimens.xml qualifiers -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="160dp"
-    android:layout_height="220dp"
+    android:layout_width="@dimen/h_card_width"
+    android:layout_height="@dimen/h_card_height"
     android:layout_marginEnd="12dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
@@ -20,7 +20,7 @@
         <!-- Product image + favorite -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="@dimen/h_card_image_height"
             android:background="@color/card_bg_secondary">
 
             <ImageView

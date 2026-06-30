@@ -110,7 +110,7 @@
             <!-- ── IMAGE GALLERY ─────────────────────────────────────────── -->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="@dimen/hero_banner_height_product"
                 android:background="@color/card_bg_secondary">
 
                 <!-- Main image -->

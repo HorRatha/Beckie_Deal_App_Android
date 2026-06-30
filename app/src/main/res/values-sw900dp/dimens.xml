@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Large tablet overrides (>= 900dp — 10" tablet, desktop mode) -->
+<resources>
+    <dimen name="section_title_size">24sp</dimen>
+    <dimen name="section_subtitle_size">15sp</dimen>
+    <dimen name="page_title_size">32sp</dimen>
+
+    <dimen name="hero_banner_height">320dp</dimen>
+    <dimen name="hero_banner_height_detail">260dp</dimen>
+    <dimen name="hero_banner_height_product">440dp</dimen>
+
+    <!-- 4 columns on large tablet -->
+    <dimen name="product_grid_columns">4</dimen>
+    <dimen name="product_image_height">220dp</dimen>
+    <dimen name="product_card_margin">10dp</dimen>
+
+    <dimen name="h_card_width">240dp</dimen>
+    <dimen name="h_card_height">310dp</dimen>
+    <dimen name="h_card_image_height">170dp</dimen>
+
+    <dimen name="category_card_height">220dp</dimen>
+
+    <dimen name="toolbar_height">80dp</dimen>
+
+    <dimen name="page_margin">32dp</dimen>
+    <dimen name="card_inner_padding">20dp</dimen>
+    <dimen name="section_spacing">40dp</dimen>
+
+    <dimen name="bottom_nav_side_margin">160dp</dimen>
+    <dimen name="bottom_nav_bottom_margin">28dp</dimen>
+    <dimen name="bottom_nav_corner_radius">36dp</dimen>
+</resources>

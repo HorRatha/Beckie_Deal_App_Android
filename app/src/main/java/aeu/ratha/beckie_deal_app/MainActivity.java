@@ -142,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
         GridLayout productsGrid = findViewById(R.id.productsGrid);
         if (productsGrid == null) return;
         productsGrid.removeAllViews();
+        // Responsive column count
+        productsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
 
         for (int i = 0; i < products.size(); i++) {
             Product product = products.get(i);
