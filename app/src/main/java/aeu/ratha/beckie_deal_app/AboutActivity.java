@@ -11,9 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.card.MaterialCardView;
 
 public class AboutActivity extends AppCompatActivity {
+
+    // Headquarters coordinates — Capitol Hill, Seattle
+    private static final double HQ_LAT  = 47.6205;
+    private static final double HQ_LNG  = -122.3212;
+    private static final String HQ_LABEL = "TechStore HQ, Capitol Hill, Seattle, WA 98102";
 
     private EditText inputName, inputEmail, inputMessage;
 
@@ -28,6 +35,7 @@ public class AboutActivity extends AppCompatActivity {
 
         setupTopBar();
         setupSubmitButton();
+        setupMapCard();
         setupBottomNavigation();
     }
 
@@ -95,6 +103,53 @@ public class AboutActivity extends AppCompatActivity {
             inputMessage.setText("");
             Toast.makeText(this, "Message sent!", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void setupMapCard() {
+        MaterialCardView mapCard = findViewById(R.id.mapCard);
+        ImageView mapImage       = findViewById(R.id.mapImage);
+
+        // Load a real map snapshot via Google Maps Static API
+        // Replace YOUR_API_KEY with your actual Maps Static API key.
+        // If you don't have one yet the card still works — tapping opens the Maps app.
+        String staticMapUrl = "https://maps.googleapis.com/maps/api/staticmap"
+                + "?center=" + HQ_LAT + "," + HQ_LNG
+                + "&zoom=15"
+                + "&size=600x300"
+                + "&scale=2"
+                + "&markers=color:red%7C" + HQ_LAT + "," + HQ_LNG
+                + "&key=YOUR_API_KEY";
+
+        if (mapImage != null) {
+            Glide.with(this)
+                    .load(staticMapUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.placeholder_image)
+                    .centerCrop()
+                    .into(mapImage);
+        }
+
+        if (mapCard != null) {
+            mapCard.setOnClickListener(v -> openGoogleMaps());
+        }
+    }
+
+    private void openGoogleMaps() {
+        // Try the geo URI first — opens Google Maps (or any maps app) and drops a pin
+        Uri geoUri = Uri.parse("geo:" + HQ_LAT + "," + HQ_LNG
+                + "?q=" + Uri.encode(HQ_LABEL));
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, geoUri);
+        mapIntent.setPackage("com.google.android.apps.maps"); // prefer Google Maps
+
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            // Fallback: open in browser if Google Maps is not installed
+            Uri browserUri = Uri.parse(
+                    "https://www.google.com/maps/search/?api=1&query="
+                    + HQ_LAT + "," + HQ_LNG);
+            startActivity(new Intent(Intent.ACTION_VIEW, browserUri));
+        }
     }
 
     private void setupBottomNavigation() {

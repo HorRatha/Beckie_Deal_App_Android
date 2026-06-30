@@ -466,54 +466,86 @@
 
             <!-- Headquarters Map Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mapCard"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-                <FrameLayout
+                app:cardElevation="2dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Static Google Map snapshot -->
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/placeholder_image"
-                        android:contentDescription="Headquarters location" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#55000000" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|center_horizontal"
-                        android:layout_marginBottom="16dp"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:layout_height="180dp">
+
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:id="@+id/mapImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/placeholder_image"
+                            android:contentDescription="Headquarters map" />
+
+                        <!-- Marker overlay -->
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
                             android:src="@drawable/ic_location"
                             android:contentDescription="Location pin"
-                            android:layout_gravity="center" />
+                            app:tint="#FFEF4444" />
+                    </FrameLayout>
+
+                    <!-- Address strip -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="14dp"
+                        android:background="@color/surface">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Headquarters"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Capitol Hill, Seattle, WA 98102"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <!-- "Open Maps" arrow -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="Headquarters"
-                            android:textColor="@color/white_fixed"
-                            android:textSize="14sp"
+                            android:text="Open Maps ›"
+                            android:textColor="@color/primary"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Capitol Hill, Seattle, WA 98102"
-                            android:textColor="#CCFFFFFF"
-                            android:textSize="11sp" />
                     </LinearLayout>
-                </FrameLayout>
+                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
