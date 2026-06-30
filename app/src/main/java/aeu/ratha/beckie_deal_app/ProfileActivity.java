@@ -71,10 +71,16 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setupSettingsRows() {
-        LinearLayout languageRow = findViewById(R.id.languageRow);
-        LinearLayout privacyRow  = findViewById(R.id.privacyRow);
-        LinearLayout termsRow    = findViewById(R.id.termsRow);
+        LinearLayout ordersRow        = findViewById(R.id.ordersRow);
+        LinearLayout notificationsRow = findViewById(R.id.notificationsRow);
+        LinearLayout languageRow      = findViewById(R.id.languageRow);
+        LinearLayout privacyRow       = findViewById(R.id.privacyRow);
+        LinearLayout termsRow         = findViewById(R.id.termsRow);
 
+        if (ordersRow != null) ordersRow.setOnClickListener(v ->
+                Toast.makeText(this, "My Orders — coming soon", Toast.LENGTH_SHORT).show());
+        if (notificationsRow != null) notificationsRow.setOnClickListener(v ->
+                Toast.makeText(this, "Notification settings", Toast.LENGTH_SHORT).show());
         if (languageRow != null) languageRow.setOnClickListener(v ->
                 Toast.makeText(this, "Language settings", Toast.LENGTH_SHORT).show());
         if (privacyRow != null) privacyRow.setOnClickListener(v ->
