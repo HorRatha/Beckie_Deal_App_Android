@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
+import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class CategoriesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
 
+        AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         initBrandsData();
         setupLaptopBrands();
@@ -35,14 +37,12 @@ public class CategoriesActivity extends AppCompatActivity {
     }
 
     private void setupTopBar() {
-        ImageView menuIcon = findViewById(R.id.menuIcon);
+        // menuIcon click handled by AppDrawerHelper
         ImageView searchIcon = findViewById(R.id.searchIcon);
         View cartContainer = findViewById(R.id.cartContainer);
         TextView cartBadge = findViewById(R.id.cartBadge);
         TextView viewAllBrands = findViewById(R.id.viewAllBrands);
 
-        if (menuIcon != null) menuIcon.setOnClickListener(v ->
-                Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
         if (searchIcon != null) searchIcon.setOnClickListener(v ->
                 Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show());
         if (cartContainer != null) cartContainer.setOnClickListener(v ->

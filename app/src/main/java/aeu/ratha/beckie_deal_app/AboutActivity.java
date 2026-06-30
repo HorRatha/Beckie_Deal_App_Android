@@ -33,6 +33,7 @@ public class AboutActivity extends AppCompatActivity {
         inputEmail   = findViewById(R.id.inputEmail);
         inputMessage = findViewById(R.id.inputMessage);
 
+        AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         setupSubmitButton();
         setupMapCard();
@@ -47,7 +48,6 @@ public class AboutActivity extends AppCompatActivity {
         if (menuIcon != null)
             menuIcon.setOnClickListener(v ->
                 Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
-
         if (cartContainer != null)
             cartContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, CartActivity.class)));

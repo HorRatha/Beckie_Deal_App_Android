@@ -20,6 +20,7 @@ public class FavoritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
+        AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         setupBottomNavigation();
     }
@@ -31,11 +32,10 @@ public class FavoritesActivity extends AppCompatActivity {
     }
 
     private void setupTopBar() {
-        ImageView menuIcon = findViewById(R.id.menuIcon);
+        // menuIcon click handled by AppDrawerHelper
         View cartContainer = findViewById(R.id.cartContainer);
         TextView cartBadge = findViewById(R.id.cartBadge);
 
-        if (menuIcon != null) menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
         if (cartContainer != null) cartContainer.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
 
         int count = CartManager.getInstance().getTotalUnits();

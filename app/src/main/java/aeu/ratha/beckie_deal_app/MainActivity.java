@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Product> products;
     private List<Category> categories;
+    private AppDrawerHelper drawerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initializeMockData();
+        drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         setupSearchBar();
         setupHeroBanner();
@@ -67,11 +69,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupTopBar() {
-        ImageView menuIcon = findViewById(R.id.menuIcon);
+        // menuIcon click is handled by AppDrawerHelper
         View cartContainer = findViewById(R.id.cartContainer);
         TextView cartBadge = findViewById(R.id.cartBadge);
 
-        if (menuIcon != null) menuIcon.setOnClickListener(v -> Toast.makeText(this, "Menu opened", Toast.LENGTH_SHORT).show());
         if (cartContainer != null) cartContainer.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
         updateCartBadge(cartBadge);
     }
