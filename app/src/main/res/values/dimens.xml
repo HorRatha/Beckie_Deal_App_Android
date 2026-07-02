@@ -17,9 +17,9 @@
     <dimen name="product_card_margin">6dp</dimen>
 
     <!-- Horizontal scroll card -->
-    <dimen name="h_card_width">160dp</dimen>
+    <dimen name="h_card_width">150dp</dimen>
     <dimen name="h_card_height">220dp</dimen>
-    <dimen name="h_card_image_height">110dp</dimen>
+    <dimen name="h_card_image_height">120dp</dimen>
 
     <!-- Category grid card -->
     <dimen name="category_card_height">150dp</dimen>

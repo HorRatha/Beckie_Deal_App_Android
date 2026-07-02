@@ -255,8 +255,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingBottom="4dp" />
+                    android:background="@color/border_color"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="2dp" />
             </HorizontalScrollView>
 
             <!-- New Arrivals promo banner — right under New Collection -->
@@ -353,8 +355,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingBottom="4dp" />
+                    android:background="@color/border_color"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="2dp" />
             </HorizontalScrollView>
 
             <!-- ══ FEATURED PRODUCTS (moved to bottom) ════════════════════ -->
