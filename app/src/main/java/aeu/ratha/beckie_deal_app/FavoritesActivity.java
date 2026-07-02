@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.bumptech.glide.Glide;
+import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
@@ -58,45 +58,38 @@ public class FavoritesActivity extends AppCompatActivity {
                 finish();
             });
         } else {
-            // Responsive column count
-            favoritesGrid.setColumnCount(ScreenUtils.productGridColumns(this));
+            // Always 2 columns
+            favoritesGrid.setColumnCount(2);
             emptyState.setVisibility(View.GONE);
             favoritesGrid.setVisibility(View.VISIBLE);
             favoritesGrid.removeAllViews();
 
             for (MainActivity.Product product : favoriteProducts) {
-                View productView = LayoutInflater.from(this).inflate(R.layout.product_card, favoritesGrid, false);
+                product.isFavorite = true;
+                View productView = LayoutInflater.from(this)
+                        .inflate(R.layout.product_card, favoritesGrid, false);
 
-                ImageView productImage = productView.findViewById(R.id.productImage);
-                ImageView favoriteIcon = productView.findViewById(R.id.favoriteIcon);
-                TextView productName = productView.findViewById(R.id.productName);
-                TextView productPrice = productView.findViewById(R.id.productPrice);
-                TextView productRating = productView.findViewById(R.id.productRating);
-
-                productName.setText(product.name);
-                productPrice.setText(product.price);
-                productRating.setText(product.rating + " (1.2k)");
-
-                Glide.with(this).load(product.imageUrl).centerCrop().placeholder(R.drawable.placeholder_image).into(productImage);
-
-                favoriteIcon.setImageResource(R.drawable.ic_favorite);
-                favoriteIcon.setColorFilter(0xFFEF4444);
+                // Bind all fields via shared binder
+                ProductCardBinder.bind(this, productView, product);
 
                 productView.setOnClickListener(v -> {
                     Intent intent = new Intent(this, ProductDetailActivity.class);
-                    intent.putExtra("product_name", product.name);
+                    intent.putExtra("product_name",  product.name);
                     intent.putExtra("product_price", product.price);
                     intent.putExtra("product_image", product.imageUrl);
-                    intent.putExtra("product_rating", product.rating);
-                    intent.putExtra("is_favorite", true);
+                    intent.putExtra("product_rating",product.rating);
+                    intent.putExtra("is_favorite",   true);
                     startActivity(intent);
                 });
 
-                favoriteIcon.setOnClickListener(v -> {
-                    FavoriteManager.getInstance().removeFavorite(product);
-                    displayFavorites();
-                    Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
-                });
+                ImageView favoriteIcon = productView.findViewById(R.id.favoriteIcon);
+                if (favoriteIcon != null) {
+                    favoriteIcon.setOnClickListener(v -> {
+                        FavoriteManager.getInstance().removeFavorite(product);
+                        displayFavorites();
+                        Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
+                    });
+                }
 
                 favoritesGrid.addView(productView);
             }

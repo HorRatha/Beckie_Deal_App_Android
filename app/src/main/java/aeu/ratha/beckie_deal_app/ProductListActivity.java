@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
@@ -239,8 +238,8 @@ public class ProductListActivity extends AppCompatActivity
     private void renderProducts(List<MainActivity.Product> products) {
         if (productsGrid == null) return;
         productsGrid.removeAllViews();
-        // Responsive column count
-        productsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
+        // Always 2 columns to match the reference design
+        productsGrid.setColumnCount(2);
 
         if (resultsLabel != null)
             resultsLabel.setText("Showing " + products.size() + " products");
@@ -258,20 +257,8 @@ public class ProductListActivity extends AppCompatActivity
             View view = LayoutInflater.from(this)
                     .inflate(R.layout.product_card, productsGrid, false);
 
-            ImageView imgView   = view.findViewById(R.id.productImage);
-            ImageView favIcon   = view.findViewById(R.id.favoriteIcon);
-            TextView  nameView  = view.findViewById(R.id.productName);
-            TextView  priceView = view.findViewById(R.id.productPrice);
-            TextView  ratingView= view.findViewById(R.id.productRating);
-
-            nameView.setText(product.name);
-            priceView.setText(product.price);
-            ratingView.setText(product.rating + " ★");
-
-            Glide.with(this).load(product.imageUrl).centerCrop()
-                 .placeholder(R.drawable.placeholder_image).into(imgView);
-
-            refreshFavIcon(favIcon, product.isFavorite);
+            // Bind all fields via shared binder
+            ProductCardBinder.bind(this, view, product);
 
             view.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ProductDetailActivity.class);
@@ -282,24 +269,21 @@ public class ProductListActivity extends AppCompatActivity
                 startActivity(intent);
             });
 
-            favIcon.setOnClickListener(v -> {
-                product.isFavorite = !product.isFavorite;
-                if (product.isFavorite) FavoriteManager.getInstance().addFavorite(product);
-                else FavoriteManager.getInstance().removeFavorite(product);
-                refreshFavIcon(favIcon, product.isFavorite);
-                Toast.makeText(this,
-                        product.isFavorite ? "Added to Favorites" : "Removed from Favorites",
-                        Toast.LENGTH_SHORT).show();
-            });
+            ImageView favIcon = view.findViewById(R.id.favoriteIcon);
+            if (favIcon != null) {
+                favIcon.setOnClickListener(v -> {
+                    product.isFavorite = !product.isFavorite;
+                    if (product.isFavorite) FavoriteManager.getInstance().addFavorite(product);
+                    else                    FavoriteManager.getInstance().removeFavorite(product);
+                    ProductCardBinder.refreshFavIcon(this, favIcon, product.isFavorite);
+                    Toast.makeText(this,
+                            product.isFavorite ? "Added to Favorites" : "Removed from Favorites",
+                            Toast.LENGTH_SHORT).show();
+                });
+            }
 
             productsGrid.addView(view);
         }
-    }
-
-    private void refreshFavIcon(ImageView icon, boolean fav) {
-        icon.setImageResource(fav ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
-        icon.setColorFilter(ContextCompat.getColor(this,
-                fav ? R.color.red_error : R.color.text_secondary));
     }
 
     // ── Bottom navigation ─────────────────────────────────────────────────────

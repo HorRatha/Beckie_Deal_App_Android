@@ -252,8 +252,8 @@ public class CategoryDetailActivity extends AppCompatActivity {
     private void renderProducts(List<MainActivity.Product> products) {
         if (productsGrid == null) return;
         productsGrid.removeAllViews();
-        // Responsive column count
-        productsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
+        // Always 2 columns to match the reference design
+        productsGrid.setColumnCount(2);
 
         if (products.isEmpty()) {
             TextView empty = new TextView(this);
@@ -269,20 +269,8 @@ public class CategoryDetailActivity extends AppCompatActivity {
             View view = LayoutInflater.from(this)
                     .inflate(R.layout.product_card, productsGrid, false);
 
-            ImageView imgView  = view.findViewById(R.id.productImage);
-            ImageView favIcon  = view.findViewById(R.id.favoriteIcon);
-            TextView  nameView = view.findViewById(R.id.productName);
-            TextView  priceView= view.findViewById(R.id.productPrice);
-            TextView  ratingView=view.findViewById(R.id.productRating);
-
-            nameView.setText(product.name);
-            priceView.setText(product.price);
-            ratingView.setText(product.rating + " ★");
-
-            Glide.with(this).load(product.imageUrl).centerCrop()
-                 .placeholder(R.drawable.placeholder_image).into(imgView);
-
-            refreshFavIcon(favIcon, product.isFavorite);
+            // Bind all fields via shared binder
+            ProductCardBinder.bind(this, view, product);
 
             // Open product detail on card tap
             view.setOnClickListener(v -> {
@@ -295,17 +283,20 @@ public class CategoryDetailActivity extends AppCompatActivity {
             });
 
             // Toggle favorite on heart tap
-            favIcon.setOnClickListener(v -> {
-                product.isFavorite = !product.isFavorite;
-                if (product.isFavorite) {
-                    FavoriteManager.getInstance().addFavorite(product);
-                    Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show();
-                } else {
-                    FavoriteManager.getInstance().removeFavorite(product);
-                    Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
-                }
-                refreshFavIcon(favIcon, product.isFavorite);
-            });
+            ImageView favIcon = view.findViewById(R.id.favoriteIcon);
+            if (favIcon != null) {
+                favIcon.setOnClickListener(v -> {
+                    product.isFavorite = !product.isFavorite;
+                    if (product.isFavorite) {
+                        FavoriteManager.getInstance().addFavorite(product);
+                        Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show();
+                    } else {
+                        FavoriteManager.getInstance().removeFavorite(product);
+                        Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
+                    }
+                    ProductCardBinder.refreshFavIcon(this, favIcon, product.isFavorite);
+                });
+            }
 
             productsGrid.addView(view);
         }
@@ -351,9 +342,26 @@ public class CategoryDetailActivity extends AppCompatActivity {
         // ── LAPTOPS — Apple, ASUS, Dell, HP, Lenovo, Acer, Microsoft ─────────
         Map<String, List<MainActivity.Product>> laptops = new LinkedHashMap<>();
         laptops.put("Apple", list(
-                p("MacBook Air M2",            "$1,199.00","4.9","https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"),
-                p("MacBook Pro 14\"",           "$1,999.00","4.8","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&h=500&fit=crop"),
-                p("MacBook Pro M3 Max",         "$2,499.00","5.0","https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500&h=500&fit=crop")
+                p("MacBook Air 13.6\" M5",      "$1,699.00","4.9","https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop",
+                        "BECKIE6036", true, 1,
+                        "-13.6\" Liquid Retina Display\n-Weight: 1.24Kg / MDHK4\n-24GB / 1TB SkyBlue",
+                        "Free 8 items"),
+                p("MacBook Air 13.6\" M5",      "$1,699.00","4.9","https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop",
+                        "BECKIE6037", true, 1,
+                        "-13.6\" Liquid Retina Display\n-Weight: 1.24Kg / MDH94\n-24GB / 1TB Silver",
+                        "Free 8 items"),
+                p("MacBook Air M2",             "$1,199.00","4.9","https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop",
+                        "BECKIE5021", true, 1,
+                        "-13.6\" Liquid Retina Display\n-Weight: 1.24Kg\n-8GB / 256GB",
+                        "Free 5 items"),
+                p("MacBook Pro 14\"",           "$1,999.00","4.8","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&h=500&fit=crop",
+                        "BECKIE5050", true, 1,
+                        "-14.2\" Liquid Retina XDR\n-Weight: 1.55Kg\n-18GB / 512GB",
+                        "Free 5 items"),
+                p("MacBook Pro M3 Max",         "$2,499.00","5.0","https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500&h=500&fit=crop",
+                        "BECKIE5099", true, 1,
+                        "-14.2\" Liquid Retina XDR\n-Weight: 1.55Kg\n-36GB / 1TB",
+                        "Free 8 items")
         ));
         laptops.put("ASUS", list(
                 p("ASUS ZenBook 14 OLED",       "$999.00", "4.7","https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=500&fit=crop"),
@@ -486,7 +494,16 @@ public class CategoryDetailActivity extends AppCompatActivity {
 
     // Shorthand helpers to keep the catalogue readable
     private static MainActivity.Product p(String name, String price, String rating, String img) {
-        return new MainActivity.Product(name, price, rating, false, img);
+        return new MainActivity.Product(name, price, rating, false, img,
+                "", true, 1, "", "Free 8 items");
+    }
+
+    /** Full helper: includes SKU, stock, warranty, spec bullets, freebie label */
+    private static MainActivity.Product p(String name, String price, String rating, String img,
+                                           String sku, boolean inStock, int warranty,
+                                           String specs, String freeItems) {
+        return new MainActivity.Product(name, price, rating, false, img,
+                sku, inStock, warranty, specs, freeItems);
     }
 
     @SafeVarargs

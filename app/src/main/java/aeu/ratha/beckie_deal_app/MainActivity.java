@@ -143,60 +143,45 @@ public class MainActivity extends AppCompatActivity {
         GridLayout productsGrid = findViewById(R.id.productsGrid);
         if (productsGrid == null) return;
         productsGrid.removeAllViews();
-        // Responsive column count
-        productsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
+        // Always 2 columns to match the reference design
+        productsGrid.setColumnCount(2);
 
         for (int i = 0; i < products.size(); i++) {
             Product product = products.get(i);
             product.isFavorite = FavoriteManager.getInstance().isFavorite(product);
 
-            View productView = LayoutInflater.from(this).inflate(R.layout.product_card, productsGrid, false);
+            View productView = LayoutInflater.from(this)
+                    .inflate(R.layout.product_card, productsGrid, false);
 
-            ImageView productImage = productView.findViewById(R.id.productImage);
-            ImageView favoriteIcon = productView.findViewById(R.id.favoriteIcon);
-            TextView productName = productView.findViewById(R.id.productName);
-            TextView productPrice = productView.findViewById(R.id.productPrice);
-            TextView productRating = productView.findViewById(R.id.productRating);
+            // Bind all visible fields via the shared binder
+            ProductCardBinder.bind(this, productView, product);
 
-            productName.setText(product.name);
-            productPrice.setText(product.price);
-            productRating.setText(product.rating + " (1.2k)");
-
-            Glide.with(this).load(product.imageUrl).centerCrop().placeholder(R.drawable.placeholder_image).into(productImage);
-
-            if (product.isFavorite) {
-                favoriteIcon.setImageResource(R.drawable.ic_favorite);
-                favoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.red_error));
-            } else {
-                favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
-                favoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_secondary));
-            }
-
+            // Card tap → detail screen
             final int position = i;
             productView.setOnClickListener(v -> {
+                Product p = products.get(position);
                 Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
-                intent.putExtra("product_name", products.get(position).name);
-                intent.putExtra("product_price", products.get(position).price);
-                intent.putExtra("product_image", products.get(position).imageUrl);
-                intent.putExtra("product_rating", products.get(position).rating);
-                intent.putExtra("is_favorite", products.get(position).isFavorite);
+                intent.putExtra("product_name",   p.name);
+                intent.putExtra("product_price",  p.price);
+                intent.putExtra("product_image",  p.imageUrl);
+                intent.putExtra("product_rating", p.rating);
+                intent.putExtra("is_favorite",    p.isFavorite);
                 startActivity(intent);
             });
 
-            favoriteIcon.setOnClickListener(v -> {
-                product.isFavorite = !product.isFavorite;
-                if (product.isFavorite) {
-                    FavoriteManager.getInstance().addFavorite(product);
-                    favoriteIcon.setImageResource(R.drawable.ic_favorite);
-                    favoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.red_error));
-                    Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show();
-                } else {
-                    FavoriteManager.getInstance().removeFavorite(product);
-                    favoriteIcon.setImageResource(R.drawable.ic_favorite_border);
-                    favoriteIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_secondary));
-                    Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
-                }
-            });
+            // Favourite toggle
+            ImageView favoriteIcon = productView.findViewById(R.id.favoriteIcon);
+            if (favoriteIcon != null) {
+                favoriteIcon.setOnClickListener(v -> {
+                    product.isFavorite = !product.isFavorite;
+                    if (product.isFavorite) FavoriteManager.getInstance().addFavorite(product);
+                    else                    FavoriteManager.getInstance().removeFavorite(product);
+                    ProductCardBinder.refreshFavIcon(this, favoriteIcon, product.isFavorite);
+                    Toast.makeText(this,
+                            product.isFavorite ? "Added to Favorites" : "Removed from Favorites",
+                            Toast.LENGTH_SHORT).show();
+                });
+            }
 
             productsGrid.addView(productView);
         }
@@ -377,8 +362,26 @@ public class MainActivity extends AppCompatActivity {
 
     public static class Product {
         String name, price, rating, imageUrl;
+        String sku;           // e.g. "BECKIE6036"
+        boolean inStock;      // true = Available In Stock
+        int warrantyYears;    // e.g. 1
+        String specs;         // short bullet specs, newline-separated, e.g. "-13.6\" Liquid Retina\n-Weight: 1.24Kg"
+        String freeItems;     // e.g. "Free 8 items"
         boolean isFavorite;
-        Product(String n, String p, String r, boolean f, String i) { name=n; price=p; rating=r; isFavorite=f; imageUrl=i; }
+
+        // Minimal constructor (legacy — no SKU/stock/warranty/specs)
+        Product(String n, String p, String r, boolean f, String i) {
+            name=n; price=p; rating=r; isFavorite=f; imageUrl=i;
+            inStock=true; warrantyYears=1; sku=""; specs=""; freeItems="";
+        }
+
+        // Full constructor
+        Product(String n, String p, String r, boolean f, String i,
+                String sku, boolean inStock, int warranty, String specs, String freeItems) {
+            name=n; price=p; rating=r; isFavorite=f; imageUrl=i;
+            this.sku=sku; this.inStock=inStock; this.warrantyYears=warranty;
+            this.specs=specs; this.freeItems=freeItems;
+        }
     }
 
     private static class Category {

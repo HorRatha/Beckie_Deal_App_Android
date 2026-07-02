@@ -122,9 +122,9 @@
             android:id="@+id/productsGrid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
             android:layout_marginTop="4dp"
             android:paddingBottom="16dp"
+            android:background="@color/border_color"
             android:columnCount="2" />
 
     </androidx.core.widget.NestedScrollView>
