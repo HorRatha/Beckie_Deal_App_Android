@@ -17,10 +17,10 @@ import com.google.android.material.card.MaterialCardView;
 
 public class AboutActivity extends AppCompatActivity {
 
-    // Headquarters coordinates — Capitol Hill, Seattle
-    private static final double HQ_LAT  = 47.6205;
-    private static final double HQ_LNG  = -122.3212;
-    private static final String HQ_LABEL = "TechStore HQ, Capitol Hill, Seattle, WA 98102";
+    // Beckie Deal Cambodia store location
+    private static final double HQ_LAT  = 11.5564;
+    private static final double HQ_LNG  = 104.9282;
+    private static final String HQ_LABEL = "Beckie Deal Cambodia, Phnom Penh";
 
     private EditText inputName, inputEmail, inputMessage;
 
@@ -86,7 +86,7 @@ public class AboutActivity extends AppCompatActivity {
 
             // Compose email intent
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-            emailIntent.setData(Uri.parse("mailto:support@techstore.com"));
+            emailIntent.setData(Uri.parse("mailto:beckiedeal@gmail.com"));
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Inquiry from " + name);
             emailIntent.putExtra(Intent.EXTRA_TEXT,
                 "Name: " + name + "\nEmail: " + email + "\n\n" + message);
@@ -156,34 +156,29 @@ public class AboutActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
 
-        bottomNav.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-        com.google.android.material.card.MaterialCardView container =
-            findViewById(R.id.bottomNavigationContainer);
-        if (container != null)
-            container.setCardBackgroundColor(
-                androidx.core.content.ContextCompat.getColor(this, R.color.surface));
+        bottomNav.setBackground(null);
+        bottomNav.setBackgroundTintList(null);
+        bottomNav.setItemActiveIndicatorColor(android.content.res.ColorStateList.valueOf(
+                androidx.core.content.ContextCompat.getColor(this, R.color.nav_indicator_fill)));
+
+        android.content.res.ColorStateList navTint =
+                androidx.core.content.ContextCompat.getColorStateList(this, R.color.bottom_nav_color);
+        if (navTint != null) { bottomNav.setItemIconTintList(navTint); bottomNav.setItemTextColor(navTint); }
 
         bottomNav.setSelectedItemId(R.id.nav_about);
-
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
                 startActivity(new Intent(this, MainActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-                return true;
+                overridePendingTransition(0, 0); finish(); return true;
             } else if (id == R.id.nav_categories) {
                 startActivity(new Intent(this, CategoriesActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-                return true;
+                overridePendingTransition(0, 0); finish(); return true;
             } else if (id == R.id.nav_about) {
                 return true;
             } else if (id == R.id.nav_account) {
                 startActivity(new Intent(this, ProfileActivity.class));
-                overridePendingTransition(0, 0);
-                finish();
-                return true;
+                overridePendingTransition(0, 0); finish(); return true;
             }
             return false;
         });

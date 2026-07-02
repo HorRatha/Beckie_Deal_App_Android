@@ -88,7 +88,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/topAppBar"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationContainer">
+        app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -103,7 +103,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="About TechStore"
+                android:text="Beckie Deal Cambodia"
                 android:textColor="@color/text_primary"
                 android:textSize="26sp"
                 android:textStyle="bold" />
@@ -133,7 +133,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|start"
                         android:layout_margin="20dp"
-                        android:text="Innovating Tomorrow, Today."
+                        android:text="Bring new products first in Cambodia"
                         android:textColor="@color/white_fixed"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -145,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Our mission is to democratize cutting-edge technology. We believe everyone deserves access to the latest electronics that power human potential, from high-performance computing to seamless mobile connectivity. TechStore is more than a retailer; we are your technical partner in the digital age."
+                android:text="Beckie Deal តែងតែនាំមកផលិតផលថ្មីៗ មុនគេនៅក្នុងប្រទេសកម្ពុជា។\nសូមទំនាក់ទំនងផ្នែកលក់របស់ Beckie Deal Cambodia។"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:lineSpacingExtra="5dp" />
@@ -157,7 +157,7 @@
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
-                <!-- Orange stat: 15+ Global Hubs -->
+                <!-- Orange stat: Official Products -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="15+"
+                        android:text="100%"
                         android:textColor="@color/white_fixed"
                         android:textSize="28sp"
                         android:textStyle="bold" />
@@ -177,12 +177,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Global Hubs"
+                        android:text="Official Products"
                         android:textColor="#CCFFFFFF"
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <!-- Light stat: Guaranteed Official Partner Series -->
+                <!-- Light stat: Guaranteed Official Partner -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -215,7 +215,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Next-Day Delivery badge -->
+            <!-- New Products First badge -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@android:drawable/ic_menu_upload"
-                        android:contentDescription="Delivery"
+                        android:contentDescription="New Products"
                         app:tint="@color/white_fixed" />
                 </LinearLayout>
 
@@ -247,7 +247,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Next-Day Delivery"
+                        android:text="New Products First"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -255,7 +255,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Efficiency is our primary protocol."
+                        android:text="Always first in Cambodia."
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -269,12 +269,76 @@
                 android:layout_marginBottom="4dp"
                 android:background="@color/border_color" />
 
-            <!-- Get in Touch Section -->
+            <!-- Warranty Terms Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Get in Touch"
+                android:text="លក្ខខណ្ឌការធានា / Warranty Terms"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Khmer warranty block -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@color/surface">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• រាល់ Password Log-in សំរាប់ម៉ាសុីនទិញថ្មី setup រួចគឺ : 1234\n• រាល់ទំនិញទិញរួចមិនអាចប្ដូរ ឬ ដូរវិញបានឡើយ\n• ធានាលើគ្រឿងបន្លាស់តាមរយៈពេលដែលបានកំណត់\n• មិនធានាលើរបស់ដែលថែមជូន\n• មិនធានាលើទំនិញដែលបាត់បង់លក្ខណៈដើម ឆេះ ធ្លាក់ បាក់បែក ចូលទឹក និងបាត់/រហែក Warranty Seal\n• រាល់ឥវ៉ាន់របស់ ASUS/MSI Cambodia គឺធានាទៅតាមលក្ខខ័ណ្ឌរបស់ក្រុមហ៊ុន\n• សម្រាប់ Apple ជាប់ iCloud ដែលធ្វើអោយការធានាបញ្ជូនត្រលប់មកវិញ ដូច្នេះការធានាទុកជាមោឃៈ\n• រាល់ផលិតផល Gaming Laptop (VGA ដាច់) មិនធានាលើដុំសាក និង អេក្រង់\n• រយៈពេលនៃការធ្វើ Warranty ពេលជួបបញ្ហា អាចចន្លោះពី 2-6 សប្តាហ៍\n• ក្រដាសនេះមិនអាចយកទៅប្រកាសពន្ធបានទេ"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        android:lineSpacingExtra="6dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- English warranty block -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@color/surface">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• Password Log in After Setup : 1234\n• Goods are sold — no refund and return.\n• Warranty covers parts according to the specified period.\n• Extra Free Items are not under Warranty.\n• No Warranty on Adapter / Lost / Broken / Damage / Water-Damage or Missing Warranty Seal.\n• ASUS/MSI Cambodia products are warranted according to the company\'s terms and conditions.\n• For Apple devices with iCloud lock, the warranty return will be voided.\n• Gaming Laptop (GPU) — Not Warranty on Screen and Adapter.\n• Warranty processing time in case of issues can range from 2 to 6 weeks.\n• VAT is not included in this invoice / Cannot be used for Tax Declaration."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        android:lineSpacingExtra="6dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="4dp"
+                android:background="@color/border_color" />
+
+            <!-- Contact Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="ទំនាក់ទំនងមកយើង / Contact Us"
                 android:textColor="@color/text_primary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -283,7 +347,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="Technical inquiries or support? Our specialists are standing by."
+                android:text="សូមទំនាក់ទំនងតាមរយះទូរស័ព្ទ ឬ ផ្ញើសាររបស់លោកអ្នកមកយើង។"
                 android:textColor="@color/text_secondary"
                 android:textSize="13sp"
                 android:lineSpacingExtra="3dp" />
@@ -293,7 +357,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Full Name"
+                android:text="ឈ្មោះ / Full Name"
                 android:textColor="@color/text_primary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -317,7 +381,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="Email Address"
+                android:text="អ៊ីម៉ែល / Email Address"
                 android:textColor="@color/text_primary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -341,7 +405,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="Message"
+                android:text="សាររបស់អ្នក / Message"
                 android:textColor="@color/text_primary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -382,55 +446,11 @@
                 android:layout_marginBottom="4dp"
                 android:background="@color/border_color" />
 
-            <!-- Email Support -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <LinearLayout
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/about_stat_card_light_bg"
-                    android:gravity="center">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_email"
-                        android:contentDescription="Email" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="14dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="EMAIL SUPPORT"
-                        android:textColor="@color/text_muted"
-                        android:textSize="10sp"
-                        android:letterSpacing="0.08" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="support@techstore.com"
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-
             <!-- Phone Support -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
@@ -455,7 +475,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="PHONE TECHNICAL LINE"
+                        android:text="ទំនាក់ទំនងផ្នែកលក់"
                         android:textColor="@color/text_muted"
                         android:textSize="10sp"
                         android:letterSpacing="0.08" />
@@ -463,7 +483,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="+1 (800) TECH-HUB"
+                        android:text="077 999 776 / 081 999 776"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -528,7 +548,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Headquarters"
+                                android:text="Beckie Deal Cambodia"
                                 android:textColor="@color/text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
@@ -537,7 +557,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="Capitol Hill, Seattle, WA 98102"
+                                android:text="ប្រទេសកម្ពុជា / Cambodia"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -554,36 +574,22 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Thank You -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="សូមអរគុណ! 🙏"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <!-- Floating Bottom Navigation Bar -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottomNavigationContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        app:cardCornerRadius="36dp"
-        app:cardElevation="12dp"
-        app:cardBackgroundColor="@color/surface"
-        app:strokeWidth="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigation"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@android:color/transparent"
-            app:backgroundTint="@android:color/transparent"
-            app:elevation="0dp"
-            app:labelVisibilityMode="unlabeled"
-            app:itemIconSize="26dp"
-            app:menu="@menu/bottom_nav_menu" />
-    </com.google.android.material.card.MaterialCardView>
+    <include layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

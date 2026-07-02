@@ -320,20 +320,24 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
 
-        // Force transparent — Material3 theme overrides XML backgroundTint via colorSurfaceContainer
-        bottomNav.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        // Glass style: strip Material3's colorSurfaceContainer tint so the pill drawable shows through
+        bottomNav.setBackground(null);
+        bottomNav.setBackgroundTintList(null);
+
+        // Active indicator tint: translucent primary orange
         bottomNav.setItemActiveIndicatorColor(
                 android.content.res.ColorStateList.valueOf(
-                        androidx.core.content.ContextCompat.getColor(this, R.color.badge_bg)));
+                        ContextCompat.getColor(this, R.color.nav_indicator_fill)));
 
-        // Also force the card container to pure white so no theme tint leaks through
-        com.google.android.material.card.MaterialCardView container =
-                findViewById(R.id.bottomNavigationContainer);
-        if (container != null) {
-            container.setCardBackgroundColor(
-                    androidx.core.content.ContextCompat.getColor(this, R.color.surface));
+        // Icon & text tint from the color selector
+        android.content.res.ColorStateList navTint =
+                ContextCompat.getColorStateList(this, R.color.bottom_nav_color);
+        if (navTint != null) {
+            bottomNav.setItemIconTintList(navTint);
+            bottomNav.setItemTextColor(navTint);
         }
 
+        // ── Navigation ─────────────────────────────────────────────────────
         bottomNav.setSelectedItemId(R.id.nav_home);
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();

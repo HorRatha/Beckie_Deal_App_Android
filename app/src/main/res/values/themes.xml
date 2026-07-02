@@ -16,8 +16,9 @@
         <item name="itemIconSize">26dp</item>
         <item name="itemIconTint">@color/bottom_nav_color</item>
         <item name="itemTextColor">@color/bottom_nav_color</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="backgroundTint">@android:color/transparent</item>
+        <!-- Force truly transparent — android:background wins over Material3's colorSurfaceContainer tint -->
+        <item name="android:background">@null</item>
+        <item name="backgroundTint">@null</item>
         <item name="labelVisibilityMode">unlabeled</item>
         <item name="itemActiveIndicatorStyle">@style/Widget.App.BottomNavigationView.ActiveIndicator</item>
     </style>
@@ -30,6 +31,19 @@
     </style>
 
     <style name="ShapeAppearance.App.BottomNavigationView.ActiveIndicator" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- iOS 26 liquid-glass active indicator pill -->
+    <style name="Widget.App.BottomNav.GlassIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/nav_indicator_fill</item>
+        <item name="android:width">52dp</item>
+        <item name="android:height">40dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.GlassIndicator</item>
+    </style>
+
+    <style name="ShapeAppearance.App.GlassIndicator" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>

@@ -291,11 +291,15 @@ public class ProductListActivity extends AppCompatActivity
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
-        bottomNav.setBackgroundColor(Color.TRANSPARENT);
 
-        MaterialCardView container = findViewById(R.id.bottomNavigationContainer);
-        if (container != null)
-            container.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
+        bottomNav.setBackground(null);
+        bottomNav.setBackgroundTintList(null);
+        bottomNav.setItemActiveIndicatorColor(android.content.res.ColorStateList.valueOf(
+                ContextCompat.getColor(this, R.color.nav_indicator_fill)));
+
+        android.content.res.ColorStateList navTint =
+                ContextCompat.getColorStateList(this, R.color.bottom_nav_color);
+        if (navTint != null) { bottomNav.setItemIconTintList(navTint); bottomNav.setItemTextColor(navTint); }
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();

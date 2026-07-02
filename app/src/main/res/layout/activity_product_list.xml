@@ -116,7 +116,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/resultsLabel"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationContainer">
+        app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <GridLayout
             android:id="@+id/productsGrid"
@@ -130,32 +130,6 @@
     </androidx.core.widget.NestedScrollView>
 
     <!-- Floating bottom nav -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottomNavigationContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/bottom_nav_side_margin"
-        android:layout_marginEnd="@dimen/bottom_nav_side_margin"
-        android:layout_marginBottom="@dimen/bottom_nav_bottom_margin"
-        app:cardCornerRadius="@dimen/bottom_nav_corner_radius"
-        app:cardElevation="12dp"
-        app:cardBackgroundColor="@color/surface"
-        app:strokeWidth="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigation"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@android:color/transparent"
-            app:backgroundTint="@android:color/transparent"
-            app:elevation="0dp"
-            app:labelVisibilityMode="unlabeled"
-            app:itemIconSize="26dp"
-            app:menu="@menu/bottom_nav_menu" />
-
-    </com.google.android.material.card.MaterialCardView>
+    <include layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

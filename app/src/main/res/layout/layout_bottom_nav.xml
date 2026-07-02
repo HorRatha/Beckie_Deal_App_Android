@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Shared glass bottom navigation bar — included by every activity.
+    The glass look comes purely from the drawable (translucent fill +
+    specular gradient + hairline border). No RenderEffect blur is used
+    because RenderEffect blurs the view's own children, not the content
+    behind it, which makes icons unreadable.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomNavGlassHost"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/bottom_nav_side_margin"
+    android:layout_marginEnd="@dimen/bottom_nav_side_margin"
+    android:layout_marginBottom="@dimen/bottom_nav_bottom_margin"
+    android:background="@drawable/bottom_nav_glass_bg"
+    android:clipToOutline="true"
+    android:elevation="8dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@android:color/transparent"
+        app:backgroundTint="@android:color/transparent"
+        app:elevation="0dp"
+        app:labelVisibilityMode="unlabeled"
+        app:itemIconSize="26dp"
+        app:itemRippleColor="@color/nav_indicator_fill"
+        app:itemActiveIndicatorStyle="@style/Widget.App.BottomNav.GlassIndicator"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:menu="@menu/bottom_nav_menu" />
+
+</FrameLayout>

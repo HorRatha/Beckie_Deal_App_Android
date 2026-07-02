@@ -209,9 +209,14 @@ public class CategoriesActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         if (bottomNav == null) return;
 
-        bottomNav.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-        com.google.android.material.card.MaterialCardView container = findViewById(R.id.bottomNavigationContainer);
-        if (container != null) container.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.surface));
+        bottomNav.setBackground(null);
+        bottomNav.setBackgroundTintList(null);
+        bottomNav.setItemActiveIndicatorColor(android.content.res.ColorStateList.valueOf(
+                androidx.core.content.ContextCompat.getColor(this, R.color.nav_indicator_fill)));
+
+        android.content.res.ColorStateList navTint =
+                androidx.core.content.ContextCompat.getColorStateList(this, R.color.bottom_nav_color);
+        if (navTint != null) { bottomNav.setItemIconTintList(navTint); bottomNav.setItemTextColor(navTint); }
 
         bottomNav.setSelectedItemId(R.id.nav_categories);
         bottomNav.setOnItemSelectedListener(item -> {
