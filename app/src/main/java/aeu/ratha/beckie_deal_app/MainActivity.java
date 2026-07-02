@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupSearchBar() {
         View searchBar = findViewById(R.id.searchBar);
-        if (searchBar != null) searchBar.setOnClickListener(v -> Toast.makeText(this, "Search products...", Toast.LENGTH_SHORT).show());
+        if (searchBar != null) searchBar.setOnClickListener(v ->
+                startActivity(new Intent(this, SearchActivity.class)));
     }
 
     private void setupHeroBanner() {

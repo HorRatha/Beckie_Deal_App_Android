@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
@@ -44,7 +43,7 @@ public class CategoriesActivity extends AppCompatActivity {
         TextView viewAllBrands = findViewById(R.id.viewAllBrands);
 
         if (searchIcon != null) searchIcon.setOnClickListener(v ->
-                Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, SearchActivity.class)));
         if (cartContainer != null) cartContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, CartActivity.class)));
         if (viewAllBrands != null) viewAllBrands.setOnClickListener(v ->
