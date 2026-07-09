@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
-public class FavoritesActivity extends AppCompatActivity {
+public class FavoritesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

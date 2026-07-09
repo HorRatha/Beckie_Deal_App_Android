@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
 
-public class PayoutActivity extends AppCompatActivity {
+public class PayoutActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

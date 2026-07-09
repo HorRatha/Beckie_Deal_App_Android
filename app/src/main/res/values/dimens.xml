@@ -33,7 +33,7 @@
     <dimen name="section_spacing">24dp</dimen>
 
     <!-- Bottom nav pill margins -->
-    <dimen name="bottom_nav_side_margin">20dp</dimen>
-    <dimen name="bottom_nav_bottom_margin">20dp</dimen>
-    <dimen name="bottom_nav_corner_radius">36dp</dimen>
+    <dimen name="bottom_nav_side_margin">0dp</dimen>
+    <dimen name="bottom_nav_bottom_margin">0dp</dimen>
+    <dimen name="bottom_nav_corner_radius">0dp</dimen>
 </resources>

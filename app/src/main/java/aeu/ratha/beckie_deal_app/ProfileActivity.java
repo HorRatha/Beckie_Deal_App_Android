@@ -15,7 +15,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         int currentNightMode = getResources().getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_MASK;
+
+        // Null listener first so setChecked() doesn't fire the callback during setup.
+        darkModeSwitch.setOnCheckedChangeListener(null);
         darkModeSwitch.setChecked(currentNightMode == Configuration.UI_MODE_NIGHT_YES);
 
         darkModeSwitch.setOnCheckedChangeListener((btn, isChecked) ->

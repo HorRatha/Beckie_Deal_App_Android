@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProductDetailActivity extends AppCompatActivity {
+public class ProductDetailActivity extends BaseActivity {
 
     private boolean isFavorite = false;
     private ImageView detailFavoriteIcon;

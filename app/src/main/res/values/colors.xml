@@ -24,17 +24,14 @@
     <color name="nav_active_item">#F97316</color>
     <color name="nav_inactive_item">#94A3B8</color>
 
-    <!-- Bottom Nav Glass Style (Light Mode) — iOS 26 liquid glass -->
-    <!-- Nearly transparent fill — page shows through like real glass -->
-    <color name="nav_glass_fill">#18FFFFFF</color>
-    <!-- Border: soft visible gray ring so the pill has shape -->
-    <color name="nav_glass_border">#30000000</color>
-    <!-- Active pill: translucent orange tint -->
-    <color name="nav_indicator_fill">#33F97316</color>
-    <color name="nav_indicator_border">#66F97316</color>
-    <!-- Icon colors for glass nav -->
+    <!-- Bottom Nav Modern Clean Style (Light Mode) -->
+    <!-- Solid surface — clean white pill, no transparency artifacts -->
+    <color name="nav_surface">#FFFFFF</color>
+    <!-- Active pill: soft orange tint for selected item -->
+    <color name="nav_indicator_fill">#FFF1EB</color>
+    <!-- Icon colors -->
     <color name="nav_glass_active">#F97316</color>
-    <color name="nav_glass_inactive">#80251913</color>
+    <color name="nav_glass_inactive">#94A3B8</color>
 
     <!-- Fixed Colors -->
     <color name="orange_main">#F97316</color>

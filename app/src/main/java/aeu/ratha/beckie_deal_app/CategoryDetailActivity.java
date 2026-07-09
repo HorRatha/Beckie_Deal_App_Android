@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CategoryDetailActivity extends AppCompatActivity {
+public class CategoryDetailActivity extends BaseActivity {
 
     public static final String EXTRA_CATEGORY   = "category_name";
     public static final String EXTRA_HERO_IMAGE = "category_image_url";

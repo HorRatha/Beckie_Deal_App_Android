@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 import java.util.Locale;
 
-public class CartActivity extends AppCompatActivity {
+public class CartActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

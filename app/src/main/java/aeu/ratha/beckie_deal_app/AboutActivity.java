@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
 
     // Beckie Deal Cambodia store location
     private static final double HQ_LAT  = 11.5564;

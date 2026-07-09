@@ -17,7 +17,7 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriesActivity extends AppCompatActivity {
+public class CategoriesActivity extends BaseActivity {
 
     private List<Brand> brandsList = new ArrayList<>();
     private GridLayout brandsGrid;

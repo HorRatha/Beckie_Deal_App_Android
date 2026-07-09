@@ -35,7 +35,7 @@ import java.util.Map;
  * Launched by clicking the search bar on MainActivity or the search icon on
  * CategoriesActivity.
  */
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends BaseActivity {
 
     private EditText  searchEditText;
     private ImageView clearButton;

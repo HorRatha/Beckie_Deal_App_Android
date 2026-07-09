@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllBrandsActivity extends AppCompatActivity {
+public class AllBrandsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

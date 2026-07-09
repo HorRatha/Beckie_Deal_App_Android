@@ -86,9 +86,16 @@ public class AppDrawerHelper {
         if (darkSwitch != null) {
             int nightMode = activity.getResources().getConfiguration().uiMode
                     & Configuration.UI_MODE_NIGHT_MASK;
-            darkSwitch.setChecked(nightMode == Configuration.UI_MODE_NIGHT_YES);
-            darkSwitch.setOnCheckedChangeListener((btn, isChecked) ->
-                    AppCompatDelegate.setDefaultNightMode(isChecked
+            boolean isNight = nightMode == Configuration.UI_MODE_NIGHT_YES;
+
+            // Clear any previous listener BEFORE calling setChecked so it
+            // doesn't fire during initial setup and trigger a recreation loop.
+            darkSwitch.setOnCheckedChangeListener(null);
+            darkSwitch.setChecked(isNight);
+
+            // Attach the listener AFTER the initial state is set.
+            darkSwitch.setOnCheckedChangeListener((btn, checked) ->
+                    AppCompatDelegate.setDefaultNightMode(checked
                             ? AppCompatDelegate.MODE_NIGHT_YES
                             : AppCompatDelegate.MODE_NIGHT_NO));
         }
@@ -96,7 +103,8 @@ public class AppDrawerHelper {
         // Tapping the dark-mode row also toggles the switch
         View darkRow = drawerLayout.findViewById(R.id.drawerDarkMode);
         if (darkRow != null && darkSwitch != null) {
-            darkRow.setOnClickListener(v -> darkSwitch.setChecked(!darkSwitch.isChecked()));
+            final MaterialSwitch switchRef = darkSwitch;
+            darkRow.setOnClickListener(v -> switchRef.setChecked(!switchRef.isChecked()));
         }
 
         // ── Navigation items ─────────────────────────────────────────────

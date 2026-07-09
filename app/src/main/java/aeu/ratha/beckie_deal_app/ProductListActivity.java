@@ -23,7 +23,7 @@ import java.util.List;
  * Accepts EXTRA_MODE = "new_collection" | "top_selling".
  * Supports the FilterBottomSheet for Sort / Year / Price filtering.
  */
-public class ProductListActivity extends AppCompatActivity
+public class ProductListActivity extends BaseActivity
         implements FilterBottomSheet.FilterListener {
 
     public static final String EXTRA_MODE          = "list_mode";
