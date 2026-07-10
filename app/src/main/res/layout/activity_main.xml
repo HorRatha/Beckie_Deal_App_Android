@@ -261,47 +261,99 @@
                     android:paddingBottom="2dp" />
             </HorizontalScrollView>
 
-            <!-- New Arrivals promo banner — right under New Collection -->
+            <!-- ══ NEW ARRIVALS BANNER — Modern redesign ══════════════════ -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="160dp"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="6dp"
+                app:cardPreventCornerOverlap="true">
+
+                <!-- Dark gradient background -->
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/brand_background">
+                    android:background="@drawable/new_arrivals_banner_bg">
+
+                    <!-- Decorative circle — large, top-right -->
+                    <View
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="-50dp"
+                        android:layout_marginEnd="-40dp"
+                        android:background="@drawable/new_arrivals_circle_decor" />
+
+                    <!-- Decorative circle — small, bottom-right -->
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="bottom|end"
+                        android:layout_marginBottom="-20dp"
+                        android:layout_marginEnd="60dp"
+                        android:background="@drawable/new_arrivals_circle_decor" />
+
+                    <!-- Content column -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="22dp"
                         android:orientation="vertical">
+
+                        <!-- "NEW" pill tag -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/new_arrivals_tag_bg"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="3dp"
+                            android:text="✦  JUST LANDED"
+                            android:textColor="#0F172A"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+
+                        <!-- Main title -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
                             android:text="New Arrivals"
-                            android:textColor="@android:color/white"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="26sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="-0.02" />
+
+                        <!-- Subtitle -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Latest tech just landed"
-                            android:textColor="@android:color/white"
-                            android:textSize="13sp" />
-                        <Button
+                            android:layout_marginTop="2dp"
+                            android:text="Fresh tech drops, every week"
+                            android:textColor="#B0D8FF"
+                            android:textSize="12sp" />
+
+                        <!-- Ghost CTA button -->
+                        <TextView
                             android:id="@+id/discoverButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="32dp"
-                            android:layout_marginTop="8dp"
-                            android:backgroundTint="@android:color/white"
-                            android:text="Discover"
-                            android:textColor="@color/primary"
-                            android:textSize="12sp" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:background="@drawable/new_arrivals_btn_bg"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:paddingHorizontal="18dp"
+                            android:paddingVertical="7dp"
+                            android:text="Explore Now →"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
                     </LinearLayout>
+
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
 

@@ -170,7 +170,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupNewArrivalsBanner() {
-        Button discoverButton = findViewById(R.id.discoverButton);
+        View discoverButton = findViewById(R.id.discoverButton);
         if (discoverButton != null) {
             discoverButton.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ProductListActivity.class);
