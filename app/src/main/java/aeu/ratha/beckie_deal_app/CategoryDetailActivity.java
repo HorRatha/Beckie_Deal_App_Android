@@ -303,7 +303,8 @@ public class CategoryDetailActivity extends BaseActivity {
             params.width = 0;
             params.height = GridLayout.LayoutParams.WRAP_CONTENT;
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-            params.setMargins(0, 0, 0, 0);
+            int gap = (int) (2 * getResources().getDisplayMetrics().density);
+            params.setMargins(gap, gap, gap, gap);
             view.setLayoutParams(params);
 
             productsGrid.addView(view);
