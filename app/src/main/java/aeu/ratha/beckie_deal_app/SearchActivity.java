@@ -210,6 +210,14 @@ public class SearchActivity extends BaseActivity {
                 });
             }
 
+            // Set layout params so each card takes exactly half the grid width (2 per row)
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.width = 0;
+            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
+            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+            params.setMargins(0, 0, 0, 0);
+            view.setLayoutParams(params);
+
             resultsGrid.addView(view);
         }
     }
