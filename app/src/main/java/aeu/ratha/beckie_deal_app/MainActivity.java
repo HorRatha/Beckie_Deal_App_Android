@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
@@ -24,6 +25,7 @@ public class MainActivity extends BaseActivity {
     private List<Product> products;
     private List<Category> categories;
     private AppDrawerHelper drawerHelper;
+    private ProductGridAdapter productAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +52,16 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initializeMockData() {
+        // Build the flat product list from the full catalogue (all categories + brands)
         products = new ArrayList<>();
-        products.add(new Product("MacBook Air M2", "$1,199.00", "4.9", false, "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop"));
-        products.add(new Product("iPhone 15 Pro", "$999.00", "4.8", false, "https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop"));
-        products.add(new Product("ASUS ROG Strix", "$1,499.00", "4.7", false, "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop"));
-        products.add(new Product("Samsung S24 Ultra", "$1,299.00", "4.9", false, "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop"));
+        for (java.util.Map<String, List<Product>> brandMap
+                : CategoryDetailActivity.CATALOGUE.values()) {
+            for (List<Product> list : brandMap.values()) {
+                products.addAll(list);
+            }
+        }
 
+        // Sync existing favorites
         for (Product p : products) {
             if (p.isFavorite) FavoriteManager.getInstance().addFavorite(p);
         }
@@ -141,50 +147,25 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupProducts() {
-        GridLayout productsGrid = findViewById(R.id.productsGrid);
+        RecyclerView productsGrid = findViewById(R.id.productsGrid);
         if (productsGrid == null) return;
-        productsGrid.removeAllViews();
-        // Always 2 columns to match the reference design
-        productsGrid.setColumnCount(2);
 
-        for (int i = 0; i < products.size(); i++) {
-            Product product = products.get(i);
-            product.isFavorite = FavoriteManager.getInstance().isFavorite(product);
+        // Sync favorite state for all items
+        for (Product p : products) {
+            p.isFavorite = FavoriteManager.getInstance().isFavorite(p);
+        }
 
-            View productView = LayoutInflater.from(this)
-                    .inflate(R.layout.product_card, productsGrid, false);
-
-            // Bind all visible fields via the shared binder
-            ProductCardBinder.bind(this, productView, product);
-
-            // Card tap → detail screen
-            final int position = i;
-            productView.setOnClickListener(v -> {
-                Product p = products.get(position);
-                Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
-                intent.putExtra("product_name",   p.name);
-                intent.putExtra("product_price",  p.price);
-                intent.putExtra("product_image",  p.imageUrl);
-                intent.putExtra("product_rating", p.rating);
-                intent.putExtra("is_favorite",    p.isFavorite);
-                startActivity(intent);
-            });
-
-            // Favourite toggle
-            ImageView favoriteIcon = productView.findViewById(R.id.favoriteIcon);
-            if (favoriteIcon != null) {
-                favoriteIcon.setOnClickListener(v -> {
-                    product.isFavorite = !product.isFavorite;
-                    if (product.isFavorite) FavoriteManager.getInstance().addFavorite(product);
-                    else                    FavoriteManager.getInstance().removeFavorite(product);
-                    ProductCardBinder.refreshFavIcon(this, favoriteIcon, product.isFavorite);
-                    Toast.makeText(this,
-                            product.isFavorite ? "Added to Favorites" : "Removed from Favorites",
-                            Toast.LENGTH_SHORT).show();
-                });
-            }
-
-            productsGrid.addView(productView);
+        if (productAdapter == null) {
+            // First setup: create the adapter and attach a 2-column GridLayoutManager.
+            // nestedScrollingEnabled=false (set in XML) lets the outer NestedScrollView
+            // control the scroll, so the whole page scrolls as one — smooth and natural.
+            GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+            productsGrid.setLayoutManager(layoutManager);
+            productAdapter = new ProductGridAdapter(this, products);
+            productsGrid.setAdapter(productAdapter);
+        } else {
+            // onResume path: just refresh to pick up favorite changes
+            productAdapter.notifyDataSetChanged();
         }
     }
 

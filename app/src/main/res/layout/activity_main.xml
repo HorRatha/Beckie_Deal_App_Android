@@ -378,13 +378,14 @@
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <GridLayout
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/productsGrid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/border_color"
-                android:columnCount="2" />
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

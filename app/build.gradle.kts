@@ -40,6 +40,9 @@ dependencies {
     // Add CardView for product cards
     implementation("androidx.cardview:cardview:1.0.0")
 
+    // RecyclerView for efficient scrolling product grids
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+
     // Glide - Image loading library for product images (Latest version)
     implementation("com.github.bumptech.glide:glide:5.0.0-rc01")
     annotationProcessor("com.github.bumptech.glide:compiler:5.0.0-rc01")
