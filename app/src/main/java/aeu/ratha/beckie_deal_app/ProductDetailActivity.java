@@ -156,22 +156,24 @@ public class ProductDetailActivity extends BaseActivity {
         String url = index < imageUrls.size() ? imageUrls.get(index) : imageUrls.get(0);
 
         if (mainImage != null) {
-            Glide.with(this).load(url).centerInside()
-                 .placeholder(R.drawable.placeholder_image).into(mainImage);
+            Glide.with(this).load(url)
+                 .placeholder(R.drawable.placeholder_image)
+                 .into(mainImage);
         }
 
-        // Update dots
+        // Update dots — active becomes a wide pill (20dp), inactive a small circle (6dp)
         for (int i = 0; i < 4; i++) {
             if (dots[i] == null) continue;
             android.view.ViewGroup.LayoutParams lp = dots[i].getLayoutParams();
             if (i == index) {
-                lp.width = dpToPx(24);
-                dots[i].setBackgroundColor(Color.parseColor("#F97316"));
+                lp.width = dpToPx(20);
+                dots[i].setLayoutParams(lp);
+                dots[i].setBackgroundResource(R.drawable.dot_active);
             } else {
                 lp.width = dpToPx(6);
-                dots[i].setBackgroundColor(Color.parseColor("#CCCCCC"));
+                dots[i].setLayoutParams(lp);
+                dots[i].setBackgroundResource(R.drawable.dot_inactive);
             }
-            dots[i].setLayoutParams(lp);
         }
 
         // Update thumb borders

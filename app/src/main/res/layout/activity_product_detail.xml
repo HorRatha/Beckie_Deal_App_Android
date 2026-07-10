@@ -111,16 +111,23 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/hero_banner_height_product"
-                android:background="@color/card_bg_secondary">
+                android:background="@color/surface">
 
-                <!-- Main image -->
+                <!-- Main image — fills the frame edge-to-edge, fit-center keeps aspect ratio -->
                 <ImageView
                     android:id="@+id/detailProductImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="32dp"
-                    android:scaleType="centerInside"
+                    android:padding="24dp"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/placeholder_image" />
+
+                <!-- Subtle bottom gradient so image blends into white content area -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/hero_bottom_fade" />
 
                 <!-- Dot indicator (4 dots) -->
                 <LinearLayout
@@ -128,25 +135,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="14dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <View android:id="@+id/dot1"
-                        android:layout_width="24dp" android:layout_height="4dp"
+                        android:layout_width="20dp" android:layout_height="6dp"
                         android:layout_marginEnd="5dp"
-                        android:background="#F97316" />
+                        android:background="@drawable/dot_active" />
                     <View android:id="@+id/dot2"
-                        android:layout_width="6dp" android:layout_height="4dp"
+                        android:layout_width="6dp" android:layout_height="6dp"
                         android:layout_marginEnd="5dp"
-                        android:background="#CCCCCC" android:backgroundTint="@null" />
+                        android:background="@drawable/dot_inactive" />
                     <View android:id="@+id/dot3"
-                        android:layout_width="6dp" android:layout_height="4dp"
+                        android:layout_width="6dp" android:layout_height="6dp"
                         android:layout_marginEnd="5dp"
-                        android:background="#CCCCCC" android:backgroundTint="@null" />
+                        android:background="@drawable/dot_inactive" />
                     <View android:id="@+id/dot4"
-                        android:layout_width="6dp" android:layout_height="4dp"
-                        android:background="#CCCCCC" android:backgroundTint="@null" />
+                        android:layout_width="6dp" android:layout_height="6dp"
+                        android:background="@drawable/dot_inactive" />
                 </LinearLayout>
             </FrameLayout>
 
@@ -154,11 +161,11 @@
             <LinearLayout
                 android:id="@+id/thumbnailRow"
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="80dp"
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="4dp">
+                android:paddingTop="10dp"
+                android:paddingBottom="6dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/thumb1"

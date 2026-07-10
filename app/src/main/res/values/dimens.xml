@@ -9,7 +9,7 @@
     <!-- Hero banners -->
     <dimen name="hero_banner_height">180dp</dimen>
     <dimen name="hero_banner_height_detail">160dp</dimen>
-    <dimen name="hero_banner_height_product">280dp</dimen>
+    <dimen name="hero_banner_height_product">340dp</dimen>
 
     <!-- Product grid -->
     <dimen name="product_grid_columns">2</dimen>   <!-- informational only, used in Java -->
