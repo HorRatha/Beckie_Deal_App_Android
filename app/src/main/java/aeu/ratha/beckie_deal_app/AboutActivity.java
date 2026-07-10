@@ -174,6 +174,9 @@ public class AboutActivity extends BaseActivity {
             } else if (id == R.id.nav_categories) {
                 startActivity(new Intent(this, CategoriesActivity.class));
                 overridePendingTransition(0, 0); finish(); return true;
+            } else if (id == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavoritesActivity.class));
+                overridePendingTransition(0, 0); finish(); return true;
             } else if (id == R.id.nav_about) {
                 return true;
             } else if (id == R.id.nav_account) {
