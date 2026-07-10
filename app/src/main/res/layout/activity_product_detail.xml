@@ -129,6 +129,42 @@
                     android:layout_gravity="bottom"
                     android:background="@drawable/hero_bottom_fade" />
 
+                <!-- LEFT arrow -->
+                <ImageView
+                    android:id="@+id/galleryPrev"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/nav_arrow_bg"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_arrow_left"
+                    android:contentDescription="Previous image" />
+
+                <!-- RIGHT arrow -->
+                <ImageView
+                    android:id="@+id/galleryNext"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/nav_arrow_bg"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="Next image" />
+
+                <!-- Fullscreen expand button (top-right) -->
+                <ImageView
+                    android:id="@+id/galleryFullscreen"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/nav_arrow_bg"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_fullscreen"
+                    android:contentDescription="View fullscreen" />
+
                 <!-- Dot indicator (4 dots) -->
                 <LinearLayout
                     android:id="@+id/dotIndicator"

@@ -76,6 +76,11 @@
             android:exported="false"
             android:configChanges="uiMode"
             android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".ImageFullscreenActivity"
+            android:exported="false"
+            android:configChanges="uiMode|orientation|screenSize"
+            android:theme="@style/Theme.BeckieDealApp" />
     </application>
 
 </manifest>

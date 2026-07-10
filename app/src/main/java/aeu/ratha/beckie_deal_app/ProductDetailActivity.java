@@ -148,6 +148,25 @@ public class ProductDetailActivity extends BaseActivity {
             }
         }
 
+        // Prev / Next arrows
+        View prevBtn = findViewById(R.id.galleryPrev);
+        View nextBtn = findViewById(R.id.galleryNext);
+        if (prevBtn != null) prevBtn.setOnClickListener(v ->
+                selectImage((currentImageIndex - 1 + imageUrls.size()) % imageUrls.size()));
+        if (nextBtn != null) nextBtn.setOnClickListener(v ->
+                selectImage((currentImageIndex + 1) % imageUrls.size()));
+
+        // Tap main image or fullscreen button → open ImageFullscreenActivity
+        View fsBtn = findViewById(R.id.galleryFullscreen);
+        View.OnClickListener openFullscreen = v -> {
+            Intent intent = new Intent(this, ImageFullscreenActivity.class);
+            intent.putStringArrayListExtra("image_urls", new ArrayList<>(imageUrls));
+            intent.putExtra("start_index", currentImageIndex);
+            startActivity(intent);
+        };
+        if (mainImage != null) mainImage.setOnClickListener(openFullscreen);
+        if (fsBtn    != null) fsBtn.setOnClickListener(openFullscreen);
+
         selectImage(0);
     }
 

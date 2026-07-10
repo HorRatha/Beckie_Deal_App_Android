@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Full-screen image viewer: black background, image fills screen, nav arrows + close -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- The full-screen image -->
+    <ImageView
+        android:id="@+id/fullscreenImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/placeholder_image" />
+
+    <!-- ── TOP BAR: close button + counter label ── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="12dp"
+        android:background="#66000000">
+
+        <!-- Close -->
+        <ImageView
+            android:id="@+id/fullscreenClose"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/nav_arrow_bg"
+            android:padding="12dp"
+            android:src="@drawable/ic_close_white"
+            android:contentDescription="Close" />
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- e.g.  "2 / 4" -->
+        <TextView
+            android:id="@+id/fullscreenCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 / 4"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- LEFT arrow -->
+    <ImageView
+        android:id="@+id/fullscreenPrev"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/nav_arrow_bg"
+        android:padding="14dp"
+        android:src="@drawable/ic_arrow_left"
+        android:contentDescription="Previous" />
+
+    <!-- RIGHT arrow -->
+    <ImageView
+        android:id="@+id/fullscreenNext"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/nav_arrow_bg"
+        android:padding="14dp"
+        android:src="@drawable/ic_arrow_right"
+        android:contentDescription="Next" />
+
+    <!-- Dot indicator at the bottom -->
+    <LinearLayout
+        android:id="@+id/fullscreenDots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="32dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View android:id="@+id/fsDot1"
+            android:layout_width="20dp" android:layout_height="6dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/dot_active" />
+        <View android:id="@+id/fsDot2"
+            android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/dot_inactive" />
+        <View android:id="@+id/fsDot3"
+            android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/dot_inactive" />
+        <View android:id="@+id/fsDot4"
+            android:layout_width="6dp" android:layout_height="6dp"
+            android:background="@drawable/dot_inactive" />
+
+    </LinearLayout>
+
+</FrameLayout>
