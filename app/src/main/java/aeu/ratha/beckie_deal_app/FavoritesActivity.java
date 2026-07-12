@@ -92,7 +92,8 @@ public class FavoritesActivity extends BaseActivity {
                     });
                 }
 
-                // Set layout params so each card takes exactly half the grid width (2 per row)
+                // Each card takes equal column weight but is capped to max column width
+                // This prevents a single item from stretching full width
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.width = 0;
                 params.height = GridLayout.LayoutParams.WRAP_CONTENT;
@@ -101,6 +102,22 @@ public class FavoritesActivity extends BaseActivity {
                 productView.setLayoutParams(params);
 
                 favoritesGrid.addView(productView);
+            }
+
+            // If items don't fill the last row, add invisible spacers to keep cards at correct size
+            int remainder = favoriteProducts.size() % columns;
+            if (remainder != 0) {
+                int spacersNeeded = columns - remainder;
+                for (int i = 0; i < spacersNeeded; i++) {
+                    View spacer = new View(this);
+                    GridLayout.LayoutParams spacerParams = new GridLayout.LayoutParams();
+                    spacerParams.width = 0;
+                    spacerParams.height = 0;
+                    spacerParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+                    spacerParams.setMargins(dp(2), 0, dp(2), 0);
+                    spacer.setLayoutParams(spacerParams);
+                    favoritesGrid.addView(spacer);
+                }
             }
         }
     }
