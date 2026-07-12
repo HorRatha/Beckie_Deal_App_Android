@@ -35,7 +35,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:src="@android:drawable/ic_menu_sort_by_size"
-                android:tint="@color/text_primary" />
+                app:tint="@color/text_primary" />
 
             <ImageView
                 android:id="@+id/logoImage"
@@ -109,7 +109,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="16dp"
                     android:src="@android:drawable/ic_menu_search"
-                    android:tint="@color/text_secondary" />
+                    app:tint="@color/text_secondary" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
