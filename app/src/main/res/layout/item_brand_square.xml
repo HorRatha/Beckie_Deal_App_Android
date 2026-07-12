@@ -5,12 +5,14 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_columnWeight="1"
-    android:layout_margin="6dp"
+    android:layout_margin="4dp"
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
     app:strokeColor="@color/border_color"
-    app:cardBackgroundColor="@color/surface">
+    app:cardBackgroundColor="@color/surface"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:id="@+id/brandLayout"
@@ -18,22 +20,25 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingVertical="16dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="12dp"
         android:paddingHorizontal="8dp">
 
+        <!-- Rounded icon container with light fill -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/iconContainer"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            app:cardCornerRadius="0dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/surface">
-            
+            app:cardBackgroundColor="#F0F0F0"
+            app:strokeWidth="0dp">
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="8dp">
-                
+                android:padding="10dp">
+
                 <TextView
                     android:id="@+id/brandIconText"
                     android:layout_width="wrap_content"
@@ -41,7 +46,7 @@
                     android:layout_gravity="center"
                     android:text="AS"
                     android:textColor="@color/primary"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
@@ -52,18 +57,32 @@
                     android:layout_gravity="center"
                     android:scaleType="fitCenter" />
             </FrameLayout>
-            
+
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Brand name -->
         <TextView
             android:id="@+id/brandName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Brand Name"
+            android:text="Brand"
             android:textColor="@color/text_primary"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <!-- Product count subtitle -->
+        <TextView
+            android:id="@+id/brandProductCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text=""
+            android:textColor="@color/text_secondary"
+            android:textSize="10sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

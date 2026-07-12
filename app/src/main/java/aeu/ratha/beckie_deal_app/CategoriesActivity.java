@@ -65,6 +65,8 @@ public class CategoriesActivity extends BaseActivity {
         brandsList.add(new Brand("Lenovo",    R.drawable.ic_brand_lenovo,    false));
         brandsList.add(new Brand("Acer",      R.drawable.ic_brand_acer,      false));
         brandsList.add(new Brand("Microsoft", R.drawable.ic_brand_microsoft, false));
+        brandsList.add(new Brand("Samsung",   R.drawable.ic_brand_samsung,   false));
+        brandsList.add(new Brand("MSI",       R.drawable.ic_brand_msi,       false));
     }
 
     private void setupLaptopBrands() {
@@ -88,8 +90,18 @@ public class CategoriesActivity extends BaseActivity {
             ImageView brandIcon            = view.findViewById(R.id.brandIcon);
             TextView  iconText             = view.findViewById(R.id.brandIconText);
             TextView  nameText             = view.findViewById(R.id.brandName);
+            TextView  countText            = view.findViewById(R.id.brandProductCount);
 
             nameText.setText(brand.name);
+
+            // Show product count for each brand
+            if (countText != null) {
+                int productCount = getBrandProductCount(brand.name);
+                if (productCount > 0) {
+                    countText.setText(productCount + " items");
+                    countText.setVisibility(View.VISIBLE);
+                }
+            }
 
             if (brand.imageResId != 0) {
                 brandIcon.setVisibility(View.VISIBLE);
@@ -103,25 +115,25 @@ public class CategoriesActivity extends BaseActivity {
             }
 
             if (brand.isSelected) {
-                int orange = Color.parseColor("#F97316");
-                card.setCardBackgroundColor(orange);
+                int darkBg = Color.parseColor("#1A1A2E");
+                card.setCardBackgroundColor(darkBg);
+                card.setStrokeWidth(2);
+                card.setStrokeColor(Color.parseColor("#F97316"));
                 nameText.setTextColor(Color.WHITE);
-                card.setStrokeWidth(0);
-                if (iconContainer != null) {
-                    iconContainer.setCardBackgroundColor(orange);
-                    iconContainer.setStrokeWidth(0);
-                }
-                brandIcon.setColorFilter(Color.WHITE);
-                iconText.setTextColor(Color.WHITE);
-            } else {
-                card.setCardBackgroundColor(Color.WHITE);
-                nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
-                card.setStrokeWidth(1);
-                card.setStrokeColor(Color.parseColor("#EEEEEE"));
+                if (countText != null) countText.setTextColor(Color.parseColor("#AAAAAA"));
                 if (iconContainer != null) {
                     iconContainer.setCardBackgroundColor(Color.WHITE);
-                    iconContainer.setStrokeWidth(1);
-                    iconContainer.setStrokeColor(Color.parseColor("#EEEEEE"));
+                }
+                brandIcon.clearColorFilter();
+                iconText.setTextColor(ContextCompat.getColor(this, R.color.primary));
+            } else {
+                card.setCardBackgroundColor(Color.WHITE);
+                card.setStrokeWidth(1);
+                card.setStrokeColor(Color.parseColor("#EEEEEE"));
+                nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
+                if (countText != null) countText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+                if (iconContainer != null) {
+                    iconContainer.setCardBackgroundColor(Color.parseColor("#F0F0F0"));
                 }
                 brandIcon.clearColorFilter();
                 iconText.setTextColor(ContextCompat.getColor(this, R.color.primary));
@@ -143,6 +155,17 @@ public class CategoriesActivity extends BaseActivity {
 
             brandsGrid.addView(view);
         }
+    }
+
+    /** Count products for a brand across all categories in the catalogue */
+    private int getBrandProductCount(String brandName) {
+        int count = 0;
+        for (java.util.Map.Entry<String, java.util.Map<String, java.util.List<MainActivity.Product>>> catEntry
+                : CategoryDetailActivity.CATALOGUE.entrySet()) {
+            java.util.List<MainActivity.Product> products = catEntry.getValue().get(brandName);
+            if (products != null) count += products.size();
+        }
+        return count;
     }
 
     private void setupAllCategories() {
