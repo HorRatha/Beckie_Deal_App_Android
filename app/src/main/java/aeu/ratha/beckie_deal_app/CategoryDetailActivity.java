@@ -252,8 +252,8 @@ public class CategoryDetailActivity extends BaseActivity {
     private void renderProducts(List<MainActivity.Product> products) {
         if (productsGrid == null) return;
         productsGrid.removeAllViews();
-        // Always 2 columns to match the reference design
-        productsGrid.setColumnCount(2);
+        // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet
+        productsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
 
         if (products.isEmpty()) {
             TextView empty = new TextView(this);

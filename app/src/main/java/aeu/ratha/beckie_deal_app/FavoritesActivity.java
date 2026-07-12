@@ -58,8 +58,9 @@ public class FavoritesActivity extends BaseActivity {
                 finish();
             });
         } else {
-            // Always 2 columns
-            favoritesGrid.setColumnCount(2);
+            // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet
+            int columns = ScreenUtils.productGridColumns(this);
+            favoritesGrid.setColumnCount(columns);
             emptyState.setVisibility(View.GONE);
             favoritesGrid.setVisibility(View.VISIBLE);
             favoritesGrid.removeAllViews();
@@ -91,9 +92,21 @@ public class FavoritesActivity extends BaseActivity {
                     });
                 }
 
+                // Set layout params so each card takes exactly half the grid width (2 per row)
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.width = 0;
+                params.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+                params.setMargins(dp(2), dp(2), dp(2), dp(2));
+                productView.setLayoutParams(params);
+
                 favoritesGrid.addView(productView);
             }
         }
+    }
+
+    private int dp(int dp) {
+        return ScreenUtils.dpToPx(this, dp);
     }
 
     private void setupBottomNavigation() {

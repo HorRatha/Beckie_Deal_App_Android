@@ -156,7 +156,7 @@ public class SearchActivity extends BaseActivity {
 
     private void renderResults(List<ProductResult> results, String query) {
         resultsGrid.removeAllViews();
-        resultsGrid.setColumnCount(2);
+        resultsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
 
         if (results.isEmpty()) {
             resultsScrollView.setVisibility(View.GONE);

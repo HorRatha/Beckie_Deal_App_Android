@@ -143,9 +143,7 @@
                 android:id="@+id/favoritesGrid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alignmentMode="alignMargins"
-                android:background="@color/border_color"
-                android:columnCount="2" />
+                android:alignmentMode="alignMargins" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
