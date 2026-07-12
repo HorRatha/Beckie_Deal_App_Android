@@ -2,9 +2,13 @@ package aeu.ratha.beckie_deal_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +31,17 @@ public class MainActivity extends BaseActivity {
     private AppDrawerHelper drawerHelper;
     private ProductGridAdapter productAdapter;
 
+    // Auto-scroll for horizontal sections
+    private Handler autoScrollHandler;
+    private HorizontalScrollView newCollectionScroll;
+    private HorizontalScrollView topSellingScroll;
+    private boolean isNewCollectionTouched = false;
+    private boolean isTopSellingTouched = false;
+    private int newCollectionScrollIndex = 0;
+    private int topSellingScrollIndex = 0;
+    private static final long AUTO_SCROLL_PAUSE = 2500; // 2.5 seconds
+    private static final int SCROLL_DURATION = 400; // smooth scroll duration in ms
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,12 +58,26 @@ public class MainActivity extends BaseActivity {
         setupNewCollectionSection();
         setupTopSellingSection();
         setupBottomNavigation();
+        setupAutoScroll();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setupProducts();
+        startAutoScroll();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopAutoScroll();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopAutoScroll();
     }
 
     private void initializeMockData() {
@@ -297,6 +326,117 @@ public class MainActivity extends BaseActivity {
             return Double.parseDouble(price.replace("$", "").replace(",", ""));
         } catch (NumberFormatException e) { return 0; }
     }
+
+    // ── Auto-scroll logic ─────────────────────────────────────────────────────
+
+    private void setupAutoScroll() {
+        autoScrollHandler = new Handler(Looper.getMainLooper());
+
+        newCollectionScroll = findViewById(R.id.newCollectionScroll);
+        topSellingScroll = findViewById(R.id.topSellingScroll);
+
+        // Pause auto-scroll when user touches, resume when released
+        if (newCollectionScroll != null) {
+            newCollectionScroll.setOnTouchListener((v, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_MOVE:
+                        isNewCollectionTouched = true;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        isNewCollectionTouched = false;
+                        // Resume after a pause from where user left
+                        autoScrollHandler.postDelayed(newCollectionRunnable, AUTO_SCROLL_PAUSE);
+                        break;
+                }
+                return false; // allow normal scroll handling
+            });
+        }
+
+        if (topSellingScroll != null) {
+            topSellingScroll.setOnTouchListener((v, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_MOVE:
+                        isTopSellingTouched = true;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        isTopSellingTouched = false;
+                        autoScrollHandler.postDelayed(topSellingRunnable, AUTO_SCROLL_PAUSE);
+                        break;
+                }
+                return false;
+            });
+        }
+
+        startAutoScroll();
+    }
+
+    private void startAutoScroll() {
+        if (autoScrollHandler == null) return;
+        autoScrollHandler.removeCallbacks(newCollectionRunnable);
+        autoScrollHandler.removeCallbacks(topSellingRunnable);
+        autoScrollHandler.postDelayed(newCollectionRunnable, AUTO_SCROLL_PAUSE);
+        autoScrollHandler.postDelayed(topSellingRunnable, AUTO_SCROLL_PAUSE);
+    }
+
+    private void stopAutoScroll() {
+        if (autoScrollHandler == null) return;
+        autoScrollHandler.removeCallbacks(newCollectionRunnable);
+        autoScrollHandler.removeCallbacks(topSellingRunnable);
+    }
+
+    private final Runnable newCollectionRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isNewCollectionTouched || newCollectionScroll == null) return;
+
+            LinearLayout container = findViewById(R.id.newCollectionContainer);
+            if (container == null || container.getChildCount() == 0) return;
+
+            int childCount = container.getChildCount();
+            newCollectionScrollIndex++;
+
+            // If we've scrolled past the last item, smoothly scroll back to start
+            if (newCollectionScrollIndex >= childCount) {
+                newCollectionScrollIndex = 0;
+                newCollectionScroll.smoothScrollTo(0, 0);
+            } else {
+                View child = container.getChildAt(newCollectionScrollIndex);
+                newCollectionScroll.smoothScrollTo(child.getLeft(), 0);
+            }
+
+            // Schedule next scroll
+            autoScrollHandler.postDelayed(this, AUTO_SCROLL_PAUSE);
+        }
+    };
+
+    private final Runnable topSellingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isTopSellingTouched || topSellingScroll == null) return;
+
+            LinearLayout container = findViewById(R.id.topSellingContainer);
+            if (container == null || container.getChildCount() == 0) return;
+
+            int childCount = container.getChildCount();
+            topSellingScrollIndex++;
+
+            // If we've scrolled past the last item, smoothly scroll back to start
+            if (topSellingScrollIndex >= childCount) {
+                topSellingScrollIndex = 0;
+                topSellingScroll.smoothScrollTo(0, 0);
+            } else {
+                View child = container.getChildAt(topSellingScrollIndex);
+                topSellingScroll.smoothScrollTo(child.getLeft(), 0);
+            }
+
+            // Schedule next scroll
+            autoScrollHandler.postDelayed(this, AUTO_SCROLL_PAUSE);
+        }
+    };
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);

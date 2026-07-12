@@ -246,6 +246,7 @@
             </RelativeLayout>
 
             <HorizontalScrollView
+                android:id="@+id/newCollectionScroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -398,6 +399,7 @@
             </RelativeLayout>
 
             <HorizontalScrollView
+                android:id="@+id/topSellingScroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
