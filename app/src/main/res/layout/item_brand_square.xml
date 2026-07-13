@@ -7,8 +7,9 @@
     android:layout_columnWeight="1"
     android:layout_margin="5dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="2dp"
-    app:strokeWidth="0dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/primary"
     app:cardBackgroundColor="@color/surface"
     android:clickable="true"
     android:focusable="true"
@@ -24,14 +25,14 @@
         android:paddingBottom="14dp"
         android:paddingHorizontal="8dp">
 
-        <!-- Rounded icon container with gradient-ready fill -->
+        <!-- Rounded icon container with soft orange bg -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/iconContainer"
             android:layout_width="52dp"
             android:layout_height="52dp"
             app:cardCornerRadius="14dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="#F4F6F8"
+            app:cardBackgroundColor="@color/badge_bg"
             app:strokeWidth="0dp">
 
             <FrameLayout

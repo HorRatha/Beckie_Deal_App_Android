@@ -115,27 +115,27 @@ public class CategoriesActivity extends BaseActivity {
             }
 
             if (brand.isSelected) {
-                int primaryColor = Color.parseColor("#F97316");
-                card.setCardBackgroundColor(Color.parseColor("#FFF7ED"));
-                card.setStrokeWidth(2);
+                int primaryColor = ContextCompat.getColor(this, R.color.primary);
+                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
+                card.setStrokeWidth(dpToPx(2));
                 card.setStrokeColor(primaryColor);
-                card.setCardElevation(6f);
-                nameText.setTextColor(Color.parseColor("#C2410C"));
-                if (countText != null) countText.setTextColor(Color.parseColor("#EA580C"));
+                card.setCardElevation(4f);
+                nameText.setTextColor(primaryColor);
+                if (countText != null) countText.setTextColor(primaryColor);
                 if (iconContainer != null) {
-                    iconContainer.setCardBackgroundColor(Color.WHITE);
+                    iconContainer.setCardBackgroundColor(ContextCompat.getColor(this, R.color.badge_bg));
                 }
                 brandIcon.clearColorFilter();
-                iconText.setTextColor(ContextCompat.getColor(this, R.color.primary));
+                iconText.setTextColor(primaryColor);
             } else {
-                card.setCardBackgroundColor(Color.WHITE);
-                card.setStrokeWidth(0);
-                card.setStrokeColor(Color.TRANSPARENT);
-                card.setCardElevation(2f);
+                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
+                card.setStrokeWidth(dpToPx(1));
+                card.setStrokeColor(ContextCompat.getColor(this, R.color.primary));
+                card.setCardElevation(0f);
                 nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
                 if (countText != null) countText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
                 if (iconContainer != null) {
-                    iconContainer.setCardBackgroundColor(Color.parseColor("#F4F6F8"));
+                    iconContainer.setCardBackgroundColor(ContextCompat.getColor(this, R.color.badge_bg));
                 }
                 brandIcon.clearColorFilter();
                 iconText.setTextColor(ContextCompat.getColor(this, R.color.primary));
@@ -168,6 +168,10 @@ public class CategoriesActivity extends BaseActivity {
             if (products != null) count += products.size();
         }
         return count;
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
     }
 
     private void setupAllCategories() {

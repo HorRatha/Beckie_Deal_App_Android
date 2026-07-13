@@ -7,16 +7,16 @@
     <color name="on_primary_container">#582200</color>
 
     <!-- UI Semantic Colors (Light) -->
-    <color name="background">#FFFFFF</color>
+    <color name="background">#F8FAFC</color>
     <color name="surface">#FFFFFF</color>
     <color name="on_surface">#251913</color>
-    <color name="text_primary">#251913</color>
-    <color name="text_secondary">#8C7164</color>
-    <color name="text_muted">#64748B</color>
-    <color name="border_color">#F1F5F9</color>
+    <color name="text_primary">#1E293B</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_muted">#94A3B8</color>
+    <color name="border_color">#E2E8F0</color>
     <color name="input_background">#F1F5F9</color>
-    <color name="card_bg_secondary">#F8FAFC</color>
-    <color name="badge_bg">#FFF1EB</color>
+    <color name="card_bg_secondary">#F1F5F9</color>
+    <color name="badge_bg">#FFF7ED</color>
 
     <!-- Bottom Nav Custom Style (Light Mode) -->
     <color name="nav_bg">#FFFFFF</color>
