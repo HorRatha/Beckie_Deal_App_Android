@@ -88,16 +88,23 @@ public class AppDrawerHelper {
                     & Configuration.UI_MODE_NIGHT_MASK;
             boolean isNight = nightMode == Configuration.UI_MODE_NIGHT_YES;
 
+            // Prevent saved instance state from restoring a stale value
+            darkSwitch.setSaveEnabled(false);
+
             // Clear any previous listener BEFORE calling setChecked so it
             // doesn't fire during initial setup and trigger a recreation loop.
             darkSwitch.setOnCheckedChangeListener(null);
             darkSwitch.setChecked(isNight);
 
             // Attach the listener AFTER the initial state is set.
-            darkSwitch.setOnCheckedChangeListener((btn, checked) ->
-                    AppCompatDelegate.setDefaultNightMode(checked
-                            ? AppCompatDelegate.MODE_NIGHT_YES
-                            : AppCompatDelegate.MODE_NIGHT_NO));
+            darkSwitch.setOnCheckedChangeListener((btn, checked) -> {
+                int newMode = checked
+                        ? AppCompatDelegate.MODE_NIGHT_YES
+                        : AppCompatDelegate.MODE_NIGHT_NO;
+                if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                    AppCompatDelegate.setDefaultNightMode(newMode);
+                }
+            });
         }
 
         // Tapping the dark-mode row also toggles the switch

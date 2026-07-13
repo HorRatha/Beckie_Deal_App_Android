@@ -59,17 +59,28 @@ public class ProfileActivity extends BaseActivity {
         MaterialSwitch darkModeSwitch = findViewById(R.id.darkModeSwitch);
         if (darkModeSwitch == null) return;
 
+        // Disable saved instance state restoration for this switch to prevent
+        // the framework from restoring a stale checked state that conflicts
+        // with the actual current night mode.
+        darkModeSwitch.setSaveEnabled(false);
+
         int currentNightMode = getResources().getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_MASK;
+        boolean isNight = currentNightMode == Configuration.UI_MODE_NIGHT_YES;
 
         // Null listener first so setChecked() doesn't fire the callback during setup.
         darkModeSwitch.setOnCheckedChangeListener(null);
-        darkModeSwitch.setChecked(currentNightMode == Configuration.UI_MODE_NIGHT_YES);
+        darkModeSwitch.setChecked(isNight);
 
-        darkModeSwitch.setOnCheckedChangeListener((btn, isChecked) ->
-                AppCompatDelegate.setDefaultNightMode(isChecked
-                        ? AppCompatDelegate.MODE_NIGHT_YES
-                        : AppCompatDelegate.MODE_NIGHT_NO));
+        darkModeSwitch.setOnCheckedChangeListener((btn, isChecked) -> {
+            // Guard: only change night mode if it's actually different from current.
+            int newMode = isChecked
+                    ? AppCompatDelegate.MODE_NIGHT_YES
+                    : AppCompatDelegate.MODE_NIGHT_NO;
+            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                AppCompatDelegate.setDefaultNightMode(newMode);
+            }
+        });
     }
 
     private void setupSettingsRows() {

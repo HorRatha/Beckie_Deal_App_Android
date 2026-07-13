@@ -1,28 +1,15 @@
 package aeu.ratha.beckie_deal_app;
 
-import android.content.res.Configuration;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * Base activity that properly handles uiMode config changes.
+ * Base activity for the app.
  *
- * Because every activity declares android:configChanges="uiMode" in the
- * manifest, Android won't recreate them on night-mode switches. Instead it
- * calls onConfigurationChanged(). We respond by calling recreate() exactly
- * once using a flag guard to prevent infinite recreation loops.
+ * Dark mode is now handled by letting Android naturally recreate activities
+ * when AppCompatDelegate.setDefaultNightMode() is called. No manual
+ * configChanges or recreate() needed — this avoids the infinite recreation
+ * loop that occurred when multiple activities in the back-stack were
+ * fighting over recreation.
  */
 public abstract class BaseActivity extends AppCompatActivity {
-
-    private boolean isRecreating = false;
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (!isRecreating) {
-            isRecreating = true;
-            getDelegate().applyDayNight();
-            recreate();
-        }
-    }
 }
