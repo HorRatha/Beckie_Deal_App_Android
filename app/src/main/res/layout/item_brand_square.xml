@@ -5,14 +5,14 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_columnWeight="1"
-    android:layout_margin="4dp"
-    app:cardCornerRadius="0dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/border_color"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp"
     app:cardBackgroundColor="@color/surface"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:id="@+id/brandLayout"
@@ -20,24 +20,24 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="14dp"
-        android:paddingBottom="12dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="14dp"
         android:paddingHorizontal="8dp">
 
-        <!-- Rounded icon container with light fill -->
+        <!-- Rounded icon container with gradient-ready fill -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/iconContainer"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:cardCornerRadius="24dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            app:cardCornerRadius="14dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="#F0F0F0"
+            app:cardBackgroundColor="#F4F6F8"
             app:strokeWidth="0dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="10dp">
+                android:padding="11dp">
 
                 <TextView
                     android:id="@+id/brandIconText"
@@ -46,7 +46,7 @@
                     android:layout_gravity="center"
                     android:text="AS"
                     android:textColor="@color/primary"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
@@ -65,11 +65,11 @@
             android:id="@+id/brandName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:text="Brand"
             android:textColor="@color/text_primary"
             android:textSize="12sp"
-            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:ellipsize="end" />
 

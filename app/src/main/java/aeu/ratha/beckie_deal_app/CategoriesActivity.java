@@ -40,7 +40,7 @@ public class CategoriesActivity extends BaseActivity {
         ImageView searchIcon = findViewById(R.id.searchIcon);
         View cartContainer = findViewById(R.id.cartContainer);
         TextView cartBadge = findViewById(R.id.cartBadge);
-        TextView viewAllBrands = findViewById(R.id.viewAllBrands);
+        View viewAllBrands = findViewById(R.id.viewAllBrands);
 
         if (searchIcon != null) searchIcon.setOnClickListener(v ->
                 startActivity(new Intent(this, SearchActivity.class)));
@@ -115,12 +115,13 @@ public class CategoriesActivity extends BaseActivity {
             }
 
             if (brand.isSelected) {
-                int darkBg = Color.parseColor("#1A1A2E");
-                card.setCardBackgroundColor(darkBg);
+                int primaryColor = Color.parseColor("#F97316");
+                card.setCardBackgroundColor(Color.parseColor("#FFF7ED"));
                 card.setStrokeWidth(2);
-                card.setStrokeColor(Color.parseColor("#F97316"));
-                nameText.setTextColor(Color.WHITE);
-                if (countText != null) countText.setTextColor(Color.parseColor("#AAAAAA"));
+                card.setStrokeColor(primaryColor);
+                card.setCardElevation(6f);
+                nameText.setTextColor(Color.parseColor("#C2410C"));
+                if (countText != null) countText.setTextColor(Color.parseColor("#EA580C"));
                 if (iconContainer != null) {
                     iconContainer.setCardBackgroundColor(Color.WHITE);
                 }
@@ -128,12 +129,13 @@ public class CategoriesActivity extends BaseActivity {
                 iconText.setTextColor(ContextCompat.getColor(this, R.color.primary));
             } else {
                 card.setCardBackgroundColor(Color.WHITE);
-                card.setStrokeWidth(1);
-                card.setStrokeColor(Color.parseColor("#EEEEEE"));
+                card.setStrokeWidth(0);
+                card.setStrokeColor(Color.TRANSPARENT);
+                card.setCardElevation(2f);
                 nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
                 if (countText != null) countText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
                 if (iconContainer != null) {
-                    iconContainer.setCardBackgroundColor(Color.parseColor("#F0F0F0"));
+                    iconContainer.setCardBackgroundColor(Color.parseColor("#F4F6F8"));
                 }
                 brandIcon.clearColorFilter();
                 iconText.setTextColor(ContextCompat.getColor(this, R.color.primary));
