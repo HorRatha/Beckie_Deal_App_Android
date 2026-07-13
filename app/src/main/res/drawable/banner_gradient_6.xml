@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Banner 6: Cyan/Teal gradient (for new arrivals) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="135"
+        android:startColor="#0891B2"
+        android:endColor="#06B6D4"
+        android:type="linear" />
+</shape>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Banner 5: Rose/pink gradient (for new arrivals) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="135"
+        android:startColor="#E11D48"
+        android:endColor="#F43F5E"
+        android:type="linear" />
+</shape>

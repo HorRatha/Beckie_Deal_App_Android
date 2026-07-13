@@ -275,101 +275,62 @@
                     android:paddingBottom="2dp" />
             </HorizontalScrollView>
 
-            <!-- ══ NEW ARRIVALS BANNER — Modern redesign ══════════════════ -->
-            <androidx.cardview.widget.CardView
+            <!-- ══ NEW ARRIVALS BANNER — Carousel (reusable) ══════════════ -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="20dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="6dp"
-                app:cardPreventCornerOverlap="true">
+                android:layout_marginTop="20dp">
 
-                <!-- Dark gradient background -->
-                <FrameLayout
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/new_arrivals_banner_bg">
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp">
 
-                    <!-- Decorative circle — large, top-right -->
-                    <View
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:layout_gravity="top|end"
-                        android:layout_marginTop="-50dp"
-                        android:layout_marginEnd="-40dp"
-                        android:background="@drawable/new_arrivals_circle_decor" />
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/newArrivalsBannerViewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
 
-                    <!-- Decorative circle — small, bottom-right -->
-                    <View
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="bottom|end"
-                        android:layout_marginBottom="-20dp"
-                        android:layout_marginEnd="60dp"
-                        android:background="@drawable/new_arrivals_circle_decor" />
+                </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Content column -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="22dp"
-                        android:orientation="vertical">
+                <!-- Left arrow -->
+                <ImageView
+                    android:id="@+id/newArrivalsArrowLeft"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/banner_arrow_bg"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_left"
+                    android:contentDescription="Previous"
+                    app:tint="#FFFFFF" />
 
-                        <!-- "NEW" pill tag -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/new_arrivals_tag_bg"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="3dp"
-                            android:text="✦  JUST LANDED"
-                            android:textColor="#0F172A"
-                            android:textSize="9sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.1" />
+                <!-- Right arrow -->
+                <ImageView
+                    android:id="@+id/newArrivalsArrowRight"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/banner_arrow_bg"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="Next"
+                    app:tint="#FFFFFF" />
 
-                        <!-- Main title -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="New Arrivals"
-                            android:textColor="#FFFFFF"
-                            android:textSize="26sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="-0.02" />
+                <!-- Dot indicators -->
+                <LinearLayout
+                    android:id="@+id/newArrivalsDotsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal" />
 
-                        <!-- Subtitle -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Fresh tech drops, every week"
-                            android:textColor="#B0D8FF"
-                            android:textSize="12sp" />
-
-                        <!-- Ghost CTA button -->
-                        <TextView
-                            android:id="@+id/discoverButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:background="@drawable/new_arrivals_btn_bg"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:paddingHorizontal="18dp"
-                            android:paddingVertical="7dp"
-                            android:text="Explore Now →"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-            </androidx.cardview.widget.CardView>
+            </FrameLayout>
 
             <!-- ══ TOP SELLING ════════════════════════════════════════════ -->
             <RelativeLayout

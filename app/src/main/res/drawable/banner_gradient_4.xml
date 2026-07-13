@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Banner 4: Dark navy/blue gradient (for new arrivals) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="135"
+        android:startColor="#1E293B"
+        android:endColor="#334155"
+        android:type="linear" />
+</shape>

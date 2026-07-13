@@ -45,11 +45,15 @@ public class MainActivity extends BaseActivity {
     private static final long AUTO_SCROLL_PAUSE = 2500; // 2.5 seconds
     private static final int SCROLL_DURATION = 400; // smooth scroll duration in ms
 
-    // Banner carousel
+    // Banner carousels
     private ViewPager2 bannerViewPager;
+    private ViewPager2 newArrivalsBannerPager;
     private Handler bannerAutoScrollHandler;
     private Runnable bannerAutoScrollRunnable;
+    private Handler newArrivalsAutoScrollHandler;
+    private Runnable newArrivalsAutoScrollRunnable;
     private boolean isBannerTouched = false;
+    private boolean isNewArrivalsTouched = false;
     private static final long BANNER_SCROLL_DELAY = 4500; // 4.5 seconds
 
     @Override
@@ -139,33 +143,61 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupHeroBanner() {
-        bannerViewPager = findViewById(R.id.bannerViewPager);
-        ImageView arrowLeft = findViewById(R.id.bannerArrowLeft);
-        ImageView arrowRight = findViewById(R.id.bannerArrowRight);
-        LinearLayout dotsContainer = findViewById(R.id.bannerDotsContainer);
-
-        if (bannerViewPager == null) return;
-
-        // Banner data: 3 slides
-        int[][] bannerData = {
-                // {backgroundDrawableRes, tag, title, subtitle}
-                // We'll use int arrays for drawables and String arrays for text
-        };
-
-        String[][] bannerTexts = {
+        // Hero banner data: 3 slides
+        String[][] heroBannerTexts = {
                 {"🔥 HOT DEAL", "Summer Sale", "Up to 50% off on all items"},
                 {"⚡ LIMITED", "New Arrivals", "Latest tech gadgets are here"},
                 {"🎁 EXCLUSIVE", "Flash Deal", "Free shipping on orders $99+"}
         };
-
-        int[] bannerBackgrounds = {
+        int[] heroBannerBgs = {
                 R.drawable.banner_gradient_1,
                 R.drawable.banner_gradient_2,
                 R.drawable.banner_gradient_3
         };
 
-        // Set up adapter
-        bannerViewPager.setAdapter(new RecyclerView.Adapter<BannerViewHolder>() {
+        bannerViewPager = findViewById(R.id.bannerViewPager);
+        setupBannerCarousel(
+                bannerViewPager,
+                findViewById(R.id.bannerArrowLeft),
+                findViewById(R.id.bannerArrowRight),
+                findViewById(R.id.bannerDotsContainer),
+                heroBannerTexts, heroBannerBgs, null,
+                true // isHeroBanner flag
+        );
+    }
+
+    private void startBannerAutoScroll() {
+        if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
+            bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
+            bannerAutoScrollHandler.postDelayed(bannerAutoScrollRunnable, BANNER_SCROLL_DELAY);
+        }
+        if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
+            newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
+            newArrivalsAutoScrollHandler.postDelayed(newArrivalsAutoScrollRunnable, BANNER_SCROLL_DELAY);
+        }
+    }
+
+    private void stopBannerAutoScroll() {
+        if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
+            bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
+        }
+        if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
+            newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
+        }
+    }
+
+    /**
+     * Reusable carousel setup — works for any banner section.
+     * Pass imageUrls as null for gradient-only banners, or provide URLs for image-based banners.
+     */
+    private void setupBannerCarousel(ViewPager2 viewPager, ImageView arrowLeft, ImageView arrowRight,
+                                     LinearLayout dotsContainer, String[][] texts, int[] backgrounds,
+                                     String[] imageUrls, boolean isHero) {
+        if (viewPager == null) return;
+
+        int count = texts.length;
+
+        viewPager.setAdapter(new RecyclerView.Adapter<BannerViewHolder>() {
             @NonNull
             @Override
             public BannerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -176,122 +208,135 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onBindViewHolder(@NonNull BannerViewHolder holder, int position) {
-                holder.background.setBackgroundResource(bannerBackgrounds[position]);
-                holder.tag.setText(bannerTexts[position][0]);
-                holder.title.setText(bannerTexts[position][1]);
-                holder.subtitle.setText(bannerTexts[position][2]);
+                holder.background.setBackgroundResource(backgrounds[position]);
+                holder.tag.setText(texts[position][0]);
+                holder.title.setText(texts[position][1]);
+                holder.subtitle.setText(texts[position][2]);
+
+                // Support image banners (future-proof)
+                if (imageUrls != null && imageUrls[position] != null && !imageUrls[position].isEmpty()) {
+                    holder.bannerImage.setVisibility(View.VISIBLE);
+                    Glide.with(holder.itemView.getContext())
+                            .load(imageUrls[position])
+                            .centerInside()
+                            .into(holder.bannerImage);
+                } else {
+                    holder.bannerImage.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public int getItemCount() {
-                return 3;
+                return count;
             }
         });
 
         // Dot indicators
-        View[] dots = new View[3];
-        for (int i = 0; i < 3; i++) {
-            dots[i] = new View(this);
-            int size = (i == 0) ? dpToPx(8) : dpToPx(6);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
-            lp.setMargins(dpToPx(4), 0, dpToPx(4), 0);
-            dots[i].setLayoutParams(lp);
-            dots[i].setBackgroundResource(i == 0 ? R.drawable.dot_active : R.drawable.dot_inactive);
-            dotsContainer.addView(dots[i]);
-        }
-
-        // Page change listener for dots
-        bannerViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                for (int i = 0; i < dots.length; i++) {
-                    int size = (i == position) ? dpToPx(8) : dpToPx(6);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
-                    lp.setMargins(dpToPx(4), 0, dpToPx(4), 0);
-                    dots[i].setLayoutParams(lp);
-                    dots[i].setBackgroundResource(i == position
-                            ? R.drawable.dot_active : R.drawable.dot_inactive);
-                }
+        if (dotsContainer != null) {
+            dotsContainer.removeAllViews();
+            View[] dots = new View[count];
+            for (int i = 0; i < count; i++) {
+                dots[i] = new View(this);
+                int size = (i == 0) ? dpToPx(8) : dpToPx(6);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
+                lp.setMargins(dpToPx(4), 0, dpToPx(4), 0);
+                dots[i].setLayoutParams(lp);
+                dots[i].setBackgroundResource(i == 0 ? R.drawable.dot_active : R.drawable.dot_inactive);
+                dotsContainer.addView(dots[i]);
             }
-        });
+
+            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    for (int i = 0; i < dots.length; i++) {
+                        int size = (i == position) ? dpToPx(8) : dpToPx(6);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
+                        lp.setMargins(dpToPx(4), 0, dpToPx(4), 0);
+                        dots[i].setLayoutParams(lp);
+                        dots[i].setBackgroundResource(i == position
+                                ? R.drawable.dot_active : R.drawable.dot_inactive);
+                    }
+                }
+            });
+        }
 
         // Arrow navigation
         if (arrowLeft != null) {
             arrowLeft.setOnClickListener(v -> {
-                int current = bannerViewPager.getCurrentItem();
-                if (current > 0) {
-                    bannerViewPager.setCurrentItem(current - 1, true);
-                } else {
-                    bannerViewPager.setCurrentItem(2, true); // wrap to last
-                }
-                resetBannerAutoScroll();
+                int current = viewPager.getCurrentItem();
+                viewPager.setCurrentItem(current > 0 ? current - 1 : count - 1, true);
+                resetCarouselAutoScroll(isHero);
             });
         }
-
         if (arrowRight != null) {
             arrowRight.setOnClickListener(v -> {
-                int current = bannerViewPager.getCurrentItem();
-                if (current < 2) {
-                    bannerViewPager.setCurrentItem(current + 1, true);
-                } else {
-                    bannerViewPager.setCurrentItem(0, true); // wrap to first
-                }
-                resetBannerAutoScroll();
+                int current = viewPager.getCurrentItem();
+                viewPager.setCurrentItem(current < count - 1 ? current + 1 : 0, true);
+                resetCarouselAutoScroll(isHero);
             });
         }
 
-        // Auto-scroll setup
-        bannerAutoScrollHandler = new Handler(Looper.getMainLooper());
-        bannerAutoScrollRunnable = new Runnable() {
+        // Auto-scroll
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (bannerViewPager == null || isBannerTouched) return;
-                int next = (bannerViewPager.getCurrentItem() + 1) % 3;
-                bannerViewPager.setCurrentItem(next, true);
-                bannerAutoScrollHandler.postDelayed(this, BANNER_SCROLL_DELAY);
+                if (viewPager == null) return;
+                if (isHero && isBannerTouched) return;
+                if (!isHero && isNewArrivalsTouched) return;
+                int next = (viewPager.getCurrentItem() + 1) % count;
+                viewPager.setCurrentItem(next, true);
+                handler.postDelayed(this, BANNER_SCROLL_DELAY);
             }
         };
 
-        // Pause auto-scroll on touch
-        bannerViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        if (isHero) {
+            bannerAutoScrollHandler = handler;
+            bannerAutoScrollRunnable = runnable;
+        } else {
+            newArrivalsAutoScrollHandler = handler;
+            newArrivalsAutoScrollRunnable = runnable;
+        }
+
+        // Pause on user drag
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                    isBannerTouched = true;
-                    stopBannerAutoScroll();
+                    if (isHero) isBannerTouched = true;
+                    else isNewArrivalsTouched = true;
                 } else if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                    isBannerTouched = false;
-                    startBannerAutoScroll();
+                    if (isHero) isBannerTouched = false;
+                    else isNewArrivalsTouched = false;
+                    resetCarouselAutoScroll(isHero);
                 }
             }
         });
     }
 
-    private void startBannerAutoScroll() {
-        if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
-            bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
-            bannerAutoScrollHandler.postDelayed(bannerAutoScrollRunnable, BANNER_SCROLL_DELAY);
+    private void resetCarouselAutoScroll(boolean isHero) {
+        if (isHero) {
+            if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
+                bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
+                bannerAutoScrollHandler.postDelayed(bannerAutoScrollRunnable, BANNER_SCROLL_DELAY);
+            }
+        } else {
+            if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
+                newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
+                newArrivalsAutoScrollHandler.postDelayed(newArrivalsAutoScrollRunnable, BANNER_SCROLL_DELAY);
+            }
         }
-    }
-
-    private void stopBannerAutoScroll() {
-        if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
-            bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
-        }
-    }
-
-    private void resetBannerAutoScroll() {
-        stopBannerAutoScroll();
-        startBannerAutoScroll();
     }
 
     static class BannerViewHolder extends RecyclerView.ViewHolder {
         View background;
+        ImageView bannerImage;
         TextView tag, title, subtitle;
 
         BannerViewHolder(@NonNull View itemView) {
             super(itemView);
             background = itemView.findViewById(R.id.bannerBackground);
+            bannerImage = itemView.findViewById(R.id.bannerImage);
             tag = itemView.findViewById(R.id.bannerTag);
             title = itemView.findViewById(R.id.bannerTitle);
             subtitle = itemView.findViewById(R.id.bannerSubtitle);
@@ -371,14 +416,27 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupNewArrivalsBanner() {
-        View discoverButton = findViewById(R.id.discoverButton);
-        if (discoverButton != null) {
-            discoverButton.setOnClickListener(v -> {
-                Intent intent = new Intent(this, ProductListActivity.class);
-                intent.putExtra(ProductListActivity.EXTRA_MODE, ProductListActivity.MODE_NEW_COLLECTION);
-                startActivity(intent);
-            });
-        }
+        // New Arrivals banner carousel: 3 slides (different content from hero)
+        String[][] newArrivalTexts = {
+                {"✦ JUST LANDED", "New Arrivals", "Fresh tech drops, every week"},
+                {"🚀 TRENDING", "Top Picks", "Most popular this month"},
+                {"💎 PREMIUM", "Exclusive Deals", "Members-only discounts inside"}
+        };
+        int[] newArrivalBgs = {
+                R.drawable.banner_gradient_4,
+                R.drawable.banner_gradient_5,
+                R.drawable.banner_gradient_6
+        };
+
+        newArrivalsBannerPager = findViewById(R.id.newArrivalsBannerViewPager);
+        setupBannerCarousel(
+                newArrivalsBannerPager,
+                findViewById(R.id.newArrivalsArrowLeft),
+                findViewById(R.id.newArrivalsArrowRight),
+                findViewById(R.id.newArrivalsDotsContainer),
+                newArrivalTexts, newArrivalBgs, null,
+                false // not hero banner
+        );
     }
 
     // ── New Collection horizontal scroll ──────────────────────────────────────
