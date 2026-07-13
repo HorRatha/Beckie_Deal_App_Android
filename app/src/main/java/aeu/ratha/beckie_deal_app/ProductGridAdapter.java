@@ -20,6 +20,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
 
     private final Context context;
     private final List<MainActivity.Product> products;
+    private Toast lastToast;
 
     public ProductGridAdapter(Context context, List<MainActivity.Product> products) {
         this.context  = context;
@@ -63,9 +64,11 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
                 if (product.isFavorite) FavoriteManager.getInstance().addFavorite(product);
                 else                    FavoriteManager.getInstance().removeFavorite(product);
                 ProductCardBinder.refreshFavIcon(context, favoriteIcon, product.isFavorite);
-                Toast.makeText(context,
+                if (lastToast != null) lastToast.cancel();
+                lastToast = Toast.makeText(context,
                         product.isFavorite ? "Added to Favorites" : "Removed from Favorites",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT);
+                lastToast.show();
             });
         }
     }

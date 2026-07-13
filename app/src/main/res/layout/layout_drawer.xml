@@ -155,18 +155,6 @@
                     android:text="My Orders"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp" />
-                <!-- "Coming soon" badge -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/badge_pill"
-                    android:backgroundTint="#1AFF6B2F"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
-                    android:text="Soon"
-                    android:textColor="@color/primary"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Favorites -->

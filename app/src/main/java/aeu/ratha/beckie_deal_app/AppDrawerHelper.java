@@ -137,7 +137,10 @@ public class AppDrawerHelper {
         View ordersItem = drawerLayout.findViewById(R.id.drawerOrders);
         if (ordersItem != null) ordersItem.setOnClickListener(v -> {
             closeDrawer();
-            Toast.makeText(activity, "My Orders — coming soon", Toast.LENGTH_SHORT).show();
+            if (!(activity instanceof MyOrdersActivity)) {
+                activity.startActivity(new Intent(activity, MyOrdersActivity.class));
+                activity.overridePendingTransition(0, 0);
+            }
         });
 
         View favItem = drawerLayout.findViewById(R.id.drawerFavorites);

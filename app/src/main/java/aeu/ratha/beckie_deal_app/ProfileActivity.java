@@ -91,7 +91,7 @@ public class ProfileActivity extends BaseActivity {
         LinearLayout termsRow         = findViewById(R.id.termsRow);
 
         if (ordersRow != null) ordersRow.setOnClickListener(v ->
-                Toast.makeText(this, "My Orders — coming soon", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, MyOrdersActivity.class)));
         if (notificationsRow != null) notificationsRow.setOnClickListener(v ->
                 Toast.makeText(this, "Notification settings", Toast.LENGTH_SHORT).show());
         if (languageRow != null) languageRow.setOnClickListener(v ->

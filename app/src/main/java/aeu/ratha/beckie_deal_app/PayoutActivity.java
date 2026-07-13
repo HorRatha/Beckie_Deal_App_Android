@@ -63,7 +63,13 @@ public class PayoutActivity extends BaseActivity {
                     if (successView != null) {
                         successView.setVisibility(View.VISIBLE);
                     }
-                    
+
+                    // Save the order before clearing cart
+                    double subtotal = CartManager.getInstance().getTotalPrice();
+                    double total = subtotal + 15.00; // shipping
+                    OrderManager.getInstance().placeOrder(
+                            CartManager.getInstance().getCartItems(), total);
+
                     // Clear cart after successful "payment"
                     CartManager.getInstance().getCartItems().clear();
                 }, 3000);

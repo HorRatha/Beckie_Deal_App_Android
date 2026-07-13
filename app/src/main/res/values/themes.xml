@@ -37,4 +37,11 @@
     </style>
 
     <style name="Theme.BeckieDealApp" parent="Base.Theme.BeckieDealApp" />
+
+    <!-- Tab text style for orders screen -->
+    <style name="Tab.OrderText" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">false</item>
+    </style>
 </resources>

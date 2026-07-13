@@ -1,0 +1,229 @@
+package aeu.ratha.beckie_deal_app;
+
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import java.util.List;
+import java.util.Locale;
+
+public class OrderDetailActivity extends BaseActivity {
+
+    private OrderManager.Order order;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_order_detail);
+
+        // Retrieve order
+        int orderIndex = getIntent().getIntExtra("order_index", -1);
+        List<OrderManager.Order> allOrders = OrderManager.getInstance().getAllOrders();
+        if (orderIndex < 0 || orderIndex >= allOrders.size()) {
+            finish();
+            return;
+        }
+        order = allOrders.get(orderIndex);
+
+        setupTopBar();
+        bindOrderHeader();
+        buildTimeline();
+        displayItems();
+        displaySummary();
+    }
+
+    private void setupTopBar() {
+        ImageView backButton = findViewById(R.id.backButton);
+        if (backButton != null) backButton.setOnClickListener(v -> finish());
+
+        TextView title = findViewById(R.id.toolbarTitle);
+        if (title != null) title.setText("Order #" + order.orderId);
+    }
+
+    private void bindOrderHeader() {
+        TextView orderIdTv = findViewById(R.id.detailOrderId);
+        TextView statusBadge = findViewById(R.id.detailStatusBadge);
+        TextView dateTv = findViewById(R.id.detailOrderDate);
+
+        if (orderIdTv != null) orderIdTv.setText("Order #" + order.orderId);
+        if (dateTv != null) dateTv.setText("Placed on " + order.date);
+
+        if (statusBadge != null) {
+            statusBadge.setText(order.status.label);
+            int statusColor = Color.parseColor(order.status.color);
+            statusBadge.setTextColor(statusColor);
+            GradientDrawable badgeBg = new GradientDrawable();
+            badgeBg.setShape(GradientDrawable.RECTANGLE);
+            badgeBg.setCornerRadius(dpToPx(20));
+            badgeBg.setColor(setAlpha(statusColor, 0.1f));
+            statusBadge.setBackground(badgeBg);
+        }
+    }
+
+    private void buildTimeline() {
+        LinearLayout timeline = findViewById(R.id.trackingTimeline);
+        if (timeline == null) return;
+        timeline.removeAllViews();
+
+        // Define tracking steps
+        String[][] steps = {
+                {"Order Placed", "Your order has been confirmed", "#22C55E"},
+                {"Processing", "Preparing your items for shipment", null},
+                {"Shipped", "Your package is on the way", null},
+                {"Delivered", "Package delivered successfully", null}
+        };
+
+        int activeStep = getActiveStep();
+
+        for (int i = 0; i < steps.length; i++) {
+            boolean isCompleted = i <= activeStep;
+            boolean isCurrent = i == activeStep;
+            addTimelineStep(timeline, steps[i][0], steps[i][1], isCompleted, isCurrent, i < steps.length - 1);
+        }
+    }
+
+    private int getActiveStep() {
+        switch (order.status) {
+            case PROCESSING: return 1;
+            case SHIPPED: return 2;
+            case DELIVERED: return 3;
+            case CANCELLED: return 0;
+            default: return 0;
+        }
+    }
+
+    private void addTimelineStep(LinearLayout parent, String title, String subtitle,
+                                  boolean isCompleted, boolean isCurrent, boolean hasLine) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        row.setGravity(Gravity.TOP);
+
+        // Left: dot + line
+        LinearLayout dotColumn = new LinearLayout(this);
+        dotColumn.setOrientation(LinearLayout.VERTICAL);
+        dotColumn.setGravity(Gravity.CENTER_HORIZONTAL);
+        LinearLayout.LayoutParams dotColLp = new LinearLayout.LayoutParams(dpToPx(32), LinearLayout.LayoutParams.WRAP_CONTENT);
+        dotColumn.setLayoutParams(dotColLp);
+
+        // Dot
+        View dot = new View(this);
+        int dotSize = isCurrent ? dpToPx(14) : dpToPx(10);
+        LinearLayout.LayoutParams dotLp = new LinearLayout.LayoutParams(dotSize, dotSize);
+        dotLp.topMargin = dpToPx(4);
+        dot.setLayoutParams(dotLp);
+        GradientDrawable dotBg = new GradientDrawable();
+        dotBg.setShape(GradientDrawable.OVAL);
+        if (isCompleted) {
+            dotBg.setColor(Color.parseColor("#22C55E"));
+        } else {
+            dotBg.setColor(getColor(R.color.border_color));
+        }
+        dot.setBackground(dotBg);
+        dotColumn.addView(dot);
+
+        // Connector line
+        if (hasLine) {
+            View line = new View(this);
+            LinearLayout.LayoutParams lineLp = new LinearLayout.LayoutParams(dpToPx(2), dpToPx(32));
+            lineLp.topMargin = dpToPx(4);
+            line.setLayoutParams(lineLp);
+            line.setBackgroundColor(isCompleted ? Color.parseColor("#22C55E") : getColor(R.color.border_color));
+            dotColumn.addView(line);
+        }
+
+        row.addView(dotColumn);
+
+        // Right: text
+        LinearLayout textColumn = new LinearLayout(this);
+        textColumn.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams textLp = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+        textLp.setMarginStart(dpToPx(12));
+        textColumn.setLayoutParams(textLp);
+
+        TextView titleTv = new TextView(this);
+        titleTv.setText(title);
+        titleTv.setTextSize(14);
+        titleTv.setTextColor(isCompleted ? getColor(R.color.text_primary) : getColor(R.color.text_muted));
+        if (isCurrent) titleTv.setTypeface(null, android.graphics.Typeface.BOLD);
+        textColumn.addView(titleTv);
+
+        TextView subtitleTv = new TextView(this);
+        subtitleTv.setText(subtitle);
+        subtitleTv.setTextSize(12);
+        subtitleTv.setTextColor(getColor(R.color.text_muted));
+        LinearLayout.LayoutParams subLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        subLp.topMargin = dpToPx(2);
+        subLp.bottomMargin = hasLine ? dpToPx(8) : 0;
+        subtitleTv.setLayoutParams(subLp);
+        textColumn.addView(subtitleTv);
+
+        row.addView(textColumn);
+        parent.addView(row);
+    }
+
+    private void displayItems() {
+        LinearLayout itemsList = findViewById(R.id.detailItemsList);
+        if (itemsList == null) return;
+        itemsList.removeAllViews();
+
+        for (OrderManager.OrderItem item : order.items) {
+            View v = LayoutInflater.from(this).inflate(R.layout.item_order_detail_product, itemsList, false);
+
+            ImageView image = v.findViewById(R.id.orderItemImage);
+            TextView name = v.findViewById(R.id.orderItemName);
+            TextView quantity = v.findViewById(R.id.orderItemQuantity);
+            TextView price = v.findViewById(R.id.orderItemPrice);
+
+            name.setText(item.productName);
+            quantity.setText("Qty: " + item.quantity);
+
+            try {
+                String priceStr = item.productPrice.replace("$", "").replace(",", "");
+                double total = Double.parseDouble(priceStr) * item.quantity;
+                price.setText(String.format(Locale.US, "$%.2f", total));
+            } catch (Exception e) {
+                price.setText(item.productPrice != null ? item.productPrice : "");
+            }
+
+            Glide.with(this)
+                    .load(item.productImageUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .into(image);
+
+            itemsList.addView(v);
+        }
+    }
+
+    private void displaySummary() {
+        TextView subtotalTv = findViewById(R.id.detailSubtotal);
+        TextView totalTv = findViewById(R.id.detailTotal);
+
+        double subtotal = order.totalAmount - 15.0; // shipping was $15
+        if (subtotalTv != null)
+            subtotalTv.setText(String.format(Locale.US, "$%.2f", subtotal));
+        if (totalTv != null)
+            totalTv.setText(String.format(Locale.US, "$%.2f", order.totalAmount));
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
+    private int setAlpha(int color, float alpha) {
+        int a = (int) (alpha * 255);
+        return Color.argb(a, Color.red(color), Color.green(color), Color.blue(color));
+    }
+}

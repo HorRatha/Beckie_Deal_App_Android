@@ -59,6 +59,12 @@
             android:name=".ProductListActivity"
             android:exported="false" />
         <activity
+            android:name=".MyOrdersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrderDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".SearchActivity"
             android:exported="false"
             android:windowSoftInputMode="stateVisible" />
