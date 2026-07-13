@@ -7,16 +7,19 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
@@ -42,6 +45,13 @@ public class MainActivity extends BaseActivity {
     private static final long AUTO_SCROLL_PAUSE = 2500; // 2.5 seconds
     private static final int SCROLL_DURATION = 400; // smooth scroll duration in ms
 
+    // Banner carousel
+    private ViewPager2 bannerViewPager;
+    private Handler bannerAutoScrollHandler;
+    private Runnable bannerAutoScrollRunnable;
+    private boolean isBannerTouched = false;
+    private static final long BANNER_SCROLL_DELAY = 4500; // 4.5 seconds
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,18 +76,21 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         setupProducts();
         startAutoScroll();
+        startBannerAutoScroll();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         stopAutoScroll();
+        stopBannerAutoScroll();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         stopAutoScroll();
+        stopBannerAutoScroll();
     }
 
     private void initializeMockData() {
@@ -126,8 +139,167 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupHeroBanner() {
-        Button shopNowButton = findViewById(R.id.shopNowButton);
-        if (shopNowButton != null) shopNowButton.setOnClickListener(v -> Toast.makeText(this, "Opening Summer Sale!", Toast.LENGTH_SHORT).show());
+        bannerViewPager = findViewById(R.id.bannerViewPager);
+        ImageView arrowLeft = findViewById(R.id.bannerArrowLeft);
+        ImageView arrowRight = findViewById(R.id.bannerArrowRight);
+        LinearLayout dotsContainer = findViewById(R.id.bannerDotsContainer);
+
+        if (bannerViewPager == null) return;
+
+        // Banner data: 3 slides
+        int[][] bannerData = {
+                // {backgroundDrawableRes, tag, title, subtitle}
+                // We'll use int arrays for drawables and String arrays for text
+        };
+
+        String[][] bannerTexts = {
+                {"🔥 HOT DEAL", "Summer Sale", "Up to 50% off on all items"},
+                {"⚡ LIMITED", "New Arrivals", "Latest tech gadgets are here"},
+                {"🎁 EXCLUSIVE", "Flash Deal", "Free shipping on orders $99+"}
+        };
+
+        int[] bannerBackgrounds = {
+                R.drawable.banner_gradient_1,
+                R.drawable.banner_gradient_2,
+                R.drawable.banner_gradient_3
+        };
+
+        // Set up adapter
+        bannerViewPager.setAdapter(new RecyclerView.Adapter<BannerViewHolder>() {
+            @NonNull
+            @Override
+            public BannerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_banner, parent, false);
+                return new BannerViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull BannerViewHolder holder, int position) {
+                holder.background.setBackgroundResource(bannerBackgrounds[position]);
+                holder.tag.setText(bannerTexts[position][0]);
+                holder.title.setText(bannerTexts[position][1]);
+                holder.subtitle.setText(bannerTexts[position][2]);
+            }
+
+            @Override
+            public int getItemCount() {
+                return 3;
+            }
+        });
+
+        // Dot indicators
+        View[] dots = new View[3];
+        for (int i = 0; i < 3; i++) {
+            dots[i] = new View(this);
+            int size = (i == 0) ? dpToPx(8) : dpToPx(6);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
+            lp.setMargins(dpToPx(4), 0, dpToPx(4), 0);
+            dots[i].setLayoutParams(lp);
+            dots[i].setBackgroundResource(i == 0 ? R.drawable.dot_active : R.drawable.dot_inactive);
+            dotsContainer.addView(dots[i]);
+        }
+
+        // Page change listener for dots
+        bannerViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < dots.length; i++) {
+                    int size = (i == position) ? dpToPx(8) : dpToPx(6);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
+                    lp.setMargins(dpToPx(4), 0, dpToPx(4), 0);
+                    dots[i].setLayoutParams(lp);
+                    dots[i].setBackgroundResource(i == position
+                            ? R.drawable.dot_active : R.drawable.dot_inactive);
+                }
+            }
+        });
+
+        // Arrow navigation
+        if (arrowLeft != null) {
+            arrowLeft.setOnClickListener(v -> {
+                int current = bannerViewPager.getCurrentItem();
+                if (current > 0) {
+                    bannerViewPager.setCurrentItem(current - 1, true);
+                } else {
+                    bannerViewPager.setCurrentItem(2, true); // wrap to last
+                }
+                resetBannerAutoScroll();
+            });
+        }
+
+        if (arrowRight != null) {
+            arrowRight.setOnClickListener(v -> {
+                int current = bannerViewPager.getCurrentItem();
+                if (current < 2) {
+                    bannerViewPager.setCurrentItem(current + 1, true);
+                } else {
+                    bannerViewPager.setCurrentItem(0, true); // wrap to first
+                }
+                resetBannerAutoScroll();
+            });
+        }
+
+        // Auto-scroll setup
+        bannerAutoScrollHandler = new Handler(Looper.getMainLooper());
+        bannerAutoScrollRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (bannerViewPager == null || isBannerTouched) return;
+                int next = (bannerViewPager.getCurrentItem() + 1) % 3;
+                bannerViewPager.setCurrentItem(next, true);
+                bannerAutoScrollHandler.postDelayed(this, BANNER_SCROLL_DELAY);
+            }
+        };
+
+        // Pause auto-scroll on touch
+        bannerViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                    isBannerTouched = true;
+                    stopBannerAutoScroll();
+                } else if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                    isBannerTouched = false;
+                    startBannerAutoScroll();
+                }
+            }
+        });
+    }
+
+    private void startBannerAutoScroll() {
+        if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
+            bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
+            bannerAutoScrollHandler.postDelayed(bannerAutoScrollRunnable, BANNER_SCROLL_DELAY);
+        }
+    }
+
+    private void stopBannerAutoScroll() {
+        if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
+            bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
+        }
+    }
+
+    private void resetBannerAutoScroll() {
+        stopBannerAutoScroll();
+        startBannerAutoScroll();
+    }
+
+    static class BannerViewHolder extends RecyclerView.ViewHolder {
+        View background;
+        TextView tag, title, subtitle;
+
+        BannerViewHolder(@NonNull View itemView) {
+            super(itemView);
+            background = itemView.findViewById(R.id.bannerBackground);
+            tag = itemView.findViewById(R.id.bannerTag);
+            title = itemView.findViewById(R.id.bannerTitle);
+            subtitle = itemView.findViewById(R.id.bannerSubtitle);
+        }
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
     private void setupCategories() {

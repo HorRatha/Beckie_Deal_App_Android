@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Single banner slide for ViewPager2 carousel -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Full background (gradient or image) -->
+    <View
+        android:id="@+id/bannerBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Banner image overlay (for product images) -->
+    <ImageView
+        android:id="@+id/bannerImage"
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="16dp"
+        android:scaleType="centerInside"
+        android:visibility="gone" />
+
+    <!-- Text content -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="24dp"
+        android:orientation="vertical">
+
+        <!-- Tag/label pill -->
+        <TextView
+            android:id="@+id/bannerTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/banner_arrow_bg"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="3dp"
+            android:text="HOT DEAL"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/bannerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Summer Sale"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/bannerSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Up to 50% off"
+            android:textColor="#CCFFFFFF"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+</FrameLayout>

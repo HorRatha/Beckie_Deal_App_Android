@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Banner 1: Orange gradient (original style) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="135"
+        android:startColor="#F59E0B"
+        android:endColor="#F97316"
+        android:type="linear" />
+</shape>
