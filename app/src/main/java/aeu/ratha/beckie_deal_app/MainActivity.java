@@ -122,18 +122,10 @@ public class MainActivity extends BaseActivity {
 
     private void setupTopBar() {
         // menuIcon click is handled by AppDrawerHelper
-        View cartContainer = findViewById(R.id.cartContainer);
-        TextView cartBadge = findViewById(R.id.cartBadge);
+        View notificationContainer = findViewById(R.id.notificationContainer);
 
-        if (cartContainer != null) cartContainer.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
-        updateCartBadge(cartBadge);
-    }
-
-    private void updateCartBadge(TextView badge) {
-        if (badge == null) return;
-        int count = CartManager.getInstance().getTotalUnits();
-        badge.setText(String.valueOf(count));
-        badge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+        if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
+                Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
     }
 
     private void setupSearchBar() {
@@ -703,8 +695,8 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(this, FavoritesActivity.class));
                 overridePendingTransition(0, 0);
                 return true;
-            } else if (itemId == R.id.nav_about) {
-                startActivity(new Intent(this, AboutActivity.class));
+            } else if (itemId == R.id.nav_cart) {
+                startActivity(new Intent(this, CartActivity.class));
                 overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.nav_account) {

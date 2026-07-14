@@ -41,18 +41,11 @@ public class AboutActivity extends BaseActivity {
     }
 
     private void setupTopBar() {
-        View      cartContainer  = findViewById(R.id.cartContainer);
-        TextView  cartBadge      = findViewById(R.id.cartBadge);
+        View      notificationContainer  = findViewById(R.id.notificationContainer);
 
-        if (cartContainer != null)
-            cartContainer.setOnClickListener(v ->
-                startActivity(new Intent(this, CartActivity.class)));
-
-        int count = CartManager.getInstance().getTotalUnits();
-        if (cartBadge != null) {
-            cartBadge.setText(String.valueOf(count));
-            cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        }
+        if (notificationContainer != null)
+            notificationContainer.setOnClickListener(v ->
+                Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
     }
 
     private void setupSubmitButton() {
@@ -161,7 +154,7 @@ public class AboutActivity extends BaseActivity {
                 androidx.core.content.ContextCompat.getColorStateList(this, R.color.bottom_nav_color);
         if (navTint != null) { bottomNav.setItemIconTintList(navTint); bottomNav.setItemTextColor(navTint); }
 
-        bottomNav.setSelectedItemId(R.id.nav_about);
+        bottomNav.setSelectedItemId(R.id.nav_account);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -173,8 +166,9 @@ public class AboutActivity extends BaseActivity {
             } else if (id == R.id.nav_favorites) {
                 startActivity(new Intent(this, FavoritesActivity.class));
                 overridePendingTransition(0, 0); finish(); return true;
-            } else if (id == R.id.nav_about) {
-                return true;
+            } else if (id == R.id.nav_cart) {
+                startActivity(new Intent(this, CartActivity.class));
+                overridePendingTransition(0, 0); finish(); return true;
             } else if (id == R.id.nav_account) {
                 startActivity(new Intent(this, ProfileActivity.class));
                 overridePendingTransition(0, 0); finish(); return true;

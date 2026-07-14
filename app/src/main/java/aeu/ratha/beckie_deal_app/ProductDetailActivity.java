@@ -23,7 +23,6 @@ public class ProductDetailActivity extends BaseActivity {
 
     private boolean isFavorite = false;
     private ImageView detailFavoriteIcon;
-    private TextView cartBadgeView;
     private MainActivity.Product currentProduct;
 
     // Gallery state
@@ -60,17 +59,13 @@ public class ProductDetailActivity extends BaseActivity {
         if (share != null) share.setOnClickListener(v ->
                 Toast.makeText(this, "Link copied!", Toast.LENGTH_SHORT).show());
 
-        cartBadgeView = findViewById(R.id.cartBadge);
-        View cartCont = findViewById(R.id.cartContainer);
-        if (cartCont != null) cartCont.setOnClickListener(v ->
-                startActivity(new Intent(this, CartActivity.class)));
+        View notificationContainer = findViewById(R.id.notificationContainer);
+        if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
+                Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
     }
 
     private void updateCartUI() {
-        if (cartBadgeView == null) return;
-        int count = CartManager.getInstance().getTotalUnits();
-        cartBadgeView.setText(String.valueOf(count));
-        cartBadgeView.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+        // No-op: cart badge removed from toolbar
     }
 
     // ── Product data ──────────────────────────────────────────────────────────
@@ -377,7 +372,7 @@ public class ProductDetailActivity extends BaseActivity {
             if      (id == R.id.nav_home)       startActivity(new Intent(this, MainActivity.class));
             else if (id == R.id.nav_categories) startActivity(new Intent(this, CategoriesActivity.class));
             else if (id == R.id.nav_favorites)  startActivity(new Intent(this, FavoritesActivity.class));
-            else if (id == R.id.nav_about)      startActivity(new Intent(this, AboutActivity.class));
+            else if (id == R.id.nav_cart)       startActivity(new Intent(this, CartActivity.class));
             else if (id == R.id.nav_account)    startActivity(new Intent(this, ProfileActivity.class));
             finish();
             return true;

@@ -32,17 +32,10 @@ public class ProfileActivity extends BaseActivity {
 
     private void setupTopBar() {
         // menuIcon click handled by AppDrawerHelper
-        View cartContainer = findViewById(R.id.cartContainer);
-        TextView cartBadge = findViewById(R.id.cartBadge);
+        View notificationContainer = findViewById(R.id.notificationContainer);
 
-        if (cartContainer != null) cartContainer.setOnClickListener(v ->
-                startActivity(new Intent(this, CartActivity.class)));
-
-        int count = CartManager.getInstance().getTotalUnits();
-        if (cartBadge != null) {
-            cartBadge.setText(String.valueOf(count));
-            cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        }
+        if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
+                Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
     }
 
     private void setupAuthButtons() {
@@ -89,6 +82,7 @@ public class ProfileActivity extends BaseActivity {
         LinearLayout languageRow      = findViewById(R.id.languageRow);
         LinearLayout privacyRow       = findViewById(R.id.privacyRow);
         LinearLayout termsRow         = findViewById(R.id.termsRow);
+        LinearLayout aboutUsRow       = findViewById(R.id.aboutUsRow);
 
         if (ordersRow != null) ordersRow.setOnClickListener(v ->
                 startActivity(new Intent(this, MyOrdersActivity.class)));
@@ -100,6 +94,8 @@ public class ProfileActivity extends BaseActivity {
                 Toast.makeText(this, "Privacy Policy", Toast.LENGTH_SHORT).show());
         if (termsRow != null) termsRow.setOnClickListener(v ->
                 Toast.makeText(this, "Terms of Service", Toast.LENGTH_SHORT).show());
+        if (aboutUsRow != null) aboutUsRow.setOnClickListener(v ->
+                startActivity(new Intent(this, AboutActivity.class)));
     }
 
     private void setupBottomNavigation() {
@@ -124,8 +120,8 @@ public class ProfileActivity extends BaseActivity {
                 startActivity(new Intent(this, CategoriesActivity.class));
             } else if (id == R.id.nav_favorites) {
                 startActivity(new Intent(this, FavoritesActivity.class));
-            } else if (id == R.id.nav_about) {
-                startActivity(new Intent(this, AboutActivity.class));
+            } else if (id == R.id.nav_cart) {
+                startActivity(new Intent(this, CartActivity.class));
             } else {
                 return true;
             }

@@ -20,9 +20,9 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/nav_about"
-        android:icon="@drawable/ic_info"
-        android:title="About"
+        android:id="@+id/nav_cart"
+        android:icon="@drawable/ic_shopping_bag"
+        android:title="Cart"
         app:showAsAction="never" />
 
     <item

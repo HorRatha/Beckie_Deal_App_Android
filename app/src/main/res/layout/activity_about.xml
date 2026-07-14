@@ -48,7 +48,7 @@
                 android:src="@mipmap/ic_launcher" />
 
             <RelativeLayout
-                android:id="@+id/cartContainer"
+                android:id="@+id/notificationContainer"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_alignParentEnd="true"
@@ -56,16 +56,15 @@
                 android:background="@drawable/form_field_background">
 
                 <ImageView
-                    android:id="@+id/cartIcon"
+                    android:id="@+id/notificationIcon"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_shopping_bag"
-                    android:contentDescription="Cart"
+                    android:src="@drawable/ic_notifications"
                     app:tint="@color/primary" />
 
                 <TextView
-                    android:id="@+id/cartBadge"
+                    android:id="@+id/notificationBadge"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_alignParentEnd="true"
@@ -73,11 +72,11 @@
                     android:background="@drawable/badge_pill"
                     android:backgroundTint="@color/red_error"
                     android:gravity="center"
-                    android:text="0"
+                    android:text="3"
                     android:textColor="@color/white_fixed"
                     android:textSize="9sp"
                     android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
             </RelativeLayout>
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>

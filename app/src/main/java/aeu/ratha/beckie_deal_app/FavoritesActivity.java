@@ -33,16 +33,10 @@ public class FavoritesActivity extends BaseActivity {
 
     private void setupTopBar() {
         // menuIcon click handled by AppDrawerHelper
-        View cartContainer = findViewById(R.id.cartContainer);
-        TextView cartBadge = findViewById(R.id.cartBadge);
+        View notificationContainer = findViewById(R.id.notificationContainer);
 
-        if (cartContainer != null) cartContainer.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
-
-        int count = CartManager.getInstance().getTotalUnits();
-        if (cartBadge != null) {
-            cartBadge.setText(String.valueOf(count));
-            cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        }
+        if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
+                Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
     }
 
     private void displayFavorites() {
@@ -150,8 +144,8 @@ public class FavoritesActivity extends BaseActivity {
                 overridePendingTransition(0, 0); finish(); return true;
             } else if (itemId == R.id.nav_favorites) {
                 return true;
-            } else if (itemId == R.id.nav_about) {
-                startActivity(new Intent(this, AboutActivity.class));
+            } else if (itemId == R.id.nav_cart) {
+                startActivity(new Intent(this, CartActivity.class));
                 overridePendingTransition(0, 0); finish(); return true;
             } else if (itemId == R.id.nav_account) {
                 startActivity(new Intent(this, ProfileActivity.class));

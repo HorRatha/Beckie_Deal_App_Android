@@ -314,7 +314,7 @@ public class ProductListActivity extends BaseActivity
             if      (id == R.id.nav_home)       startActivity(new Intent(this, MainActivity.class));
             else if (id == R.id.nav_categories) startActivity(new Intent(this, CategoriesActivity.class));
             else if (id == R.id.nav_favorites)  startActivity(new Intent(this, FavoritesActivity.class));
-            else if (id == R.id.nav_about)      startActivity(new Intent(this, AboutActivity.class));
+            else if (id == R.id.nav_cart)       startActivity(new Intent(this, CartActivity.class));
             else if (id == R.id.nav_account)    startActivity(new Intent(this, ProfileActivity.class));
             else return true;
             overridePendingTransition(0, 0);

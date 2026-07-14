@@ -32,7 +32,6 @@ public class CategoryDetailActivity extends BaseActivity {
     private String currentCategoryName = "";
     private GridLayout productsGrid;
     private TextView resultsLabel;
-    private TextView cartBadge;
     private LinearLayout brandFilterContainer;
 
     // Filter state (from FilterBottomSheet)
@@ -74,7 +73,6 @@ public class CategoryDetailActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateCartBadge();
     }
 
     // ── Top bar ───────────────────────────────────────────────────────────────
@@ -86,19 +84,10 @@ public class CategoryDetailActivity extends BaseActivity {
         ImageView backBtn = findViewById(R.id.backButton);
         if (backBtn != null) backBtn.setOnClickListener(v -> finish());
 
-        cartBadge = findViewById(R.id.cartBadge);
-        View cartContainer = findViewById(R.id.cartContainer);
-        if (cartContainer != null)
-            cartContainer.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
-
-        updateCartBadge();
-    }
-
-    private void updateCartBadge() {
-        if (cartBadge == null) return;
-        int count = CartManager.getInstance().getCartCount();
-        cartBadge.setText(String.valueOf(count));
-        cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+        View notificationContainer = findViewById(R.id.notificationContainer);
+        if (notificationContainer != null)
+            notificationContainer.setOnClickListener(v ->
+                Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
     }
 
     // ── Hero banner ───────────────────────────────────────────────────────────
@@ -338,7 +327,7 @@ public class CategoryDetailActivity extends BaseActivity {
             if      (id == R.id.nav_home)       startActivity(new Intent(this, MainActivity.class));
             else if (id == R.id.nav_categories) startActivity(new Intent(this, CategoriesActivity.class));
             else if (id == R.id.nav_favorites)  startActivity(new Intent(this, FavoritesActivity.class));
-            else if (id == R.id.nav_about)      startActivity(new Intent(this, AboutActivity.class));
+            else if (id == R.id.nav_cart)       startActivity(new Intent(this, CartActivity.class));
             else if (id == R.id.nav_account)    startActivity(new Intent(this, ProfileActivity.class));
             else return true;
             overridePendingTransition(0, 0);

@@ -7,28 +7,27 @@
     <color name="on_primary_container">#FFEDD5</color>
 
     <!-- UI Semantic Colors (Dark) -->
-    <color name="background">#0F172A</color>
-    <color name="surface">#1E293B</color>
-    <color name="on_surface">#F8FAFC</color>
-    <color name="text_primary">#F8FAFC</color>
-    <color name="text_secondary">#94A3B8</color>
+    <color name="background">#0F1419</color>
+    <color name="surface">#1A2332</color>
+    <color name="on_surface">#F1F5F9</color>
+    <color name="text_primary">#F1F5F9</color>
+    <color name="text_secondary">#A0AEC0</color>
     <color name="text_muted">#64748B</color>
-    <color name="border_color">#334155</color>
-    <color name="input_background">#334155</color>
-    <color name="card_bg_secondary">#0F172A</color>
-    <color name="badge_bg">#431407</color>
+    <color name="border_color">#2D3B4E</color>
+    <color name="input_background">#1E2A3A</color>
+    <color name="card_bg_secondary">#141D2B</color>
+    <color name="badge_bg">#2A1A0A</color>
 
     <!-- Bottom Nav Custom Style (Dark Mode) -->
-    <color name="nav_bg">#1E293B</color>
-    <color name="nav_active_pill">#431407</color>
+    <color name="nav_bg">#1A2332</color>
+    <color name="nav_active_pill">#2A1A0A</color>
     <color name="nav_active_item">#FB923C</color>
     <color name="nav_inactive_item">#64748B</color>
 
     <!-- Bottom Nav Modern Clean Style (Dark Mode) -->
-    <!-- Solid dark surface — no transparency artifacts -->
-    <color name="nav_surface">#1E293B</color>
-    <!-- Active pill: warm dark orange tint for selected item -->
-    <color name="nav_indicator_fill">#3D2010</color>
+    <color name="nav_surface">#1A2332</color>
+    <!-- Active pill: warm subtle orange glow -->
+    <color name="nav_indicator_fill">#331E0B</color>
     <!-- Icon colors -->
     <color name="nav_glass_active">#FB923C</color>
     <color name="nav_glass_inactive">#64748B</color>
@@ -41,7 +40,12 @@
     <color name="red_error">#EF4444</color>
     <color name="yellow_star">#FFC107</color>
 
+    <color name="dark_bg">#0F1419</color>
+    <color name="dark_text">#A0AEC0</color>
+
     <!-- Compatibility -->
-    <color name="white">#1E293B</color>
-    <color name="black">#F8FAFC</color>
+    <color name="white">#1A2332</color>
+    <color name="black">#F1F5F9</color>
+    <color name="secondary">#C2703B</color>
+    <color name="on_secondary">#FFFFFF</color>
 </resources>

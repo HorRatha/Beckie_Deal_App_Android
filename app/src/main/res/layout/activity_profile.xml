@@ -46,7 +46,7 @@
                 android:src="@mipmap/ic_launcher" />
 
             <RelativeLayout
-                android:id="@+id/cartContainer"
+                android:id="@+id/notificationContainer"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_alignParentEnd="true"
@@ -54,15 +54,15 @@
                 android:background="@drawable/form_field_background">
 
                 <ImageView
-                    android:id="@+id/cartIcon"
+                    android:id="@+id/notificationIcon"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_shopping_bag"
+                    android:src="@drawable/ic_notifications"
                     app:tint="@color/primary" />
 
                 <TextView
-                    android:id="@+id/cartBadge"
+                    android:id="@+id/notificationBadge"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_alignParentEnd="true"
@@ -70,11 +70,11 @@
                     android:background="@drawable/badge_pill"
                     android:backgroundTint="@color/red_error"
                     android:gravity="center"
-                    android:text="0"
+                    android:text="3"
                     android:textColor="@color/white_fixed"
                     android:textSize="9sp"
                     android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
             </RelativeLayout>
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
@@ -476,6 +476,52 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
+                    <!-- About Us -->
+                    <LinearLayout
+                        android:id="@+id/aboutUsRow"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            app:cardCornerRadius="11dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp"
+                            app:cardBackgroundColor="@color/badge_bg">
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_info"
+                                app:tint="@color/primary" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="14dp"
+                            android:text="About Us"
+                            android:textColor="@color/text_primary"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
 
                     <!-- Privacy Policy -->
                     <LinearLayout

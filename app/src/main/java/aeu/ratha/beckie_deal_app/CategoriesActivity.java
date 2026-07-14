@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
@@ -38,22 +39,15 @@ public class CategoriesActivity extends BaseActivity {
     private void setupTopBar() {
         // menuIcon click handled by AppDrawerHelper
         ImageView searchIcon = findViewById(R.id.searchIcon);
-        View cartContainer = findViewById(R.id.cartContainer);
-        TextView cartBadge = findViewById(R.id.cartBadge);
+        View notificationContainer = findViewById(R.id.notificationContainer);
         View viewAllBrands = findViewById(R.id.viewAllBrands);
 
         if (searchIcon != null) searchIcon.setOnClickListener(v ->
                 startActivity(new Intent(this, SearchActivity.class)));
-        if (cartContainer != null) cartContainer.setOnClickListener(v ->
-                startActivity(new Intent(this, CartActivity.class)));
+        if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
+                Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
         if (viewAllBrands != null) viewAllBrands.setOnClickListener(v ->
                 startActivity(new Intent(this, AllBrandsActivity.class)));
-
-        int count = CartManager.getInstance().getTotalUnits();
-        if (cartBadge != null) {
-            cartBadge.setText(String.valueOf(count));
-            cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        }
     }
 
     private void initBrandsData() {
@@ -119,7 +113,7 @@ public class CategoriesActivity extends BaseActivity {
                 card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
                 card.setStrokeWidth(dpToPx(2));
                 card.setStrokeColor(primaryColor);
-                card.setCardElevation(4f);
+                card.setCardElevation(6f);
                 nameText.setTextColor(primaryColor);
                 if (countText != null) countText.setTextColor(primaryColor);
                 if (iconContainer != null) {
@@ -130,8 +124,8 @@ public class CategoriesActivity extends BaseActivity {
             } else {
                 card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
                 card.setStrokeWidth(dpToPx(1));
-                card.setStrokeColor(ContextCompat.getColor(this, R.color.primary));
-                card.setCardElevation(0f);
+                card.setStrokeColor(ContextCompat.getColor(this, R.color.border_color));
+                card.setCardElevation(2f);
                 nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
                 if (countText != null) countText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
                 if (iconContainer != null) {
@@ -251,7 +245,7 @@ public class CategoriesActivity extends BaseActivity {
             int id = item.getItemId();
             if      (id == R.id.nav_home)      startActivity(new Intent(this, MainActivity.class));
             else if (id == R.id.nav_favorites) startActivity(new Intent(this, FavoritesActivity.class));
-            else if (id == R.id.nav_about)     startActivity(new Intent(this, AboutActivity.class));
+            else if (id == R.id.nav_cart)      startActivity(new Intent(this, CartActivity.class));
             else if (id == R.id.nav_account)   startActivity(new Intent(this, ProfileActivity.class));
             else return true;
             overridePendingTransition(0, 0);
