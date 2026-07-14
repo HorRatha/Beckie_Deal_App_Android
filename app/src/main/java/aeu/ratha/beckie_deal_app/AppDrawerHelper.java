@@ -158,7 +158,7 @@ public class AppDrawerHelper {
         View notifItem = drawerLayout.findViewById(R.id.drawerNotifications);
         if (notifItem != null) notifItem.setOnClickListener(v -> {
             closeDrawer();
-            Toast.makeText(activity, "Notifications — coming soon", Toast.LENGTH_SHORT).show();
+            activity.startActivity(new Intent(activity, NotificationsActivity.class));
         });
 
         View languageItem = drawerLayout.findViewById(R.id.drawerLanguage);

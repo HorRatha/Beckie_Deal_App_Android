@@ -36,7 +36,7 @@ public class FavoritesActivity extends BaseActivity {
         View notificationContainer = findViewById(R.id.notificationContainer);
 
         if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
-                Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, NotificationsActivity.class)));
     }
 
     private void displayFavorites() {

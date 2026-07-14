@@ -45,7 +45,7 @@ public class CategoriesActivity extends BaseActivity {
         if (searchIcon != null) searchIcon.setOnClickListener(v ->
                 startActivity(new Intent(this, SearchActivity.class)));
         if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
-                Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, NotificationsActivity.class)));
         if (viewAllBrands != null) viewAllBrands.setOnClickListener(v ->
                 startActivity(new Intent(this, AllBrandsActivity.class)));
     }
