@@ -30,22 +30,23 @@
             android:paddingHorizontal="16dp">
 
             <ImageView
-                android:id="@+id/menuIcon"
+                android:id="@+id/backButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:src="@android:drawable/ic_menu_sort_by_size"
-                android:contentDescription="Menu"
+                android:src="@drawable/ic_arrow_left"
+                android:contentDescription="Back"
                 app:tint="@color/text_primary" />
 
-            <ImageView
-                android:id="@+id/logoImage"
-                android:layout_width="120dp"
-                android:layout_height="40dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_launcher" />
+                android:text="About Us"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <RelativeLayout
                 android:id="@+id/notificationContainer"

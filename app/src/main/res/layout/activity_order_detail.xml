@@ -36,8 +36,7 @@
                     android:layout_centerVertical="true"
                     android:background="@drawable/form_field_background"
                     android:padding="12dp"
-                    android:src="@android:drawable/ic_menu_revert"
-                    android:rotation="180"
+                    android:src="@drawable/ic_arrow_left"
                     android:contentDescription="Back"
                     app:tint="@color/text_primary" />
 

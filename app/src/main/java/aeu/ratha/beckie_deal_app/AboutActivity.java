@@ -33,7 +33,7 @@ public class AboutActivity extends BaseActivity {
         inputEmail   = findViewById(R.id.inputEmail);
         inputMessage = findViewById(R.id.inputMessage);
 
-        AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        AppDrawerHelper.attach(this, R.id.drawerLayout, 0);
         setupTopBar();
         setupSubmitButton();
         setupMapCard();
@@ -41,8 +41,10 @@ public class AboutActivity extends BaseActivity {
     }
 
     private void setupTopBar() {
-        View      notificationContainer  = findViewById(R.id.notificationContainer);
+        ImageView backButton = findViewById(R.id.backButton);
+        if (backButton != null) backButton.setOnClickListener(v -> finish());
 
+        View notificationContainer = findViewById(R.id.notificationContainer);
         if (notificationContainer != null)
             notificationContainer.setOnClickListener(v ->
                 Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show());
