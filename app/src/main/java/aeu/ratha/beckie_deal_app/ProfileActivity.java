@@ -66,6 +66,9 @@ public class ProfileActivity extends BaseActivity {
         darkModeSwitch.setChecked(isNight);
 
         darkModeSwitch.setOnCheckedChangeListener((btn, isChecked) -> {
+            // Save preference so it persists across app restarts.
+            ThemePreferences.setDarkMode(this, isChecked);
+
             // Guard: only change night mode if it's actually different from current.
             int newMode = isChecked
                     ? AppCompatDelegate.MODE_NIGHT_YES

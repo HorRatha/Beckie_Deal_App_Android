@@ -98,6 +98,9 @@ public class AppDrawerHelper {
 
             // Attach the listener AFTER the initial state is set.
             darkSwitch.setOnCheckedChangeListener((btn, checked) -> {
+                // Save preference so it persists across app restarts.
+                ThemePreferences.setDarkMode(activity, checked);
+
                 int newMode = checked
                         ? AppCompatDelegate.MODE_NIGHT_YES
                         : AppCompatDelegate.MODE_NIGHT_NO;
