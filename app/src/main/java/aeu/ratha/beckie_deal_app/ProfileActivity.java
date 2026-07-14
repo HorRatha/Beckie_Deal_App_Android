@@ -129,5 +129,21 @@ public class ProfileActivity extends BaseActivity {
             finish();
             return true;
         });
+
+        updateCartBadge(bottomNav);
+    }
+
+    private void updateCartBadge(BottomNavigationView bottomNav) {
+        if (bottomNav == null) return;
+        int count = CartManager.getInstance().getTotalUnits();
+        if (count > 0) {
+            com.google.android.material.badge.BadgeDrawable badge = bottomNav.getOrCreateBadge(R.id.nav_cart);
+            badge.setVisible(true);
+            badge.setNumber(count);
+            badge.setBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.red_error));
+            badge.setBadgeTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.white_fixed));
+        } else {
+            bottomNav.removeBadge(R.id.nav_cart);
+        }
     }
 }

@@ -65,7 +65,19 @@ public class ProductDetailActivity extends BaseActivity {
     }
 
     private void updateCartUI() {
-        // No-op: cart badge removed from toolbar
+        // Update bottom nav cart badge
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        if (bottomNav == null) return;
+        int count = CartManager.getInstance().getTotalUnits();
+        if (count > 0) {
+            com.google.android.material.badge.BadgeDrawable badge = bottomNav.getOrCreateBadge(R.id.nav_cart);
+            badge.setVisible(true);
+            badge.setNumber(count);
+            badge.setBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.red_error));
+            badge.setBadgeTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.white_fixed));
+        } else {
+            bottomNav.removeBadge(R.id.nav_cart);
+        }
     }
 
     // ── Product data ──────────────────────────────────────────────────────────
@@ -377,6 +389,18 @@ public class ProductDetailActivity extends BaseActivity {
             finish();
             return true;
         });
+
+        // Cart badge
+        int cartCount = CartManager.getInstance().getTotalUnits();
+        if (cartCount > 0) {
+            com.google.android.material.badge.BadgeDrawable badge = bottomNav.getOrCreateBadge(R.id.nav_cart);
+            badge.setVisible(true);
+            badge.setNumber(cartCount);
+            badge.setBackgroundColor(ContextCompat.getColor(this, R.color.red_error));
+            badge.setBadgeTextColor(ContextCompat.getColor(this, R.color.white_fixed));
+        } else {
+            bottomNav.removeBadge(R.id.nav_cart);
+        }
     }
 
     // ── Per-product data ──────────────────────────────────────────────────────

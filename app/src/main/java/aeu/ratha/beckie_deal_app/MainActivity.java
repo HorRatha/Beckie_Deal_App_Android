@@ -81,6 +81,7 @@ public class MainActivity extends BaseActivity {
         setupProducts();
         startAutoScroll();
         startBannerAutoScroll();
+        updateCartBadge();
     }
 
     @Override
@@ -706,6 +707,23 @@ public class MainActivity extends BaseActivity {
             }
             return false;
         });
+
+        updateCartBadge();
+    }
+
+    private void updateCartBadge() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        if (bottomNav == null) return;
+        int count = CartManager.getInstance().getTotalUnits();
+        if (count > 0) {
+            com.google.android.material.badge.BadgeDrawable badge = bottomNav.getOrCreateBadge(R.id.nav_cart);
+            badge.setVisible(true);
+            badge.setNumber(count);
+            badge.setBackgroundColor(ContextCompat.getColor(this, R.color.red_error));
+            badge.setBadgeTextColor(ContextCompat.getColor(this, R.color.white_fixed));
+        } else {
+            bottomNav.removeBadge(R.id.nav_cart);
+        }
     }
 
     public static class Product {
