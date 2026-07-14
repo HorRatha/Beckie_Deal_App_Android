@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
@@ -41,13 +41,9 @@ public class AboutActivity extends BaseActivity {
     }
 
     private void setupTopBar() {
-        ImageView menuIcon       = findViewById(R.id.menuIcon);
         View      cartContainer  = findViewById(R.id.cartContainer);
         TextView  cartBadge      = findViewById(R.id.cartBadge);
 
-        if (menuIcon != null)
-            menuIcon.setOnClickListener(v ->
-                Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
         if (cartContainer != null)
             cartContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, CartActivity.class)));

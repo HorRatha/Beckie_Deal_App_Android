@@ -18,9 +18,10 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@color/surface"
-        app:elevation="0dp"
+        android:elevation="0dp"
+        app:contentInsetStart="0dp"
         app:layout_constraintTop_toTopOf="parent">
         <RelativeLayout
             android:layout_width="match_parent"
