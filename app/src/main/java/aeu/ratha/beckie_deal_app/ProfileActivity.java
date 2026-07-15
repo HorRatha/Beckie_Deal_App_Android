@@ -4,16 +4,14 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.materialswitch.MaterialSwitch;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -26,6 +24,7 @@ public class ProfileActivity extends BaseActivity {
         setupTopBar();
         setupAuthButtons();
         setupDarkModeSwitch();
+        setupNotificationToggle();
         setupSettingsRows();
         setupBottomNavigation();
     }
@@ -49,34 +48,103 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void setupDarkModeSwitch() {
-        MaterialSwitch darkModeSwitch = findViewById(R.id.darkModeSwitch);
-        if (darkModeSwitch == null) return;
+        FrameLayout lightOption = findViewById(R.id.lightModeOption);
+        FrameLayout darkOption = findViewById(R.id.darkModeOption);
+        ImageView lightIcon = findViewById(R.id.lightModeIcon);
+        ImageView darkIcon = findViewById(R.id.darkModeIcon);
 
-        // Disable saved instance state restoration for this switch to prevent
-        // the framework from restoring a stale checked state that conflicts
-        // with the actual current night mode.
-        darkModeSwitch.setSaveEnabled(false);
+        if (lightOption == null || darkOption == null) return;
 
         int currentNightMode = getResources().getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_MASK;
         boolean isNight = currentNightMode == Configuration.UI_MODE_NIGHT_YES;
 
-        // Null listener first so setChecked() doesn't fire the callback during setup.
-        darkModeSwitch.setOnCheckedChangeListener(null);
-        darkModeSwitch.setChecked(isNight);
+        // Set initial state without animation
+        updateDarkModeToggleUI(lightOption, darkOption, lightIcon, darkIcon, isNight);
 
-        darkModeSwitch.setOnCheckedChangeListener((btn, isChecked) -> {
-            // Save preference so it persists across app restarts.
-            ThemePreferences.setDarkMode(this, isChecked);
-
-            // Guard: only change night mode if it's actually different from current.
-            int newMode = isChecked
-                    ? AppCompatDelegate.MODE_NIGHT_YES
-                    : AppCompatDelegate.MODE_NIGHT_NO;
-            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
-                AppCompatDelegate.setDefaultNightMode(newMode);
+        lightOption.setOnClickListener(v -> {
+            if (isCurrentlyDark()) {
+                updateDarkModeToggleUI(lightOption, darkOption, lightIcon, darkIcon, false);
+                applyDarkMode(false);
             }
         });
+
+        darkOption.setOnClickListener(v -> {
+            if (!isCurrentlyDark()) {
+                updateDarkModeToggleUI(lightOption, darkOption, lightIcon, darkIcon, true);
+                applyDarkMode(true);
+            }
+        });
+    }
+
+    private boolean isCurrentlyDark() {
+        int currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    private void updateDarkModeToggleUI(FrameLayout lightOption, FrameLayout darkOption,
+                                         ImageView lightIcon, ImageView darkIcon, boolean isDark) {
+        if (isDark) {
+            // Dark is active
+            darkOption.setBackgroundResource(R.drawable.dark_mode_pill_active);
+            lightOption.setBackgroundResource(R.drawable.dark_mode_pill_inactive);
+            darkIcon.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
+            lightIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_secondary));
+        } else {
+            // Light is active
+            lightOption.setBackgroundResource(R.drawable.dark_mode_pill_active);
+            darkOption.setBackgroundResource(R.drawable.dark_mode_pill_inactive);
+            lightIcon.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
+            darkIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_secondary));
+        }
+    }
+
+    private void applyDarkMode(boolean isDark) {
+        ThemePreferences.setDarkMode(this, isDark);
+        int newMode = isDark
+                ? AppCompatDelegate.MODE_NIGHT_YES
+                : AppCompatDelegate.MODE_NIGHT_NO;
+        if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+            AppCompatDelegate.setDefaultNightMode(newMode);
+        }
+    }
+
+    private void setupNotificationToggle() {
+        FrameLayout onOption = findViewById(R.id.notifOnOption);
+        FrameLayout offOption = findViewById(R.id.notifOffOption);
+        ImageView onIcon = findViewById(R.id.notifOnIcon);
+        ImageView offIcon = findViewById(R.id.notifOffIcon);
+
+        if (onOption == null || offOption == null) return;
+
+        // Default state: ON
+        updateNotifToggleUI(onOption, offOption, onIcon, offIcon, true);
+
+        onOption.setOnClickListener(v -> {
+            updateNotifToggleUI(onOption, offOption, onIcon, offIcon, true);
+            Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();
+        });
+
+        offOption.setOnClickListener(v -> {
+            updateNotifToggleUI(onOption, offOption, onIcon, offIcon, false);
+            Toast.makeText(this, "Notifications disabled", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void updateNotifToggleUI(FrameLayout onOption, FrameLayout offOption,
+                                      ImageView onIcon, ImageView offIcon, boolean isOn) {
+        if (isOn) {
+            onOption.setBackgroundResource(R.drawable.notification_pill_active);
+            offOption.setBackgroundResource(R.drawable.notification_pill_inactive);
+            onIcon.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
+            offIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_secondary));
+        } else {
+            offOption.setBackgroundResource(R.drawable.notification_pill_active);
+            onOption.setBackgroundResource(R.drawable.notification_pill_inactive);
+            offIcon.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
+            onIcon.setColorFilter(ContextCompat.getColor(this, R.color.text_secondary));
+        }
     }
 
     private void setupSettingsRows() {

@@ -284,17 +284,14 @@
                     <View android:layout_width="match_parent" android:layout_height="1dp"
                         android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
 
-                    <!-- Notifications -->
+                    <!-- Notifications — Segmented Pill Toggle (ON / OFF) -->
                     <LinearLayout
                         android:id="@+id/notificationsRow"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
+                        android:paddingHorizontal="16dp">
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="38dp"
@@ -320,11 +317,51 @@
                             android:textColor="@color/text_primary"
                             android:textSize="15sp" />
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/notificationsSwitch"
+                        <!-- Modern Segmented Pill Toggle (ON / OFF) -->
+                        <LinearLayout
+                            android:id="@+id/notifToggleContainer"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true" />
+                            android:layout_height="36dp"
+                            android:background="@drawable/notification_toggle_bg"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="3dp">
+
+                            <!-- ON option -->
+                            <FrameLayout
+                                android:id="@+id/notifOnOption"
+                                android:layout_width="40dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/notification_pill_active"
+                                android:clickable="true"
+                                android:focusable="true">
+                                <ImageView
+                                    android:id="@+id/notifOnIcon"
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_toggle_on"
+                                    app:tint="@color/white_fixed" />
+                            </FrameLayout>
+
+                            <!-- OFF option -->
+                            <FrameLayout
+                                android:id="@+id/notifOffOption"
+                                android:layout_width="40dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/notification_pill_inactive"
+                                android:clickable="true"
+                                android:focusable="true">
+                                <ImageView
+                                    android:id="@+id/notifOffIcon"
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_toggle_off"
+                                    app:tint="@color/text_secondary" />
+                            </FrameLayout>
+
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -410,7 +447,7 @@
                     <View android:layout_width="match_parent" android:layout_height="1dp"
                         android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
 
-                    <!-- Dark Mode -->
+                    <!-- Dark Mode — Segmented Pill Toggle -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
@@ -442,10 +479,51 @@
                             android:textColor="@color/text_primary"
                             android:textSize="15sp" />
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/darkModeSwitch"
+                        <!-- Modern Segmented Pill Toggle (Sun / Moon) -->
+                        <LinearLayout
+                            android:id="@+id/darkModeToggleContainer"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="36dp"
+                            android:background="@drawable/dark_mode_toggle_bg"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="3dp">
+
+                            <!-- Light (Sun) option -->
+                            <FrameLayout
+                                android:id="@+id/lightModeOption"
+                                android:layout_width="40dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/dark_mode_pill_active"
+                                android:clickable="true"
+                                android:focusable="true">
+                                <ImageView
+                                    android:id="@+id/lightModeIcon"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_sun"
+                                    app:tint="@color/white_fixed" />
+                            </FrameLayout>
+
+                            <!-- Dark (Moon) option -->
+                            <FrameLayout
+                                android:id="@+id/darkModeOption"
+                                android:layout_width="40dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/dark_mode_pill_inactive"
+                                android:clickable="true"
+                                android:focusable="true">
+                                <ImageView
+                                    android:id="@+id/darkModeIcon"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_moon"
+                                    app:tint="@color/text_secondary" />
+                            </FrameLayout>
+
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
