@@ -55,6 +55,9 @@ public class RegisterActivity extends BaseActivity {
 
         if (loginLink != null) {
             loginLink.setOnClickListener(v -> {
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 finish();
             });
         }
