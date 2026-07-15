@@ -3,21 +3,33 @@ package aeu.ratha.beckie_deal_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        makeStatusBarTransparent();
         setContentView(R.layout.activity_login);
 
         setupTopBar();
         setupForm();
+    }
+
+    private void makeStatusBarTransparent() {
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(android.graphics.Color.TRANSPARENT);
+        WindowCompat.setDecorFitsSystemWindows(window, false);
     }
 
     private void setupTopBar() {
