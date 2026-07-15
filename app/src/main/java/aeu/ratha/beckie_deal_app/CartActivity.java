@@ -9,7 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,14 +21,27 @@ public class CartActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
+        setupBottomNavigation();
         displayCartItems();
         setupCheckoutButton();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        displayCartItems();
+        updateCartBadge();
+    }
+
     private void setupTopBar() {
-        ImageView backButton = findViewById(R.id.backButton);
-        if (backButton != null) backButton.setOnClickListener(v -> finish());
+        // menuIcon click handled by AppDrawerHelper
+        View notificationContainer = findViewById(R.id.notificationContainer);
+
+        if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
+                startActivity(new Intent(this, NotificationsActivity.class)));
     }
 
     private void setupCheckoutButton() {
@@ -98,6 +113,7 @@ public class CartActivity extends BaseActivity {
             CartManager.getInstance().incrementQuantity(item.product);
             refreshItemRow(item, quantityTv, subtotalTv);
             updateTotal(findViewById(R.id.totalPriceText));
+            updateCartBadge();
         });
 
         // ── Decrement ──────────────────────────────────────────────────────
@@ -107,10 +123,12 @@ public class CartActivity extends BaseActivity {
                 CartManager.getInstance().removeFromCart(item.product);
                 Toast.makeText(this, "Removed from cart", Toast.LENGTH_SHORT).show();
                 displayCartItems();   // full re-render to handle empty state
+                updateCartBadge();
             } else {
                 CartManager.getInstance().decrementQuantity(item.product);
                 refreshItemRow(item, quantityTv, subtotalTv);
                 updateTotal(findViewById(R.id.totalPriceText));
+                updateCartBadge();
             }
         });
 
@@ -119,6 +137,7 @@ public class CartActivity extends BaseActivity {
             CartManager.getInstance().removeFromCart(item.product);
             Toast.makeText(this, "Removed from cart", Toast.LENGTH_SHORT).show();
             displayCartItems();
+            updateCartBadge();
         });
 
         parent.addView(v);
@@ -141,5 +160,57 @@ public class CartActivity extends BaseActivity {
         if (totalText == null) return;
         totalText.setText(String.format(Locale.US, "$%.2f",
                 CartManager.getInstance().getTotalPrice()));
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        if (bottomNav == null) return;
+
+        bottomNav.setBackground(null);
+        bottomNav.setBackgroundTintList(null);
+        bottomNav.setItemActiveIndicatorColor(android.content.res.ColorStateList.valueOf(
+                ContextCompat.getColor(this, R.color.nav_indicator_fill)));
+
+        android.content.res.ColorStateList navTint =
+                ContextCompat.getColorStateList(this, R.color.bottom_nav_color);
+        if (navTint != null) { bottomNav.setItemIconTintList(navTint); bottomNav.setItemTextColor(navTint); }
+
+        bottomNav.setSelectedItemId(R.id.nav_cart);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                startActivity(new Intent(this, MainActivity.class));
+                overridePendingTransition(0, 0); finish(); return true;
+            } else if (itemId == R.id.nav_categories) {
+                startActivity(new Intent(this, CategoriesActivity.class));
+                overridePendingTransition(0, 0); finish(); return true;
+            } else if (itemId == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavoritesActivity.class));
+                overridePendingTransition(0, 0); finish(); return true;
+            } else if (itemId == R.id.nav_cart) {
+                return true;
+            } else if (itemId == R.id.nav_account) {
+                startActivity(new Intent(this, ProfileActivity.class));
+                overridePendingTransition(0, 0); finish(); return true;
+            }
+            return false;
+        });
+
+        updateCartBadge();
+    }
+
+    private void updateCartBadge() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        if (bottomNav == null) return;
+        int count = CartManager.getInstance().getTotalUnits();
+        if (count > 0) {
+            com.google.android.material.badge.BadgeDrawable badge = bottomNav.getOrCreateBadge(R.id.nav_cart);
+            badge.setVisible(true);
+            badge.setNumber(count);
+            badge.setBackgroundColor(ContextCompat.getColor(this, R.color.red_error));
+            badge.setBadgeTextColor(ContextCompat.getColor(this, R.color.white_fixed));
+        } else {
+            bottomNav.removeBadge(R.id.nav_cart);
+        }
     }
 }
