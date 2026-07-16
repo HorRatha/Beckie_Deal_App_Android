@@ -3,12 +3,12 @@ package aeu.ratha.beckie_deal_app;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.materialswitch.MaterialSwitch;
@@ -32,10 +32,58 @@ public class AppDrawerHelper {
         this.activity     = activity;
         this.drawerLayout = activity.findViewById(drawerLayoutId);
 
+        if (drawerLayout != null) {
+            // Never leave the drawer locked on any page
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            // Cheap scrim so opening doesn't force an expensive full-content
+            // redraw gradient every frame.
+            drawerLayout.setScrimColor(0x99000000);
+
+            // DrawerLayout re-runs draw() on the drawer panel AND the main
+            // content view on every animation frame while sliding. With a
+            // heavy content tree (ViewPager2 banners, Glide images, nested
+            // ConstraintLayouts) that redraw work drops frames and the slide
+            // looks janky/stuttery. Caching both views to hardware layers
+            // during the slide makes the animation just move a cached
+            // bitmap on the GPU instead of re-drawing the tree every frame.
+            drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+                    if (drawerView.getLayerType() != View.LAYER_TYPE_HARDWARE) {
+                        drawerView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+                    }
+                    View content = getContentView();
+                    if (content != null && content.getLayerType() != View.LAYER_TYPE_HARDWARE) {
+                        content.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+                    }
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    clearLayers(drawerView);
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    clearLayers(drawerView);
+                }
+
+                private void clearLayers(View drawerView) {
+                    drawerView.setLayerType(View.LAYER_TYPE_NONE, null);
+                    View content = getContentView();
+                    if (content != null) content.setLayerType(View.LAYER_TYPE_NONE, null);
+                }
+            });
+        }
+
         // Hamburger icon opens the drawer
-        ImageView menuIcon = activity.findViewById(menuIconId);
-        if (menuIcon != null) {
-            menuIcon.setOnClickListener(v -> openDrawer());
+        if (menuIconId != 0) {
+            View menuIcon = activity.findViewById(menuIconId);
+            if (menuIcon != null) {
+                menuIcon.setClickable(true);
+                menuIcon.setFocusable(true);
+                menuIcon.setOnClickListener(v -> openDrawer());
+            }
         }
 
         setupDrawerContent();
@@ -49,13 +97,26 @@ public class AppDrawerHelper {
     }
 
     public void openDrawer() {
-        if (drawerLayout != null) drawerLayout.openDrawer(
-                androidx.core.view.GravityCompat.START);
+        if (drawerLayout == null) return;
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) return;
+        drawerLayout.openDrawer(GravityCompat.START, true);
     }
 
     public void closeDrawer() {
-        if (drawerLayout != null) drawerLayout.closeDrawer(
-                androidx.core.view.GravityCompat.START);
+        if (drawerLayout != null) drawerLayout.closeDrawer(GravityCompat.START, true);
+    }
+
+    /** The DrawerLayout's first non-drawer child — i.e. the main screen content. */
+    private View getContentView() {
+        if (drawerLayout == null) return null;
+        for (int i = 0; i < drawerLayout.getChildCount(); i++) {
+            View child = drawerLayout.getChildAt(i);
+            if (((DrawerLayout.LayoutParams) child.getLayoutParams()).gravity
+                    != GravityCompat.START) {
+                return child;
+            }
+        }
+        return null;
     }
 
     // ── Wire all items inside layout_drawer.xml ──────────────────────────

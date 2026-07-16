@@ -6,6 +6,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.request.RequestOptions;
 
 /**
  * Binds a {@link MainActivity.Product} to the views inside {@code product_card.xml}.
@@ -13,6 +15,23 @@ import com.bumptech.glide.Glide;
  * stays in sync without duplicating logic.
  */
 public class ProductCardBinder {
+
+    /**
+     * Shared image options. Reused across every card so Glide doesn't rebuild
+     * the request settings each bind.
+     *  - PREFER_RGB_565 halves decode memory & CPU vs ARGB_8888
+     *  - override(400) caps decode resolution so a large source image can't
+     *    block the main thread while being decoded/scaled
+     *  - dontAnimate() skips the crossfade
+     *  - error/placeholder settle cleanly on the 404 image URLs
+     */
+    private static final RequestOptions CARD_IMAGE_OPTIONS = new RequestOptions()
+            .format(DecodeFormat.PREFER_RGB_565)
+            .override(400)
+            .centerInside()
+            .dontAnimate()
+            .placeholder(R.drawable.placeholder_image)
+            .error(R.drawable.placeholder_image);
 
     /**
      * Bind all visible fields of a product card.
@@ -32,8 +51,7 @@ public class ProductCardBinder {
         if (imgView != null) {
             Glide.with(context)
                  .load(product.imageUrl)
-                 .centerInside()
-                 .placeholder(R.drawable.placeholder_image)
+                 .apply(CARD_IMAGE_OPTIONS)
                  .into(imgView);
         }
 
