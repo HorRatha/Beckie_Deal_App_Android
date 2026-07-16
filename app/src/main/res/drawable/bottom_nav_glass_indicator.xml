@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-    Active-item pill indicator — solid soft orange tint for the selected item.
--->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@color/nav_indicator_fill" />
-    <corners android:radius="20dp" />
-</shape>
