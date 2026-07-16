@@ -70,6 +70,17 @@ public class CategoriesActivity extends BaseActivity {
         renderBrands();
     }
 
+    /** Rotating tint pairs (background, foreground) applied to brand icon containers
+     *  so the grid reads as colorful instead of every card sharing the same cream circle. */
+    private static final int[][] BRAND_TINTS = {
+            {R.color.brand_tint_bg_1, R.color.brand_tint_fg_1},
+            {R.color.brand_tint_bg_2, R.color.brand_tint_fg_2},
+            {R.color.brand_tint_bg_3, R.color.brand_tint_fg_3},
+            {R.color.brand_tint_bg_4, R.color.brand_tint_fg_4},
+            {R.color.brand_tint_bg_5, R.color.brand_tint_fg_5},
+            {R.color.brand_tint_bg_6, R.color.brand_tint_fg_6},
+    };
+
     private void renderBrands() {
         if (brandsGrid == null) return;
         brandsGrid.removeAllViews();
@@ -85,6 +96,7 @@ public class CategoriesActivity extends BaseActivity {
             TextView  iconText             = view.findViewById(R.id.brandIconText);
             TextView  nameText             = view.findViewById(R.id.brandName);
             TextView  countText            = view.findViewById(R.id.brandProductCount);
+            View      checkBadge           = view.findViewById(R.id.selectedCheckBadge);
 
             nameText.setText(brand.name);
 
@@ -108,35 +120,37 @@ public class CategoriesActivity extends BaseActivity {
                         Math.min(brand.name.length(), 3)).toUpperCase());
             }
 
+            int[] tint = BRAND_TINTS[i % BRAND_TINTS.length];
+            int tintBg = ContextCompat.getColor(this, tint[0]);
+            int tintFg = ContextCompat.getColor(this, tint[1]);
+
             if (brand.isSelected) {
                 int primaryColor = ContextCompat.getColor(this, R.color.primary);
-                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
+                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.brand_selected_bg));
                 card.setStrokeWidth(dpToPx(2));
                 card.setStrokeColor(primaryColor);
-                card.setCardElevation(6f);
+                card.setCardElevation(8f);
                 nameText.setTextColor(primaryColor);
                 if (countText != null) countText.setTextColor(primaryColor);
-                if (iconContainer != null) {
-                    iconContainer.setCardBackgroundColor(ContextCompat.getColor(this, R.color.badge_bg));
-                }
-                brandIcon.clearColorFilter();
-                iconText.setTextColor(primaryColor);
+                if (iconContainer != null) iconContainer.setCardBackgroundColor(primaryColor);
+                brandIcon.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
+                iconText.setTextColor(ContextCompat.getColor(this, R.color.white_fixed));
+                if (checkBadge != null) checkBadge.setVisibility(View.VISIBLE);
             } else {
                 card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
                 card.setStrokeWidth(dpToPx(1));
                 card.setStrokeColor(ContextCompat.getColor(this, R.color.border_color));
-                card.setCardElevation(2f);
+                card.setCardElevation(3f);
                 nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
                 if (countText != null) countText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
-                if (iconContainer != null) {
-                    iconContainer.setCardBackgroundColor(ContextCompat.getColor(this, R.color.badge_bg));
-                }
+                if (iconContainer != null) iconContainer.setCardBackgroundColor(tintBg);
                 brandIcon.clearColorFilter();
-                iconText.setTextColor(ContextCompat.getColor(this, R.color.primary));
+                iconText.setTextColor(tintFg);
+                if (checkBadge != null) checkBadge.setVisibility(View.GONE);
             }
 
             final int index = i;
-            view.setOnClickListener(v -> {
+            View.OnClickListener onBrandClick = v -> {
                 for (int j = 0; j < brandsList.size(); j++)
                     brandsList.get(j).isSelected = (j == index);
                 renderBrands();
@@ -147,7 +161,10 @@ public class CategoriesActivity extends BaseActivity {
                 intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT,   "124 Items");
                 intent.putExtra(CategoryDetailActivity.EXTRA_BRAND_FILTER, brand.name);
                 startActivity(intent);
-            });
+            };
+            // Card is the clickable element (has ripple foreground); the root FrameLayout
+            // only exists to float the checkmark badge, so it must not intercept the click.
+            card.setOnClickListener(onBrandClick);
 
             brandsGrid.addView(view);
         }

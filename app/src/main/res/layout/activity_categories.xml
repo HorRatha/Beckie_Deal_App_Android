@@ -14,12 +14,20 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Top App Bar -->
+    <!-- Gradient hero header — continues the status bar color into the page and
+         hosts the top bar + page title, replacing the flat white toolbar. -->
+    <View
+        android:id="@+id/heroGradient"
+        android:layout_width="match_parent"
+        android:layout_height="168dp"
+        android:background="@drawable/categories_hero_gradient"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="@color/background"
+        android:background="@android:color/transparent"
         android:elevation="0dp"
         app:contentInsetStart="0dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -29,53 +37,56 @@
             android:paddingHorizontal="16dp">
             <ImageView
                 android:id="@+id/menuIcon"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:padding="10dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="9dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="-10dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/circle_white_translucent"
                 android:src="@android:drawable/ic_menu_sort_by_size"
-                app:tint="@color/text_primary" />
+                app:tint="@color/white_fixed" />
             <ImageView
                 android:id="@+id/logoImage"
-                android:layout_width="120dp"
-                android:layout_height="40dp"
+                android:layout_width="110dp"
+                android:layout_height="36dp"
                 android:layout_centerInParent="true"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/ic_launcher" />
             <ImageView
                 android:id="@+id/searchIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="9dp"
                 android:layout_toStartOf="@+id/notificationContainer"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/circle_white_translucent"
                 android:src="@android:drawable/ic_menu_search"
-                app:tint="@color/text_primary" />
+                app:tint="@color/white_fixed" />
             <RelativeLayout
                 android:id="@+id/notificationContainer"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/form_field_background">
+                android:background="@drawable/circle_white_translucent">
 
                 <ImageView
                     android:id="@+id/notificationIcon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_notifications"
-                    app:tint="@color/primary" />
+                    app:tint="@color/white_fixed" />
 
                 <TextView
                     android:id="@+id/notificationBadge"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
                     android:background="@drawable/badge_pill"
@@ -83,7 +94,7 @@
                     android:gravity="center"
                     android:text="3"
                     android:textColor="@color/white_fixed"
-                    android:textSize="9sp"
+                    android:textSize="8sp"
                     android:textStyle="bold"
                     android:visibility="visible" />
 
@@ -91,12 +102,41 @@
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- Scrollable Content -->
+    <!-- Page title + subtitle, sitting on the gradient -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categories"
+            android:textColor="@color/white_fixed"
+            android:textSize="26sp"
+            android:fontFamily="sans-serif-medium" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Explore our premium collection by hardware type"
+            android:textColor="#E6FFFFFF"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!-- Scrollable Content — rounded-top sheet overlapping the gradient header -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/contentScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        android:background="@drawable/content_sheet_top_rounded"
+        android:layout_marginTop="-22dp"
+        app:layout_constraintTop_toBottomOf="@id/heroGradient"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <LinearLayout
@@ -104,31 +144,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
-            android:paddingTop="20dp"
+            android:paddingTop="22dp"
             android:paddingBottom="16dp">
-
-            <!-- Page Header -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Categories"
-                android:textColor="@color/text_primary"
-                android:textSize="26sp"
-                android:fontFamily="sans-serif-medium" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Explore our premium collection by hardware type"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp" />
 
             <!-- Laptops Brands Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="24dp">
+                android:orientation="vertical">
 
                 <!-- Section header row -->
                 <LinearLayout
@@ -141,7 +164,7 @@
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="36dp"
                         android:layout_height="36dp"
-                        app:cardCornerRadius="10dp"
+                        app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
                         app:cardBackgroundColor="@color/badge_bg"
                         app:strokeWidth="0dp">

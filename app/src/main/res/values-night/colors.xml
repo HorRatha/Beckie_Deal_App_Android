@@ -18,6 +18,23 @@
     <color name="card_bg_secondary">#141D2B</color>
     <color name="badge_bg">#2A1A0A</color>
 
+    <!-- Brand icon tint palette (dark mode) -->
+    <color name="brand_tint_bg_1">#1E2547</color>
+    <color name="brand_tint_fg_1">#818CF8</color>
+    <color name="brand_tint_bg_2">#0F2A22</color>
+    <color name="brand_tint_fg_2">#34D399</color>
+    <color name="brand_tint_bg_3">#3B1220</color>
+    <color name="brand_tint_fg_3">#FB7185</color>
+    <color name="brand_tint_bg_4">#0B2A30</color>
+    <color name="brand_tint_fg_4">#22D3EE</color>
+    <color name="brand_tint_bg_5">#241A3D</color>
+    <color name="brand_tint_fg_5">#A78BFA</color>
+    <color name="brand_tint_bg_6">#2A1A0A</color>
+    <color name="brand_tint_fg_6">#FB923C</color>
+
+    <!-- Selected brand state -->
+    <color name="brand_selected_bg">#2A1A0A</color>
+
     <!-- Bottom Nav Custom Style (Dark Mode) -->
     <color name="nav_bg">#1A2332</color>
     <color name="nav_active_pill">#2A1A0A</color>
