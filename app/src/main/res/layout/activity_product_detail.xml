@@ -517,7 +517,7 @@
                         android:src="@drawable/ic_favorite_border" />
                 </com.google.android.material.card.MaterialCardView>
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/addToCartButton"
                     android:layout_width="0dp"
                     android:layout_height="52dp"
@@ -529,6 +529,10 @@
                     android:textColor="@color/white_fixed"
                     android:textSize="15sp"
                     android:textStyle="bold"
+                    app:icon="@drawable/add_shopping_cart_24"
+                    app:iconTint="@color/white_fixed"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
                     app:cornerRadius="14dp" />
 
             </LinearLayout>
