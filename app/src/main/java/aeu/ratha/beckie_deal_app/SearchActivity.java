@@ -45,6 +45,8 @@ public class SearchActivity extends BaseActivity {
     private LinearLayout emptyState;
     private TextView  emptyTitle;
     private TextView  emptySubtitle;
+    private ImageView viewModeIcon;
+    private String    lastQuery = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,16 @@ public class SearchActivity extends BaseActivity {
         clearButton.setOnClickListener(v -> {
             searchEditText.setText("");
             searchEditText.requestFocus();
+        });
+
+        // View mode toggle (grid ⇄ list)
+        viewModeIcon = findViewById(R.id.viewModeIcon);
+        View viewModeBtn = findViewById(R.id.viewModeButton);
+        updateViewModeIcon();
+        if (viewModeBtn != null) viewModeBtn.setOnClickListener(v -> {
+            ViewModePreferences.setListView(this, !ViewModePreferences.isListView(this));
+            updateViewModeIcon();
+            performSearch(lastQuery);
         });
 
         // Live search as the user types
@@ -107,6 +119,7 @@ public class SearchActivity extends BaseActivity {
     // ── Search logic ──────────────────────────────────────────────────────────
 
     private void performSearch(String query) {
+        lastQuery = query;
         if (query.isEmpty()) {
             resultsScrollView.setVisibility(View.GONE);
             showEmptyState(true, "Search for products",
@@ -156,7 +169,11 @@ public class SearchActivity extends BaseActivity {
 
     private void renderResults(List<ProductResult> results, String query) {
         resultsGrid.removeAllViews();
-        resultsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
+
+        boolean isListView = ViewModePreferences.isListView(this);
+        int columns = isListView ? 1 : ScreenUtils.productGridColumns(this);
+        resultsGrid.setColumnCount(columns);
+        int cardLayout = isListView ? R.layout.product_card_list : R.layout.product_card;
 
         if (results.isEmpty()) {
             resultsScrollView.setVisibility(View.GONE);
@@ -175,7 +192,7 @@ public class SearchActivity extends BaseActivity {
             final MainActivity.Product product = result.product;
 
             View view = LayoutInflater.from(this)
-                    .inflate(R.layout.product_card, resultsGrid, false);
+                    .inflate(cardLayout, resultsGrid, false);
 
             // Sync favourite state
             product.isFavorite = FavoriteManager.getInstance().isFavorite(product);
@@ -235,6 +252,13 @@ public class SearchActivity extends BaseActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if (imm != null && getCurrentFocus() != null)
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
+    /** Swap the toggle button's icon to reflect the current mode (shows the icon for the OTHER mode to switch to). */
+    private void updateViewModeIcon() {
+        if (viewModeIcon == null) return;
+        boolean isListView = ViewModePreferences.isListView(this);
+        viewModeIcon.setImageResource(isListView ? R.drawable.grid_view_24 : R.drawable.event_list_24);
     }
 
     // ── Lightweight result wrapper ────────────────────────────────────────────

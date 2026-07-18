@@ -33,6 +33,7 @@ public class CategoryDetailActivity extends BaseActivity {
     private GridLayout productsGrid;
     private TextView resultsLabel;
     private LinearLayout brandFilterContainer;
+    private ImageView viewModeIcon;
 
     // Filter state (from FilterBottomSheet)
     private String currentSort     = FilterBottomSheet.SORT_DEFAULT;
@@ -65,6 +66,16 @@ public class CategoryDetailActivity extends BaseActivity {
         // Wire Filter & Sort button
         View sortBtn = findViewById(R.id.sortButton);
         if (sortBtn != null) sortBtn.setOnClickListener(v -> openFilterSheet());
+
+        // View mode toggle (grid ⇄ list)
+        viewModeIcon = findViewById(R.id.viewModeIcon);
+        View viewModeBtn = findViewById(R.id.viewModeButton);
+        updateViewModeIcon();
+        if (viewModeBtn != null) viewModeBtn.setOnClickListener(v -> {
+            ViewModePreferences.setListView(this, !ViewModePreferences.isListView(this));
+            updateViewModeIcon();
+            loadProducts(currentBrandFilter);
+        });
 
         loadProducts(currentBrandFilter);
         setupBottomNavigation();
@@ -241,8 +252,12 @@ public class CategoryDetailActivity extends BaseActivity {
     private void renderProducts(List<MainActivity.Product> products) {
         if (productsGrid == null) return;
         productsGrid.removeAllViews();
-        // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet
-        productsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
+
+        boolean isListView = ViewModePreferences.isListView(this);
+        // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet (1 in list mode)
+        int columns = isListView ? 1 : ScreenUtils.productGridColumns(this);
+        productsGrid.setColumnCount(columns);
+        int cardLayout = isListView ? R.layout.product_card_list : R.layout.product_card;
 
         if (products.isEmpty()) {
             TextView empty = new TextView(this);
@@ -256,7 +271,7 @@ public class CategoryDetailActivity extends BaseActivity {
         for (int i = 0; i < products.size(); i++) {
             final MainActivity.Product product = products.get(i);
             View view = LayoutInflater.from(this)
-                    .inflate(R.layout.product_card, productsGrid, false);
+                    .inflate(cardLayout, productsGrid, false);
 
             // Bind all fields via shared binder
             ProductCardBinder.bind(this, view, product);
@@ -304,6 +319,13 @@ public class CategoryDetailActivity extends BaseActivity {
         icon.setImageResource(fav ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
         icon.setColorFilter(ContextCompat.getColor(this,
                 fav ? R.color.red_error : R.color.text_secondary));
+    }
+
+    /** Swap the toggle button's icon to reflect the current mode (shows the icon for the OTHER mode to switch to). */
+    private void updateViewModeIcon() {
+        if (viewModeIcon == null) return;
+        boolean isListView = ViewModePreferences.isListView(this);
+        viewModeIcon.setImageResource(isListView ? R.drawable.grid_view_24 : R.drawable.event_list_24);
     }
 
     // ── Bottom navigation ─────────────────────────────────────────────────────

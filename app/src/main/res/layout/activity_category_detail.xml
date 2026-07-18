@@ -178,6 +178,26 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 
+                <!-- View mode toggle (grid / list) -->
+                <RelativeLayout
+                    android:id="@+id/viewModeButton"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/chip_unselected"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/viewModeIcon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/event_list_24"
+                        app:tint="@color/primary" />
+
+                </RelativeLayout>
+
                 <TextView
                     android:id="@+id/sortButton"
                     android:layout_width="wrap_content"

@@ -33,6 +33,7 @@ public class MainActivity extends BaseActivity {
     private List<Category> categories;
     private AppDrawerHelper drawerHelper;
     private ProductGridAdapter productAdapter;
+    private ImageView viewModeIcon;
 
     // Auto-scroll for horizontal sections
     private Handler autoScrollHandler;
@@ -394,18 +395,52 @@ public class MainActivity extends BaseActivity {
             p.isFavorite = FavoriteManager.getInstance().isFavorite(p);
         }
 
+        boolean isListView = ViewModePreferences.isListView(this);
+
         if (productAdapter == null) {
-            // First setup: create the adapter and attach a 2-column GridLayoutManager.
+            // First setup: create the adapter and attach a GridLayoutManager.
             // nestedScrollingEnabled=false (set in XML) lets the outer NestedScrollView
             // control the scroll, so the whole page scrolls as one — smooth and natural.
-            GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+            GridLayoutManager layoutManager = new GridLayoutManager(this, isListView ? 1 : 2);
             productsGrid.setLayoutManager(layoutManager);
             productAdapter = new ProductGridAdapter(this, products);
+            productAdapter.setListMode(isListView);
             productsGrid.setAdapter(productAdapter);
         } else {
-            // onResume path: just refresh to pick up favorite changes
+            // onResume path: apply current view mode + refresh to pick up favorite changes
+            GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
+            if (layoutManager != null) layoutManager.setSpanCount(isListView ? 1 : 2);
+            productAdapter.setListMode(isListView);
             productAdapter.notifyDataSetChanged();
         }
+
+        setupViewModeToggle();
+    }
+
+    /** Wires the grid/list toggle button next to "Featured Products". */
+    private void setupViewModeToggle() {
+        viewModeIcon = findViewById(R.id.viewModeIcon);
+        View viewModeBtn = findViewById(R.id.viewModeButton);
+        updateViewModeIcon();
+        if (viewModeBtn != null) viewModeBtn.setOnClickListener(v -> {
+            boolean newListView = !ViewModePreferences.isListView(this);
+            ViewModePreferences.setListView(this, newListView);
+            updateViewModeIcon();
+
+            RecyclerView productsGrid = findViewById(R.id.productsGrid);
+            if (productsGrid != null) {
+                GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
+                if (layoutManager != null) layoutManager.setSpanCount(newListView ? 1 : 2);
+            }
+            if (productAdapter != null) productAdapter.setListMode(newListView);
+        });
+    }
+
+    /** Swap the toggle button's icon to reflect the current mode (shows the icon for the OTHER mode to switch to). */
+    private void updateViewModeIcon() {
+        if (viewModeIcon == null) return;
+        boolean isListView = ViewModePreferences.isListView(this);
+        viewModeIcon.setImageResource(isListView ? R.drawable.grid_view_24 : R.drawable.event_list_24);
     }
 
     private void setupNewArrivalsBanner() {

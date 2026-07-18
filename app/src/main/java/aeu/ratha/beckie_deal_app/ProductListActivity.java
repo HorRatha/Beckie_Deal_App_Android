@@ -42,6 +42,7 @@ public class ProductListActivity extends BaseActivity
     private View filterActiveDot;
     private LinearLayout activeFiltersContainer;
     private View activeFiltersScroll;
+    private ImageView viewModeIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,16 @@ public class ProductListActivity extends BaseActivity
         // Filter button → open bottom sheet
         View filterBtn = findViewById(R.id.filterButton);
         if (filterBtn != null) filterBtn.setOnClickListener(v -> openFilterSheet());
+
+        // View mode toggle (grid ⇄ list)
+        viewModeIcon = findViewById(R.id.viewModeIcon);
+        View viewModeBtn = findViewById(R.id.viewModeButton);
+        updateViewModeIcon();
+        if (viewModeBtn != null) viewModeBtn.setOnClickListener(v -> {
+            ViewModePreferences.setListView(this, !ViewModePreferences.isListView(this));
+            updateViewModeIcon();
+            applyAndRender();
+        });
 
         setupBottomNavigation();
         applyAndRender();
@@ -238,8 +249,12 @@ public class ProductListActivity extends BaseActivity
     private void renderProducts(List<MainActivity.Product> products) {
         if (productsGrid == null) return;
         productsGrid.removeAllViews();
-        // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet
-        productsGrid.setColumnCount(ScreenUtils.productGridColumns(this));
+
+        boolean isListView = ViewModePreferences.isListView(this);
+        // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet (1 in list mode)
+        int columns = isListView ? 1 : ScreenUtils.productGridColumns(this);
+        productsGrid.setColumnCount(columns);
+        int cardLayout = isListView ? R.layout.product_card_list : R.layout.product_card;
 
         if (resultsLabel != null)
             resultsLabel.setText("Showing " + products.size() + " products");
@@ -255,7 +270,7 @@ public class ProductListActivity extends BaseActivity
 
         for (final MainActivity.Product product : products) {
             View view = LayoutInflater.from(this)
-                    .inflate(R.layout.product_card, productsGrid, false);
+                    .inflate(cardLayout, productsGrid, false);
 
             // Bind all fields via shared binder
             ProductCardBinder.bind(this, view, product);
@@ -282,7 +297,7 @@ public class ProductListActivity extends BaseActivity
                 });
             }
 
-            // Set layout params so each card takes exactly half the grid width (2 per row)
+            // Set layout params so each card takes exactly 1/columns of the grid width
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = 0;
             params.height = GridLayout.LayoutParams.WRAP_CONTENT;
@@ -292,6 +307,13 @@ public class ProductListActivity extends BaseActivity
 
             productsGrid.addView(view);
         }
+    }
+
+    /** Swap the toggle button's icon to reflect the current mode (shows the icon for the OTHER mode to switch to). */
+    private void updateViewModeIcon() {
+        if (viewModeIcon == null) return;
+        boolean isListView = ViewModePreferences.isListView(this);
+        viewModeIcon.setImageResource(isListView ? R.drawable.grid_view_24 : R.drawable.event_list_24);
     }
 
     // ── Bottom navigation ─────────────────────────────────────────────────────

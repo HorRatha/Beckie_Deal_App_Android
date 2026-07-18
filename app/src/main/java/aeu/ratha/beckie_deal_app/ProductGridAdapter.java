@@ -21,18 +21,42 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
     private final Context context;
     private final List<MainActivity.Product> products;
     private Toast lastToast;
+    private boolean listMode = false;
 
     public ProductGridAdapter(Context context, List<MainActivity.Product> products) {
         this.context  = context;
         this.products = products;
     }
 
+    /**
+     * Switch between the 2-column grid card ({@code product_card.xml}) and the
+     * 1-column list row ({@code product_card_list.xml}). Triggers a full rebind
+     * since every visible item needs to be re-inflated with the new layout.
+     */
+    public void setListMode(boolean listMode) {
+        if (this.listMode == listMode) return;
+        this.listMode = listMode;
+        notifyDataSetChanged();
+    }
+
+    public boolean isListMode() {
+        return listMode;
+    }
+
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int layoutRes = listMode ? R.layout.product_card_list : R.layout.product_card;
         View view = LayoutInflater.from(context)
-                .inflate(R.layout.product_card, parent, false);
+                .inflate(layoutRes, parent, false);
         return new ProductViewHolder(view);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        // Distinct view types for grid vs list so RecyclerView doesn't try to
+        // recycle a grid card into a list row (or vice versa) after a mode switch.
+        return listMode ? 1 : 0;
     }
 
     @Override
