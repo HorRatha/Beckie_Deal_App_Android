@@ -14,12 +14,19 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- ── Top bar ─────────────────────────────────────────────────────── -->
+    <!-- ── Gradient hero header ────────────────────────────────────────── -->
+    <View
+        android:id="@+id/heroGradient"
+        android:layout_width="match_parent"
+        android:layout_height="172dp"
+        android:background="@drawable/categories_hero_gradient"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="@color/surface"
+        android:background="@android:color/transparent"
         android:elevation="0dp"
         app:contentInsetStart="0dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -31,45 +38,46 @@
 
             <ImageView
                 android:id="@+id/menuIcon"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:padding="10dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="9dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="-10dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/circle_white_translucent"
                 android:src="@android:drawable/ic_menu_sort_by_size"
-                app:tint="@color/text_primary" />
+                app:tint="@color/white_fixed" />
 
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="40dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_launcher" />
+                android:text="Profile"
+                android:textColor="@color/white_fixed"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif-medium" />
 
             <RelativeLayout
                 android:id="@+id/notificationContainer"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/form_field_background">
+                android:background="@drawable/circle_white_translucent">
 
                 <ImageView
                     android:id="@+id/notificationIcon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_notifications"
-                    app:tint="@color/primary" />
+                    app:tint="@color/white_fixed" />
 
                 <TextView
                     android:id="@+id/notificationBadge"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
                     android:background="@drawable/badge_pill"
@@ -77,19 +85,119 @@
                     android:gravity="center"
                     android:text="3"
                     android:textColor="@color/white_fixed"
-                    android:textSize="9sp"
+                    android:textSize="8sp"
                     android:textStyle="bold"
                     android:visibility="visible" />
             </RelativeLayout>
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- ── Scrollable body ─────────────────────────────────────────────── -->
+    <!-- ══ FIXED IDENTITY HEADER ═══════════════════════════════════════════
+         Avatar + name + subtitle + auth buttons form ONE fixed block that sits
+         half on the gradient, half on the white sheet below. It is a direct
+         sibling in the outer ConstraintLayout (never inside the NestedScrollView),
+         because ScrollView-family views clip overflowing content to their own
+         bounds even with clipChildren=false — regular ViewGroups don't have that
+         limitation, so the negative-margin overlap renders correctly here.
+         The whole block stays fixed together (not just the avatar alone), so
+         nothing looks like it's floating independently while the settings list
+         scrolls beneath it. -->
+    <LinearLayout
+        android:id="@+id/profileHeaderCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:background="@drawable/content_sheet_top_rounded"
+        android:paddingHorizontal="@dimen/page_margin"
+        android:paddingBottom="20dp"
+        android:layout_marginTop="-28dp"
+        app:layout_constraintTop_toBottomOf="@id/heroGradient">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <!-- Reserved space for the avatar, which is now drawn as a separate
+                 top-level element below (see avatarOverlay), positioned last in
+                 this file so it always renders above every other view with no
+                 dependency on elevation/shadow rendering. -->
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="72dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Guest User"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Sign in to sync your wishlist and orders"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <!-- ══ AUTH BUTTONS ══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Login"
+                android:textAllCaps="false"
+                android:textColor="@color/white_fixed"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/primary"
+                app:cornerRadius="16dp"
+                app:elevation="2dp"
+                app:strokeWidth="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/registerButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Register"
+                android:textAllCaps="false"
+                android:textColor="@color/primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/badge_bg"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ── Scrollable body — Account / Preferences / Legal settings lists only ── -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/contentScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        android:background="@color/background"
+        app:layout_constraintTop_toBottomOf="@id/profileHeaderCard"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <LinearLayout
@@ -97,123 +205,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/page_margin"
-            android:paddingTop="28dp"
+            android:paddingTop="8dp"
             android:paddingBottom="24dp">
-
-            <!-- ══ AVATAR + NAME ══════════════════════════════════════════ -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_width="96dp"
-                    android:layout_height="96dp">
-
-                    <!-- Avatar circle -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        app:cardCornerRadius="48dp"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="2dp"
-                        app:strokeColor="@color/border_color"
-                        app:cardBackgroundColor="@color/card_bg_secondary">
-                        <ImageView
-                            android:id="@+id/avatarIcon"
-                            android:layout_width="52dp"
-                            android:layout_height="52dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_person"
-                            app:tint="@color/text_secondary" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Edit badge -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/editAvatarButton"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_gravity="bottom|end"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="4dp"
-                        app:strokeWidth="0dp"
-                        app:cardBackgroundColor="@color/primary">
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_edit_profile" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Guest User"
-                    android:textColor="@color/text_primary"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Sign in to sync your wishlist and orders"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-            <!-- ══ AUTH BUTTONS ══════════════════════════════════════════ -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="24dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/loginButton"
-                    android:layout_width="0dp"
-                    android:layout_height="52dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Login"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white_fixed"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/primary"
-                    app:cornerRadius="14dp"
-                    app:strokeWidth="0dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/registerButton"
-                    android:layout_width="0dp"
-                    android:layout_height="52dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Register"
-                    android:textAllCaps="false"
-                    android:textColor="@color/primary"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/surface"
-                    app:cornerRadius="14dp"
-                    app:strokeColor="@color/primary"
-                    app:strokeWidth="1.5dp" />
-
-            </LinearLayout>
 
             <!-- ══ ACCOUNT SECTION (My Orders + Notifications) ═══════════ -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
                 android:layout_marginBottom="10dp"
                 android:text="Account"
                 android:textColor="@color/text_secondary"
@@ -250,16 +248,16 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="38dp"
                             android:layout_height="38dp"
-                            app:cardCornerRadius="11dp"
+                            app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/badge_bg">
+                            app:cardBackgroundColor="@color/brand_tint_bg_1">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_orders"
-                                app:tint="@color/primary" />
+                                app:tint="@color/brand_tint_fg_1" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <TextView
@@ -304,13 +302,13 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/badge_bg">
+                            app:cardBackgroundColor="@color/brand_tint_bg_3">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_notifications"
-                                app:tint="@color/primary" />
+                                app:tint="@color/brand_tint_fg_3" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <TextView
@@ -416,13 +414,13 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/badge_bg">
+                            app:cardBackgroundColor="@color/brand_tint_bg_4">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_language"
-                                app:tint="@color/primary" />
+                                app:tint="@color/brand_tint_fg_4" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <TextView
@@ -466,13 +464,13 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/badge_bg">
+                            app:cardBackgroundColor="@color/brand_tint_bg_5">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_dark_mode"
-                                app:tint="@color/primary" />
+                                app:tint="@color/brand_tint_fg_5" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <TextView
@@ -578,13 +576,13 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/badge_bg">
+                            app:cardBackgroundColor="@color/brand_tint_bg_2">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_info"
-                                app:tint="@color/primary" />
+                                app:tint="@color/brand_tint_fg_2" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <TextView
@@ -624,13 +622,13 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/badge_bg">
+                            app:cardBackgroundColor="@color/brand_tint_bg_6">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_privacy"
-                                app:tint="@color/primary" />
+                                app:tint="@color/brand_tint_fg_6" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <TextView
@@ -670,13 +668,13 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/badge_bg">
+                            app:cardBackgroundColor="@color/brand_tint_bg_1">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_terms"
-                                app:tint="@color/primary" />
+                                app:tint="@color/brand_tint_fg_1" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <TextView
@@ -733,6 +731,61 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- ══ FLOATING AVATAR ═══════════════════════════════════════════════
+         Deliberately placed LAST in this ConstraintLayout (drawn after the
+         hero, toolbar, header card and scrolling content) so it always
+         renders on top of everything with plain view stacking order — no
+         dependency on elevation/shadow rendering, which was inconsistent
+         on-device. A MaterialCardView is used instead of a shape drawable
+         because its cardElevation/shadow already rendered correctly for the
+         edit-pencil badge; the colored stroke ring also guarantees the
+         avatar reads as "elevated" even if shadows don't render at all. -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/avatarOverlay"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:cardCornerRadius="60dp"
+        app:cardElevation="12dp"
+        app:strokeWidth="4dp"
+        app:strokeColor="@color/primary"
+        app:cardBackgroundColor="@color/card_bg_secondary"
+        android:layout_marginTop="-60dp"
+        app:layout_constraintTop_toBottomOf="@id/heroGradient"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/avatarIcon"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_person"
+            app:tint="@color/text_secondary" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/editAvatarButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="12dp"
+        app:strokeWidth="2dp"
+        app:strokeColor="@color/surface"
+        app:cardBackgroundColor="@color/primary"
+        android:layout_marginEnd="-4dp"
+        android:layout_marginBottom="-4dp"
+        app:layout_constraintBottom_toBottomOf="@id/avatarOverlay"
+        app:layout_constraintEnd_toEndOf="@id/avatarOverlay">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_edit_profile" />
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- ── Floating bottom nav ─────────────────────────────────────────── -->
     <include layout="@layout/layout_bottom_nav" />

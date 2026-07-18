@@ -117,7 +117,7 @@
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/ic_category"
+                    android:src="@drawable/category_search_24"
                     android:contentDescription="Categories"
                     app:tint="@color/primary" />
                 <TextView

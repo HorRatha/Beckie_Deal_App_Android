@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Plain oval background for the profile avatar. Using a simple shape drawable
+     instead of MaterialCardView avoids CardView's clipToOutline + elevation
+     shadow-padding interactions, which were cropping the icon's top half when
+     cardCornerRadius was set to exactly half the view's width/height (a perfect circle). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/card_bg_secondary" />
+    <stroke android:width="4dp" android:color="@color/surface" />
+</shape>
