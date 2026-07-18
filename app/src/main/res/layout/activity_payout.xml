@@ -362,52 +362,194 @@
     </FrameLayout>
 
     <!-- Success View -->
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/successView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/surface"
         android:elevation="101dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:padding="40dp">
+        android:fillViewport="true"
+        android:visibility="gone">
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@android:drawable/checkbox_on_background"
-            app:tint="@color/green_stock" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Payment Successful!"
-            android:textColor="@color/text_primary"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:text="Your order has been placed. We'll notify you when it's on the way."
-            android:textColor="@color/text_muted"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/backToHomeButton"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="48dp"
-            android:backgroundTint="@color/primary"
-            android:text="Back to Home"
-            android:textAllCaps="false"
-            android:textColor="@color/white_fixed"
-            app:cornerRadius="16dp" />
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="28dp"
+            android:paddingVertical="40dp">
 
-    </LinearLayout>
+            <!-- Soft glow ring behind the check badge -->
+            <FrameLayout
+                android:layout_width="128dp"
+                android:layout_height="128dp">
+
+                <View
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:background="@drawable/success_check_outer_bg" />
+
+                <FrameLayout
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/success_check_inner_bg">
+
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_check_bold_24"
+                        android:contentDescription="Success" />
+
+                </FrameLayout>
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="Payment Successful!"
+                android:textColor="@color/text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Your order has been placed. We'll notify you when it's on the way."
+                android:textColor="@color/text_muted"
+                android:textSize="15sp" />
+
+            <!-- Order receipt summary card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_color"
+                app:cardBackgroundColor="@color/card_bg_secondary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Order ID"
+                            android:textColor="@color/text_muted"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/successOrderId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="BD-1001"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="12dp"
+                        android:background="@color/border_color" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Amount Paid"
+                            android:textColor="@color/text_muted"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/successAmountPaid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$0.00"
+                            android:textColor="@color/primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="12dp"
+                        android:background="@color/border_color" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Payment Method"
+                            android:textColor="@color/text_muted"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="**** 4582"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/backToHomeButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="@color/primary"
+                android:text="Back to Home"
+                android:textAllCaps="false"
+                android:textColor="@color/white_fixed"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:icon="@drawable/ic_home"
+                app:iconTint="@color/white_fixed"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:cornerRadius="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewOrdersButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:text="View My Orders"
+                android:textAllCaps="false"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:strokeColor="@color/border_color"
+                app:strokeWidth="1dp"
+                app:cornerRadius="16dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

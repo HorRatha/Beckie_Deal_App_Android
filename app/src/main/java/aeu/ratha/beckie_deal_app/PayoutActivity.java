@@ -47,6 +47,9 @@ public class PayoutActivity extends BaseActivity {
         View processingOverlay = findViewById(R.id.processingOverlay);
         View successView = findViewById(R.id.successView);
         Button backToHomeButton = findViewById(R.id.backToHomeButton);
+        Button viewOrdersButton = findViewById(R.id.viewOrdersButton);
+        TextView successOrderId = findViewById(R.id.successOrderId);
+        TextView successAmountPaid = findViewById(R.id.successAmountPaid);
 
         if (confirmButton != null) {
             confirmButton.setOnClickListener(v -> {
@@ -60,15 +63,21 @@ public class PayoutActivity extends BaseActivity {
                     if (processingOverlay != null) {
                         processingOverlay.setVisibility(View.GONE);
                     }
-                    if (successView != null) {
-                        successView.setVisibility(View.VISIBLE);
-                    }
 
                     // Save the order before clearing cart
                     double subtotal = CartManager.getInstance().getTotalPrice();
                     double total = subtotal + 15.00; // shipping
-                    OrderManager.getInstance().placeOrder(
+                    OrderManager.Order order = OrderManager.getInstance().placeOrder(
                             CartManager.getInstance().getCartItems(), total);
+
+                    if (successOrderId != null) successOrderId.setText(order.orderId);
+                    if (successAmountPaid != null) {
+                        successAmountPaid.setText(String.format(Locale.US, "$%.2f", total));
+                    }
+
+                    if (successView != null) {
+                        successView.setVisibility(View.VISIBLE);
+                    }
 
                     // Clear cart after successful "payment"
                     CartManager.getInstance().getCartItems().clear();
@@ -79,6 +88,15 @@ public class PayoutActivity extends BaseActivity {
         if (backToHomeButton != null) {
             backToHomeButton.setOnClickListener(v -> {
                 Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            });
+        }
+
+        if (viewOrdersButton != null) {
+            viewOrdersButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, MyOrdersActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
