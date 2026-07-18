@@ -173,7 +173,7 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_cat_laptops"
+                            android:src="@drawable/devices_24"
                             app:tint="@color/primary" />
 
                     </com.google.android.material.card.MaterialCardView>

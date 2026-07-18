@@ -194,22 +194,22 @@ public class CategoriesActivity extends BaseActivity {
         List<CategoryItem> categories = new ArrayList<>();
         categories.add(new CategoryItem("Laptops",     "124 Items",
                 "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop",
-                R.drawable.ic_cat_laptops, true));
+                R.drawable.devices_24, true));
         categories.add(new CategoryItem("Smartphones", "210 Items",
                 "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop",
-                R.drawable.ic_cat_phones, false));
+                R.drawable.mobile_24, false));
         categories.add(new CategoryItem("Accessories", "456 Items",
                 "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop",
-                R.drawable.ic_cat_accessories, false));
+                R.drawable.widgets_24, false));
         categories.add(new CategoryItem("Audio",       "89 Items",
                 "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop",
-                R.drawable.ic_cat_accessories, false));
+                R.drawable.widgets_24, false));
         categories.add(new CategoryItem("Gaming",      "167 Items",
                 "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop",
-                R.drawable.ic_cat_gaming, false));
+                R.drawable.sports_esports_24, false));
         categories.add(new CategoryItem("Wearables",   "54 Items",
                 "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop",
-                R.drawable.ic_cat_wearables, false));
+                R.drawable.devices_wearables_24, false));
 
         allCategoriesGrid.removeAllViews();
         for (CategoryItem item : categories) {

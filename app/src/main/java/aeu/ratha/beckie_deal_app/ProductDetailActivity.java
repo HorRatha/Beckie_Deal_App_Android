@@ -420,10 +420,10 @@ public class ProductDetailActivity extends BaseActivity {
                 "Supercharged by M2, the MacBook Air features a strikingly thin design and exceptional speed. Designed for portability, it provides a silent, fanless experience with up to 18 hours of battery life.",
                 tags("Apple M2 Chip", "13.6\" Liquid Retina", "8GB Unified Memory", "256GB SSD"),
                 specCards(
-                    card("CHIP",    "Apple M2",    R.drawable.ic_cat_laptops),
-                    card("MEMORY",  "8GB Unified", R.drawable.ic_cat_accessories),
-                    card("STORAGE", "256GB SSD",   R.drawable.ic_cat_gaming),
-                    card("DISPLAY", "13.6\" Retina",R.drawable.ic_cat_laptops)
+                    card("CHIP",    "Apple M2",    R.drawable.devices_24),
+                    card("MEMORY",  "8GB Unified", R.drawable.widgets_24),
+                    card("STORAGE", "256GB SSD",   R.drawable.sports_esports_24),
+                    card("DISPLAY", "13.6\" Retina",R.drawable.devices_24)
                 ),
                 specRows("CPU","8-Core CPU","GPU","8-Core GPU","Camera","1080p FaceTime HD","Weight","2.7 Pounds","Battery","Up to 18 hrs"));
 
@@ -436,10 +436,10 @@ public class ProductDetailActivity extends BaseActivity {
                 "The MacBook Pro with M3 Pro chip delivers breakthrough performance for demanding workflows. With a stunning Liquid Retina XDR display and all-day battery, it redefines the professional laptop.",
                 tags("M3 Pro Chip", "14.2\" XDR Display", "18GB Unified", "512GB SSD"),
                 specCards(
-                    card("CHIP",    "Apple M3 Pro", R.drawable.ic_cat_laptops),
-                    card("MEMORY",  "18GB Unified", R.drawable.ic_cat_accessories),
-                    card("STORAGE", "512GB SSD",    R.drawable.ic_cat_gaming),
-                    card("DISPLAY", "14.2\" XDR",   R.drawable.ic_cat_laptops)
+                    card("CHIP",    "Apple M3 Pro", R.drawable.devices_24),
+                    card("MEMORY",  "18GB Unified", R.drawable.widgets_24),
+                    card("STORAGE", "512GB SSD",    R.drawable.sports_esports_24),
+                    card("DISPLAY", "14.2\" XDR",   R.drawable.devices_24)
                 ),
                 specRows("CPU","11-Core CPU","GPU","14-Core GPU","Camera","1080p FaceTime HD","Weight","3.5 Pounds","Battery","Up to 17 hrs"));
 
@@ -452,10 +452,10 @@ public class ProductDetailActivity extends BaseActivity {
                 "iPhone 15 Pro Max. Forged in titanium with the A17 Pro chip, a customizable Action button, and the most powerful iPhone camera system ever.",
                 tags("A17 Pro Chip", "6.7\" Super Retina", "48MP Main Camera", "USB-C"),
                 specCards(
-                    card("CHIP",    "A17 Pro",    R.drawable.ic_cat_phones),
-                    card("CAMERA",  "48 MP",      R.drawable.ic_cat_accessories),
-                    card("STORAGE", "256GB",      R.drawable.ic_cat_gaming),
-                    card("DISPLAY", "6.7\" OLED", R.drawable.ic_cat_phones)
+                    card("CHIP",    "A17 Pro",    R.drawable.mobile_24),
+                    card("CAMERA",  "48 MP",      R.drawable.widgets_24),
+                    card("STORAGE", "256GB",      R.drawable.sports_esports_24),
+                    card("DISPLAY", "6.7\" OLED", R.drawable.mobile_24)
                 ),
                 specRows("Processor","A17 Pro","RAM","8GB","Battery","4,422 mAh","Camera","48+12+12 MP","Weight","221 g"));
 
@@ -468,10 +468,10 @@ public class ProductDetailActivity extends BaseActivity {
                 "iPhone 15 Pro. The first iPhone to feature an aerospace-grade titanium design. Featuring the A17 Pro chip with a 16-core Neural Engine.",
                 tags("A17 Pro Chip", "6.1\" Super Retina", "48MP Camera", "Titanium"),
                 specCards(
-                    card("CHIP",    "A17 Pro",    R.drawable.ic_cat_phones),
-                    card("CAMERA",  "48 MP",      R.drawable.ic_cat_accessories),
-                    card("STORAGE", "128GB",      R.drawable.ic_cat_gaming),
-                    card("DISPLAY", "6.1\" OLED", R.drawable.ic_cat_phones)
+                    card("CHIP",    "A17 Pro",    R.drawable.mobile_24),
+                    card("CAMERA",  "48 MP",      R.drawable.widgets_24),
+                    card("STORAGE", "128GB",      R.drawable.sports_esports_24),
+                    card("DISPLAY", "6.1\" OLED", R.drawable.mobile_24)
                 ),
                 specRows("Processor","A17 Pro","RAM","8GB","Battery","3,274 mAh","Camera","48+12+12 MP","Weight","187 g"));
 
@@ -484,10 +484,10 @@ public class ProductDetailActivity extends BaseActivity {
                 "Galaxy S24 Ultra. The ultimate Galaxy AI smartphone with a built-in S Pen, 200MP camera, and Snapdragon 8 Gen 3 — crafted in titanium for maximum durability.",
                 tags("Snapdragon 8 Gen 3", "6.8\" QHD+ AMOLED", "200MP Camera", "S Pen"),
                 specCards(
-                    card("CHIP",    "SD 8 Gen 3", R.drawable.ic_cat_phones),
-                    card("CAMERA",  "200 MP",     R.drawable.ic_cat_accessories),
-                    card("STORAGE", "256GB",      R.drawable.ic_cat_gaming),
-                    card("DISPLAY", "6.8\" QHD+", R.drawable.ic_cat_phones)
+                    card("CHIP",    "SD 8 Gen 3", R.drawable.mobile_24),
+                    card("CAMERA",  "200 MP",     R.drawable.widgets_24),
+                    card("STORAGE", "256GB",      R.drawable.sports_esports_24),
+                    card("DISPLAY", "6.8\" QHD+", R.drawable.mobile_24)
                 ),
                 specRows("Processor","Snapdragon 8 Gen 3","RAM","12GB","Battery","5,000 mAh","Camera","200+12+10+10 MP","Weight","232 g"));
 
@@ -500,10 +500,10 @@ public class ProductDetailActivity extends BaseActivity {
                 "ROG Strix G16 — built for domination. Powered by Intel Core i9 HX and NVIDIA RTX 4080, featuring a 16\" QHD 240Hz display for buttery-smooth gaming.",
                 tags("Core i9 HX", "RTX 4080", "16\" QHD 240Hz", "32GB DDR5"),
                 specCards(
-                    card("CPU",     "Core i9 HX",  R.drawable.ic_cat_laptops),
-                    card("GPU",     "RTX 4080",     R.drawable.ic_cat_gaming),
-                    card("RAM",     "32GB DDR5",    R.drawable.ic_cat_accessories),
-                    card("DISPLAY", "16\" 240Hz",   R.drawable.ic_cat_laptops)
+                    card("CPU",     "Core i9 HX",  R.drawable.devices_24),
+                    card("GPU",     "RTX 4080",     R.drawable.sports_esports_24),
+                    card("RAM",     "32GB DDR5",    R.drawable.widgets_24),
+                    card("DISPLAY", "16\" 240Hz",   R.drawable.devices_24)
                 ),
                 specRows("Processor","Intel Core i9-13980HX","Graphics","NVIDIA RTX 4080","RAM","32GB DDR5","Storage","1TB NVMe SSD","Display","16\" QHD 240Hz","Weight","2.3 kg"));
 
@@ -516,10 +516,10 @@ public class ProductDetailActivity extends BaseActivity {
                 "Advanced health monitoring with ECG, blood oxygen sensor, and crash detection. Features an always-on Retina display with sapphire crystal glass.",
                 tags("Always-On Display", "ECG + SpO2", "Crash Detection", "WR50m"),
                 specCards(
-                    card("DISPLAY", "Always-On",  R.drawable.ic_cat_wearables),
-                    card("HEALTH",  "ECG+SpO2",   R.drawable.ic_cat_accessories),
-                    card("BATTERY", "36 Hours",   R.drawable.ic_cat_wearables),
-                    card("WATER",   "50m Resist", R.drawable.ic_cat_wearables)
+                    card("DISPLAY", "Always-On",  R.drawable.devices_wearables_24),
+                    card("HEALTH",  "ECG+SpO2",   R.drawable.widgets_24),
+                    card("BATTERY", "36 Hours",   R.drawable.devices_wearables_24),
+                    card("WATER",   "50m Resist", R.drawable.devices_wearables_24)
                 ),
                 specRows("Chip","S9 SiP","Display","Always-On Retina","Battery","Up to 36 hrs","Water Resist","WR50m","Sensors","ECG, SpO2, Temperature","Weight","51.5 g"));
 
@@ -537,10 +537,10 @@ public class ProductDetailActivity extends BaseActivity {
                 "Premium quality product built with the latest technology. Designed for performance, durability, and an exceptional user experience.",
                 tags("Premium Build", "Latest Tech", "1-Year Warranty", "Brand New"),
                 specCards(
-                    card("CONDITION", "Brand New",  R.drawable.ic_cat_accessories),
-                    card("WARRANTY",  "12 Months",  R.drawable.ic_cat_accessories),
-                    card("DELIVERY",  "2-3 Days",   R.drawable.ic_cat_laptops),
-                    card("RETURNS",   "30 Days",    R.drawable.ic_cat_gaming)
+                    card("CONDITION", "Brand New",  R.drawable.widgets_24),
+                    card("WARRANTY",  "12 Months",  R.drawable.widgets_24),
+                    card("DELIVERY",  "2-3 Days",   R.drawable.devices_24),
+                    card("RETURNS",   "30 Days",    R.drawable.sports_esports_24)
                 ),
                 specRows("Condition","Brand New","Warranty","12 Months","Delivery","2-3 Business Days","Returns","30-Day Policy"));
         }

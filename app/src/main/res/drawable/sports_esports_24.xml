@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <!--
+        Google Material Symbols — sports_esports
+        Apache 2.0 License © Google
+        https://fonts.google.com/icons?icon.query=sports_esports
+    -->
+    <group android:translateY="960">
+        <path
+            android:fillColor="#F97316"
+            android:pathData="M147,-200q-38,0 -59.5,-25.5T72,-296l48,-335q8,-53 49.5,-91t94.5,-38h433q53,0 94.5,38t49.5,91l47,335q6,45 -15.5,70.5T813,-200q-23,0 -39,-7.5T747,-226L643,-330H317L213,-226q-11,11 -27,18.5t-39,7.5Zm18,-64 126,-126h378l126,126q5,5 18,9q9,0 13.5,-9t2.5,-18l-48,-339q-5,-35 -29.5,-57T697,-700H263q-30,0 -54.5,22T179,-621l-48,339q-2,9 2.5,18t13.5,9q7,0 18,-9Zm563,-188q12,-12 12,-28t-12,-28q-12,-12 -28,-12t-28,12q-12,12 -12,28t12,28q12,12 28,12t28,-12Zm-85,-130q12,-12 12,-28t-12,-28q-12,-12 -28,-12t-28,12q-12,12 -12,28t12,28q12,12 28,12t28,-12ZM300,-445h50v-75h75v-50h-75v-75h-50v75h-75v50h75v75Zm180,-33Z" />
+    </group>
+</vector>

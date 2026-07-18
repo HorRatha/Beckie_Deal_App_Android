@@ -115,11 +115,11 @@ public class MainActivity extends BaseActivity {
         }
 
         categories = new ArrayList<>();
-        categories.add(new Category("Laptops", R.drawable.ic_cat_laptops, false));
-        categories.add(new Category("Phones", R.drawable.ic_cat_phones, false));
-        categories.add(new Category("Accessories", R.drawable.ic_cat_accessories, false));
-        categories.add(new Category("Gaming", R.drawable.ic_cat_gaming, true));
-        categories.add(new Category("Wearables", R.drawable.ic_cat_wearables, false));
+        categories.add(new Category("Laptops", R.drawable.devices_24, false));
+        categories.add(new Category("Phones", R.drawable.mobile_24, false));
+        categories.add(new Category("Accessories", R.drawable.widgets_24, false));
+        categories.add(new Category("Gaming", R.drawable.sports_esports_24, true));
+        categories.add(new Category("Wearables", R.drawable.devices_wearables_24, false));
     }
 
     private void setupTopBar() {
