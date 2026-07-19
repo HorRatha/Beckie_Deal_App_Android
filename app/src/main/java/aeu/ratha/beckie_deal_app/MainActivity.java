@@ -74,6 +74,21 @@ public class MainActivity extends BaseActivity {
         setupTopSellingSection();
         setupBottomNavigation();
         setupAutoScroll();
+        setupEntranceAnimation();
+    }
+
+    /** Fades/slides the top bar, search bar, hero banner and section headers into
+     *  place on load. productsGrid (the RecyclerView of product cards) is left
+     *  completely untouched — same for the horizontal product-card rows and
+     *  category chips, since those render product-like cards too. */
+    private void setupEntranceAnimation() {
+        UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
+        UiAnimations.fadeSlideUp(findViewById(R.id.searchBar), 60);
+        UiAnimations.fadeSlideUp(findViewById(R.id.bannerCard), 100);
+        UiAnimations.fadeSlideUp(findViewById(R.id.categoriesSectionHeader), 150);
+        UiAnimations.fadeSlideUp(findViewById(R.id.newCollectionSectionHeader), 190);
+        UiAnimations.fadeSlideUp(findViewById(R.id.topSellingSectionHeader), 230);
+        UiAnimations.fadeSlideUp(findViewById(R.id.featuredProductsHeader), 270);
     }
 
     @Override
@@ -128,12 +143,15 @@ public class MainActivity extends BaseActivity {
 
         if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
+
+        UiAnimations.pressBounce(notificationContainer);
     }
 
     private void setupSearchBar() {
         View searchBar = findViewById(R.id.searchBar);
         if (searchBar != null) searchBar.setOnClickListener(v ->
                 startActivity(new Intent(this, SearchActivity.class)));
+        UiAnimations.pressBounce(searchBar);
     }
 
     private void setupHeroBanner() {
@@ -269,6 +287,7 @@ public class MainActivity extends BaseActivity {
                 resetCarouselAutoScroll(isHero);
             });
         }
+        UiAnimations.pressBounce(arrowLeft, arrowRight);
 
         // Auto-scroll
         Handler handler = new Handler(Looper.getMainLooper());
@@ -346,6 +365,7 @@ public class MainActivity extends BaseActivity {
         if (viewAllCategories != null) {
             viewAllCategories.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CategoriesActivity.class)));
         }
+        UiAnimations.pressBounce(viewAllCategories);
 
         LinearLayout categoriesContainer = findViewById(R.id.categoriesContainer);
         if (categoriesContainer == null) return;
@@ -434,6 +454,7 @@ public class MainActivity extends BaseActivity {
             }
             if (productAdapter != null) productAdapter.setListMode(newListView);
         });
+        UiAnimations.pressBounce(viewModeBtn);
     }
 
     /** Swap the toggle button's icon to reflect the current mode (shows the icon for the OTHER mode to switch to). */
@@ -476,6 +497,7 @@ public class MainActivity extends BaseActivity {
             intent.putExtra(ProductListActivity.EXTRA_MODE, ProductListActivity.MODE_NEW_COLLECTION);
             startActivity(intent);
         });
+        UiAnimations.pressBounce(viewAll);
 
         LinearLayout container = findViewById(R.id.newCollectionContainer);
         if (container == null) return;
@@ -511,6 +533,7 @@ public class MainActivity extends BaseActivity {
             intent.putExtra(ProductListActivity.EXTRA_MODE, ProductListActivity.MODE_TOP_SELLING);
             startActivity(intent);
         });
+        UiAnimations.pressBounce(viewAll);
 
         LinearLayout container = findViewById(R.id.topSellingContainer);
         if (container == null) return;

@@ -83,6 +83,10 @@ public class ProductListActivity extends BaseActivity
 
         setupBottomNavigation();
         applyAndRender();
+
+        UiAnimations.pressBounce(backBtn, filterBtn, viewModeBtn);
+        UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
+        UiAnimations.fadeSlideUp(findViewById(R.id.resultsLabel), 80);
     }
 
     @Override

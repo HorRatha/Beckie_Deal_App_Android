@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
 
@@ -38,14 +41,28 @@ public class OrderDetailActivity extends BaseActivity {
         buildTimeline();
         displayItems();
         displaySummary();
+        setupEntranceAnimation();
     }
 
     private void setupTopBar() {
         ImageView backButton = findViewById(R.id.backButton);
         if (backButton != null) backButton.setOnClickListener(v -> finish());
+        UiAnimations.pressBounce(backButton);
 
         TextView title = findViewById(R.id.toolbarTitle);
         if (title != null) title.setText("Order #" + order.orderId);
+    }
+
+    /** Staggers the order header, tracking timeline and payment summary cards into place. */
+    private void setupEntranceAnimation() {
+        UiAnimations.fadeSlideDown(findViewById(R.id.appBarLayout), 0);
+        NestedScrollView scroll = findViewById(R.id.orderDetailScroll);
+        if (scroll != null && scroll.getChildCount() > 0) {
+            View listRoot = scroll.getChildAt(0);
+            if (listRoot instanceof ViewGroup) {
+                UiAnimations.staggerChildrenIn((ViewGroup) listRoot, 80L);
+            }
+        }
     }
 
     private void bindOrderHeader() {

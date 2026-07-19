@@ -3,11 +3,8 @@ package aeu.ratha.beckie_deal_app;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,12 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
 public class ProfileActivity extends BaseActivity {
-
-    // Stagger timing for the settings-list entrance, matching the side
-    // drawer's row animation so the app feels consistent page to page.
-    private static final long ITEM_STAGGER_MS  = 40L;
-    private static final long ITEM_DURATION_MS = 280L;
-    private static final float ITEM_START_TRANS_DP = 40f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,51 +37,13 @@ public class ProfileActivity extends BaseActivity {
     /** Pops the avatar in, drops the header card into place, then staggers
      *  the settings cards up from below — mirrors the drawer's open animation. */
     private void setupEntranceAnimation() {
-        float density = getResources().getDisplayMetrics().density;
-        float startTransPx = ITEM_START_TRANS_DP * density;
-
         View headerCard    = findViewById(R.id.profileHeaderCard);
         View avatarOverlay = findViewById(R.id.avatarOverlay);
         View editAvatar    = findViewById(R.id.editAvatarButton);
 
-        if (headerCard != null) {
-            headerCard.setAlpha(0f);
-            headerCard.setTranslationY(-startTransPx * 0.6f);
-            headerCard.animate()
-                    .alpha(1f)
-                    .translationY(0f)
-                    .setDuration(ITEM_DURATION_MS)
-                    .setInterpolator(new DecelerateInterpolator(1.6f))
-                    .start();
-        }
-
-        if (avatarOverlay != null) {
-            avatarOverlay.setAlpha(0f);
-            avatarOverlay.setScaleX(0.4f);
-            avatarOverlay.setScaleY(0.4f);
-            avatarOverlay.animate()
-                    .alpha(1f)
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .setStartDelay(120)
-                    .setDuration(340)
-                    .setInterpolator(new OvershootInterpolator(2.2f))
-                    .start();
-        }
-
-        if (editAvatar != null) {
-            editAvatar.setAlpha(0f);
-            editAvatar.setScaleX(0.4f);
-            editAvatar.setScaleY(0.4f);
-            editAvatar.animate()
-                    .alpha(1f)
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .setStartDelay(220)
-                    .setDuration(300)
-                    .setInterpolator(new OvershootInterpolator(2.2f))
-                    .start();
-        }
+        UiAnimations.fadeSlideDown(headerCard, 0);
+        UiAnimations.popIn(avatarOverlay, 120);
+        UiAnimations.popIn(editAvatar, 220);
 
         // Stagger every direct child of the scrolling body (section labels,
         // the Account/Preferences/Legal cards and the version footer) —
@@ -99,53 +52,8 @@ public class ProfileActivity extends BaseActivity {
         if (contentScroll != null && contentScroll.getChildCount() > 0) {
             View listRoot = contentScroll.getChildAt(0);
             if (listRoot instanceof ViewGroup) {
-                ViewGroup list = (ViewGroup) listRoot;
-                long baseDelay = 200L;
-                for (int i = 0; i < list.getChildCount(); i++) {
-                    View child = list.getChildAt(i);
-                    child.setAlpha(0f);
-                    child.setTranslationY(startTransPx);
-                    child.animate()
-                            .alpha(1f)
-                            .translationY(0f)
-                            .setStartDelay(baseDelay + i * ITEM_STAGGER_MS)
-                            .setDuration(ITEM_DURATION_MS)
-                            .setInterpolator(new DecelerateInterpolator(1.6f))
-                            .start();
-                }
+                UiAnimations.staggerChildrenIn((ViewGroup) listRoot, 200L);
             }
-        }
-    }
-
-    /** Adds a bouncy scale-down/overshoot-back press effect on top of any
-     *  existing ripple/click behaviour a view already has. */
-    private void addPressBounce(View... views) {
-        for (View v : views) {
-            if (v == null) continue;
-            v.setOnTouchListener((view, event) -> {
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        view.animate()
-                                .scaleX(0.96f)
-                                .scaleY(0.96f)
-                                .setDuration(100)
-                                .setInterpolator(new DecelerateInterpolator())
-                                .start();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        view.animate()
-                                .scaleX(1f)
-                                .scaleY(1f)
-                                .setDuration(220)
-                                .setInterpolator(new OvershootInterpolator(3f))
-                                .start();
-                        break;
-                    default:
-                        break;
-                }
-                return false; // let clicks/ripples still fire
-            });
         }
     }
 
@@ -159,7 +67,7 @@ public class ProfileActivity extends BaseActivity {
         if (editAvatarButton != null) editAvatarButton.setOnClickListener(v ->
                 Toast.makeText(this, "Edit photo — coming soon", Toast.LENGTH_SHORT).show());
 
-        addPressBounce(notificationContainer, editAvatarButton);
+        UiAnimations.pressBounce(notificationContainer, editAvatarButton);
     }
 
     private void setupAuthButtons() {
@@ -171,7 +79,7 @@ public class ProfileActivity extends BaseActivity {
         if (registerButton != null) registerButton.setOnClickListener(v ->
                 startActivity(new Intent(this, RegisterActivity.class)));
 
-        addPressBounce(loginButton, registerButton);
+        UiAnimations.pressBounce(loginButton, registerButton);
     }
 
     private void setupDarkModeSwitch() {
@@ -203,7 +111,7 @@ public class ProfileActivity extends BaseActivity {
             }
         });
 
-        addPressBounce(lightOption, darkOption);
+        UiAnimations.pressBounce(lightOption, darkOption);
     }
 
     private boolean isCurrentlyDark() {
@@ -260,7 +168,7 @@ public class ProfileActivity extends BaseActivity {
             Toast.makeText(this, "Notifications disabled", Toast.LENGTH_SHORT).show();
         });
 
-        addPressBounce(onOption, offOption);
+        UiAnimations.pressBounce(onOption, offOption);
     }
 
     private void updateNotifToggleUI(FrameLayout onOption, FrameLayout offOption,
@@ -299,7 +207,7 @@ public class ProfileActivity extends BaseActivity {
         if (aboutUsRow != null) aboutUsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, AboutActivity.class)));
 
-        addPressBounce(ordersRow, notificationsRow, languageRow, privacyRow, termsRow, aboutUsRow);
+        UiAnimations.pressBounce(ordersRow, notificationsRow, languageRow, privacyRow, termsRow, aboutUsRow);
     }
 
     private void setupBottomNavigation() {

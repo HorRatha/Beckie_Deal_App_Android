@@ -19,6 +19,7 @@ public class AllBrandsActivity extends BaseActivity {
 
         setupTopBar();
         displayAllBrands();
+        UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
     }
 
     private void setupTopBar() {
@@ -26,6 +27,7 @@ public class AllBrandsActivity extends BaseActivity {
         if (backButton != null) {
             backButton.setOnClickListener(v -> finish());
         }
+        UiAnimations.pressBounce(backButton);
     }
 
     private void displayAllBrands() {

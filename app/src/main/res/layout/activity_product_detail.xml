@@ -109,6 +109,7 @@
 
             <!-- ── IMAGE GALLERY ─────────────────────────────────────────── -->
             <FrameLayout
+                android:id="@+id/galleryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/hero_banner_height_product"
                 android:background="@color/surface">
@@ -270,6 +271,7 @@
 
             <!-- ── PRODUCT INFO ───────────────────────────────────────────── -->
             <LinearLayout
+                android:id="@+id/productInfoBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

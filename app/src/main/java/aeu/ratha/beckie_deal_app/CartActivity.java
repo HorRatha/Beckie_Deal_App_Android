@@ -27,6 +27,19 @@ public class CartActivity extends BaseActivity {
         setupBottomNavigation();
         displayCartItems();
         setupCheckoutButton();
+        setupEntranceAnimation();
+    }
+
+    /** Fades/slides the static chrome (empty state or checkout bar) into place on load. */
+    private void setupEntranceAnimation() {
+        View emptyState      = findViewById(R.id.emptyState);
+        View checkoutSection = findViewById(R.id.checkoutSection);
+        if (emptyState != null && emptyState.getVisibility() == View.VISIBLE) {
+            UiAnimations.fadeSlideUp(emptyState, 60);
+        }
+        if (checkoutSection != null && checkoutSection.getVisibility() == View.VISIBLE) {
+            UiAnimations.fadeSlideUp(checkoutSection, 60);
+        }
     }
 
     @Override
@@ -42,6 +55,8 @@ public class CartActivity extends BaseActivity {
 
         if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
+
+        UiAnimations.pressBounce(notificationContainer);
     }
 
     private void setupCheckoutButton() {
@@ -49,6 +64,7 @@ public class CartActivity extends BaseActivity {
         if (checkoutButton != null) {
             checkoutButton.setOnClickListener(v ->
                     startActivity(new Intent(this, PayoutActivity.class)));
+            UiAnimations.pressBounce(checkoutButton);
         }
     }
 
@@ -64,10 +80,13 @@ public class CartActivity extends BaseActivity {
             cartList.setVisibility(View.GONE);
             checkoutSection.setVisibility(View.GONE);
             View shopBtn = findViewById(R.id.startShoppingButton);
-            if (shopBtn != null) shopBtn.setOnClickListener(v -> {
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
-            });
+            if (shopBtn != null) {
+                shopBtn.setOnClickListener(v -> {
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                });
+                UiAnimations.pressBounce(shopBtn);
+            }
         } else {
             emptyState.setVisibility(View.GONE);
             cartList.setVisibility(View.VISIBLE);
@@ -93,6 +112,7 @@ public class CartActivity extends BaseActivity {
         ImageView decrement   = v.findViewById(R.id.cartItemDecrement);
         ImageView increment   = v.findViewById(R.id.cartItemIncrement);
         ImageView removeBtn   = v.findViewById(R.id.cartItemRemove);
+        UiAnimations.pressBounce(decrement, increment, removeBtn);
 
         // Bind static data
         name.setText(item.product.name);

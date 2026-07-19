@@ -34,6 +34,7 @@ public class CategoriesActivity extends BaseActivity {
         setupLaptopBrands();
         setupAllCategories();
         setupBottomNavigation();
+        setupEntranceAnimation();
     }
 
     private void setupTopBar() {
@@ -48,6 +49,15 @@ public class CategoriesActivity extends BaseActivity {
                 startActivity(new Intent(this, NotificationsActivity.class)));
         if (viewAllBrands != null) viewAllBrands.setOnClickListener(v ->
                 startActivity(new Intent(this, AllBrandsActivity.class)));
+
+        UiAnimations.pressBounce(searchIcon, notificationContainer, viewAllBrands);
+    }
+
+    /** Fades/slides the hero header and section headers into place — brand/category
+     *  grids themselves are left untouched (grid-of-cards, kept static). */
+    private void setupEntranceAnimation() {
+        UiAnimations.fadeSlideUp(findViewById(R.id.laptopBrandsSectionHeader), 80);
+        UiAnimations.fadeSlideUp(findViewById(R.id.allCategoriesTitle), 140);
     }
 
     private void initBrandsData() {

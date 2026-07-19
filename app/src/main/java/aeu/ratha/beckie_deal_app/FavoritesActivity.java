@@ -37,6 +37,8 @@ public class FavoritesActivity extends BaseActivity {
 
         if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
+
+        UiAnimations.pressBounce(notificationContainer);
     }
 
     private void displayFavorites() {
@@ -47,10 +49,13 @@ public class FavoritesActivity extends BaseActivity {
         if (favoriteProducts == null || favoriteProducts.isEmpty()) {
             emptyState.setVisibility(View.VISIBLE);
             favoritesGrid.setVisibility(View.GONE);
-            findViewById(R.id.exploreButton).setOnClickListener(v -> {
+            View exploreButton = findViewById(R.id.exploreButton);
+            exploreButton.setOnClickListener(v -> {
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
             });
+            UiAnimations.pressBounce(exploreButton);
+            UiAnimations.fadeSlideUp(emptyState, 60);
         } else {
             // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet
             int columns = ScreenUtils.productGridColumns(this);

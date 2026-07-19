@@ -128,6 +128,7 @@
 
             <!-- Hero Banner Carousel -->
             <FrameLayout
+                android:id="@+id/bannerCard"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/hero_banner_height"
                 android:layout_marginHorizontal="@dimen/page_margin"
@@ -185,6 +186,7 @@
 
             <!-- Categories -->
             <RelativeLayout
+                android:id="@+id/categoriesSectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/page_margin"
@@ -226,6 +228,7 @@
 
             <!-- ══ NEW COLLECTION ══════════════════════════════════════════ -->
             <RelativeLayout
+                android:id="@+id/newCollectionSectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
@@ -340,6 +343,7 @@
 
             <!-- ══ TOP SELLING ════════════════════════════════════════════ -->
             <RelativeLayout
+                android:id="@+id/topSellingSectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
@@ -397,6 +401,7 @@
 
             <!-- ══ FEATURED PRODUCTS (moved to bottom) ════════════════════ -->
             <RelativeLayout
+                android:id="@+id/featuredProductsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"

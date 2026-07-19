@@ -72,6 +72,9 @@ public class SearchActivity extends BaseActivity {
             searchEditText.requestFocus();
         });
 
+        UiAnimations.pressBounce(backBtn, clearButton);
+        UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
+
         // View mode toggle (grid ⇄ list)
         viewModeIcon = findViewById(R.id.viewModeIcon);
         View viewModeBtn = findViewById(R.id.viewModeButton);
@@ -81,6 +84,7 @@ public class SearchActivity extends BaseActivity {
             updateViewModeIcon();
             performSearch(lastQuery);
         });
+        UiAnimations.pressBounce(viewModeBtn);
 
         // Live search as the user types
         searchEditText.addTextChangedListener(new TextWatcher() {

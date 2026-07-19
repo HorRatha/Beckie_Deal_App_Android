@@ -22,6 +22,17 @@ public class LoginActivity extends BaseActivity {
 
         setupTopBar();
         setupForm();
+        setupEntranceAnimation();
+    }
+
+    /** Fades the header wave in, then staggers every form row up from below. */
+    private void setupEntranceAnimation() {
+        UiAnimations.fadeSlideDown(findViewById(R.id.loginHeaderWave), 0);
+
+        View formSection = findViewById(R.id.loginFormSection);
+        if (formSection instanceof android.view.ViewGroup) {
+            UiAnimations.staggerChildrenIn((android.view.ViewGroup) formSection, 150L);
+        }
     }
 
     private void makeStatusBarTransparent() {
@@ -37,12 +48,14 @@ public class LoginActivity extends BaseActivity {
         if (backButton != null) {
             backButton.setOnClickListener(v -> finish());
         }
+        UiAnimations.pressBounce(backButton);
     }
 
     private void setupForm() {
         Button loginButton = findViewById(R.id.loginButton);
         TextView registerLink = findViewById(R.id.registerLink);
         TextView forgotPassword = findViewById(R.id.forgotPassword);
+        UiAnimations.pressBounce(loginButton, registerLink, forgotPassword);
 
         if (loginButton != null) {
             loginButton.setOnClickListener(v -> {

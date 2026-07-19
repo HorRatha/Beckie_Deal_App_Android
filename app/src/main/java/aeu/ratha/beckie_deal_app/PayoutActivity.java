@@ -21,6 +21,7 @@ public class PayoutActivity extends BaseActivity {
         setupTopBar();
         setupOrderSummary();
         setupConfirmButton();
+        setupEntranceAnimation();
     }
 
     private void setupTopBar() {
@@ -28,6 +29,20 @@ public class PayoutActivity extends BaseActivity {
         if (backButton != null) {
             backButton.setOnClickListener(v -> finish());
         }
+        UiAnimations.pressBounce(backButton);
+    }
+
+    /** Staggers the shipping/payment/summary cards into place, and fades in the header. */
+    private void setupEntranceAnimation() {
+        UiAnimations.fadeSlideDown(findViewById(R.id.appBarLayout), 0);
+        androidx.core.widget.NestedScrollView scroll = findViewById(R.id.payoutContentScroll);
+        if (scroll != null && scroll.getChildCount() > 0) {
+            View listRoot = scroll.getChildAt(0);
+            if (listRoot instanceof android.view.ViewGroup) {
+                UiAnimations.staggerChildrenIn((android.view.ViewGroup) listRoot, 80L);
+            }
+        }
+        UiAnimations.fadeSlideUp(findViewById(R.id.bottomActionLayout), 200);
     }
 
     private void setupOrderSummary() {
@@ -50,6 +65,8 @@ public class PayoutActivity extends BaseActivity {
         Button viewOrdersButton = findViewById(R.id.viewOrdersButton);
         TextView successOrderId = findViewById(R.id.successOrderId);
         TextView successAmountPaid = findViewById(R.id.successAmountPaid);
+
+        UiAnimations.pressBounce(confirmButton, backToHomeButton, viewOrdersButton);
 
         if (confirmButton != null) {
             confirmButton.setOnClickListener(v -> {
@@ -77,6 +94,7 @@ public class PayoutActivity extends BaseActivity {
 
                     if (successView != null) {
                         successView.setVisibility(View.VISIBLE);
+                        UiAnimations.popIn(successView, 0);
                     }
 
                     // Clear cart after successful "payment"

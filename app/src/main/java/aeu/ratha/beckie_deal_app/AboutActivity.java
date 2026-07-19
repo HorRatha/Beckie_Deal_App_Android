@@ -5,11 +5,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,6 +41,7 @@ public class AboutActivity extends BaseActivity {
         setupSubmitButton();
         setupMapCard();
         setupBottomNavigation();
+        setupEntranceAnimation();
     }
 
     private void setupTopBar() {
@@ -48,11 +52,25 @@ public class AboutActivity extends BaseActivity {
         if (notificationContainer != null)
             notificationContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
+
+        UiAnimations.pressBounce(backButton, notificationContainer);
+    }
+
+    /** Staggers every section of the About page's scroll body up into place on load. */
+    private void setupEntranceAnimation() {
+        NestedScrollView scroll = findViewById(R.id.aboutContentScroll);
+        if (scroll != null && scroll.getChildCount() > 0) {
+            View listRoot = scroll.getChildAt(0);
+            if (listRoot instanceof ViewGroup) {
+                UiAnimations.staggerChildrenIn((ViewGroup) listRoot, 0L);
+            }
+        }
     }
 
     private void setupSubmitButton() {
         Button btnSubmit = findViewById(R.id.btnSubmit);
         if (btnSubmit == null) return;
+        UiAnimations.pressBounce(btnSubmit);
 
         btnSubmit.setOnClickListener(v -> {
             String name    = inputName.getText().toString().trim();
@@ -122,6 +140,7 @@ public class AboutActivity extends BaseActivity {
 
         if (mapCard != null) {
             mapCard.setOnClickListener(v -> openGoogleMaps());
+            UiAnimations.pressBounce(mapCard);
         }
     }
 

@@ -155,6 +155,7 @@
 
                 <!-- Section header row -->
                 <LinearLayout
+                    android:id="@+id/laptopBrandsSectionHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -240,6 +241,7 @@
 
             <!-- All Categories Section -->
             <TextView
+                android:id="@+id/allCategoriesTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"

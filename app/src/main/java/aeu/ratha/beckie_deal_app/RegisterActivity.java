@@ -22,6 +22,7 @@ public class RegisterActivity extends BaseActivity {
 
         setupTopBar();
         setupForm();
+        setupEntranceAnimation();
     }
 
     private void makeStatusBarTransparent() {
@@ -32,16 +33,29 @@ public class RegisterActivity extends BaseActivity {
         WindowCompat.setDecorFitsSystemWindows(window, false);
     }
 
+    /** Fades the header wave in, then staggers every form row up from below. */
+    private void setupEntranceAnimation() {
+        UiAnimations.fadeSlideDown(findViewById(R.id.registerHeaderWave), 0);
+
+        View formSection = findViewById(R.id.registerFormSection);
+        if (formSection instanceof android.view.ViewGroup) {
+            UiAnimations.staggerChildrenIn((android.view.ViewGroup) formSection, 150L);
+        }
+    }
+
     private void setupTopBar() {
         ImageView backButton = findViewById(R.id.backButton);
         if (backButton != null) {
             backButton.setOnClickListener(v -> finish());
         }
+        UiAnimations.pressBounce(backButton);
     }
 
     private void setupForm() {
         Button registerButton = findViewById(R.id.registerButton);
         TextView loginLink = findViewById(R.id.loginLink);
+        View termsCheckbox = findViewById(R.id.termsCheckbox);
+        UiAnimations.pressBounce(registerButton, loginLink, termsCheckbox);
 
         if (registerButton != null) {
             registerButton.setOnClickListener(v -> {

@@ -43,12 +43,16 @@ public class MyOrdersActivity extends BaseActivity {
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
             });
+            UiAnimations.pressBounce(shopBtn);
         }
+
+        UiAnimations.fadeSlideDown(findViewById(R.id.appBarLayout), 0);
     }
 
     private void setupTopBar() {
         ImageView backButton = findViewById(R.id.backButton);
         if (backButton != null) backButton.setOnClickListener(v -> finish());
+        UiAnimations.pressBounce(backButton);
     }
 
     private void setupTabs() {
@@ -80,6 +84,7 @@ public class MyOrdersActivity extends BaseActivity {
         if (orders.isEmpty()) {
             emptyState.setVisibility(View.VISIBLE);
             ordersList.setVisibility(View.GONE);
+            UiAnimations.fadeSlideUp(emptyState, 60);
 
             // Customize empty state message based on tab
             TextView emptyTitle = findViewById(R.id.emptyTitle);
@@ -158,6 +163,7 @@ public class MyOrdersActivity extends BaseActivity {
         // View details tap
         detailsBtn.setOnClickListener(v -> openOrderDetail(order));
         card.setOnClickListener(v -> openOrderDetail(order));
+        UiAnimations.pressBounce(card);
 
         ordersList.addView(card);
     }

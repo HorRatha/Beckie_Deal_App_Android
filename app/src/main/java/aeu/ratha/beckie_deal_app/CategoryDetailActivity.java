@@ -76,9 +76,19 @@ public class CategoryDetailActivity extends BaseActivity {
             updateViewModeIcon();
             loadProducts(currentBrandFilter);
         });
+        UiAnimations.pressBounce(sortBtn, viewModeBtn);
 
         loadProducts(currentBrandFilter);
         setupBottomNavigation();
+        setupEntranceAnimation();
+    }
+
+    /** Fades/slides the hero, brand filter row and results row into place —
+     *  detailProductsGrid (the product cards) is left untouched on purpose. */
+    private void setupEntranceAnimation() {
+        UiAnimations.fadeSlideDown(findViewById(R.id.categoryHeroCard), 0);
+        UiAnimations.fadeSlideUp(brandFilterContainer, 100);
+        UiAnimations.fadeSlideUp(findViewById(R.id.resultsRow), 150);
     }
 
     @Override
@@ -99,6 +109,8 @@ public class CategoryDetailActivity extends BaseActivity {
         if (notificationContainer != null)
             notificationContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
+
+        UiAnimations.pressBounce(backBtn, notificationContainer);
     }
 
     // ── Hero banner ───────────────────────────────────────────────────────────
@@ -141,6 +153,7 @@ public class CategoryDetailActivity extends BaseActivity {
                 setupBrandFilters();
                 loadProducts(brand);
             });
+            UiAnimations.pressBounce(chip);
             brandFilterContainer.addView(chip);
         }
     }

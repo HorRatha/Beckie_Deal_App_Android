@@ -41,6 +41,16 @@ public class ProductDetailActivity extends BaseActivity {
         loadProductData();
         setupActions();
         setupBottomNavigation();
+        setupEntranceAnimation();
+    }
+
+    /** Fades/slides the gallery, thumbnail row, info block and bottom action bar into place. */
+    private void setupEntranceAnimation() {
+        UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
+        UiAnimations.fadeSlideUp(findViewById(R.id.galleryContainer), 60);
+        UiAnimations.fadeSlideUp(findViewById(R.id.thumbnailRow), 110);
+        UiAnimations.fadeSlideUp(findViewById(R.id.productInfoBlock), 150);
+        UiAnimations.fadeSlideUp(findViewById(R.id.bottomActionLayout), 100);
     }
 
     @Override
@@ -62,6 +72,8 @@ public class ProductDetailActivity extends BaseActivity {
         View notificationContainer = findViewById(R.id.notificationContainer);
         if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
+
+        UiAnimations.pressBounce(back, share, notificationContainer);
     }
 
     private void updateCartUI() {
@@ -162,6 +174,8 @@ public class ProductDetailActivity extends BaseActivity {
                 selectImage((currentImageIndex - 1 + imageUrls.size()) % imageUrls.size()));
         if (nextBtn != null) nextBtn.setOnClickListener(v ->
                 selectImage((currentImageIndex + 1) % imageUrls.size()));
+        UiAnimations.pressBounce(prevBtn, nextBtn);
+        UiAnimations.pressBounce(thumbCards[0], thumbCards[1], thumbCards[2], thumbCards[3]);
 
         // Tap main image or fullscreen button → open ImageFullscreenActivity
         View fsBtn = findViewById(R.id.galleryFullscreen);
@@ -336,6 +350,8 @@ public class ProductDetailActivity extends BaseActivity {
             if (quantityValue != null) quantityValue.setText(String.valueOf(selectedQuantity));
         });
 
+        UiAnimations.pressBounce(decrement, increment);
+
         // ── Add to cart ───────────────────────────────────────────────────────
         View addToCart = findViewById(R.id.addToCartButton);
         if (addToCart != null) addToCart.setOnClickListener(v -> {
@@ -354,6 +370,8 @@ public class ProductDetailActivity extends BaseActivity {
             else            FavoriteManager.getInstance().removeFavorite(currentProduct);
             updateFavoriteUI();
         });
+
+        UiAnimations.pressBounce(addToCart, favBtn);
     }
 
     private void updateFavoriteUI() {

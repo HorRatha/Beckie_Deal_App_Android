@@ -35,6 +35,9 @@ public class NotificationsActivity extends BaseActivity {
 
         initMockNotifications();
         displayNotifications("all");
+
+        UiAnimations.fadeSlideDown(findViewById(R.id.appBarLayout), 0);
+        UiAnimations.fadeSlideUp(findViewById(R.id.chipScroll), 80);
     }
 
     private void setupTopBar() {
@@ -43,6 +46,8 @@ public class NotificationsActivity extends BaseActivity {
 
         TextView markAllRead = findViewById(R.id.markAllReadButton);
         if (markAllRead != null) markAllRead.setOnClickListener(v -> markAllRead());
+
+        UiAnimations.pressBounce(backButton, markAllRead);
     }
 
     private void setupChips() {
@@ -57,6 +62,8 @@ public class NotificationsActivity extends BaseActivity {
         chipOrders.setOnClickListener(v -> selectChip(chipOrders, "order"));
         chipPromos.setOnClickListener(v -> selectChip(chipPromos, "promo"));
         chipAlerts.setOnClickListener(v -> selectChip(chipAlerts, "alert"));
+
+        UiAnimations.pressBounce(chipAll, chipOrders, chipPromos, chipAlerts);
     }
 
     private void selectChip(TextView chip, String filter) {
@@ -100,6 +107,7 @@ public class NotificationsActivity extends BaseActivity {
         if (filtered.isEmpty()) {
             emptyState.setVisibility(View.VISIBLE);
             notificationsList.setVisibility(View.GONE);
+            UiAnimations.fadeSlideUp(emptyState, 60);
         } else {
             emptyState.setVisibility(View.GONE);
             notificationsList.setVisibility(View.VISIBLE);
@@ -140,6 +148,7 @@ public class NotificationsActivity extends BaseActivity {
             item.unread = false;
             unreadDot.setVisibility(View.GONE);
         });
+        UiAnimations.pressBounce(card);
 
         notificationsList.addView(card);
     }

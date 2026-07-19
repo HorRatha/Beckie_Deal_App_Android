@@ -21,6 +21,7 @@
 
             <!-- Header Wave Section with Logo -->
             <FrameLayout
+                android:id="@+id/registerHeaderWave"
                 android:layout_width="match_parent"
                 android:layout_height="240dp">
 
@@ -82,6 +83,7 @@
 
             <!-- Form Section -->
             <LinearLayout
+                android:id="@+id/registerFormSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
