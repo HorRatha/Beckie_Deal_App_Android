@@ -25,6 +25,11 @@ import com.google.android.material.materialswitch.MaterialSwitch;
  */
 public class AppDrawerHelper {
 
+    // Starting point for the "pop" — how small/faded the panel is right
+    // as it begins sliding into view. 1f/1f would be a plain flat slide.
+    private static final float POP_MIN_SCALE = 0.90f;
+    private static final float POP_MIN_ALPHA = 0.55f;
+
     private final AppCompatActivity activity;
     private final DrawerLayout drawerLayout;
 
@@ -38,6 +43,19 @@ public class AppDrawerHelper {
             // Cheap scrim so opening doesn't force an expensive full-content
             // redraw gradient every frame.
             drawerLayout.setScrimColor(0x99000000);
+
+            // Anchor scaling to the left edge (where the drawer is docked)
+            // instead of its center, so the pop grows outward from the
+            // edge it's attached to rather than from the middle of the
+            // panel — that's what makes it read as "sliding in", not
+            // "zooming in".
+            View panel = getDrawerPanel();
+            if (panel != null) {
+                panel.setPivotX(0f);
+                panel.setScaleX(POP_MIN_SCALE);
+                panel.setScaleY(POP_MIN_SCALE);
+                panel.setAlpha(POP_MIN_ALPHA);
+            }
 
             // DrawerLayout re-runs draw() on the drawer panel AND the main
             // content view on every animation frame while sliding. With a
@@ -56,15 +74,29 @@ public class AppDrawerHelper {
                     if (content != null && content.getLayerType() != View.LAYER_TYPE_HARDWARE) {
                         content.setLayerType(View.LAYER_TYPE_HARDWARE, null);
                     }
+
+                    // Layer the slide with a gentle scale + fade "pop" so
+                    // the panel feels like it's growing into place rather
+                    // than just sliding flatly across the screen.
+                    float scale = POP_MIN_SCALE + (1f - POP_MIN_SCALE) * slideOffset;
+                    drawerView.setScaleX(scale);
+                    drawerView.setScaleY(scale);
+                    drawerView.setAlpha(POP_MIN_ALPHA + (1f - POP_MIN_ALPHA) * slideOffset);
                 }
 
                 @Override
                 public void onDrawerOpened(View drawerView) {
+                    drawerView.setScaleX(1f);
+                    drawerView.setScaleY(1f);
+                    drawerView.setAlpha(1f);
                     clearLayers(drawerView);
                 }
 
                 @Override
                 public void onDrawerClosed(View drawerView) {
+                    drawerView.setScaleX(POP_MIN_SCALE);
+                    drawerView.setScaleY(POP_MIN_SCALE);
+                    drawerView.setAlpha(POP_MIN_ALPHA);
                     clearLayers(drawerView);
                 }
 
@@ -113,6 +145,19 @@ public class AppDrawerHelper {
             View child = drawerLayout.getChildAt(i);
             if (((DrawerLayout.LayoutParams) child.getLayoutParams()).gravity
                     != GravityCompat.START) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    /** The drawer's own child — the panel with gravity=start (layout_drawer.xml root). */
+    private View getDrawerPanel() {
+        if (drawerLayout == null) return null;
+        for (int i = 0; i < drawerLayout.getChildCount(); i++) {
+            View child = drawerLayout.getChildAt(i);
+            if (((DrawerLayout.LayoutParams) child.getLayoutParams()).gravity
+                    == GravityCompat.START) {
                 return child;
             }
         }
