@@ -231,7 +231,7 @@ public class SearchActivity extends BaseActivity {
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = 0;
             params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL, 1f);
             int gap = (int) (2 * getResources().getDisplayMetrics().density);
             params.setMargins(gap, gap, gap, gap);
             view.setLayoutParams(params);

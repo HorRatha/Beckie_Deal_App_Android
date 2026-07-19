@@ -22,8 +22,8 @@
 
         <!-- ── Product image — fixed square thumbnail ────────────────────── -->
         <FrameLayout
-            android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:background="@color/card_bg_secondary">
 
             <ImageView
@@ -36,12 +36,12 @@
             <!-- Favourite — semi-transparent pill, top-right -->
             <ImageView
                 android:id="@+id/favoriteIcon"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="top|end"
-                android:layout_margin="5dp"
+                android:layout_margin="6dp"
                 android:background="@drawable/favorite_background"
-                android:padding="4dp"
+                android:padding="5dp"
                 android:src="@drawable/ic_favorite_border"
                 app:tint="@color/text_secondary" />
 

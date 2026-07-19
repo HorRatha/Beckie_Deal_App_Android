@@ -301,7 +301,7 @@ public class ProductListActivity extends BaseActivity
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = 0;
             params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL, 1f);
             params.setMargins(dp(2), dp(2), dp(2), dp(2));
             view.setLayoutParams(params);
 
