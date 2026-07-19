@@ -2,7 +2,10 @@ package aeu.ratha.beckie_deal_app;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,6 +15,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.materialswitch.MaterialSwitch;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AppDrawerHelper
@@ -30,8 +36,18 @@ public class AppDrawerHelper {
     private static final float POP_MIN_SCALE = 0.90f;
     private static final float POP_MIN_ALPHA = 0.55f;
 
+    // Stagger timing for the menu-item entrance animation.
+    private static final long ITEM_STAGGER_MS   = 35L;
+    private static final long ITEM_DURATION_MS  = 260L;
+    private static final float ITEM_START_TRANS = -50f; // dp, converted below
+
     private final AppCompatActivity activity;
     private final DrawerLayout drawerLayout;
+
+    // Every clickable row inside the drawer, in visual order — used to
+    // stagger the entrance animation when the drawer opens.
+    private final List<View> drawerItemViews = new ArrayList<>();
+    private boolean itemsEntranceAnimated = false;
 
     private AppDrawerHelper(AppCompatActivity activity, int drawerLayoutId, int menuIconId) {
         this.activity     = activity;
@@ -90,6 +106,7 @@ public class AppDrawerHelper {
                     drawerView.setScaleY(1f);
                     drawerView.setAlpha(1f);
                     clearLayers(drawerView);
+                    animateItemsEntrance();
                 }
 
                 @Override
@@ -98,6 +115,7 @@ public class AppDrawerHelper {
                     drawerView.setScaleY(POP_MIN_SCALE);
                     drawerView.setAlpha(POP_MIN_ALPHA);
                     clearLayers(drawerView);
+                    resetItemsForNextEntrance();
                 }
 
                 private void clearLayers(View drawerView) {
@@ -164,6 +182,73 @@ public class AppDrawerHelper {
         return null;
     }
 
+    // ── Entrance animation for the menu rows ──────────────────────────────
+
+    /** Slide + fade each drawer row in, staggered top-to-bottom. */
+    private void animateItemsEntrance() {
+        if (itemsEntranceAnimated || drawerItemViews.isEmpty()) return;
+        itemsEntranceAnimated = true;
+
+        for (int i = 0; i < drawerItemViews.size(); i++) {
+            View item = drawerItemViews.get(i);
+            item.animate()
+                    .translationX(0f)
+                    .alpha(1f)
+                    .setStartDelay(i * ITEM_STAGGER_MS)
+                    .setDuration(ITEM_DURATION_MS)
+                    .setInterpolator(new DecelerateInterpolator(1.6f))
+                    .start();
+        }
+    }
+
+    /** Put every row back to its pre-entrance state so the stagger can replay on next open. */
+    private void resetItemsForNextEntrance() {
+        itemsEntranceAnimated = false;
+        float startTransPx = ITEM_START_TRANS * activity.getResources().getDisplayMetrics().density;
+        for (View item : drawerItemViews) {
+            item.animate().cancel();
+            item.setTranslationX(startTransPx);
+            item.setAlpha(0f);
+        }
+    }
+
+    /** Registers a row for the staggered entrance and gives it a bouncy press-down feel. */
+    private void prepareDrawerItem(View item) {
+        if (item == null) return;
+
+        float startTransPx = ITEM_START_TRANS * activity.getResources().getDisplayMetrics().density;
+        item.setTranslationX(startTransPx);
+        item.setAlpha(0f);
+        drawerItemViews.add(item);
+
+        // Bounce the row down slightly on press and back up with an
+        // overshoot on release, on top of the existing ripple background.
+        item.setOnTouchListener((v, event) -> {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.animate()
+                            .scaleX(0.96f)
+                            .scaleY(0.96f)
+                            .setDuration(100)
+                            .setInterpolator(new DecelerateInterpolator())
+                            .start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(220)
+                            .setInterpolator(new OvershootInterpolator(3f))
+                            .start();
+                    break;
+                default:
+                    break;
+            }
+            return false; // let the click listener + ripple still fire
+        });
+    }
+
     // ── Wire all items inside layout_drawer.xml ──────────────────────────
 
     private void setupDrawerContent() {
@@ -222,6 +307,7 @@ public class AppDrawerHelper {
             final MaterialSwitch switchRef = darkSwitch;
             darkRow.setOnClickListener(v -> switchRef.setChecked(!switchRef.isChecked()));
         }
+        prepareDrawerItem(darkRow);
 
         // ── Navigation items ─────────────────────────────────────────────
 
@@ -233,6 +319,7 @@ public class AppDrawerHelper {
                 activity.overridePendingTransition(0, 0);
             }
         });
+        prepareDrawerItem(homeItem);
 
         View categoriesItem = drawerLayout.findViewById(R.id.drawerCategories);
         if (categoriesItem != null) categoriesItem.setOnClickListener(v -> {
@@ -242,6 +329,7 @@ public class AppDrawerHelper {
                 activity.overridePendingTransition(0, 0);
             }
         });
+        prepareDrawerItem(categoriesItem);
 
         View ordersItem = drawerLayout.findViewById(R.id.drawerOrders);
         if (ordersItem != null) ordersItem.setOnClickListener(v -> {
@@ -251,6 +339,7 @@ public class AppDrawerHelper {
                 activity.overridePendingTransition(0, 0);
             }
         });
+        prepareDrawerItem(ordersItem);
 
         View favItem = drawerLayout.findViewById(R.id.drawerFavorites);
         if (favItem != null) favItem.setOnClickListener(v -> {
@@ -260,18 +349,21 @@ public class AppDrawerHelper {
                 activity.overridePendingTransition(0, 0);
             }
         });
+        prepareDrawerItem(favItem);
 
         View notifItem = drawerLayout.findViewById(R.id.drawerNotifications);
         if (notifItem != null) notifItem.setOnClickListener(v -> {
             closeDrawer();
             activity.startActivity(new Intent(activity, NotificationsActivity.class));
         });
+        prepareDrawerItem(notifItem);
 
         View languageItem = drawerLayout.findViewById(R.id.drawerLanguage);
         if (languageItem != null) languageItem.setOnClickListener(v -> {
             closeDrawer();
             Toast.makeText(activity, "Language settings — coming soon", Toast.LENGTH_SHORT).show();
         });
+        prepareDrawerItem(languageItem);
 
         View aboutItem = drawerLayout.findViewById(R.id.drawerAbout);
         if (aboutItem != null) aboutItem.setOnClickListener(v -> {
@@ -281,6 +373,7 @@ public class AppDrawerHelper {
                 activity.overridePendingTransition(0, 0);
             }
         });
+        prepareDrawerItem(aboutItem);
 
         View loginItem = drawerLayout.findViewById(R.id.drawerLogin);
         if (loginItem != null) loginItem.setOnClickListener(v -> {
@@ -290,5 +383,6 @@ public class AppDrawerHelper {
                 activity.overridePendingTransition(0, 0);
             }
         });
+        prepareDrawerItem(loginItem);
     }
 }
