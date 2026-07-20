@@ -159,7 +159,7 @@ public class FavoritesActivity extends BaseActivity {
             return false;
         });
 
-        // Cart badge
+        // Cart badgez
         int count = CartManager.getInstance().getTotalUnits();
         if (count > 0) {
             com.google.android.material.badge.BadgeDrawable badge = bottomNav.getOrCreateBadge(R.id.nav_cart);

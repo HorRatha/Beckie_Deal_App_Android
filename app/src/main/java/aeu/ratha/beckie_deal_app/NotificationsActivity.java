@@ -94,6 +94,9 @@ public class NotificationsActivity extends BaseActivity {
         return "all";
     }
 
+    // Stagger delay between each notification card's entrance.
+    private static final long CARD_STAGGER_MS = 45L;
+
     private void displayNotifications(String filter) {
         notificationsList.removeAllViews();
 
@@ -107,18 +110,18 @@ public class NotificationsActivity extends BaseActivity {
         if (filtered.isEmpty()) {
             emptyState.setVisibility(View.VISIBLE);
             notificationsList.setVisibility(View.GONE);
-            UiAnimations.fadeSlideUp(emptyState, 60);
+            UiAnimations.popIn(emptyState, 0);
         } else {
             emptyState.setVisibility(View.GONE);
             notificationsList.setVisibility(View.VISIBLE);
 
-            for (NotificationItem item : filtered) {
-                inflateNotificationCard(item);
+            for (int i = 0; i < filtered.size(); i++) {
+                inflateNotificationCard(filtered.get(i), i);
             }
         }
     }
 
-    private void inflateNotificationCard(NotificationItem item) {
+    private void inflateNotificationCard(NotificationItem item, int position) {
         View card = LayoutInflater.from(this).inflate(R.layout.item_notification, notificationsList, false);
 
         TextView title = card.findViewById(R.id.notificationTitle);
@@ -143,12 +146,23 @@ public class NotificationsActivity extends BaseActivity {
             unreadDot.setVisibility(View.GONE);
         }
 
-        // Tap to mark as read
+        // Tap to mark as read — fade the unread dot out instead of an instant cut
         card.setOnClickListener(v -> {
             item.unread = false;
-            unreadDot.setVisibility(View.GONE);
+            if (unreadDot.getVisibility() == View.VISIBLE) {
+                unreadDot.animate()
+                        .alpha(0f)
+                        .scaleX(0f)
+                        .scaleY(0f)
+                        .setDuration(180)
+                        .withEndAction(() -> unreadDot.setVisibility(View.GONE))
+                        .start();
+            }
         });
         UiAnimations.pressBounce(card);
+
+        // Staggered slide-up + fade entrance for each card, top to bottom
+        UiAnimations.fadeSlideUp(card, position * CARD_STAGGER_MS);
 
         notificationsList.addView(card);
     }
