@@ -137,6 +137,28 @@ public class AppDrawerHelper {
         }
 
         setupDrawerContent();
+
+        // On activity recreate (e.g. triggered by toggling dark mode while the
+        // drawer is open), Android's default view-state restoration silently
+        // reopens the DrawerLayout without ever running an actual slide
+        // animation — so onDrawerOpened() above never fires. Without this,
+        // the panel stays stuck at its "about to open" pose (90% scale, 55%
+        // alpha) and every row stays off-screen/invisible, which looks like
+        // a frozen/half-rendered drawer. Once restoration settles, check for
+        // that case and snap everything to its fully-open state.
+        if (drawerLayout != null) {
+            drawerLayout.post(() -> {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    View panel = getDrawerPanel();
+                    if (panel != null) {
+                        panel.setScaleX(1f);
+                        panel.setScaleY(1f);
+                        panel.setAlpha(1f);
+                    }
+                    showItemsImmediately();
+                }
+            });
+        }
     }
 
     /** Factory — call this from every activity's onCreate(). */
@@ -198,6 +220,17 @@ public class AppDrawerHelper {
                     .setDuration(ITEM_DURATION_MS)
                     .setInterpolator(new DecelerateInterpolator(1.6f))
                     .start();
+        }
+    }
+
+    /** Snap every row straight to its post-entrance state, no animation — used when the
+     *  drawer is restored already-open (e.g. after a dark-mode-triggered recreate). */
+    private void showItemsImmediately() {
+        itemsEntranceAnimated = true;
+        for (View item : drawerItemViews) {
+            item.animate().cancel();
+            item.setTranslationX(0f);
+            item.setAlpha(1f);
         }
     }
 
