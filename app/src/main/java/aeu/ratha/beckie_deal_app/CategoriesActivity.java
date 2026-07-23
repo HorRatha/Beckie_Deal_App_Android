@@ -64,19 +64,25 @@ public class CategoriesActivity extends BaseActivity {
         brandsList.clear();
         brandsList.add(new Brand("Apple",     R.drawable.ic_brand_apple,     false));
         brandsList.add(new Brand("ASUS",      R.drawable.ic_brand_asus,      true));
+        brandsList.add(new Brand("ROG",       R.drawable.ic_brand_rog,       false));
+        brandsList.add(new Brand("Razer",     R.drawable.ic_brand_razer,     false));
+        brandsList.add(new Brand("MSI",       R.drawable.ic_brand_msi,       false));
         brandsList.add(new Brand("Dell",      R.drawable.ic_brand_dell,      false));
         brandsList.add(new Brand("HP",        R.drawable.ic_brand_hp,        false));
         brandsList.add(new Brand("Lenovo",    R.drawable.ic_brand_lenovo,    false));
         brandsList.add(new Brand("Acer",      R.drawable.ic_brand_acer,      false));
         brandsList.add(new Brand("Microsoft", R.drawable.ic_brand_microsoft, false));
         brandsList.add(new Brand("Samsung",   R.drawable.ic_brand_samsung,   false));
-        brandsList.add(new Brand("MSI",       R.drawable.ic_brand_msi,       false));
     }
 
     private void setupLaptopBrands() {
         brandsGrid = findViewById(R.id.laptopBrandsGrid);
         // Responsive column count
         if (brandsGrid != null) brandsGrid.setColumnCount(ScreenUtils.brandsGridColumns(this));
+
+        TextView brandsSubtitle = findViewById(R.id.brandsAvailableSubtitle);
+        if (brandsSubtitle != null) brandsSubtitle.setText(brandsList.size() + " brands available");
+
         renderBrands();
     }
 
@@ -91,11 +97,16 @@ public class CategoriesActivity extends BaseActivity {
             {R.color.brand_tint_bg_6, R.color.brand_tint_fg_6},
     };
 
+    /** How many brands to preview on this page before "View All" (keeps a clean
+     *  2-column grid of 3 even rows). The full list lives in AllBrandsActivity. */
+    private static final int BRANDS_PREVIEW_COUNT = 6;
+
     private void renderBrands() {
         if (brandsGrid == null) return;
         brandsGrid.removeAllViews();
 
-        for (int i = 0; i < brandsList.size(); i++) {
+        int previewCount = Math.min(brandsList.size(), BRANDS_PREVIEW_COUNT);
+        for (int i = 0; i < previewCount; i++) {
             Brand brand = brandsList.get(i);
             View view = LayoutInflater.from(this)
                     .inflate(R.layout.item_brand_square, brandsGrid, false);
@@ -164,11 +175,14 @@ public class CategoriesActivity extends BaseActivity {
                 for (int j = 0; j < brandsList.size(); j++)
                     brandsList.get(j).isSelected = (j == index);
                 renderBrands();
-                // Open CategoryDetailActivity pre-filtered to this brand
+                // Open CategoryDetailActivity pre-filtered to this brand, using the
+                // category where the brand actually has products (e.g. gaming brands).
+                String category = brandToCategory(brand.name);
+                int total = getBrandProductCount(brand.name);
                 Intent intent = new Intent(this, CategoryDetailActivity.class);
-                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,     "Laptops");
-                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE,   "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop");
-                intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT,   "124 Items");
+                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,     category);
+                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE,   heroImageFor(category));
+                intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT,   total + " Items");
                 intent.putExtra(CategoryDetailActivity.EXTRA_BRAND_FILTER, brand.name);
                 startActivity(intent);
             };
@@ -177,6 +191,30 @@ public class CategoriesActivity extends BaseActivity {
             card.setOnClickListener(onBrandClick);
 
             brandsGrid.addView(view);
+        }
+    }
+
+    /** Maps a brand to the catalogue category where it actually has products.
+     *  Gaming brands (ROG, MSI, Razer) resolve to "Gaming". */
+    private String brandToCategory(String brand) {
+        switch (brand) {
+            case "ROG":
+            case "MSI":
+            case "Razer":   return "Gaming";
+            case "Samsung": return "Smartphones";
+            default:        return "Laptops";
+        }
+    }
+
+    /** Hero banner image per category for the detail screen. */
+    private String heroImageFor(String category) {
+        switch (category) {
+            case "Gaming":
+                return "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop";
+            case "Smartphones":
+                return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop";
+            default:
+                return "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop";
         }
     }
 

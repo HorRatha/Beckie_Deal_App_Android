@@ -30,9 +30,9 @@ public final class ScreenUtils {
     /** Number of columns for the brands grid (3 phone, 4 tablet, 5 large tablet). */
     public static int brandsGridColumns(Context ctx) {
         int sw = getSmallestWidthDp(ctx);
-        if (sw >= 900) return 5;
-        if (sw >= 600) return 4;
-        return 3;
+        if (sw >= 900) return 4;
+        if (sw >= 600) return 3;
+        return 2;
     }
 
     /** Number of columns for the "All Categories" grid (2 phone, 3 tablet). */

@@ -10,7 +10,7 @@
         android:id="@+id/brandCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="18dp"
+        app:cardCornerRadius="16dp"
         app:cardElevation="3dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/border_color"
@@ -23,18 +23,17 @@
             android:id="@+id/brandLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingTop="18dp"
-            android:paddingBottom="14dp"
-            android:paddingHorizontal="8dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="10dp">
 
             <!-- Rounded icon container, background tint rotates per brand for visual variety -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/iconContainer"
-                android:layout_width="54dp"
-                android:layout_height="54dp"
-                app:cardCornerRadius="16dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/badge_bg"
                 app:strokeWidth="0dp">
@@ -42,7 +41,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="12dp">
+                    android:padding="10dp">
 
                     <TextView
                         android:id="@+id/brandIconText"
@@ -65,29 +64,38 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Brand name -->
-            <TextView
-                android:id="@+id/brandName"
-                android:layout_width="wrap_content"
+            <!-- Brand name + product count -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Brand"
-                android:textColor="@color/text_primary"
-                android:textSize="12sp"
-                android:fontFamily="sans-serif-medium"
-                android:maxLines="1"
-                android:ellipsize="end" />
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="4dp"
+                android:orientation="vertical">
 
-            <!-- Product count subtitle -->
-            <TextView
-                android:id="@+id/brandProductCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text=""
-                android:textColor="@color/text_secondary"
-                android:textSize="10sp"
-                android:visibility="gone" />
+                <TextView
+                    android:id="@+id/brandName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Brand"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/brandProductCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text=""
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

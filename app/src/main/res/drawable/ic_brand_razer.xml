@@ -1,18 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48dp"
     android:height="48dp"
     android:viewportWidth="100"
     android:viewportHeight="100">
-    <!-- Razer three-headed snake / triple slash mark -->
+
+    <!-- Razer triple-headed snake mark – three blades radiating from a common base -->
+    <!-- Left snake -->
     <path
-        android:fillColor="#00D700"
-        android:pathData="M15,20 L45,20 L85,80 L55,80 Z" />
+        android:fillColor="#44D62C"
+        android:pathData="M50,86 C40,60 30,40 14,22 C22,42 26,64 32,86 Z" />
+    <!-- Centre snake -->
     <path
-        android:fillColor="#00D700"
-        android:pathData="M30,20 L60,20 L100,80 L70,80 Z"
-        android:fillAlpha="0.55"/>
+        android:fillColor="#44D62C"
+        android:pathData="M42,86 C46,58 46,38 50,12 C54,38 54,58 58,86 Z" />
+    <!-- Right snake -->
     <path
-        android:fillColor="#00D700"
-        android:pathData="M0,20 L30,20 L70,80 L40,80 Z"
-        android:fillAlpha="0.35"/>
+        android:fillColor="#44D62C"
+        android:pathData="M50,86 C60,60 70,40 86,22 C78,42 74,64 68,86 Z" />
 </vector>

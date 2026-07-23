@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- ROG "Eye of the Republic" – stylized angular eye -->
+    <!-- Outer eye ring (almond) with hollow centre via evenOdd fill -->
     <path
         android:fillColor="#000000"
-        android:pathData="M12,2L4,5v14l8,3 8-3V5L12,2z M18,17.4L12,20l-6-2.6V6.6L12,4l6,2.6V17.4z M15,10h-2V8h2V10z M11,10H9V8h2V10z M15,14h-6v-2h6V14z" />
+        android:fillType="evenOdd"
+        android:pathData="M8,60
+            C30,34 90,34 112,60
+            C90,86 30,86 8,60 Z
+            M30,60
+            C44,45 76,45 90,60
+            C76,75 44,75 30,60 Z" />
+
+    <!-- Angular pupil / iris slash -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M54,48 L70,48 L66,72 L50,72 Z" />
+
+    <!-- Upper aggressive brow slash (ROG signature) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M14,44 L40,30 L44,38 L20,50 Z" />
+
+    <!-- Lower aggressive slash -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M106,76 L80,90 L76,82 L100,70 Z" />
 </vector>
