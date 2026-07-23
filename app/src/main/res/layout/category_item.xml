@@ -1,45 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:id="@+id/categoryCard"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:layout_marginEnd="16dp">
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/border_color"
+    app:cardBackgroundColor="@color/surface"
+    app:rippleColor="@color/badge_bg">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/categoryCard"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="2dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/border_color"
-        app:cardBackgroundColor="@color/surface">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="10dp">
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/category_icon_bg">
 
             <ImageView
                 android:id="@+id/categoryIcon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@android:drawable/ic_menu_gallery"
                 app:tint="@color/primary" />
 
         </FrameLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:id="@+id/categoryName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Category"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/categoryName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Category"
-        android:textColor="@color/text_primary"
-        android:textSize="11sp" />
+    </LinearLayout>
 
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

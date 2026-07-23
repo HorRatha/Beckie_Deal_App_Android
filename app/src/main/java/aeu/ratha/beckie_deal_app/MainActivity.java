@@ -371,8 +371,33 @@ public class MainActivity extends BaseActivity {
         if (categoriesContainer == null) return;
         categoriesContainer.removeAllViews();
 
-        for (Category category : categories) {
-            View categoryView = LayoutInflater.from(this).inflate(R.layout.category_item, categoriesContainer, false);
+        // Show ALL categories in a wrapping 2-column grid of horizontal pills
+        // (icon on the left, name on the right).
+        final int columns = 2;
+        final int spacing = Math.round(10 * getResources().getDisplayMetrics().density);
+        LinearLayout currentRow = null;
+
+        for (int i = 0; i < categories.size(); i++) {
+            final Category category = categories.get(i);
+            final int col = i % columns;
+
+            if (col == 0) {
+                currentRow = new LinearLayout(this);
+                currentRow.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                if (i > 0) rowParams.topMargin = spacing;
+                currentRow.setLayoutParams(rowParams);
+                categoriesContainer.addView(currentRow);
+            }
+
+            View categoryView = LayoutInflater.from(this).inflate(R.layout.category_item, currentRow, false);
+            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            if (col > 0) itemParams.setMarginStart(spacing);
+            categoryView.setLayoutParams(itemParams);
+
             MaterialCardView categoryCard = categoryView.findViewById(R.id.categoryCard);
             ImageView categoryIcon = categoryView.findViewById(R.id.categoryIcon);
             TextView categoryName = categoryView.findViewById(R.id.categoryName);
@@ -402,7 +427,22 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             });
 
-            categoriesContainer.addView(categoryView);
+            currentRow.addView(categoryView);
+        }
+
+        // Fill trailing empty cell(s) so a lone last item keeps its column width.
+        if (currentRow != null) {
+            int remainder = categories.size() % columns;
+            if (remainder != 0) {
+                for (int c = remainder; c < columns; c++) {
+                    View spacer = new View(this);
+                    LinearLayout.LayoutParams spacerParams = new LinearLayout.LayoutParams(
+                            0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+                    spacerParams.setMarginStart(spacing);
+                    spacer.setLayoutParams(spacerParams);
+                    currentRow.addView(spacer);
+                }
+            }
         }
     }
 
