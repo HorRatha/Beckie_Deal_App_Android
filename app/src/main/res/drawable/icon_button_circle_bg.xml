@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Circular background for top-bar icon buttons (notification, etc.).
+     Matches the surface colour of form_field_background but keeps the round
+     shape used by the hero-header icon buttons (circle_white_translucent),
+     so every top-bar action reads as a circle across the app. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/input_background" />
+</shape>

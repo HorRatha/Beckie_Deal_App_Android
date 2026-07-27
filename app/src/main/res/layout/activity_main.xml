@@ -57,7 +57,7 @@
                 android:layout_height="44dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/form_field_background">
+                android:background="@drawable/icon_button_circle_bg">
 
                 <ImageView
                     android:id="@+id/notificationIcon"
