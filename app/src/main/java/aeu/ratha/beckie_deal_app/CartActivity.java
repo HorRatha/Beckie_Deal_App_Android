@@ -165,7 +165,8 @@ public class CartActivity extends BaseActivity {
 
     /** Update the quantity label and subtotal for a single cart row (no full re-render). */
     private void refreshItemRow(CartManager.CartItem item, TextView quantityTv, TextView subtotalTv) {
-        quantityTv.setText(String.valueOf(item.quantity));
+        // Zero-padded to two digits so the stepper width never jumps (01, 02 ... 12)
+        quantityTv.setText(String.format(Locale.US, "%02d", item.quantity));
         try {
             String priceStr = item.product.price.replace("$", "").replace(",", "");
             double subtotal = Double.parseDouble(priceStr) * item.quantity;
