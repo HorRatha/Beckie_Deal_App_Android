@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".ProductDetailActivity">
 
-    <!-- ── TOP BAR ─────────────────────────────────────────────────────────── -->
+    <!-- â”€â”€ TOP BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                 android:layout_centerInParent="true"
                 android:text="Product Details"
                 android:textColor="@color/text_primary"
-                android:textSize="17sp"
+                android:textSize="@dimen/text_size_title_small"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -85,7 +85,7 @@
                         android:gravity="center"
                         android:text="3"
                         android:textColor="@color/white_fixed"
-                        android:textSize="9sp"
+                        android:textSize="@dimen/text_size_badge"
                         android:textStyle="bold"
                         android:visibility="visible" />
                 </RelativeLayout>
@@ -93,7 +93,7 @@
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- ── SCROLLABLE CONTENT ──────────────────────────────────────────────── -->
+    <!-- â”€â”€ SCROLLABLE CONTENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -107,14 +107,14 @@
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
-            <!-- ── IMAGE GALLERY ─────────────────────────────────────────── -->
+            <!-- â”€â”€ IMAGE GALLERY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
             <FrameLayout
                 android:id="@+id/galleryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/hero_banner_height_product"
                 android:background="@color/surface">
 
-                <!-- Main image — fills the frame edge-to-edge, fit-center keeps aspect ratio -->
+                <!-- Main image â€” fills the frame edge-to-edge, fit-center keeps aspect ratio -->
                 <ImageView
                     android:id="@+id/detailProductImage"
                     android:layout_width="match_parent"
@@ -194,7 +194,7 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <!-- ── THUMBNAIL ROW (4 images) ──────────────────────────────── -->
+            <!-- â”€â”€ THUMBNAIL ROW (4 images) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
             <LinearLayout
                 android:id="@+id/thumbnailRow"
                 android:layout_width="match_parent"
@@ -269,7 +269,7 @@
 
             </LinearLayout>
 
-            <!-- ── PRODUCT INFO ───────────────────────────────────────────── -->
+            <!-- â”€â”€ PRODUCT INFO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
             <LinearLayout
                 android:id="@+id/productInfoBlock"
                 android:layout_width="match_parent"
@@ -292,7 +292,7 @@
                         android:layout_weight="1"
                         android:text="Product Name"
                         android:textColor="@color/text_primary"
-                        android:textSize="22sp"
+                        android:textSize="@dimen/text_size_headline"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -307,7 +307,7 @@
                             android:layout_height="wrap_content"
                             android:text="$0.00"
                             android:textColor="@color/primary"
-                            android:textSize="20sp"
+                            android:textSize="@dimen/text_size_title"
                             android:textStyle="bold" />
 
                         <TextView
@@ -316,7 +316,7 @@
                             android:layout_height="wrap_content"
                             android:text="In Stock"
                             android:textColor="#22C55E"
-                            android:textSize="11sp" />
+                            android:textSize="@dimen/text_size_caption" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -341,7 +341,7 @@
                         android:layout_marginStart="4dp"
                         android:text="4.9"
                         android:textColor="@color/text_primary"
-                        android:textSize="13sp"
+                        android:textSize="@dimen/text_size_body"
                         android:textStyle="bold" />
 
                     <TextView
@@ -351,7 +351,7 @@
                         android:layout_marginStart="4dp"
                         android:text="(120 reviews)"
                         android:textColor="@color/text_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/text_size_caption" />
                 </LinearLayout>
 
                 <!-- Description -->
@@ -362,7 +362,7 @@
                     android:layout_marginTop="14dp"
                     android:text=""
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_size_body"
                     android:lineSpacingExtra="4dp" />
 
                 <!-- Spec tag pills -->
@@ -375,14 +375,14 @@
                     <!-- Tags added programmatically -->
                 </LinearLayout>
 
-                <!-- ── TECHNICAL SPECIFICATIONS HEADER ────────────────────── -->
+                <!-- â”€â”€ TECHNICAL SPECIFICATIONS HEADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="Technical Specifications"
                     android:textColor="@color/text_primary"
-                    android:textSize="17sp"
+                    android:textSize="@dimen/text_size_title_small"
                     android:textStyle="bold" />
 
                 <!-- 2x2 spec cards grid -->
@@ -394,7 +394,7 @@
                     android:columnCount="2"
                     android:useDefaultMargins="false" />
 
-                <!-- ── DETAIL SPEC ROWS ────────────────────────────────────── -->
+                <!-- â”€â”€ DETAIL SPEC ROWS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -418,7 +418,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ── BOTTOM ACTION BAR ───────────────────────────────────────────────── -->
+    <!-- â”€â”€ BOTTOM ACTION BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomActionLayout"
         android:layout_width="match_parent"
@@ -450,9 +450,9 @@
                     android:layout_weight="1"
                     android:text="Quantity"
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
-                <!-- − qty + stepper pill -->
+                <!-- âˆ’ qty + stepper pill -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="44dp"
@@ -478,7 +478,7 @@
                         android:gravity="center"
                         android:text="1"
                         android:textColor="@color/text_primary"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_size_body_large"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -529,7 +529,7 @@
                     android:text="Add to Cart"
                     android:textAllCaps="false"
                     android:textColor="@color/white_fixed"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_size_body_large"
                     android:textStyle="bold"
                     app:icon="@drawable/add_shopping_cart_24"
                     app:iconTint="@color/white_fixed"
@@ -542,7 +542,7 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- ── FLOATING BOTTOM NAV ─────────────────────────────────────────────── -->
+    <!-- â”€â”€ FLOATING BOTTOM NAV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <include layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

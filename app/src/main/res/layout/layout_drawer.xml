@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Side drawer panel — used by all activities via AppDrawerHelper.
+    Side drawer panel â€” used by all activities via AppDrawerHelper.
     Width is fixed at 300dp so it never covers the full screen.
 -->
 <LinearLayout
@@ -14,7 +14,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
-    <!-- ── Header ──────────────────────────────────────────────────────── -->
+    <!-- â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:layout_marginTop="10dp"
             android:text="Guest User"
             android:textColor="@color/white_fixed"
-            android:textSize="17sp"
+            android:textSize="@dimen/text_size_title_small"
             android:textStyle="bold" />
 
         <TextView
@@ -57,11 +57,11 @@
             android:layout_marginTop="2dp"
             android:text="Sign in to your account"
             android:textColor="#CCFFFFFF"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_caption" />
 
     </LinearLayout>
 
-    <!-- ── Scrollable menu items ────────────────────────────────────────── -->
+    <!-- â”€â”€ Scrollable menu items â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -100,7 +100,7 @@
                     android:layout_marginStart="14dp"
                     android:text="Home"
                     android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/text_size_body_large" />
             </LinearLayout>
 
             <!-- Categories -->
@@ -127,7 +127,7 @@
                     android:layout_marginStart="14dp"
                     android:text="Categories"
                     android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/text_size_body_large" />
             </LinearLayout>
 
             <!-- My Orders -->
@@ -154,7 +154,7 @@
                     android:layout_marginStart="14dp"
                     android:text="My Orders"
                     android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/text_size_body_large" />
             </LinearLayout>
 
             <!-- Favorites -->
@@ -181,7 +181,7 @@
                     android:layout_marginStart="14dp"
                     android:text="Favorites"
                     android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/text_size_body_large" />
                 <!-- Live favorites count badge -->
                 <TextView
                     android:id="@+id/drawerFavBadge"
@@ -192,7 +192,7 @@
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/white_fixed"
-                    android:textSize="10sp"
+                    android:textSize="@dimen/text_size_overline"
                     android:textStyle="bold"
                     android:visibility="gone" />
             </LinearLayout>
@@ -228,7 +228,7 @@
                     android:layout_marginStart="14dp"
                     android:text="Notifications"
                     android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/text_size_body_large" />
             </LinearLayout>
 
             <!-- Dark Mode toggle row -->
@@ -255,7 +255,7 @@
                     android:layout_marginStart="14dp"
                     android:text="Dark Mode"
                     android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/text_size_body_large" />
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/drawerDarkModeSwitch"
                     android:layout_width="wrap_content"
@@ -287,14 +287,14 @@
                     android:layout_marginStart="14dp"
                     android:text="Language"
                     android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/text_size_body_large" />
                 <TextView
                     android:id="@+id/drawerLanguageValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="English"
                     android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/text_size_body" />
             </LinearLayout>
 
             <!-- Divider -->
@@ -328,7 +328,7 @@
                     android:layout_marginStart="14dp"
                     android:text="About Us"
                     android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/text_size_body_large" />
             </LinearLayout>
 
             <!-- Login / Logout -->
@@ -357,19 +357,19 @@
                     android:layout_marginStart="14dp"
                     android:text="Login / Register"
                     android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/text_size_body_large" />
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- ── Footer version tag ───────────────────────────────────────────── -->
+    <!-- â”€â”€ Footer version tag â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center"
         android:text="TechStore v1.0"
         android:textColor="@color/text_muted"
-        android:textSize="11sp" />
+        android:textSize="@dimen/text_size_caption" />
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -49,7 +49,7 @@
                 android:layout_centerInParent="true"
                 android:text="My Favorites"
                 android:textColor="@color/text_primary"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_title"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -79,7 +79,7 @@
                     android:gravity="center"
                     android:text="3"
                     android:textColor="@color/white_fixed"
-                    android:textSize="9sp"
+                    android:textSize="@dimen/text_size_badge"
                     android:textStyle="bold"
                     android:visibility="visible" />
 
@@ -122,7 +122,7 @@
                     android:layout_marginTop="24dp"
                     android:text="Your heart is empty"
                     android:textColor="@color/text_primary"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_title"
                     android:textStyle="bold" />
 
                 <TextView
@@ -131,7 +131,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Start adding items you love to your favorites!"
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
                 
                 <Button
                     android:id="@+id/exploreButton"

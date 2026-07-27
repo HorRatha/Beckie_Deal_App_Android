@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Beckie Deal — Horizontal scroll product card
+    Beckie Deal â€” Horizontal scroll product card
     Used in "New Collection" and "Top Selling" sections on the home screen.
-    Flat design: no shadow, no border, no rounded corners — consistent with grid cards.
+    Flat design: no shadow, no border, no rounded corners â€” consistent with grid cards.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- ── Image — full-width, tall ──────────────────────────────────── -->
+        <!-- â”€â”€ Image â€” full-width, tall â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
@@ -47,13 +47,13 @@
 
         </FrameLayout>
 
-        <!-- ── Hairline divider ───────────────────────────────────────────── -->
+        <!-- â”€â”€ Hairline divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/border_color" />
 
-        <!-- ── Info ───────────────────────────────────────────────────────── -->
+        <!-- â”€â”€ Info â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:text="Product Name"
                 android:textColor="@color/text_primary"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textStyle="bold"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -83,7 +83,7 @@
                 android:layout_marginTop="5dp"
                 android:text="$999"
                 android:textColor="@color/red_error"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold" />
 
             <!-- Rating row -->
@@ -107,7 +107,7 @@
                     android:layout_marginStart="3dp"
                     android:text="4.9"
                     android:textColor="@color/text_secondary"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/text_size_overline" />
 
             </LinearLayout>
 

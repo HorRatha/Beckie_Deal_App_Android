@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Standard phone (>= 360dp smallest width) — the reference design size.
+  Only the type scale is overridden here; every other dimen falls back to values/.
+-->
+<resources>
+    <dimen name="text_size_badge">9sp</dimen>
+    <dimen name="text_size_overline">10sp</dimen>
+    <dimen name="text_size_caption">12sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
+    <dimen name="text_size_body_large">16sp</dimen>
+    <dimen name="text_size_title_small">18sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_headline">22sp</dimen>
+    <dimen name="text_size_headline_large">26sp</dimen>
+    <dimen name="text_size_display">28sp</dimen>
+</resources>

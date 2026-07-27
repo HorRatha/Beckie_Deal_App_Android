@@ -3,8 +3,10 @@ package aeu.ratha.beckie_deal_app;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.GridLayout;
+import android.widget.TextView;
 
 /**
  * Utility class for responsive layout helpers.
@@ -68,6 +70,18 @@ public final class ScreenUtils {
     /** Convert dp to pixels. */
     public static int dpToPx(Context ctx, float dp) {
         return Math.round(dp * ctx.getResources().getDisplayMetrics().density);
+    }
+
+    /**
+     * Apply a text size from the responsive type scale to a view created in code.
+     * Keeps programmatic views in sync with the dimens buckets
+     * (values / sw360dp / sw600dp / sw900dp) instead of hardcoding sp.
+     *
+     * @param dimenRes one of the R.dimen.text_size_* tokens
+     */
+    public static void applyTextSize(TextView view, int dimenRes) {
+        view.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                view.getResources().getDimension(dimenRes));
     }
 
     /** True when the device is in landscape orientation. */

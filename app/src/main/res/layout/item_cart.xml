@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="Product Name"
                 android:textColor="@color/text_primary"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 android:maxLines="2"
                 android:ellipsize="end" />
@@ -64,7 +64,7 @@
                 android:layout_marginTop="4dp"
                 android:text="$0.00 / unit"
                 android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
+                android:textSize="@dimen/text_size_caption" />
 
             <!-- Quantity stepper + subtotal row -->
             <LinearLayout
@@ -100,7 +100,7 @@
                         android:gravity="center"
                         android:text="1"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/text_size_body_large"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:text="$0.00"
                     android:textColor="@color/primary"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_size_body_large"
                     android:textStyle="bold" />
 
             </LinearLayout>

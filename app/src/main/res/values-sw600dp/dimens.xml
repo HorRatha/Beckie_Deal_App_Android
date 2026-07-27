@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Tablet overrides (>= 600dp smallest width — small tablet / large phone landscape) -->
 <resources>
-    <!-- Section headers — larger text -->
-    <dimen name="section_title_size">22sp</dimen>
-    <dimen name="section_subtitle_size">14sp</dimen>
-    <dimen name="page_title_size">28sp</dimen>
+
+    <!-- Type scale — tablet step -->
+    <dimen name="text_size_badge">10sp</dimen>
+    <dimen name="text_size_overline">11sp</dimen>
+    <dimen name="text_size_caption">13sp</dimen>
+    <dimen name="text_size_body">16sp</dimen>
+    <dimen name="text_size_body_large">18sp</dimen>
+    <dimen name="text_size_title_small">20sp</dimen>
+    <dimen name="text_size_title">23sp</dimen>
+    <dimen name="text_size_headline">26sp</dimen>
+    <dimen name="text_size_headline_large">30sp</dimen>
+    <dimen name="text_size_display">34sp</dimen>
 
     <!-- Hero banners — taller on tablets -->
     <dimen name="hero_banner_height">260dp</dimen>

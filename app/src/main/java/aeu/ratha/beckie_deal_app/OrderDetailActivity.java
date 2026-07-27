@@ -171,14 +171,14 @@ public class OrderDetailActivity extends BaseActivity {
 
         TextView titleTv = new TextView(this);
         titleTv.setText(title);
-        titleTv.setTextSize(14);
+        ScreenUtils.applyTextSize(titleTv, R.dimen.text_size_body);
         titleTv.setTextColor(isCompleted ? getColor(R.color.text_primary) : getColor(R.color.text_muted));
         if (isCurrent) titleTv.setTypeface(null, android.graphics.Typeface.BOLD);
         textColumn.addView(titleTv);
 
         TextView subtitleTv = new TextView(this);
         subtitleTv.setText(subtitle);
-        subtitleTv.setTextSize(12);
+        ScreenUtils.applyTextSize(subtitleTv, R.dimen.text_size_caption);
         subtitleTv.setTextColor(getColor(R.color.text_muted));
         LinearLayout.LayoutParams subLp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

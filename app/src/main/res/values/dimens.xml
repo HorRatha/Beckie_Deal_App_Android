@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Phone defaults (< 600dp smallest width) -->
+<!-- Compact phone baseline (< 360dp smallest width) -->
 <resources>
-    <!-- Section headers -->
-    <dimen name="section_title_size">18sp</dimen>
-    <dimen name="section_subtitle_size">12sp</dimen>
-    <dimen name="page_title_size">22sp</dimen>
+
+    <!-- ============================================================
+         TYPE SCALE  —  single source of truth for every text size.
+         Buckets: values/ (<360dp)  values-sw360dp/  values-sw600dp/  values-sw900dp/
+         Never hardcode "sp" in a layout; always use one of these.
+         ============================================================ -->
+
+    <!-- Counters inside fixed-size badge circles. Scales the least on purpose
+         so the number never outgrows its container. -->
+    <dimen name="text_size_badge">9sp</dimen>
+    <!-- Micro uppercase labels, ratings, chip eyebrows -->
+    <dimen name="text_size_overline">9sp</dimen>
+    <!-- Metadata, helper text, timestamps, secondary chips -->
+    <dimen name="text_size_caption">11sp</dimen>
+    <!-- Default body copy and list labels -->
+    <dimen name="text_size_body">13sp</dimen>
+    <!-- Emphasised body: prices, inputs, drawer menu items -->
+    <dimen name="text_size_body_large">15sp</dimen>
+    <!-- Card titles and in-card section headers -->
+    <dimen name="text_size_title_small">17sp</dimen>
+    <!-- Screen section titles ("Featured Products") -->
+    <dimen name="text_size_title">18sp</dimen>
+    <!-- Banner / stat headlines -->
+    <dimen name="text_size_headline">20sp</dimen>
+    <!-- Hero headlines on category + about screens -->
+    <dimen name="text_size_headline_large">23sp</dimen>
+    <!-- Auth / brand display titles -->
+    <dimen name="text_size_display">25sp</dimen>
+
+    <!-- Legacy aliases kept so existing names stay valid -->
+    <dimen name="section_title_size">@dimen/text_size_title</dimen>
+    <dimen name="section_subtitle_size">@dimen/text_size_caption</dimen>
+    <dimen name="page_title_size">@dimen/text_size_headline</dimen>
 
     <!-- Hero banners -->
     <dimen name="hero_banner_height">180dp</dimen>

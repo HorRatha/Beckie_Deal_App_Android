@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Order card — matches existing card style (16dp corners, 1dp border, 0dp elevation).
+    Order card â€” matches existing card style (16dp corners, 1dp border, 0dp elevation).
     Shows order ID, date, status badge, item thumbnails strip, and total.
 -->
 <com.google.android.material.card.MaterialCardView
@@ -35,7 +35,7 @@
                 android:layout_weight="1"
                 android:text="Order #BD-1001"
                 android:textColor="@color/text_primary"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:paddingVertical="4dp"
                 android:text="Processing"
                 android:textColor="@color/primary"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -67,7 +67,7 @@
                 android:layout_weight="1"
                 android:text="Jul 13, 2026"
                 android:textColor="@color/text_muted"
-                android:textSize="13sp" />
+                android:textSize="@dimen/text_size_body" />
 
             <TextView
                 android:id="@+id/orderItemCountText"
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:text="3 items"
                 android:textColor="@color/text_secondary"
-                android:textSize="13sp" />
+                android:textSize="@dimen/text_size_body" />
 
         </LinearLayout>
 
@@ -113,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:text="Total"
                     android:textColor="@color/text_muted"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_caption" />
 
                 <TextView
                     android:id="@+id/orderTotalText"
@@ -122,7 +122,7 @@
                     android:layout_marginTop="2dp"
                     android:text="$0.00"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_body_large"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -136,7 +136,7 @@
                 android:paddingHorizontal="16dp"
                 android:text="View Details"
                 android:textColor="@color/primary"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold" />
 
         </LinearLayout>

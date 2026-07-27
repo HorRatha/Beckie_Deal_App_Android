@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -46,7 +46,7 @@
                     android:layout_centerInParent="true"
                     android:text="Notifications"
                     android:textColor="@color/text_primary"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_title"
                     android:textStyle="bold" />
 
                 <TextView
@@ -57,7 +57,7 @@
                     android:layout_centerVertical="true"
                     android:text="Mark all read"
                     android:textColor="@color/primary"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/text_size_body" />
 
             </RelativeLayout>
 
@@ -89,7 +89,7 @@
                 android:paddingHorizontal="20dp"
                 android:layout_marginEnd="8dp"
                 android:text="All"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 android:background="@drawable/chip_selected"
                 android:textColor="@color/white_fixed" />
@@ -102,7 +102,7 @@
                 android:paddingHorizontal="20dp"
                 android:layout_marginEnd="8dp"
                 android:text="Orders"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_body"
                 android:background="@drawable/chip_unselected"
                 android:textColor="@color/text_secondary" />
 
@@ -114,7 +114,7 @@
                 android:paddingHorizontal="20dp"
                 android:layout_marginEnd="8dp"
                 android:text="Promos"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_body"
                 android:background="@drawable/chip_unselected"
                 android:textColor="@color/text_secondary" />
 
@@ -125,7 +125,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="20dp"
                 android:text="Alerts"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_body"
                 android:background="@drawable/chip_unselected"
                 android:textColor="@color/text_secondary" />
 
@@ -166,7 +166,7 @@
                     android:layout_marginTop="24dp"
                     android:text="No notifications yet"
                     android:textColor="@color/text_primary"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_title"
                     android:textStyle="bold" />
 
                 <TextView
@@ -176,7 +176,7 @@
                     android:gravity="center"
                     android:text="We'll notify you about orders, deals\nand updates."
                     android:textColor="@color/text_muted"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
             </LinearLayout>
 

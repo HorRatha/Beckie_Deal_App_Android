@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -44,7 +44,7 @@
                 android:layout_centerInParent="true"
                 android:text="Category"
                 android:textColor="@color/text_primary"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_title_small"
                 android:textStyle="bold" />
 
             <!-- Notification icon -->
@@ -75,7 +75,7 @@
                     android:gravity="center"
                     android:text="3"
                     android:textColor="@color/white_fixed"
-                    android:textSize="9sp"
+                    android:textSize="@dimen/text_size_badge"
                     android:textStyle="bold"
                     android:visibility="visible" />
             </RelativeLayout>
@@ -130,7 +130,7 @@
                         android:layout_height="wrap_content"
                         android:text="Laptops"
                         android:textColor="@android:color/white"
-                        android:textSize="26sp"
+                        android:textSize="@dimen/text_size_headline_large"
                         android:textStyle="bold" />
 
                     <TextView
@@ -139,7 +139,7 @@
                         android:layout_height="wrap_content"
                         android:text="124 Items"
                         android:textColor="#CCFFFFFF"
-                        android:textSize="13sp" />
+                        android:textSize="@dimen/text_size_body" />
                 </LinearLayout>
             </FrameLayout>
 
@@ -178,7 +178,7 @@
                     android:layout_weight="1"
                     android:text="Showing all products"
                     android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <!-- View mode toggle (grid / list) -->
                 <RelativeLayout
@@ -210,7 +210,7 @@
                     android:drawablePadding="4dp"
                     android:text="Filter &amp; Sort"
                     android:textColor="@color/primary"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_size_body"
                     android:textStyle="bold"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="6dp"

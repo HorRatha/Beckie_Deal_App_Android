@@ -241,7 +241,7 @@ public class ProductListActivity extends BaseActivity
         lp.setMargins(0, 0, 8, 0);
         chip.setLayoutParams(lp);
         chip.setText(label);
-        chip.setTextSize(12f);
+        ScreenUtils.applyTextSize(chip, R.dimen.text_size_caption);
         chip.setTextColor(ContextCompat.getColor(this, R.color.primary));
         chip.setBackground(ContextCompat.getDrawable(this, R.drawable.chip_unselected));
         chip.setPadding(dp(12), dp(6), dp(12), dp(6));

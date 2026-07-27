@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -76,7 +76,7 @@
                     android:layout_marginBottom="24dp"
                     android:text="@string/app_name"
                     android:textColor="@color/white_fixed"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_size_title_small"
                     android:textStyle="bold" />
 
             </FrameLayout>
@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:text="Login"
                     android:textColor="@color/text_primary"
-                    android:textSize="28sp"
+                    android:textSize="@dimen/text_size_display"
                     android:textStyle="bold" />
 
                 <!-- Subtitle -->
@@ -107,7 +107,7 @@
                     android:layout_marginTop="6dp"
                     android:text="Enter your login and password"
                     android:textColor="@color/text_muted"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <!-- Email Field -->
                 <TextView
@@ -116,7 +116,7 @@
                     android:layout_marginTop="28dp"
                     android:text="Email"
                     android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <EditText
                     android:id="@+id/emailInput"
@@ -131,7 +131,7 @@
                     android:paddingHorizontal="16dp"
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/text_muted"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <!-- Password Field -->
                 <TextView
@@ -140,7 +140,7 @@
                     android:layout_marginTop="18dp"
                     android:text="Password"
                     android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <EditText
                     android:id="@+id/passwordInput"
@@ -155,7 +155,7 @@
                     android:paddingHorizontal="16dp"
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/text_muted"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <!-- Remember me + Forgot password row -->
                 <LinearLayout
@@ -173,7 +173,7 @@
                         android:paddingStart="8dp"
                         android:text="Remember me"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <View
                         android:layout_width="0dp"
@@ -186,7 +186,7 @@
                         android:layout_height="wrap_content"
                         android:text="Forgot Password?"
                         android:textColor="@color/primary"
-                        android:textSize="13sp"
+                        android:textSize="@dimen/text_size_body"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -201,7 +201,7 @@
                     android:text="Login"
                     android:textAllCaps="false"
                     android:textColor="@color/white_fixed"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_body_large"
                     android:textStyle="bold"
                     android:stateListAnimator="@null" />
 
@@ -213,7 +213,7 @@
                     android:layout_marginTop="20dp"
                     android:text="Sign in with your university account"
                     android:textColor="@color/text_muted"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <!-- Register link -->
                 <LinearLayout
@@ -228,7 +228,7 @@
                         android:layout_height="wrap_content"
                         android:text="Don't have an account? "
                         android:textColor="@color/text_muted"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <TextView
                         android:id="@+id/registerLink"
@@ -236,7 +236,7 @@
                         android:layout_height="wrap_content"
                         android:text="Register"
                         android:textColor="@color/primary"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_size_body"
                         android:textStyle="bold" />
 
                 </LinearLayout>

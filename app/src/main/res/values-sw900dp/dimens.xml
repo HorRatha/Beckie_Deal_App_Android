@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Large tablet overrides (>= 900dp — 10" tablet, desktop mode) -->
 <resources>
-    <dimen name="section_title_size">24sp</dimen>
-    <dimen name="section_subtitle_size">15sp</dimen>
-    <dimen name="page_title_size">32sp</dimen>
+
+    <!-- Type scale — large tablet step -->
+    <dimen name="text_size_badge">11sp</dimen>
+    <dimen name="text_size_overline">12sp</dimen>
+    <dimen name="text_size_caption">14sp</dimen>
+    <dimen name="text_size_body">17sp</dimen>
+    <dimen name="text_size_body_large">19sp</dimen>
+    <dimen name="text_size_title_small">22sp</dimen>
+    <dimen name="text_size_title">25sp</dimen>
+    <dimen name="text_size_headline">28sp</dimen>
+    <dimen name="text_size_headline_large">33sp</dimen>
+    <dimen name="text_size_display">38sp</dimen>
 
     <dimen name="hero_banner_height">320dp</dimen>
     <dimen name="hero_banner_height_detail">260dp</dimen>

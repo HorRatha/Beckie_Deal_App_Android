@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -46,7 +46,7 @@
                     android:layout_centerInParent="true"
                     android:text="Checkout"
                     android:textColor="@color/text_primary"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_title"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:text="Shipping Address"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold" />
 
             <com.google.android.material.card.MaterialCardView
@@ -119,7 +119,7 @@
                             android:layout_height="wrap_content"
                             android:text="123 Tech Avenue, Silicon Valley, CA"
                             android:textColor="@color/text_muted"
-                            android:textSize="13sp" />
+                            android:textSize="@dimen/text_size_body" />
                     </LinearLayout>
 
                     <ImageView
@@ -137,7 +137,7 @@
                 android:layout_marginTop="32dp"
                 android:text="Payment Method"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold" />
 
             <com.google.android.material.card.MaterialCardView
@@ -182,7 +182,7 @@
                             android:layout_height="wrap_content"
                             android:text="**** **** **** 4582"
                             android:textColor="@color/text_muted"
-                            android:textSize="13sp" />
+                            android:textSize="@dimen/text_size_body" />
                     </LinearLayout>
 
                     <RadioButton
@@ -200,7 +200,7 @@
                 android:layout_marginTop="32dp"
                 android:text="Order Summary"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold" />
 
             <com.google.android.material.card.MaterialCardView
@@ -272,7 +272,7 @@
                             android:layout_weight="1"
                             android:text="Total"
                             android:textColor="@color/text_primary"
-                            android:textSize="18sp"
+                            android:textSize="@dimen/text_size_title_small"
                             android:textStyle="bold" />
                         <TextView
                             android:id="@+id/summaryTotal"
@@ -280,7 +280,7 @@
                             android:layout_height="wrap_content"
                             android:text="$15.00"
                             android:textColor="@color/primary"
-                            android:textSize="18sp"
+                            android:textSize="@dimen/text_size_title_small"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
@@ -313,7 +313,7 @@
                 android:text="Confirm Payment"
                 android:textAllCaps="false"
                 android:textColor="@color/white_fixed"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
                 app:cornerRadius="16dp" />
 
@@ -349,7 +349,7 @@
                 android:layout_marginTop="24dp"
                 android:text="Processing Payout..."
                 android:textColor="@color/white_fixed"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_title_small"
                 android:textStyle="bold" />
                 
             <TextView
@@ -412,7 +412,7 @@
                 android:layout_marginTop="28dp"
                 android:text="Payment Successful!"
                 android:textColor="@color/text_primary"
-                android:textSize="24sp"
+                android:textSize="@dimen/text_size_headline_large"
                 android:textStyle="bold" />
 
             <TextView
@@ -422,7 +422,7 @@
                 android:gravity="center"
                 android:text="Your order has been placed. We'll notify you when it's on the way."
                 android:textColor="@color/text_muted"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_size_body_large" />
 
             <!-- Order receipt summary card -->
             <com.google.android.material.card.MaterialCardView
@@ -451,14 +451,14 @@
                             android:layout_weight="1"
                             android:text="Order ID"
                             android:textColor="@color/text_muted"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_body" />
                         <TextView
                             android:id="@+id/successOrderId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="BD-1001"
                             android:textColor="@color/text_primary"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/text_size_body"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -478,14 +478,14 @@
                             android:layout_weight="1"
                             android:text="Amount Paid"
                             android:textColor="@color/text_muted"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_body" />
                         <TextView
                             android:id="@+id/successAmountPaid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$0.00"
                             android:textColor="@color/primary"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/text_size_body_large"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -505,13 +505,13 @@
                             android:layout_weight="1"
                             android:text="Payment Method"
                             android:textColor="@color/text_muted"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_body" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="**** 4582"
                             android:textColor="@color/text_primary"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/text_size_body"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -527,7 +527,7 @@
                 android:text="Back to Home"
                 android:textAllCaps="false"
                 android:textColor="@color/white_fixed"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
                 app:icon="@drawable/ic_home"
                 app:iconTint="@color/white_fixed"
@@ -544,7 +544,7 @@
                 android:text="View My Orders"
                 android:textAllCaps="false"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
                 app:strokeColor="@color/border_color"
                 app:strokeWidth="1dp"

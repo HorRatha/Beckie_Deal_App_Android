@@ -150,7 +150,7 @@ public class MyOrdersActivity extends BaseActivity {
             TextView moreText = new TextView(this);
             moreText.setText("+" + (order.items.size() - 3));
             moreText.setTextColor(getColor(R.color.text_muted));
-            moreText.setTextSize(12);
+            ScreenUtils.applyTextSize(moreText, R.dimen.text_size_caption);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);

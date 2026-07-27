@@ -158,7 +158,7 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
             chip.setLayoutParams(lp);
             chip.setPadding(dp(14), dp(8), dp(14), dp(8));
             chip.setText(year);
-            chip.setTextSize(13f);
+            ScreenUtils.applyTextSize(chip, R.dimen.text_size_body);
             chip.setClickable(true);
             chip.setFocusable(true);
 

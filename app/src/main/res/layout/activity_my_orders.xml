@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -46,7 +46,7 @@
                     android:layout_centerInParent="true"
                     android:text="My Orders"
                     android:textColor="@color/text_primary"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_title"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -106,7 +106,7 @@
                     android:layout_marginTop="24dp"
                     android:text="No orders yet"
                     android:textColor="@color/text_primary"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_title"
                     android:textStyle="bold" />
 
                 <TextView
@@ -117,7 +117,7 @@
                     android:gravity="center"
                     android:text="When you place an order, it will appear here."
                     android:textColor="@color/text_muted"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <Button
                     android:id="@+id/startShoppingButton"

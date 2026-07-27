@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Beckie Deal — Product Card (1-column list row)
+    Beckie Deal â€” Product Card (1-column list row)
     Horizontal layout: square thumbnail on the left, details on the right.
     Shares the same view IDs as product_card.xml so ProductCardBinder works unchanged.
 -->
@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <!-- ── Product image — fixed square thumbnail ────────────────────── -->
+        <!-- â”€â”€ Product image â€” fixed square thumbnail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <FrameLayout
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -33,7 +33,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_image" />
 
-            <!-- Favourite — semi-transparent pill, top-right -->
+            <!-- Favourite â€” semi-transparent pill, top-right -->
             <ImageView
                 android:id="@+id/favoriteIcon"
                 android:layout_width="30dp"
@@ -47,13 +47,13 @@
 
         </FrameLayout>
 
-        <!-- ── Hairline divider ───────────────────────────────────────────── -->
+        <!-- â”€â”€ Hairline divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/border_color" />
 
-        <!-- ── Info section — grows to fill remaining width ───────────────── -->
+        <!-- â”€â”€ Info section â€” grows to fill remaining width â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:text="Product Name"
                 android:textColor="@color/text_primary"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 android:maxLines="2"
                 android:ellipsize="end" />
@@ -83,7 +83,7 @@
                 android:layout_marginTop="2dp"
                 android:text=""
                 android:textColor="@color/text_secondary"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_caption"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:visibility="gone" />
@@ -96,7 +96,7 @@
                 android:layout_marginTop="4dp"
                 android:text="Available In Stock"
                 android:textColor="#1565C0"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textStyle="bold" />
 
             <!-- Warranty -->
@@ -107,7 +107,7 @@
                 android:layout_marginTop="1dp"
                 android:text="1 Year Warranty"
                 android:textColor="#2E7D32"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textStyle="bold" />
 
             <!-- SKU -->
@@ -118,7 +118,7 @@
                 android:layout_marginTop="1dp"
                 android:text=""
                 android:textColor="#00897B"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textStyle="bold"
                 android:visibility="gone" />
 
@@ -130,7 +130,7 @@
                 android:layout_marginTop="5dp"
                 android:text="$0"
                 android:textColor="@color/red_error"
-                android:textSize="17sp"
+                android:textSize="@dimen/text_size_title_small"
                 android:textStyle="bold" />
 
             <!-- Specs bullets -->
@@ -141,7 +141,7 @@
                 android:layout_marginTop="4dp"
                 android:text=""
                 android:textColor="@color/text_secondary"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_caption"
                 android:lineSpacingMultiplier="1.3"
                 android:maxLines="3"
                 android:ellipsize="end"
@@ -155,7 +155,7 @@
                 android:layout_marginTop="2dp"
                 android:text=""
                 android:textColor="@color/red_error"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textStyle="italic"
                 android:visibility="gone" />
 

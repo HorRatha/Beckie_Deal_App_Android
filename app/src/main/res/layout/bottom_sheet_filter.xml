@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -31,7 +31,7 @@
             android:layout_centerVertical="true"
             android:text="Filter &amp; Sort"
             android:textColor="@color/text_primary"
-            android:textSize="17sp"
+            android:textSize="@dimen/text_size_title_small"
             android:textStyle="bold" />
 
         <TextView
@@ -46,7 +46,7 @@
             android:paddingVertical="7dp"
             android:text="Reset"
             android:textColor="@color/primary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold" />
 
     </RelativeLayout>
@@ -57,7 +57,7 @@
         android:layout_height="1dp"
         android:background="@color/border_color" />
 
-    <!-- ══ SORT BY ══════════════════════════════════════════════════════════ -->
+    <!-- â•â• SORT BY â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
         android:paddingBottom="10dp"
         android:text="Sort By"
         android:textColor="@color/text_primary"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_body"
         android:textStyle="bold"
         android:letterSpacing="0.05" />
 
@@ -93,7 +93,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:text="Default"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_body"
                 android:singleLine="true"
                 android:background="@drawable/chip_selected"
                 android:textColor="@color/white_fixed" />
@@ -105,8 +105,8 @@
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
-                android:text="Price: Low → High"
-                android:textSize="13sp"
+                android:text="Price: Low â†’ High"
+                android:textSize="@dimen/text_size_body"
                 android:singleLine="true"
                 android:background="@drawable/chip_unselected"
                 android:textColor="@color/text_secondary" />
@@ -118,8 +118,8 @@
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
-                android:text="Price: High → Low"
-                android:textSize="13sp"
+                android:text="Price: High â†’ Low"
+                android:textSize="@dimen/text_size_body"
                 android:singleLine="true"
                 android:background="@drawable/chip_unselected"
                 android:textColor="@color/text_secondary" />
@@ -131,7 +131,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:text="Top Rated"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_body"
                 android:singleLine="true"
                 android:background="@drawable/chip_unselected"
                 android:textColor="@color/text_secondary" />
@@ -146,7 +146,7 @@
         android:layout_marginTop="14dp"
         android:background="@color/border_color" />
 
-    <!-- ══ RELEASE YEAR ═════════════════════════════════════════════════════ -->
+    <!-- â•â• RELEASE YEAR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
         android:paddingBottom="10dp"
         android:text="Release Year"
         android:textColor="@color/text_primary"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_body"
         android:textStyle="bold"
         android:letterSpacing="0.05" />
 
@@ -182,7 +182,7 @@
         android:layout_marginTop="14dp"
         android:background="@color/border_color" />
 
-    <!-- ══ PRICE RANGE ══════════════════════════════════════════════════════ -->
+    <!-- â•â• PRICE RANGE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -191,7 +191,7 @@
         android:paddingBottom="6dp"
         android:text="Price Range"
         android:textColor="@color/text_primary"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_body"
         android:textStyle="bold"
         android:letterSpacing="0.05" />
 
@@ -205,9 +205,9 @@
         android:background="@drawable/chip_selected"
         android:paddingHorizontal="16dp"
         android:paddingVertical="6dp"
-        android:text="$0 – $3,000"
+        android:text="$0 â€“ $3,000"
         android:textColor="@color/white_fixed"
-        android:textSize="13sp"
+        android:textSize="@dimen/text_size_body"
         android:textStyle="bold" />
 
     <!-- Slider -->
@@ -235,7 +235,7 @@
             android:layout_alignParentStart="true"
             android:text="$0"
             android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_caption" />
 
         <TextView
             android:id="@+id/priceMaxLabel"
@@ -244,11 +244,11 @@
             android:layout_alignParentEnd="true"
             android:text="$3,000"
             android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_caption" />
 
     </RelativeLayout>
 
-    <!-- ══ APPLY BUTTON ═════════════════════════════════════════════════════ -->
+    <!-- â•â• APPLY BUTTON â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/applyButton"
         android:layout_width="match_parent"
@@ -258,7 +258,7 @@
         android:backgroundTint="@color/primary"
         android:text="Apply Filters"
         android:textColor="@color/white_fixed"
-        android:textSize="15sp"
+        android:textSize="@dimen/text_size_body_large"
         android:textStyle="bold"
         app:cornerRadius="14dp" />
 

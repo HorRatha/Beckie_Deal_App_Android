@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:text="Notification Title"
                 android:textColor="@color/text_primary"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 android:maxLines="1"
                 android:ellipsize="end" />
@@ -71,7 +71,7 @@
                 android:layout_marginTop="3dp"
                 android:text="Notification body text goes here"
                 android:textColor="@color/text_secondary"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_caption"
                 android:maxLines="2"
                 android:ellipsize="end" />
 
@@ -82,7 +82,7 @@
                 android:layout_marginTop="6dp"
                 android:text="2 hours ago"
                 android:textColor="@color/text_muted"
-                android:textSize="11sp" />
+                android:textSize="@dimen/text_size_caption" />
 
         </LinearLayout>
 

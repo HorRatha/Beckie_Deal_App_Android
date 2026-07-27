@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Single product row in order detail — matches cart item styling -->
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Single product row in order detail â€” matches cart item styling -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="Product Name"
                 android:textColor="@color/text_primary"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 android:maxLines="2"
                 android:ellipsize="end" />
@@ -63,7 +63,7 @@
                 android:layout_marginTop="4dp"
                 android:text="Qty: 1"
                 android:textColor="@color/text_muted"
-                android:textSize="12sp" />
+                android:textSize="@dimen/text_size_caption" />
 
         </LinearLayout>
 
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:text="$0.00"
             android:textColor="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold" />
 
     </LinearLayout>

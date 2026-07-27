@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- Single banner slide for ViewPager2 carousel -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -39,7 +39,7 @@
             android:paddingVertical="3dp"
             android:text="HOT DEAL"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
+            android:textSize="@dimen/text_size_overline"
             android:textStyle="bold"
             android:letterSpacing="0.05" />
 
@@ -51,7 +51,7 @@
             android:layout_marginTop="8dp"
             android:text="Summer Sale"
             android:textColor="#FFFFFF"
-            android:textSize="22sp"
+            android:textSize="@dimen/text_size_headline"
             android:textStyle="bold" />
 
         <!-- Subtitle -->
@@ -62,7 +62,7 @@
             android:layout_marginTop="4dp"
             android:text="Up to 50% off"
             android:textColor="#CCFFFFFF"
-            android:textSize="13sp" />
+            android:textSize="@dimen/text_size_body" />
 
     </LinearLayout>
 

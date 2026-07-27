@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,7 +14,7 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- ── Gradient hero header ────────────────────────────────────────── -->
+    <!-- â”€â”€ Gradient hero header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <View
         android:id="@+id/heroGradient"
         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                 android:layout_centerInParent="true"
                 android:text="Profile"
                 android:textColor="@color/white_fixed"
-                android:textSize="17sp"
+                android:textSize="@dimen/text_size_title_small"
                 android:fontFamily="sans-serif-medium" />
 
             <RelativeLayout
@@ -85,19 +85,19 @@
                     android:gravity="center"
                     android:text="3"
                     android:textColor="@color/white_fixed"
-                    android:textSize="8sp"
+                    android:textSize="@dimen/text_size_badge"
                     android:textStyle="bold"
                     android:visibility="visible" />
             </RelativeLayout>
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- ══ FIXED IDENTITY HEADER ═══════════════════════════════════════════
+    <!-- â•â• FIXED IDENTITY HEADER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
          Avatar + name + subtitle + auth buttons form ONE fixed block that sits
          half on the gradient, half on the white sheet below. It is a direct
          sibling in the outer ConstraintLayout (never inside the NestedScrollView),
          because ScrollView-family views clip overflowing content to their own
-         bounds even with clipChildren=false — regular ViewGroups don't have that
+         bounds even with clipChildren=false â€” regular ViewGroups don't have that
          limitation, so the negative-margin overlap renders correctly here.
          The whole block stays fixed together (not just the avatar alone), so
          nothing looks like it's floating independently while the settings list
@@ -135,7 +135,7 @@
                 android:layout_marginTop="14dp"
                 android:text="Guest User"
                 android:textColor="@color/text_primary"
-                android:textSize="22sp"
+                android:textSize="@dimen/text_size_headline"
                 android:textStyle="bold" />
 
             <TextView
@@ -144,11 +144,11 @@
                 android:layout_marginTop="4dp"
                 android:text="Sign in to sync your wishlist and orders"
                 android:textColor="@color/text_secondary"
-                android:textSize="13sp" />
+                android:textSize="@dimen/text_size_body" />
 
         </LinearLayout>
 
-        <!-- ══ AUTH BUTTONS ══════════════════════════════════════════ -->
+        <!-- â•â• AUTH BUTTONS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
                 android:text="Login"
                 android:textAllCaps="false"
                 android:textColor="@color/white_fixed"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
                 app:backgroundTint="@color/primary"
                 app:cornerRadius="16dp"
@@ -180,7 +180,7 @@
                 android:text="Register"
                 android:textAllCaps="false"
                 android:textColor="@color/primary"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
                 app:backgroundTint="@color/badge_bg"
                 app:cornerRadius="16dp"
@@ -190,7 +190,7 @@
 
     </LinearLayout>
 
-    <!-- ── Scrollable body — Account / Preferences / Legal settings lists only ── -->
+    <!-- â”€â”€ Scrollable body â€” Account / Preferences / Legal settings lists only â”€â”€ -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentScroll"
         android:layout_width="match_parent"
@@ -208,14 +208,14 @@
             android:paddingTop="8dp"
             android:paddingBottom="24dp">
 
-            <!-- ══ ACCOUNT SECTION (My Orders + Notifications) ═══════════ -->
+            <!-- â•â• ACCOUNT SECTION (My Orders + Notifications) â•â•â•â•â•â•â•â•â•â•â• -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="Account"
                 android:textColor="@color/text_secondary"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textStyle="bold"
                 android:letterSpacing="0.08" />
 
@@ -267,7 +267,7 @@
                             android:layout_marginStart="14dp"
                             android:text="My Orders"
                             android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/text_size_body_large" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -275,7 +275,7 @@
                             android:layout_marginEnd="6dp"
                             android:text="3 active"
                             android:textColor="@color/text_secondary"
-                            android:textSize="13sp" />
+                            android:textSize="@dimen/text_size_body" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -287,7 +287,7 @@
                     <View android:layout_width="match_parent" android:layout_height="1dp"
                         android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
 
-                    <!-- Notifications — Segmented Pill Toggle (ON / OFF) -->
+                    <!-- Notifications â€” Segmented Pill Toggle (ON / OFF) -->
                     <LinearLayout
                         android:id="@+id/notificationsRow"
                         android:layout_width="match_parent"
@@ -318,7 +318,7 @@
                             android:layout_marginStart="14dp"
                             android:text="Notifications"
                             android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/text_size_body_large" />
 
                         <!-- Modern Segmented Pill Toggle (ON / OFF) -->
                         <LinearLayout
@@ -370,7 +370,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ══ PREFERENCES SECTION ════════════════════════════════════ -->
+            <!-- â•â• PREFERENCES SECTION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -378,7 +378,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="Preferences"
                 android:textColor="@color/text_secondary"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textStyle="bold"
                 android:letterSpacing="0.08" />
 
@@ -430,7 +430,7 @@
                             android:layout_marginStart="14dp"
                             android:text="Language"
                             android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/text_size_body_large" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -438,7 +438,7 @@
                             android:layout_marginEnd="6dp"
                             android:text="English"
                             android:textColor="@color/text_secondary"
-                            android:textSize="13sp" />
+                            android:textSize="@dimen/text_size_body" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -450,7 +450,7 @@
                     <View android:layout_width="match_parent" android:layout_height="1dp"
                         android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
 
-                    <!-- Dark Mode — Segmented Pill Toggle -->
+                    <!-- Dark Mode â€” Segmented Pill Toggle -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
@@ -480,7 +480,7 @@
                             android:layout_marginStart="14dp"
                             android:text="Dark Mode"
                             android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/text_size_body_large" />
 
                         <!-- Modern Segmented Pill Toggle (Sun / Moon) -->
                         <LinearLayout
@@ -532,7 +532,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ══ LEGAL SECTION ══════════════════════════════════════════ -->
+            <!-- â•â• LEGAL SECTION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -540,7 +540,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="Legal"
                 android:textColor="@color/text_secondary"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_caption"
                 android:textStyle="bold"
                 android:letterSpacing="0.08" />
 
@@ -592,7 +592,7 @@
                             android:layout_marginStart="14dp"
                             android:text="About Us"
                             android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/text_size_body_large" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -638,7 +638,7 @@
                             android:layout_marginStart="14dp"
                             android:text="Privacy Policy"
                             android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/text_size_body_large" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -684,7 +684,7 @@
                             android:layout_marginStart="14dp"
                             android:text="Terms of Service"
                             android:textColor="@color/text_primary"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/text_size_body_large" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -696,7 +696,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ══ VERSION FOOTER ══════════════════════════════════════════ -->
+            <!-- â•â• VERSION FOOTER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -716,7 +716,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Beckie Deal"
                     android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_size_body"
                     android:textStyle="bold" />
 
                 <TextView
@@ -725,17 +725,17 @@
                     android:layout_marginTop="2dp"
                     android:text="Version 1.0.0"
                     android:textColor="@color/text_secondary"
-                    android:textSize="11sp" />
+                    android:textSize="@dimen/text_size_caption" />
 
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ══ FLOATING AVATAR ═══════════════════════════════════════════════
+    <!-- â•â• FLOATING AVATAR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
          Deliberately placed LAST in this ConstraintLayout (drawn after the
          hero, toolbar, header card and scrolling content) so it always
-         renders on top of everything with plain view stacking order — no
+         renders on top of everything with plain view stacking order â€” no
          dependency on elevation/shadow rendering, which was inconsistent
          on-device. A MaterialCardView is used instead of a shape drawable
          because its cardElevation/shadow already rendered correctly for the
@@ -787,7 +787,7 @@
             android:src="@drawable/ic_edit_profile" />
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- ── Floating bottom nav ─────────────────────────────────────────── -->
+    <!-- â”€â”€ Floating bottom nav â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <include layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

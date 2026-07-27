@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -47,7 +47,7 @@
                     android:layout_centerInParent="true"
                     android:text="Order Details"
                     android:textColor="@color/text_primary"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_title"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -98,7 +98,7 @@
                             android:layout_weight="1"
                             android:text="Order #BD-1001"
                             android:textColor="@color/text_primary"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_body_large"
                             android:textStyle="bold" />
 
                         <TextView
@@ -110,7 +110,7 @@
                             android:paddingVertical="4dp"
                             android:text="Processing"
                             android:textColor="@color/primary"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_size_caption"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -121,7 +121,7 @@
                         android:layout_marginTop="6dp"
                         android:text="Placed on Jul 13, 2026"
                         android:textColor="@color/text_muted"
-                        android:textSize="13sp" />
+                        android:textSize="@dimen/text_size_body" />
 
                 </LinearLayout>
 
@@ -134,7 +134,7 @@
                 android:layout_marginTop="24dp"
                 android:text="Order Status"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold" />
 
             <com.google.android.material.card.MaterialCardView
@@ -163,7 +163,7 @@
                 android:layout_marginTop="24dp"
                 android:text="Items"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -180,7 +180,7 @@
                 android:layout_marginTop="24dp"
                 android:text="Payment Summary"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold" />
 
             <com.google.android.material.card.MaterialCardView
@@ -210,14 +210,14 @@
                             android:layout_weight="1"
                             android:text="Subtotal"
                             android:textColor="@color/text_muted"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_body" />
                         <TextView
                             android:id="@+id/detailSubtotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$0.00"
                             android:textColor="@color/text_primary"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_body" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -231,13 +231,13 @@
                             android:layout_weight="1"
                             android:text="Shipping"
                             android:textColor="@color/text_muted"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_body" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$15.00"
                             android:textColor="@color/green_stock"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_body" />
                     </LinearLayout>
 
                     <View
@@ -256,7 +256,7 @@
                             android:layout_weight="1"
                             android:text="Total"
                             android:textColor="@color/text_primary"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_body_large"
                             android:textStyle="bold" />
                         <TextView
                             android:id="@+id/detailTotal"
@@ -264,7 +264,7 @@
                             android:layout_height="wrap_content"
                             android:text="$0.00"
                             android:textColor="@color/primary"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_body_large"
                             android:textStyle="bold" />
                     </LinearLayout>
 

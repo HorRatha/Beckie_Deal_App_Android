@@ -255,7 +255,7 @@ public class ProductDetailActivity extends BaseActivity {
         for (int i = 0; i < tags.size(); i++) {
             TextView chip = new TextView(this);
             chip.setText(tags.get(i));
-            chip.setTextSize(11f);
+            ScreenUtils.applyTextSize(chip, R.dimen.text_size_caption);
             chip.setTextColor(Color.parseColor("#F97316"));
             chip.setBackground(ContextCompat.getDrawable(this, R.drawable.badge_pill));
             chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
