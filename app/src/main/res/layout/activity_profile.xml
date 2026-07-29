@@ -251,7 +251,7 @@
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/brand_tint_bg_1">
+                            app:cardBackgroundColor="@android:color/transparent">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
@@ -302,7 +302,7 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/brand_tint_bg_3">
+                            app:cardBackgroundColor="@android:color/transparent">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
@@ -414,7 +414,7 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/brand_tint_bg_4">
+                            app:cardBackgroundColor="@android:color/transparent">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
@@ -464,7 +464,7 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/brand_tint_bg_5">
+                            app:cardBackgroundColor="@android:color/transparent">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
@@ -576,7 +576,7 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/brand_tint_bg_2">
+                            app:cardBackgroundColor="@android:color/transparent">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
@@ -622,7 +622,7 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/brand_tint_bg_6">
+                            app:cardBackgroundColor="@android:color/transparent">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
@@ -668,7 +668,7 @@
                             app:cardCornerRadius="11dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@color/brand_tint_bg_1">
+                            app:cardBackgroundColor="@android:color/transparent">
                             <ImageView
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
