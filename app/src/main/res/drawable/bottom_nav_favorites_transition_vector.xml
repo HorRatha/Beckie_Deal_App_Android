@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <group android:name="thin" android:pivotX="12" android:pivotY="12">
+        <path android:name="thinPath" android:fillColor="#00000000" android:strokeColor="@android:color/white"
+            android:strokeWidth="1.5" android:strokeLineCap="round" android:strokeLineJoin="round"
+            android:pathData="M12,20.5L10.7,19.3C5.4,14.5 2.5,11.8 2.5,8.4C2.5,5.7 4.6,3.5 7.4,3.5C9,3.5 10.6,4.3 12,5.6C13.4,4.3 15,3.5 16.6,3.5C19.4,3.5 21.5,5.7 21.5,8.4C21.5,11.8 18.6,14.5 13.3,19.3Z" />
+    </group>
+    <group android:name="bold" android:alpha="0" android:pivotX="12" android:pivotY="12" android:scaleX="0.72" android:scaleY="0.72" android:translateY="1.5">
+        <path android:fillColor="@android:color/white"
+            android:pathData="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
+    </group>
+</vector>

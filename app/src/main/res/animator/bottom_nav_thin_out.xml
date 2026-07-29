@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="400"
+    android:interpolator="@interpolator/bottom_nav_emphasized">
+    <propertyValuesHolder
+        android:propertyName="alpha"
+        android:valueType="floatType">
+        <keyframe android:fraction="0" android:value="1" />
+        <keyframe android:fraction="0.12" android:value="1" />
+        <keyframe android:fraction="0.48" android:value="0" />
+        <keyframe android:fraction="1" android:value="0" />
+    </propertyValuesHolder>
+    <propertyValuesHolder
+        android:propertyName="scaleX"
+        android:valueType="floatType">
+        <keyframe android:fraction="0" android:value="1" />
+        <keyframe android:fraction="0.48" android:value="0.82" />
+        <keyframe android:fraction="1" android:value="0.82" />
+    </propertyValuesHolder>
+    <propertyValuesHolder
+        android:propertyName="scaleY"
+        android:valueType="floatType">
+        <keyframe android:fraction="0" android:value="1" />
+        <keyframe android:fraction="0.48" android:value="0.82" />
+        <keyframe android:fraction="1" android:value="0.82" />
+    </propertyValuesHolder>
+    <propertyValuesHolder
+        android:propertyName="translateY"
+        android:valueType="floatType">
+        <keyframe android:fraction="0" android:value="0" />
+        <keyframe android:fraction="0.48" android:value="-0.7" />
+        <keyframe android:fraction="1" android:value="-0.7" />
+    </propertyValuesHolder>
+</objectAnimator>

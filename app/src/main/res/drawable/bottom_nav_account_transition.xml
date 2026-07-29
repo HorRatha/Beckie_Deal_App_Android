@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android" android:drawable="@drawable/bottom_nav_account_transition_vector">
+    <target android:name="thin" android:animation="@animator/bottom_nav_thin_out" />
+    <target android:name="thinPath" android:animation="@animator/bottom_nav_outline_collapse" />
+    <target android:name="bold" android:animation="@animator/bottom_nav_bold_in" />
+</animated-vector>

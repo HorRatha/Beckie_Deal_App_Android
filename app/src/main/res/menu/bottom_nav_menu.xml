@@ -3,31 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/bottom_nav_home_icon"
         android:title="Home"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/nav_categories"
-        android:icon="@drawable/category_search_24"
+        android:icon="@drawable/bottom_nav_categories_icon"
         android:title="Categories"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/nav_favorites"
-        android:icon="@drawable/ic_favorite"
+        android:icon="@drawable/bottom_nav_favorites_icon"
         android:title="Favorites"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/nav_cart"
-        android:icon="@drawable/shopping_cart_24"
+        android:icon="@drawable/bottom_nav_cart_icon"
         android:title="Cart"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/nav_account"
-        android:icon="@drawable/ic_account"
+        android:icon="@drawable/bottom_nav_account_icon"
         android:title="Account"
         app:showAsAction="never" />
 </menu>

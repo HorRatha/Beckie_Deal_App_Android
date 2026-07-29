@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="400"
+    android:interpolator="@interpolator/bottom_nav_emphasized">
+    <propertyValuesHolder
+        android:propertyName="trimPathStart"
+        android:valueType="floatType">
+        <keyframe android:fraction="0" android:value="0" />
+        <keyframe android:fraction="0.5" android:value="0.48" />
+        <keyframe android:fraction="1" android:value="0.48" />
+    </propertyValuesHolder>
+    <propertyValuesHolder
+        android:propertyName="trimPathEnd"
+        android:valueType="floatType">
+        <keyframe android:fraction="0" android:value="1" />
+        <keyframe android:fraction="0.5" android:value="0.52" />
+        <keyframe android:fraction="1" android:value="0.52" />
+    </propertyValuesHolder>
+    <propertyValuesHolder
+        android:propertyName="strokeWidth"
+        android:valueType="floatType">
+        <keyframe android:fraction="0" android:value="1.5" />
+        <keyframe android:fraction="0.28" android:value="1.85" />
+        <keyframe android:fraction="0.5" android:value="1.5" />
+        <keyframe android:fraction="1" android:value="1.5" />
+    </propertyValuesHolder>
+</objectAnimator>

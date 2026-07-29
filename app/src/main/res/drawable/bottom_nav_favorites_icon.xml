@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_nav_favorites_bold"
+        android:state_checked="true"
+        android:drawable="@drawable/ic_favorite" />
+    <item
+        android:id="@+id/bottom_nav_favorites_thin"
+        android:drawable="@drawable/ic_favorite_thin" />
+    <transition
+        android:fromId="@id/bottom_nav_favorites_thin"
+        android:toId="@id/bottom_nav_favorites_bold"
+        android:drawable="@drawable/bottom_nav_favorites_transition"
+        android:reversible="true" />
+</animated-selector>
