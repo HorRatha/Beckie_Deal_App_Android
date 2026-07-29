@@ -36,7 +36,24 @@
         <item name="cornerSize">50%</item>
     </style>
 
-    <style name="Theme.BeckieDealApp" parent="Base.Theme.BeckieDealApp" />
+    <style name="Theme.BeckieDealApp" parent="Base.Theme.BeckieDealApp">
+        <item name="buttonStyle">@style/Widget.App.Button</item>
+        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+    </style>
+
+    <!-- Shared capsule shape for all primary action buttons. -->
+    <style name="ShapeAppearance.App.Button.Pill" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.Material3.Button">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button.Pill</item>
+    </style>
+
+    <style name="Widget.App.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button.Pill</item>
+    </style>
 
     <!-- Tab text style for orders screen -->
     <style name="Tab.OrderText" parent="TextAppearance.Material3.TitleSmall">

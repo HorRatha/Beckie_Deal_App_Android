@@ -314,8 +314,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white_fixed"
                 android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold"
-                app:cornerRadius="16dp" />
+                android:textStyle="bold" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -532,12 +531,11 @@
                 app:icon="@drawable/ic_home"
                 app:iconTint="@color/white_fixed"
                 app:iconGravity="textStart"
-                app:iconPadding="8dp"
-                app:cornerRadius="16dp" />
+                app:iconPadding="8dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/viewOrdersButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.App.Button.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="12dp"
@@ -547,8 +545,7 @@
                 android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
                 app:strokeColor="@color/border_color"
-                app:strokeWidth="1dp"
-                app:cornerRadius="16dp" />
+                app:strokeWidth="1dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

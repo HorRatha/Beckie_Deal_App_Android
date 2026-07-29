@@ -140,7 +140,6 @@
                     android:layout_marginTop="24dp"
                     android:text="Explore Products"
                     android:textAllCaps="false"
-                    app:cornerRadius="12dp"
                     android:backgroundTint="@color/primary"/>
             </LinearLayout>
 

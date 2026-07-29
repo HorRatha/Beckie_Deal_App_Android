@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:gravity="center"
-                android:background="@drawable/form_field_background"
+                android:background="@drawable/button_secondary"
                 android:paddingHorizontal="16dp"
                 android:text="View Details"
                 android:textColor="@color/primary"

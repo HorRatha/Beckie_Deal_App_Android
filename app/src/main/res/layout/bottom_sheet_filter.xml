@@ -259,7 +259,6 @@
         android:text="Apply Filters"
         android:textColor="@color/white_fixed"
         android:textSize="@dimen/text_size_body_large"
-        android:textStyle="bold"
-        app:cornerRadius="14dp" />
+        android:textStyle="bold" />
 
 </LinearLayout>

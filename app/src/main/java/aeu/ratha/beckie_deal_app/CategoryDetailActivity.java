@@ -159,15 +159,16 @@ public class CategoryDetailActivity extends BaseActivity {
     }
 
     private void applyChipStyle(MaterialCardView card, TextView text, boolean selected) {
-        if (selected) {
-            card.setCardBackgroundColor(Color.parseColor("#F97316"));
-            card.setStrokeWidth(0);
-            if (text != null) text.setTextColor(Color.WHITE);
-        } else {
-            card.setCardBackgroundColor(Color.WHITE);
-            card.setStrokeWidth(1);
-            card.setStrokeColor(Color.parseColor("#EEEEEE"));
-            if (text != null) text.setTextColor(Color.parseColor("#555555"));
+        card.setSelected(selected);
+        card.setCardBackgroundColor(ContextCompat.getColor(
+                this, selected ? R.color.primary : R.color.surface));
+        card.setStrokeWidth(selected
+                ? 0
+                : getResources().getDimensionPixelSize(R.dimen.chip_stroke_width));
+        card.setStrokeColor(ContextCompat.getColor(this, R.color.border_color));
+        if (text != null) {
+            text.setTextColor(ContextCompat.getColor(
+                    this, selected ? R.color.on_primary : R.color.text_secondary));
         }
     }
 

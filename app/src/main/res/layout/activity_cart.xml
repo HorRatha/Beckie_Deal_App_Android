@@ -141,7 +141,6 @@
                     android:layout_marginTop="24dp"
                     android:text="Start Shopping"
                     android:textAllCaps="false"
-                    app:cornerRadius="12dp"
                     android:backgroundTint="@color/primary"/>
             </LinearLayout>
 
@@ -206,8 +205,7 @@
                 app:icon="@drawable/shopping_cart_checkout_24"
                 app:iconTint="@color/white_fixed"
                 app:iconGravity="textStart"
-                app:iconPadding="8dp"
-                app:cornerRadius="16dp" />
+                app:iconPadding="8dp" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

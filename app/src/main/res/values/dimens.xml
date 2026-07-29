@@ -61,6 +61,13 @@
     <dimen name="card_inner_padding">12dp</dimen>
     <dimen name="section_spacing">24dp</dimen>
 
+    <!-- Shared capsule geometry for compact filter and category chips. -->
+    <dimen name="chip_pill_radius">20dp</dimen>
+    <dimen name="chip_stroke_width">1dp</dimen>
+
+    <!-- Oversized radius is clamped to half the button height, creating a capsule. -->
+    <dimen name="button_pill_radius">999dp</dimen>
+
     <!-- Bottom nav pill margins -->
     <dimen name="bottom_nav_side_margin">0dp</dimen>
     <dimen name="bottom_nav_bottom_margin">0dp</dimen>

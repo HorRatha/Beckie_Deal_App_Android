@@ -167,7 +167,6 @@
                 android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
                 app:backgroundTint="@color/primary"
-                app:cornerRadius="16dp"
                 app:elevation="2dp"
                 app:strokeWidth="0dp" />
 
@@ -183,7 +182,6 @@
                 android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
                 app:backgroundTint="@color/badge_bg"
-                app:cornerRadius="16dp"
                 app:strokeWidth="0dp" />
 
         </LinearLayout>

@@ -534,8 +534,7 @@
                     app:icon="@drawable/add_shopping_cart_24"
                     app:iconTint="@color/white_fixed"
                     app:iconGravity="textStart"
-                    app:iconPadding="8dp"
-                    app:cornerRadius="14dp" />
+                    app:iconPadding="8dp" />
 
             </LinearLayout>
 
