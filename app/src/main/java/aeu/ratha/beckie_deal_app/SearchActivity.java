@@ -79,11 +79,12 @@ public class SearchActivity extends BaseActivity {
         viewModeIcon = findViewById(R.id.viewModeIcon);
         View viewModeBtn = findViewById(R.id.viewModeButton);
         updateViewModeIcon();
-        if (viewModeBtn != null) viewModeBtn.setOnClickListener(v -> {
-            ViewModePreferences.setListView(this, !ViewModePreferences.isListView(this));
-            updateViewModeIcon();
-            performSearch(lastQuery);
-        });
+        if (viewModeBtn != null) viewModeBtn.setOnClickListener(v ->
+                ViewModeAnimator.transform(resultsGrid, viewModeBtn, viewModeIcon, () -> {
+                    ViewModePreferences.setListView(this, !ViewModePreferences.isListView(this));
+                    updateViewModeIcon();
+                    performSearch(lastQuery);
+                }));
         UiAnimations.pressBounce(viewModeBtn);
 
         // Live search as the user types

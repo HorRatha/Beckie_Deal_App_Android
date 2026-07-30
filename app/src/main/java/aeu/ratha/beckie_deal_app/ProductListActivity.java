@@ -75,11 +75,12 @@ public class ProductListActivity extends BaseActivity
         viewModeIcon = findViewById(R.id.viewModeIcon);
         View viewModeBtn = findViewById(R.id.viewModeButton);
         updateViewModeIcon();
-        if (viewModeBtn != null) viewModeBtn.setOnClickListener(v -> {
-            ViewModePreferences.setListView(this, !ViewModePreferences.isListView(this));
-            updateViewModeIcon();
-            applyAndRender();
-        });
+        if (viewModeBtn != null) viewModeBtn.setOnClickListener(v ->
+                ViewModeAnimator.transform(productsGrid, viewModeBtn, viewModeIcon, () -> {
+                    ViewModePreferences.setListView(this, !ViewModePreferences.isListView(this));
+                    updateViewModeIcon();
+                    applyAndRender();
+                }));
 
         setupBottomNavigation();
         applyAndRender();

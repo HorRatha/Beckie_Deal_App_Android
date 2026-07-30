@@ -483,16 +483,18 @@ public class MainActivity extends BaseActivity {
         View viewModeBtn = findViewById(R.id.viewModeButton);
         updateViewModeIcon();
         if (viewModeBtn != null) viewModeBtn.setOnClickListener(v -> {
-            boolean newListView = !ViewModePreferences.isListView(this);
-            ViewModePreferences.setListView(this, newListView);
-            updateViewModeIcon();
-
             RecyclerView productsGrid = findViewById(R.id.productsGrid);
-            if (productsGrid != null) {
-                GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
-                if (layoutManager != null) layoutManager.setSpanCount(newListView ? 1 : 2);
-            }
-            if (productAdapter != null) productAdapter.setListMode(newListView);
+            ViewModeAnimator.transform(productsGrid, viewModeBtn, viewModeIcon, () -> {
+                boolean newListView = !ViewModePreferences.isListView(this);
+                ViewModePreferences.setListView(this, newListView);
+                updateViewModeIcon();
+
+                if (productsGrid != null) {
+                    GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
+                    if (layoutManager != null) layoutManager.setSpanCount(newListView ? 1 : 2);
+                }
+                if (productAdapter != null) productAdapter.setListMode(newListView);
+            });
         });
         UiAnimations.pressBounce(viewModeBtn);
     }
