@@ -44,7 +44,7 @@ public final class BottomNavHelper {
         // Set initial selected state (no animation on first load)
         selectItem(activity, currentItem, false);
 
-        // Wire click handlers
+        // Wire click handlers with animation
         homeFrame.setOnClickListener(v -> {
             if (currentItem != NavItem.HOME) {
                 activity.startActivity(new Intent(activity, MainActivity.class));
@@ -111,6 +111,8 @@ public final class BottomNavHelper {
 
         int selectedIndex = item.ordinal();
 
+        if (animate && !ValueAnimator.areAnimatorsEnabled()) animate = false;
+
         for (int i = 0; i < ids.length; i++) {
             View itemFrame = ((Activity) context).findViewById(ids[i]);
             View pill = ((Activity) context).findViewById(pillIds[i]);
@@ -122,107 +124,116 @@ public final class BottomNavHelper {
             boolean isSelected = (i == selectedIndex);
             pill.setSelected(isSelected);
 
-            // Adjust layout weight for dynamic clustering with balanced distribution
+            // Set weight immediately (no animation on weight to avoid jank)
             LinearLayout.LayoutParams itemParams = (LinearLayout.LayoutParams) itemFrame.getLayoutParams();
-            if (isSelected) {
-                // Selected item gets more space to display full label
-                itemParams.weight = 1.5f;
-            } else {
-                // Unselected items share remaining space equally for better balance
-                itemParams.weight = 1.0f;
-            }
+            itemParams.weight = isSelected ? 1.5f : 1.0f;
             itemFrame.setLayoutParams(itemParams);
 
             if (isSelected) {
-                // Selected: show label, orange icon (bold), orange pill bg
+                // Selected: show label with slide animation, orange icon (bold), orange pill bg
                 icon.setImageTintList(ContextCompat.getColorStateList(context, R.color.nav_glass_active));
                 label.setTextColor(ContextCompat.getColor(context, R.color.nav_glass_active));
                 // Trigger checked state so animated-selector plays thin→bold transition
                 icon.setImageState(new int[]{android.R.attr.state_checked}, true);
 
-                if (animate && !ValueAnimator.areAnimatorsEnabled()) animate = false;
-
                 if (animate) {
-                    animateLabelIn(label);
+                    animateLabelSlideIn(label);
                 } else {
                     label.setVisibility(View.VISIBLE);
                     label.setAlpha(1f);
                     label.setScaleX(1f);
                     label.setScaleY(1f);
-                    // Set pill to wrap content so it expands
-                    ViewGroup.LayoutParams params = pill.getLayoutParams();
-                    params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    pill.setLayoutParams(params);
+                    label.setTranslationX(0f);
                 }
             } else {
-                // Unselected: hide label, gray icon (thin)
+                // Unselected: hide label with slide animation, gray icon (thin)
                 icon.setImageTintList(ContextCompat.getColorStateList(context, R.color.nav_glass_inactive));
                 // Clear checked state so animated-selector plays bold→thin transition
                 icon.setImageState(new int[]{-android.R.attr.state_checked}, true);
 
                 if (animate) {
-                    animateLabelOut(label);
+                    animateLabelSlideOut(label);
                 } else {
                     label.setVisibility(View.GONE);
                     label.setAlpha(0f);
-                    // Set pill to fixed icon-only width
-                    ViewGroup.LayoutParams params = pill.getLayoutParams();
-                    params.width = (int) (46 * context.getResources().getDisplayMetrics().density);
-                    pill.setLayoutParams(params);
+                    label.setTranslationX(0f);
                 }
             }
         }
     }
 
     /**
-     * Animate label fading/scaling in. The pill expands automatically via wrap_content.
+     * Animate label sliding in from left with fade and hardware acceleration.
      */
-    private static void animateLabelIn(TextView label) {
+    private static void animateLabelSlideIn(TextView label) {
         label.setVisibility(View.VISIBLE);
         label.setAlpha(0f);
-        label.setScaleX(0.7f);
-        label.setScaleY(0.7f);
+        label.setScaleX(0.9f);
+        label.setScaleY(0.9f);
+        label.setTranslationX(-12f);
+        
+        // Enable hardware acceleration for smooth animation
+        label.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(label, "alpha", 0f, 1f);
         alphaAnim.setDuration(200L);
-        alphaAnim.setStartDelay(40L);
+        alphaAnim.setStartDelay(20L);
+        alphaAnim.setInterpolator(new DecelerateInterpolator(1.0f));
 
-        ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(label, "scaleX", 0.7f, 1.04f, 1f);
-        scaleXAnim.setDuration(240L);
-        scaleXAnim.setStartDelay(20L);
-        scaleXAnim.setInterpolator(new OvershootInterpolator(1.2f));
+        ObjectAnimator translateAnim = ObjectAnimator.ofFloat(label, "translationX", -12f, 0f);
+        translateAnim.setDuration(240L);
+        translateAnim.setInterpolator(new DecelerateInterpolator(1.5f));
 
-        ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(label, "scaleY", 0.7f, 1.04f, 1f);
-        scaleYAnim.setDuration(240L);
-        scaleYAnim.setStartDelay(20L);
-        scaleYAnim.setInterpolator(new OvershootInterpolator(1.2f));
+        ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(label, "scaleX", 0.9f, 1f);
+        scaleXAnim.setDuration(220L);
+        scaleXAnim.setInterpolator(new DecelerateInterpolator(1.2f));
+
+        ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(label, "scaleY", 0.9f, 1f);
+        scaleYAnim.setDuration(220L);
+        scaleYAnim.setInterpolator(new DecelerateInterpolator(1.2f));
 
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(alphaAnim, scaleXAnim, scaleYAnim);
+        set.playTogether(alphaAnim, translateAnim, scaleXAnim, scaleYAnim);
+        set.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                label.setLayerType(View.LAYER_TYPE_NONE, null);
+            }
+        });
         set.start();
     }
 
     /**
-     * Animate label fading/scaling out. The pill collapses automatically via wrap_content.
+     * Animate label sliding out to left with fade and hardware acceleration.
      */
-    private static void animateLabelOut(TextView label) {
+    private static void animateLabelSlideOut(TextView label) {
+        // Enable hardware acceleration for smooth animation
+        label.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        
         ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(label, "alpha", 1f, 0f);
         alphaAnim.setDuration(160L);
+        alphaAnim.setInterpolator(new DecelerateInterpolator(1.0f));
 
-        ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(label, "scaleX", 1f, 0.7f);
-        scaleXAnim.setDuration(180L);
-        scaleXAnim.setInterpolator(new DecelerateInterpolator(1.2f));
+        ObjectAnimator translateAnim = ObjectAnimator.ofFloat(label, "translationX", 0f, -10f);
+        translateAnim.setDuration(180L);
+        translateAnim.setInterpolator(new DecelerateInterpolator(1.2f));
 
-        ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(label, "scaleY", 1f, 0.7f);
-        scaleYAnim.setDuration(180L);
-        scaleYAnim.setInterpolator(new DecelerateInterpolator(1.2f));
+        ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(label, "scaleX", 1f, 0.9f);
+        scaleXAnim.setDuration(160L);
+        scaleXAnim.setInterpolator(new DecelerateInterpolator(1.0f));
+
+        ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(label, "scaleY", 1f, 0.9f);
+        scaleYAnim.setDuration(160L);
+        scaleYAnim.setInterpolator(new DecelerateInterpolator(1.0f));
 
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(alphaAnim, scaleXAnim, scaleYAnim);
+        set.playTogether(alphaAnim, translateAnim, scaleXAnim, scaleYAnim);
         set.addListener(new android.animation.AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
                 label.setVisibility(View.GONE);
+                label.setTranslationX(0f);
+                label.setLayerType(View.LAYER_TYPE_NONE, null);
             }
         });
         set.start();
