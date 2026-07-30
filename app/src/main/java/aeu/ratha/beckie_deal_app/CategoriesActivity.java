@@ -260,15 +260,16 @@ public class CategoriesActivity extends BaseActivity {
                 R.drawable.devices_wearables_24, false));
 
         allCategoriesGrid.removeAllViews();
-        for (CategoryItem item : categories) {
+        for (int i = 0; i < categories.size(); i++) {
+            CategoryItem item = categories.get(i);
             View view = LayoutInflater.from(this)
                     .inflate(R.layout.item_category_grid, allCategoriesGrid, false);
 
-            ImageView bgImage  = view.findViewById(R.id.categoryBgImage);
-            TextView  title    = view.findViewById(R.id.categoryTitle);
-            TextView  count    = view.findViewById(R.id.categoryItemsCount);
-            ImageView icon     = view.findViewById(R.id.categorySmallIcon);
-            View      hotBadge = view.findViewById(R.id.hotBadge);
+            ImageView bgImage         = view.findViewById(R.id.categoryBgImage);
+            TextView  title           = view.findViewById(R.id.categoryTitle);
+            TextView  count           = view.findViewById(R.id.categoryItemsCount);
+            ImageView icon            = view.findViewById(R.id.categorySmallIcon);
+            View      hotBadge        = view.findViewById(R.id.hotBadge);
 
             title.setText(item.name);
             count.setText(item.count);

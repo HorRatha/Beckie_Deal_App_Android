@@ -401,9 +401,33 @@ public class MainActivity extends BaseActivity {
             MaterialCardView categoryCard = categoryView.findViewById(R.id.categoryCard);
             ImageView categoryIcon = categoryView.findViewById(R.id.categoryIcon);
             TextView categoryName = categoryView.findViewById(R.id.categoryName);
+            ImageView decorativeIcon = categoryView.findViewById(R.id.categoryDecorativeIcon);
 
             categoryIcon.setImageResource(category.iconResId);
             categoryName.setText(category.name);
+
+            // Assign category-specific accent icon
+            if (decorativeIcon != null) {
+                int accentIconRes = R.drawable.decorative_sparkle_outline; // default
+                switch (category.name) {
+                    case "Laptops":
+                        accentIconRes = R.drawable.category_accent_laptop;
+                        break;
+                    case "Phones":
+                        accentIconRes = R.drawable.category_accent_phone;
+                        break;
+                    case "Accessories":
+                        accentIconRes = R.drawable.category_accent_accessories;
+                        break;
+                    case "Gaming":
+                        accentIconRes = R.drawable.category_accent_gaming;
+                        break;
+                    case "Wearables":
+                        accentIconRes = R.drawable.category_accent_wearables;
+                        break;
+                }
+                decorativeIcon.setImageResource(accentIconRes);
+            }
 
             if (category.isHighlighted) {
                 categoryCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.badge_bg));

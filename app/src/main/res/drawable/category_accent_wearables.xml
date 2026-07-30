@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Smartwatch outline -->
+    <path
+        android:strokeColor="@color/primary"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M8,7 L16,7 C17.1,7 18,7.9 18,9 L18,15 C18,16.1 17.1,17 16,17 L8,17 C6.9,17 6,16.1 6,15 L6,9 C6,7.9 6.9,7 8,7 Z"
+        android:fillColor="#00000000" />
+    <!-- Screen -->
+    <path
+        android:strokeColor="@color/primary"
+        android:strokeWidth="1"
+        android:pathData="M8.5,9 L8.5,15 L15.5,15 L15.5,9 Z"
+        android:fillColor="#00000000" />
+    <!-- Band top -->
+    <path
+        android:strokeColor="@color/primary"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:pathData="M10,7 L10,4 L14,4 L14,7"
+        android:fillColor="#00000000" />
+    <!-- Band bottom -->
+    <path
+        android:strokeColor="@color/primary"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:pathData="M10,17 L10,20 L14,20 L14,17"
+        android:fillColor="#00000000" />
+</vector>

@@ -14,42 +14,60 @@
     app:cardBackgroundColor="@color/surface"
     app:rippleColor="@color/badge_bg">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="10dp">
+        android:layout_height="wrap_content">
 
-        <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/category_icon_bg">
-
-            <ImageView
-                android:id="@+id/categoryIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_gallery"
-                app:tint="@color/primary" />
-
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/categoryName"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="12dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Category"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_size_body"
-            android:textStyle="bold" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="10dp">
 
-    </LinearLayout>
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/category_icon_bg">
+
+                <ImageView
+                    android:id="@+id/categoryIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/ic_menu_gallery"
+                    app:tint="@color/primary" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/categoryName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Category"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_size_body"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Decorative icon - bottom right, half visible -->
+        <ImageView
+            android:id="@+id/categoryDecorativeIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="-12dp"
+            android:layout_marginBottom="-12dp"
+            android:src="@drawable/decorative_sparkle_outline"
+            android:scaleType="fitEnd"
+            android:alpha="0.3" />
+
+    </FrameLayout>
 
 </com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Headphones -->
+    <path
+        android:strokeColor="@color/primary"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M12,3 C7.5,3 4,6.5 4,11 L4,17 L6,17 C6.6,17 7,16.6 7,16 L7,13 C7,12.4 6.6,12 6,12 L5,12 L5,11 C5,7 8,4 12,4 C16,4 19,7 19,11 L19,12 L18,12 C17.4,12 17,12.4 17,13 L17,16 C17,16.6 17.4,17 18,17 L20,17 L20,11 C20,6.5 16.5,3 12,3 Z"
+        android:fillColor="#00000000" />
+    <!-- Cable -->
+    <path
+        android:strokeColor="@color/primary"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:pathData="M6,17 L6,19 C6,20.1 6.9,21 8,21 L10,21"
+        android:fillColor="#00000000" />
+</vector>
