@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
@@ -120,6 +121,17 @@ public final class BottomNavHelper {
 
             boolean isSelected = (i == selectedIndex);
             pill.setSelected(isSelected);
+
+            // Adjust layout weight for dynamic clustering with balanced distribution
+            LinearLayout.LayoutParams itemParams = (LinearLayout.LayoutParams) itemFrame.getLayoutParams();
+            if (isSelected) {
+                // Selected item gets more space to display full label
+                itemParams.weight = 1.5f;
+            } else {
+                // Unselected items share remaining space equally for better balance
+                itemParams.weight = 1.0f;
+            }
+            itemFrame.setLayoutParams(itemParams);
 
             if (isSelected) {
                 // Selected: show label, orange icon (bold), orange pill bg

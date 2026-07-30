@@ -26,9 +26,9 @@
         android:layout_height="60dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:weightSum="5">
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:weightSum="5.5">
 
         <!-- Home -->
         <LinearLayout
@@ -48,8 +48,8 @@
                 android:layout_height="34dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:background="@drawable/nav_pill_background">
 
                 <ImageView
@@ -63,7 +63,7 @@
                     android:id="@+id/navLabelHome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="5dp"
                     android:text="Home"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -91,8 +91,8 @@
                 android:layout_height="34dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:background="@drawable/nav_pill_background">
 
                 <ImageView
@@ -106,7 +106,7 @@
                     android:id="@+id/navLabelCategories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="5dp"
                     android:text="Categories"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -135,8 +135,8 @@
                 android:layout_height="34dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:background="@drawable/nav_pill_background">
 
                 <ImageView
@@ -150,7 +150,7 @@
                     android:id="@+id/navLabelFavorites"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="5dp"
                     android:text="Favorites"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -179,8 +179,8 @@
                 android:layout_height="34dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:background="@drawable/nav_pill_background">
 
                 <ImageView
@@ -194,7 +194,7 @@
                     android:id="@+id/navLabelCart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="5dp"
                     android:text="Cart"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -222,8 +222,8 @@
                 android:layout_height="34dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:background="@drawable/nav_pill_background">
 
                 <ImageView
@@ -237,7 +237,7 @@
                     android:id="@+id/navLabelAccount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="5dp"
                     android:text="Account"
                     android:textSize="11sp"
                     android:textStyle="bold"
