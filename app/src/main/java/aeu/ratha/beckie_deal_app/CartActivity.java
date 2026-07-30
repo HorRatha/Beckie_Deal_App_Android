@@ -184,54 +184,11 @@ public class CartActivity extends BaseActivity {
     }
 
     private void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
-        if (bottomNav == null) return;
-
-        bottomNav.setBackground(null);
-        bottomNav.setBackgroundTintList(null);
-        bottomNav.setItemActiveIndicatorColor(android.content.res.ColorStateList.valueOf(
-                ContextCompat.getColor(this, R.color.nav_indicator_fill)));
-
-        android.content.res.ColorStateList navTint =
-                ContextCompat.getColorStateList(this, R.color.bottom_nav_color);
-        if (navTint != null) { bottomNav.setItemIconTintList(navTint); bottomNav.setItemTextColor(navTint); }
-
-        bottomNav.setSelectedItemId(R.id.nav_cart);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
-                startActivity(new Intent(this, MainActivity.class));
-                overridePendingTransition(0, 0); finish(); return true;
-            } else if (itemId == R.id.nav_categories) {
-                startActivity(new Intent(this, CategoriesActivity.class));
-                overridePendingTransition(0, 0); finish(); return true;
-            } else if (itemId == R.id.nav_favorites) {
-                startActivity(new Intent(this, FavoritesActivity.class));
-                overridePendingTransition(0, 0); finish(); return true;
-            } else if (itemId == R.id.nav_cart) {
-                return true;
-            } else if (itemId == R.id.nav_account) {
-                startActivity(new Intent(this, ProfileActivity.class));
-                overridePendingTransition(0, 0); finish(); return true;
-            }
-            return false;
-        });
-
+        BottomNavHelper.setup(this, BottomNavHelper.NavItem.CART);
         updateCartBadge();
     }
 
     private void updateCartBadge() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
-        if (bottomNav == null) return;
-        int count = CartManager.getInstance().getTotalUnits();
-        if (count > 0) {
-            com.google.android.material.badge.BadgeDrawable badge = bottomNav.getOrCreateBadge(R.id.nav_cart);
-            badge.setVisible(true);
-            badge.setNumber(count);
-            badge.setBackgroundColor(ContextCompat.getColor(this, R.color.red_error));
-            badge.setBadgeTextColor(ContextCompat.getColor(this, R.color.white_fixed));
-        } else {
-            bottomNav.removeBadge(R.id.nav_cart);
-        }
+        // Cart badge not yet implemented for custom nav - TODO add badge view to layout
     }
 }

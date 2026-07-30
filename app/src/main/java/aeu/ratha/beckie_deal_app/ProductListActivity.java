@@ -324,42 +324,7 @@ public class ProductListActivity extends BaseActivity
     // ── Bottom navigation ─────────────────────────────────────────────────────
 
     private void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
-        if (bottomNav == null) return;
-
-        bottomNav.setBackground(null);
-        bottomNav.setBackgroundTintList(null);
-        bottomNav.setItemActiveIndicatorColor(android.content.res.ColorStateList.valueOf(
-                ContextCompat.getColor(this, R.color.nav_indicator_fill)));
-
-        android.content.res.ColorStateList navTint =
-                ContextCompat.getColorStateList(this, R.color.bottom_nav_color);
-        if (navTint != null) { bottomNav.setItemIconTintList(navTint); bottomNav.setItemTextColor(navTint); }
-
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if      (id == R.id.nav_home)       startActivity(new Intent(this, MainActivity.class));
-            else if (id == R.id.nav_categories) startActivity(new Intent(this, CategoriesActivity.class));
-            else if (id == R.id.nav_favorites)  startActivity(new Intent(this, FavoritesActivity.class));
-            else if (id == R.id.nav_cart)       startActivity(new Intent(this, CartActivity.class));
-            else if (id == R.id.nav_account)    startActivity(new Intent(this, ProfileActivity.class));
-            else return true;
-            overridePendingTransition(0, 0);
-            finish();
-            return true;
-        });
-
-        // Cart badge
-        int cartCount = CartManager.getInstance().getTotalUnits();
-        if (cartCount > 0) {
-            com.google.android.material.badge.BadgeDrawable badge = bottomNav.getOrCreateBadge(R.id.nav_cart);
-            badge.setVisible(true);
-            badge.setNumber(cartCount);
-            badge.setBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.red_error));
-            badge.setBadgeTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.white_fixed));
-        } else {
-            bottomNav.removeBadge(R.id.nav_cart);
-        }
+        BottomNavHelper.setup(this, BottomNavHelper.NavItem.HOME);
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

@@ -13,21 +13,23 @@
     </style>
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="itemIconSize">26dp</item>
+        <item name="itemIconSize">22dp</item>
         <item name="itemIconTint">@color/bottom_nav_color</item>
         <item name="itemTextColor">@color/bottom_nav_color</item>
         <!-- Suppress Material3's internal surface tint so our pill bg is the only layer -->
         <item name="android:background">@null</item>
         <item name="backgroundTint">@null</item>
-        <item name="labelVisibilityMode">unlabeled</item>
+        <item name="labelVisibilityMode">selected</item>
         <item name="itemActiveIndicatorStyle">@style/Widget.App.BottomNav.ActiveIndicator</item>
+        <item name="itemPaddingTop">4dp</item>
+        <item name="itemPaddingBottom">4dp</item>
     </style>
 
     <!-- Clean pill indicator — solid orange tint, no border noise -->
     <style name="Widget.App.BottomNav.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/nav_indicator_fill</item>
-        <item name="android:width">52dp</item>
-        <item name="android:height">40dp</item>
+        <item name="android:width">80dp</item>
+        <item name="android:height">36dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.App.BottomNav.ActiveIndicator</item>
     </style>
 
