@@ -61,6 +61,12 @@
     <color name="dark_bg">#1E293B</color>
     <color name="dark_text">#94A3B8</color>
 
+    <!-- Order Status Colors (Light Mode) -->
+    <color name="status_processing">#F97316</color>
+    <color name="status_shipped">#3B82F6</color>
+    <color name="status_delivered">#22C55E</color>
+    <color name="status_cancelled">#EF4444</color>
+
     <!-- Compatibility -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>

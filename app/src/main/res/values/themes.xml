@@ -59,8 +59,9 @@
 
     <!-- Tab text style for orders screen -->
     <style name="Tab.OrderText" parent="TextAppearance.Material3.TitleSmall">
-        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="textAllCaps">false</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 </resources>

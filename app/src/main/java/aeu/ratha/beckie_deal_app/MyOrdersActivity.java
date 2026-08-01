@@ -135,26 +135,28 @@ public class MyOrdersActivity extends BaseActivity {
         statusBadge.setTextColor(statusColor);
         GradientDrawable badgeBg = new GradientDrawable();
         badgeBg.setShape(GradientDrawable.RECTANGLE);
-        badgeBg.setCornerRadius(dpToPx(20));
-        badgeBg.setColor(setAlpha(statusColor, 0.1f));
+        badgeBg.setCornerRadius(dpToPx(24));
+        badgeBg.setColor(setAlpha(statusColor, 0.12f));
         statusBadge.setBackground(badgeBg);
 
-        // Thumbnails — show up to 3 product images
+        // Thumbnails — show up to 4 product images with improved design
         thumbnailStrip.removeAllViews();
-        int maxThumbs = Math.min(order.items.size(), 3);
+        int maxThumbs = Math.min(order.items.size(), 4);
         for (int i = 0; i < maxThumbs; i++) {
             ImageView thumb = createThumbnail(order.items.get(i).productImageUrl);
             thumbnailStrip.addView(thumb);
         }
-        if (order.items.size() > 3) {
+        if (order.items.size() > 4) {
             TextView moreText = new TextView(this);
-            moreText.setText("+" + (order.items.size() - 3));
-            moreText.setTextColor(getColor(R.color.text_muted));
-            ScreenUtils.applyTextSize(moreText, R.dimen.text_size_caption);
+            moreText.setText("+" + (order.items.size() - 4));
+            moreText.setTextColor(getColor(R.color.text_secondary));
+            moreText.setTextSize(14);
+            moreText.setTypeface(null, android.graphics.Typeface.BOLD);
+            ScreenUtils.applyTextSize(moreText, R.dimen.text_size_body);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMarginStart(dpToPx(8));
+            lp.setMarginStart(dpToPx(12));
             moreText.setLayoutParams(lp);
             moreText.setGravity(android.view.Gravity.CENTER_VERTICAL);
             thumbnailStrip.addView(moreText);
@@ -166,52 +168,29 @@ public class MyOrdersActivity extends BaseActivity {
         UiAnimations.pressBounce(card);
 
         ordersList.addView(card);
+        UiAnimations.fadeSlideUp(card, ordersList.getChildCount() * 40);
     }
 
     private ImageView createThumbnail(String imageUrl) {
-        MaterialCardView wrapper = new MaterialCardView(this);
-        LinearLayout.LayoutParams wrapperLp = new LinearLayout.LayoutParams(
-                dpToPx(48), dpToPx(48));
-        wrapperLp.setMarginEnd(dpToPx(8));
-        wrapper.setLayoutParams(wrapperLp);
-        wrapper.setRadius(dpToPx(10));
-        wrapper.setCardElevation(0);
-        wrapper.setCardBackgroundColor(getColor(R.color.card_bg_secondary));
-
-        ImageView img = new ImageView(this);
-        img.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));
-        img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        img.setPadding(dpToPx(4), dpToPx(4), dpToPx(4), dpToPx(4));
-
-        Glide.with(this)
-                .load(imageUrl)
-                .placeholder(R.drawable.placeholder_image)
-                .into(img);
-
-        wrapper.addView(img);
-
-        // We can't add MaterialCardView directly to a LinearLayout expecting ImageView,
-        // so we use a FrameLayout wrapper approach — but simpler: just return the image
-        // Actually, let's just create a simple ImageView with rounded background
         ImageView thumb = new ImageView(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dpToPx(48), dpToPx(48));
-        lp.setMarginEnd(dpToPx(8));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dpToPx(56), dpToPx(56));
+        lp.setMarginEnd(dpToPx(10));
         thumb.setLayoutParams(lp);
-        thumb.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        thumb.setPadding(dpToPx(6), dpToPx(6), dpToPx(6), dpToPx(6));
+        thumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        thumb.setPadding(dpToPx(4), dpToPx(4), dpToPx(4), dpToPx(4));
 
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.RECTANGLE);
-        bg.setCornerRadius(dpToPx(10));
+        bg.setCornerRadius(dpToPx(12));
         bg.setColor(getColor(R.color.card_bg_secondary));
+        bg.setStroke(dpToPx(1), getColor(R.color.border_color));
         thumb.setBackground(bg);
         thumb.setClipToOutline(true);
 
         Glide.with(this)
                 .load(imageUrl)
                 .placeholder(R.drawable.placeholder_image)
+                .centerCrop()
                 .into(thumb);
 
         return thumb;
