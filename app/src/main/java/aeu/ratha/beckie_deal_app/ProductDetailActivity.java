@@ -78,7 +78,7 @@ public class ProductDetailActivity extends BaseActivity {
 
     private void updateCartUI() {
         // Cart badge - TODO: add badge view to custom nav layout
-        Toast.makeText(this, "Added to cart", Toast.LENGTH_SHORT).show();
+        // Update cart count badge when implemented
     }
 
     // ── Product data ──────────────────────────────────────────────────────────
