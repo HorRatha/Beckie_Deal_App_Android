@@ -455,40 +455,42 @@
                 <!-- âˆ’ qty + stepper pill -->
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="44dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/form_field_background"
-                    android:paddingHorizontal="4dp">
+                    android:gravity="center_vertical">
 
+                    <!-- Decrement button -->
                     <ImageView
                         android:id="@+id/quantityDecrement"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:padding="9dp"
-                        android:src="@android:drawable/ic_input_delete"
-                        app:tint="@color/text_primary"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:background="@drawable/stepper_btn_outline"
+                        android:src="@drawable/ic_minus_24"
+                        android:scaleType="fitCenter"
                         android:contentDescription="Decrease quantity" />
 
+                    <!-- Quantity value -->
                     <TextView
                         android:id="@+id/quantityValue"
-                        android:layout_width="44dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minWidth="48dp"
                         android:gravity="center"
-                        android:text="1"
+                        android:text="01"
                         android:textColor="@color/text_primary"
                         android:textSize="@dimen/text_size_body_large"
                         android:textStyle="bold" />
 
+                    <!-- Increment button -->
                     <ImageView
                         android:id="@+id/quantityIncrement"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:padding="9dp"
-                        android:src="@android:drawable/ic_input_add"
-                        app:tint="@color/primary"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:background="@drawable/stepper_btn_filled"
+                        android:src="@drawable/ic_plus_24"
+                        android:scaleType="fitCenter"
                         android:contentDescription="Increase quantity" />
 
                 </LinearLayout>

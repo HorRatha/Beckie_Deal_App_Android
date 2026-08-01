@@ -325,18 +325,18 @@ public class ProductDetailActivity extends BaseActivity {
         View decrement = findViewById(R.id.quantityDecrement);
         View increment = findViewById(R.id.quantityIncrement);
 
-        if (quantityValue != null) quantityValue.setText(String.valueOf(selectedQuantity));
+        if (quantityValue != null) quantityValue.setText(String.format(java.util.Locale.US, "%02d", selectedQuantity));
 
         if (decrement != null) decrement.setOnClickListener(v -> {
             if (selectedQuantity > 1) {
                 selectedQuantity--;
-                if (quantityValue != null) quantityValue.setText(String.valueOf(selectedQuantity));
+                if (quantityValue != null) quantityValue.setText(String.format(java.util.Locale.US, "%02d", selectedQuantity));
             }
         });
 
         if (increment != null) increment.setOnClickListener(v -> {
             selectedQuantity++;
-            if (quantityValue != null) quantityValue.setText(String.valueOf(selectedQuantity));
+            if (quantityValue != null) quantityValue.setText(String.format(java.util.Locale.US, "%02d", selectedQuantity));
         });
 
         UiAnimations.pressBounce(decrement, increment);
