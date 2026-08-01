@@ -104,23 +104,23 @@
             <LinearLayout
                 android:id="@+id/emptyState"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
+                android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:padding="40dp"
                 android:visibility="gone">
 
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:src="@drawable/ic_favorite"
-                    app:tint="@color/badge_bg" />
+                    app:tint="@color/text_muted" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="Your heart is empty"
+                    android:text="No favorites yet"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_size_title"
                     android:textStyle="bold" />
@@ -129,18 +129,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Start adding items you love to your favorites!"
-                    android:textColor="@color/text_secondary"
+                    android:gravity="center"
+                    android:text="Tap the heart icon on products you love and they'll appear here."
+                    android:textColor="@color/text_muted"
                     android:textSize="@dimen/text_size_body" />
-                
+
                 <Button
                     android:id="@+id/exploreButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="Explore Products"
+                    android:text="Start Shopping"
                     android:textAllCaps="false"
-                    android:backgroundTint="@color/primary"/>
+                    android:backgroundTint="@color/primary" />
             </LinearLayout>
 
             <!-- Favorites Grid -->
