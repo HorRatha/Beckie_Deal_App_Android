@@ -82,6 +82,56 @@ public final class BottomNavHelper {
 
         // Optional: add press bounce to item frames
         UiAnimations.pressBounce(homeFrame, categoriesFrame, favoritesFrame, cartFrame, accountFrame);
+
+        // Initialize cart badge
+        updateCartBadge(activity);
+    }
+
+    /**
+     * Update the cart badge to show the number of items in cart.
+     * Minimal design - displays count as plain text next to icon/label.
+     *
+     * @param activity The activity containing the bottom nav
+     */
+    public static void updateCartBadge(Activity activity) {
+        TextView cartBadge = activity.findViewById(R.id.cartBadge);
+        if (cartBadge == null) return;
+
+        int itemCount = CartManager.getInstance().getTotalUnits();
+        String currentText = cartBadge.getText().toString();
+        String newText = itemCount > 99 ? "(99+)" : "(" + itemCount + ")";
+        
+        if (itemCount > 0) {
+            boolean wasVisible = cartBadge.getVisibility() == View.VISIBLE;
+            boolean countChanged = !currentText.equals(newText);
+            
+            cartBadge.setText(newText);
+            cartBadge.setVisibility(View.VISIBLE);
+            
+            // Animate only if badge just appeared or count increased
+            if (!wasVisible || countChanged) {
+                animateBadgePop(cartBadge);
+            }
+        } else {
+            cartBadge.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Subtle pop animation for cart badge - professional micro-interaction.
+     */
+    private static void animateBadgePop(View badge) {
+        badge.setScaleX(0.3f);
+        badge.setScaleY(0.3f);
+        badge.setAlpha(0f);
+        
+        badge.animate()
+            .scaleX(1f)
+            .scaleY(1f)
+            .alpha(1f)
+            .setDuration(300L)
+            .setInterpolator(new OvershootInterpolator(2.0f))
+            .start();
     }
 
     /**

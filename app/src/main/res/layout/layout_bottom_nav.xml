@@ -201,6 +201,20 @@
                     android:visibility="gone"
                     android:alpha="0"
                     android:includeFontPadding="false" />
+
+                <!-- Cart Badge - minimal number display -->
+                <TextView
+                    android:id="@+id/cartBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary"
+                    android:visibility="gone"
+                    android:includeFontPadding="false"
+                    android:minWidth="12dp"
+                    android:gravity="center" />
             </LinearLayout>
         </LinearLayout>
 

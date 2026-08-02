@@ -77,8 +77,7 @@ public class ProductDetailActivity extends BaseActivity {
     }
 
     private void updateCartUI() {
-        // Cart badge - TODO: add badge view to custom nav layout
-        // Update cart count badge when implemented
+        BottomNavHelper.updateCartBadge(this);
     }
 
     // ── Product data ──────────────────────────────────────────────────────────

@@ -185,10 +185,9 @@ public class CartActivity extends BaseActivity {
 
     private void setupBottomNavigation() {
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.CART);
-        updateCartBadge();
     }
 
     private void updateCartBadge() {
-        // Cart badge not yet implemented for custom nav - TODO add badge view to layout
+        BottomNavHelper.updateCartBadge(this);
     }
 }

@@ -20,7 +20,7 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout .activity_profile);
 
         AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
@@ -212,10 +212,9 @@ public class ProfileActivity extends BaseActivity {
 
     private void setupBottomNavigation() {
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.ACCOUNT);
-        updateCartBadge(null);
     }
 
     private void updateCartBadge(BottomNavigationView ignored) {
-        // Cart badge not yet implemented for custom nav - TODO add badge view to layout
+        BottomNavHelper.updateCartBadge(this);
     }
 }

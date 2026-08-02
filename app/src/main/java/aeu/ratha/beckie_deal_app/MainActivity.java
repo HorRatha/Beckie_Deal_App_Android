@@ -787,11 +787,10 @@ public class MainActivity extends BaseActivity {
 
     private void setupBottomNavigation() {
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.HOME);
-        updateCartBadge();
     }
 
     private void updateCartBadge() {
-        // Cart badge not yet implemented for custom nav - TODO add badge view to layout
+        BottomNavHelper.updateCartBadge(this);
     }
 
     public static class Product {
