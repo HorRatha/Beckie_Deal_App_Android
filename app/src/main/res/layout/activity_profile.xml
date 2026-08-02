@@ -181,8 +181,10 @@
                 android:textColor="@color/primary"
                 android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
-                app:backgroundTint="@color/badge_bg"
-                app:strokeWidth="0dp" />
+                app:backgroundTint="@android:color/transparent"
+                app:strokeColor="@color/primary"
+                app:strokeWidth="2dp"
+                app:elevation="0dp" />
 
         </LinearLayout>
 
