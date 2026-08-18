@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -146,7 +146,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Beckie Deal ážáŸ‚áž„ážáŸ‚áž“áž¶áŸ†áž˜áž€áž•áž›áž·ážáž•áž›ážáŸ’áž˜áž¸áŸ— áž˜áž»áž“áž‚áŸáž“áŸ…áž€áŸ’áž“áž»áž„áž”áŸ’ážšáž‘áŸážŸáž€áž˜áŸ’áž–áž»áž‡áž¶áŸ”\nážŸáž¼áž˜áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„áž•áŸ’áž“áŸ‚áž€áž›áž€áŸ‹ážšáž”ážŸáŸ‹ Beckie Deal CambodiaáŸ”"
+                android:text="Beckie Deal តែងតែនាំមកផលិតផលថ្មីៗ មុនគេនៅក្នុងប្រទេសកម្ពុជា។\nសូមទំនាក់ទំនងផ្នែកលក់របស់ Beckie Deal Cambodia។"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_size_body"
                 android:lineSpacingExtra="5dp" />
@@ -180,7 +180,8 @@
                         android:layout_marginTop="2dp"
                         android:text="Official Products"
                         android:textColor="#CCFFFFFF"
-                        android:textSize="@dimen/text_size_caption" />
+                        android:textSize="@dimen/text_size_caption"
+                        android:fontFamily="@font/khmer_font" />
                 </LinearLayout>
 
                 <!-- Light stat: Guaranteed Official Partner -->
@@ -275,7 +276,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="áž›áž€áŸ’ážážážŽáŸ’ážŒáž€áž¶ážšáž’áž¶áž“áž¶ / Warranty Terms"
+                android:text="លក្ខខណ្ឌការធានា / Warranty Terms"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_headline"
                 android:textStyle="bold" />
@@ -296,7 +297,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="â€¢ ážšáž¶áž›áŸ‹ Password Log-in ážŸáŸ†ážšáž¶áž”áŸ‹áž˜áŸ‰áž¶ážŸáž»áž¸áž“áž‘áž·áž‰ážáŸ’áž˜áž¸ setup ážšáž½áž…áž‚ážº : 1234\nâ€¢ ážšáž¶áž›áŸ‹áž‘áŸ†áž“áž·áž‰áž‘áž·áž‰ážšáž½áž…áž˜áž·áž“áž¢áž¶áž…áž”áŸ’ážŠáž¼ážš áž¬ ážŠáž¼ážšážœáž·áž‰áž”áž¶áž“áž¡áž¾áž™\nâ€¢ áž’áž¶áž“áž¶áž›áž¾áž‚áŸ’ážšáž¿áž„áž”áž“áŸ’áž›áž¶ážŸáŸ‹ážáž¶áž˜ážšáž™áŸˆáž–áŸáž›ážŠáŸ‚áž›áž”áž¶áž“áž€áŸ†ážŽážáŸ‹\nâ€¢ áž˜áž·áž“áž’áž¶áž“áž¶áž›áž¾ážšáž”ážŸáŸ‹ážŠáŸ‚áž›ážáŸ‚áž˜áž‡áž¼áž“\nâ€¢ áž˜áž·áž“áž’áž¶áž“áž¶áž›áž¾áž‘áŸ†áž“áž·áž‰ážŠáŸ‚áž›áž”áž¶ážáŸ‹áž”áž„áŸ‹áž›áž€áŸ’ážážŽáŸˆážŠáž¾áž˜ áž†áŸáŸ‡ áž’áŸ’áž›áž¶áž€áŸ‹ áž”áž¶áž€áŸ‹áž”áŸ‚áž€ áž…áž¼áž›áž‘áž¹áž€ áž“áž·áž„áž”áž¶ážáŸ‹/ážšáž áŸ‚áž€ Warranty Seal\nâ€¢ ážšáž¶áž›áŸ‹áž¥ážœáŸ‰áž¶áž“áŸ‹ážšáž”ážŸáŸ‹ ASUS/MSI Cambodia áž‚ážºáž’áž¶áž“áž¶áž‘áŸ…ážáž¶áž˜áž›áž€áŸ’ážážáŸážŽáŸ’ážŒážšáž”ážŸáŸ‹áž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“\nâ€¢ ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ Apple áž‡áž¶áž”áŸ‹ iCloud ážŠáŸ‚áž›áž’áŸ’ážœáž¾áž¢áŸ„áž™áž€áž¶ážšáž’áž¶áž“áž¶áž”áž‰áŸ’áž‡áž¼áž“ážáŸ’ážšáž›áž”áŸ‹áž˜áž€ážœáž·áž‰ ážŠáž¼áž…áŸ’áž“áŸáŸ‡áž€áž¶ážšáž’áž¶áž“áž¶áž‘áž»áž€áž‡áž¶áž˜áŸ„ážƒáŸˆ\nâ€¢ ážšáž¶áž›áŸ‹áž•áž›áž·ážáž•áž› Gaming Laptop (VGA ážŠáž¶áž…áŸ‹) áž˜áž·áž“áž’áž¶áž“áž¶áž›áž¾ážŠáž»áŸ†ážŸáž¶áž€ áž“áž·áž„ áž¢áŸáž€áŸ’ážšáž„áŸ‹\nâ€¢ ážšáž™áŸˆáž–áŸáž›áž“áŸƒáž€áž¶ážšáž’áŸ’ážœáž¾ Warranty áž–áŸáž›áž‡áž½áž”áž”áž‰áŸ’áž áž¶ áž¢áž¶áž…áž…áž“áŸ’áž›áŸ„áŸ‡áž–áž¸ 2-6 ážŸáž”áŸ’ážáž¶áž áŸ\nâ€¢ áž€áŸ’ážšážŠáž¶ážŸáž“áŸáŸ‡áž˜áž·áž“áž¢áž¶áž…áž™áž€áž‘áŸ…áž”áŸ’ážšáž€áž¶ážŸáž–áž“áŸ’áž’áž”áž¶áž“áž‘áŸ"
+                        android:text="• រាល់ Password Log-in សំរាប់ម៉ាសុីនទិញថ្មី setup រួចគឺ : 1234\n• រាល់ទំនិញទិញរួចមិនអាចប្ដូរ ឬ ដូរវិញបានឡើយ\n• ធានាលើគ្រឿងបន្លាស់តាមរយៈពេលដែលបានកំណត់\n• មិនធានាលើរបស់ដែលថែមជូន\n• មិនធានាលើទំនិញដែលបាត់បង់លក្ខណៈដើម ឆេះ ធ្លាក់ បាក់បែក ចូលទឹក និងបាត់/រហែក Warranty Seal\n• រាល់ឥវ៉ាន់របស់ ASUS/MSI Cambodia គឺធានាទៅតាមលក្ខខ័ណ្ឌរបស់ក្រុមហ៊ុន\n• សម្រាប់ Apple ជាប់ iCloud ដែលធ្វើអោយការធានាបញ្ជូនត្រលប់មកវិញ ដូច្នេះការធានាទុកជាមោឃៈ\n• រាល់ផលិតផល Gaming Laptop (VGA ដាច់) មិនធានាលើដុំសាក និង អេក្រង់\n• រយៈពេលនៃការធ្វើ Warranty ពេលជួបបញ្ហា អាចចន្លោះពី 2-6 សប្តាហ៍\n• ក្រដាសនេះមិនអាចយកទៅប្រកាសពន្ធបានទេ"
                         android:textColor="@color/text_secondary"
                         android:textSize="@dimen/text_size_body"
                         android:lineSpacingExtra="6dp" />
@@ -319,7 +320,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="â€¢ Password Log in After Setup : 1234\nâ€¢ Goods are sold â€” no refund and return.\nâ€¢ Warranty covers parts according to the specified period.\nâ€¢ Extra Free Items are not under Warranty.\nâ€¢ No Warranty on Adapter / Lost / Broken / Damage / Water-Damage or Missing Warranty Seal.\nâ€¢ ASUS/MSI Cambodia products are warranted according to the company\'s terms and conditions.\nâ€¢ For Apple devices with iCloud lock, the warranty return will be voided.\nâ€¢ Gaming Laptop (GPU) â€” Not Warranty on Screen and Adapter.\nâ€¢ Warranty processing time in case of issues can range from 2 to 6 weeks.\nâ€¢ VAT is not included in this invoice / Cannot be used for Tax Declaration."
+                        android:text="• Password Log in After Setup : 1234\n• Goods are sold — no refund and return.\n• Warranty covers parts according to the specified period.\n• Extra Free Items are not under Warranty.\n• No Warranty on Adapter / Lost / Broken / Damage / Water-Damage or Missing Warranty Seal.\n• ASUS/MSI Cambodia products are warranted according to the company\'s terms and conditions.\n• For Apple devices with iCloud lock, the warranty return will be voided.\n• Gaming Laptop (GPU) — Not Warranty on Screen and Adapter.\n• Warranty processing time in case of issues can range from 2 to 6 weeks.\n• VAT is not included in this invoice / Cannot be used for Tax Declaration."
                         android:textColor="@color/text_secondary"
                         android:textSize="@dimen/text_size_body"
                         android:lineSpacingExtra="6dp" />
@@ -339,7 +340,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„áž˜áž€áž™áž¾áž„ / Contact Us"
+                android:text="ទំនាក់ទំនងមកយើង / Contact Us"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_headline"
                 android:textStyle="bold" />
@@ -348,7 +349,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="ážŸáž¼áž˜áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„ážáž¶áž˜ážšáž™áŸ‡áž‘áž¼ážšážŸáŸáž–áŸ’áž‘ áž¬ áž•áŸ’áž‰áž¾ážŸáž¶ážšážšáž”ážŸáŸ‹áž›áŸ„áž€áž¢áŸ’áž“áž€áž˜áž€áž™áž¾áž„áŸ”"
+                android:text="សូមទំនាក់ទំនងតាមរយះទូរស័ព្ទ ឬ ផ្ញើសាររបស់លោកអ្នកមកយើង។"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_size_body"
                 android:lineSpacingExtra="3dp" />
@@ -358,7 +359,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="ážˆáŸ’áž˜áŸ„áŸ‡ / Full Name"
+                android:text="ឈ្មោះ / Full Name"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_body"
                 android:textStyle="bold" />
@@ -382,10 +383,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="áž¢áŸŠáž¸áž˜áŸ‰áŸ‚áž› / Email Address"
+                android:text="អ៊ីម៉ែល / Email Address"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_body"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/khmer_font" />
 
             <EditText
                 android:id="@+id/inputEmail"
@@ -406,7 +408,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="ážŸáž¶ážšážšáž”ážŸáŸ‹áž¢áŸ’áž“áž€ / Message"
+                android:text="សាររបស់អ្នក / Message"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_body"
                 android:textStyle="bold" />
@@ -433,7 +435,7 @@
                 android:layout_height="54dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_primary"
-                android:text="Submit âž¤"
+                android:text="Submit ➤"
                 android:textColor="@color/white_fixed"
                 android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
@@ -476,7 +478,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„áž•áŸ’áž“áŸ‚áž€áž›áž€áŸ‹"
+                        android:text="ទំនាក់ទំនងផ្នែកលក់"
                         android:textColor="@color/text_muted"
                         android:textSize="@dimen/text_size_overline"
                         android:letterSpacing="0.08" />
@@ -558,7 +560,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="áž”áŸ’ážšáž‘áŸážŸáž€áž˜áŸ’áž–áž»áž‡áž¶ / Cambodia"
+                                android:text="ប្រទេសកម្ពុជា / Cambodia"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="@dimen/text_size_caption" />
                         </LinearLayout>
@@ -567,7 +569,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Open Maps â€º"
+                            android:text="Open Maps ›"
                             android:textColor="@color/primary"
                             android:textSize="@dimen/text_size_caption"
                             android:textStyle="bold" />
@@ -580,7 +582,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="ážŸáž¼áž˜áž¢ážšáž‚áž»ážŽ! ðŸ™"
+                android:text="សូមអរគុណ! 🙏"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_title_small"
                 android:textStyle="bold"
@@ -597,3 +599,4 @@
 <include layout="@layout/layout_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
+

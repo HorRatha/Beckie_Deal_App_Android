@@ -1,6 +1,7 @@
 package aeu.ratha.beckie_deal_app;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +43,7 @@ public class AboutActivity extends BaseActivity {
         setupSubmitButton();
         setupMapCard();
         setupBottomNavigation();
+        setupKhmerFont();
         setupEntranceAnimation();
     }
 
@@ -164,5 +167,62 @@ public class AboutActivity extends BaseActivity {
 
     private void setupBottomNavigation() {
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.ACCOUNT);
+    }
+
+    /**
+     * Apply Khmer-compatible font to all TextViews in the About page
+     * to ensure proper rendering of Khmer Unicode characters.
+     */
+    private void setupKhmerFont() {
+        try {
+            Typeface khmerFont = ResourcesCompat.getFont(this, R.font.khmer_font);
+            if (khmerFont == null) return;
+
+            NestedScrollView scroll = findViewById(R.id.aboutContentScroll);
+            if (scroll != null && scroll.getChildCount() > 0) {
+                View listRoot = scroll.getChildAt(0);
+                if (listRoot instanceof ViewGroup) {
+                    applyKhmerFontToViewGroup((ViewGroup) listRoot, khmerFont);
+                }
+            }
+        } catch (Exception e) {
+            // Fallback: If custom font fails, continue with system font
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Recursively apply Khmer font to all TextViews in a ViewGroup.
+     * Checks if the TextView contains Khmer characters before applying the font.
+     */
+    private void applyKhmerFontToViewGroup(ViewGroup viewGroup, Typeface khmerFont) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            
+            if (child instanceof TextView) {
+                TextView textView = (TextView) child;
+                CharSequence text = textView.getText();
+                
+                // Apply font if text contains Khmer Unicode characters (U+1780 to U+17FF)
+                if (text != null && containsKhmerCharacters(text.toString())) {
+                    textView.setTypeface(khmerFont);
+                }
+            } else if (child instanceof ViewGroup) {
+                // Recursively apply to nested ViewGroups
+                applyKhmerFontToViewGroup((ViewGroup) child, khmerFont);
+            }
+        }
+    }
+
+    /**
+     * Check if a string contains Khmer Unicode characters.
+     */
+    private boolean containsKhmerCharacters(String text) {
+        for (char c : text.toCharArray()) {
+            if (c >= '\u1780' && c <= '\u17FF') {
+                return true;
+            }
+        }
+        return false;
     }
 }
