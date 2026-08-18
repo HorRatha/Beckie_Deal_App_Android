@@ -6,12 +6,25 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.card.MaterialCardView;
 import java.util.Locale;
 
 public class PayoutActivity extends BaseActivity {
+
+    private TextView summarySubtotalText;
+    private TextView summaryDiscountText;
+    private TextView summaryTotalText;
+    private LinearLayout discountRow;
+    private EditText couponInput;
+    private MaterialCardView appliedCouponCard;
+    private TextView appliedCouponCode;
+    private TextView appliedCouponDiscount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +32,7 @@ public class PayoutActivity extends BaseActivity {
         setContentView(R.layout.activity_payout);
 
         setupTopBar();
+        setupCouponSection();
         setupOrderSummary();
         setupConfirmButton();
         setupEntranceAnimation();
@@ -45,16 +59,102 @@ public class PayoutActivity extends BaseActivity {
         UiAnimations.fadeSlideUp(findViewById(R.id.bottomActionLayout), 200);
     }
 
+    private void setupCouponSection() {
+        couponInput = findViewById(R.id.couponInput);
+        Button applyCouponButton = findViewById(R.id.applyCouponButton);
+        appliedCouponCard = findViewById(R.id.appliedCouponCard);
+        appliedCouponCode = findViewById(R.id.appliedCouponCode);
+        appliedCouponDiscount = findViewById(R.id.appliedCouponDiscount);
+        ImageView removeCouponButton = findViewById(R.id.removeCouponButton);
+
+        UiAnimations.pressBounce(applyCouponButton, removeCouponButton);
+
+        if (applyCouponButton != null) {
+            applyCouponButton.setOnClickListener(v -> {
+                String code = couponInput.getText().toString();
+                double subtotal = CartManager.getInstance().getTotalPrice();
+                
+                CouponManager.CouponResult result = 
+                    CouponManager.getInstance().applyCoupon(code, subtotal);
+                
+                if (result.success) {
+                    Toast.makeText(this, result.message, Toast.LENGTH_LONG).show();
+                    updateCouponUI();
+                    updateOrderSummary();
+                } else {
+                    Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        if (removeCouponButton != null) {
+            removeCouponButton.setOnClickListener(v -> {
+                CouponManager.getInstance().removeCoupon();
+                Toast.makeText(this, "Coupon removed", Toast.LENGTH_SHORT).show();
+                updateCouponUI();
+                updateOrderSummary();
+            });
+        }
+
+        updateCouponUI();
+    }
+
+    private void updateCouponUI() {
+        if (CouponManager.getInstance().hasCoupon()) {
+            CouponManager.Coupon coupon = CouponManager.getInstance().getAppliedCoupon();
+            if (appliedCouponCard != null) {
+                appliedCouponCard.setVisibility(View.VISIBLE);
+                UiAnimations.fadeSlideDown(appliedCouponCard, 0);
+            }
+            if (appliedCouponCode != null) {
+                appliedCouponCode.setText(coupon.code);
+            }
+            if (appliedCouponDiscount != null) {
+                appliedCouponDiscount.setText(coupon.getDiscountLabel());
+            }
+            if (couponInput != null) {
+                couponInput.setText("");
+                couponInput.clearFocus();
+            }
+        } else {
+            if (appliedCouponCard != null) {
+                appliedCouponCard.setVisibility(View.GONE);
+            }
+        }
+    }
+
     private void setupOrderSummary() {
+        summarySubtotalText = findViewById(R.id.summarySubtotal);
+        summaryDiscountText = findViewById(R.id.summaryDiscount);
+        summaryTotalText = findViewById(R.id.summaryTotal);
+        discountRow = findViewById(R.id.discountRow);
+
+        updateOrderSummary();
+    }
+
+    private void updateOrderSummary() {
         double subtotal = CartManager.getInstance().getTotalPrice();
+        double discount = CouponManager.getInstance().calculateDiscount(subtotal);
         double shipping = 15.00;
-        double total = subtotal + shipping;
+        double total = subtotal - discount + shipping;
 
-        TextView subtotalText = findViewById(R.id.summarySubtotal);
-        TextView totalText = findViewById(R.id.summaryTotal);
+        if (summarySubtotalText != null) {
+            summarySubtotalText.setText(String.format(Locale.US, "$%.2f", subtotal));
+        }
+        
+        if (discountRow != null && summaryDiscountText != null) {
+            if (discount > 0) {
+                discountRow.setVisibility(View.VISIBLE);
+                summaryDiscountText.setText(String.format(Locale.US, "-$%.2f", discount));
+                UiAnimations.fadeSlideDown(discountRow, 0);
+            } else {
+                discountRow.setVisibility(View.GONE);
+            }
+        }
 
-        if (subtotalText != null) subtotalText.setText(String.format(Locale.US, "$%.2f", subtotal));
-        if (totalText != null) totalText.setText(String.format(Locale.US, "$%.2f", total));
+        if (summaryTotalText != null) {
+            summaryTotalText.setText(String.format(Locale.US, "$%.2f", total));
+        }
     }
 
     private void setupConfirmButton() {
@@ -83,7 +183,8 @@ public class PayoutActivity extends BaseActivity {
 
                     // Save the order before clearing cart
                     double subtotal = CartManager.getInstance().getTotalPrice();
-                    double total = subtotal + 15.00; // shipping
+                    double discount = CouponManager.getInstance().calculateDiscount(subtotal);
+                    double total = subtotal - discount + 15.00; // shipping
                     OrderManager.Order order = OrderManager.getInstance().placeOrder(
                             CartManager.getInstance().getCartItems(), total);
 
@@ -97,8 +198,9 @@ public class PayoutActivity extends BaseActivity {
                         UiAnimations.popIn(successView, 0);
                     }
 
-                    // Clear cart after successful "payment"
+                    // Clear cart and coupon after successful "payment"
                     CartManager.getInstance().getCartItems().clear();
+                    CouponManager.getInstance().removeCoupon();
                 }, 3000);
             });
         }

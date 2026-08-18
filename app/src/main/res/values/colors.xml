@@ -55,6 +55,7 @@
     <color name="white_fixed">#FFFFFF</color>
     <color name="black_fixed">#000000</color>
     <color name="green_stock">#22C55E</color>
+    <color name="success_light_bg">#F0FDF4</color>
     <color name="red_error">#EF4444</color>
     <color name="yellow_star">#FFC107</color>
     

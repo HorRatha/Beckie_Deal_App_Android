@@ -193,6 +193,137 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Coupon Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Promo Code"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_size_body_large"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_color"
+                app:cardBackgroundColor="@color/surface">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/form_field_background"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_discount_tag"
+                            app:tint="@color/primary" />
+
+                        <EditText
+                            android:id="@+id/couponInput"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/form_field_background"
+                            android:paddingHorizontal="16dp"
+                            android:hint="Enter coupon code"
+                            android:inputType="textCapCharacters"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_muted"
+                            android:textSize="@dimen/text_size_body" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/applyCouponButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:backgroundTint="@color/primary"
+                            android:text="Apply"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white_fixed"
+                            android:textSize="@dimen/text_size_body"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp" />
+                    </LinearLayout>
+
+                    <!-- Applied Coupon Display -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/appliedCouponCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/success_light_bg">
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="12dp"
+                            android:gravity="center_vertical">
+                            
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_check_circle_24"
+                                app:tint="@color/green_stock" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+                                
+                                <TextView
+                                    android:id="@+id/appliedCouponCode"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="WELCOME10"
+                                    android:textColor="@color/green_stock"
+                                    android:textStyle="bold"
+                                    android:textSize="@dimen/text_size_body" />
+                                
+                                <TextView
+                                    android:id="@+id/appliedCouponDiscount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="10% OFF"
+                                    android:textColor="@color/green_stock"
+                                    android:textSize="@dimen/text_size_caption" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/removeCouponButton"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="6dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_close"
+                                app:tint="@color/green_stock" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Order Summary -->
             <TextView
                 android:layout_width="wrap_content"
@@ -234,6 +365,28 @@
                             android:layout_height="wrap_content"
                             android:text="$0.00"
                             android:textColor="@color/text_primary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/discountRow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Coupon Discount"
+                            android:textColor="@color/text_muted" />
+                        <TextView
+                            android:id="@+id/summaryDiscount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="-$0.00"
+                            android:textColor="@color/red_error"
                             android:textStyle="bold" />
                     </LinearLayout>
 
