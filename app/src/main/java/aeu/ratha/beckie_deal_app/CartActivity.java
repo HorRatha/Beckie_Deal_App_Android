@@ -25,6 +25,7 @@ public class CartActivity extends BaseActivity {
         AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         setupBottomNavigation();
+        setupCouponReminder();
         displayCartItems();
         setupCheckoutButton();
         setupEntranceAnimation();
@@ -33,12 +34,16 @@ public class CartActivity extends BaseActivity {
     /** Fades/slides the static chrome (empty state or checkout bar) into place on load. */
     private void setupEntranceAnimation() {
         View emptyState      = findViewById(R.id.emptyState);
+        View couponReminder  = findViewById(R.id.couponReminderCard);
         View checkoutSection = findViewById(R.id.checkoutSection);
         if (emptyState != null && emptyState.getVisibility() == View.VISIBLE) {
             UiAnimations.fadeSlideUp(emptyState, 60);
         }
+        if (couponReminder != null && couponReminder.getVisibility() == View.VISIBLE) {
+            UiAnimations.fadeSlideUp(couponReminder, 80);
+        }
         if (checkoutSection != null && checkoutSection.getVisibility() == View.VISIBLE) {
-            UiAnimations.fadeSlideUp(checkoutSection, 60);
+            UiAnimations.fadeSlideUp(checkoutSection, 100);
         }
     }
 
@@ -68,16 +73,31 @@ public class CartActivity extends BaseActivity {
         }
     }
 
+    private void setupCouponReminder() {
+        View couponReminderCard = findViewById(R.id.couponReminderCard);
+        View couponReminderButton = findViewById(R.id.couponReminderButton);
+        
+        if (couponReminderButton != null) {
+            couponReminderButton.setOnClickListener(v -> {
+                // Navigate to checkout where user can apply coupon
+                startActivity(new Intent(this, PayoutActivity.class));
+            });
+            UiAnimations.pressBounce(couponReminderButton);
+        }
+    }
+
     private void displayCartItems() {
         List<CartManager.CartItem> cartItems = CartManager.getInstance().getCartItems();
         LinearLayout cartList = findViewById(R.id.cartItemsList);
         View emptyState       = findViewById(R.id.emptyState);
+        View couponReminder   = findViewById(R.id.couponReminderCard);
         View checkoutSection  = findViewById(R.id.checkoutSection);
         TextView totalText    = findViewById(R.id.totalPriceText);
 
         if (cartItems.isEmpty()) {
             emptyState.setVisibility(View.VISIBLE);
             cartList.setVisibility(View.GONE);
+            couponReminder.setVisibility(View.GONE);
             checkoutSection.setVisibility(View.GONE);
             View shopBtn = findViewById(R.id.startShoppingButton);
             if (shopBtn != null) {
@@ -90,6 +110,7 @@ public class CartActivity extends BaseActivity {
         } else {
             emptyState.setVisibility(View.GONE);
             cartList.setVisibility(View.VISIBLE);
+            couponReminder.setVisibility(View.VISIBLE);
             checkoutSection.setVisibility(View.VISIBLE);
             cartList.removeAllViews();
 

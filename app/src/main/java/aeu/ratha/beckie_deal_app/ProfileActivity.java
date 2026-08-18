@@ -188,6 +188,7 @@ public class ProfileActivity extends BaseActivity {
 
     private void setupSettingsRows() {
         LinearLayout ordersRow        = findViewById(R.id.ordersRow);
+        LinearLayout couponsRow       = findViewById(R.id.couponsRow);
         LinearLayout notificationsRow = findViewById(R.id.notificationsRow);
         LinearLayout languageRow      = findViewById(R.id.languageRow);
         LinearLayout privacyRow       = findViewById(R.id.privacyRow);
@@ -196,6 +197,8 @@ public class ProfileActivity extends BaseActivity {
 
         if (ordersRow != null) ordersRow.setOnClickListener(v ->
                 startActivity(new Intent(this, MyOrdersActivity.class)));
+        if (couponsRow != null) couponsRow.setOnClickListener(v ->
+                startActivity(new Intent(this, CouponsActivity.class)));
         if (notificationsRow != null) notificationsRow.setOnClickListener(v ->
                 Toast.makeText(this, "Notification settings", Toast.LENGTH_SHORT).show());
         if (languageRow != null) languageRow.setOnClickListener(v ->
@@ -207,7 +210,7 @@ public class ProfileActivity extends BaseActivity {
         if (aboutUsRow != null) aboutUsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, AboutActivity.class)));
 
-        UiAnimations.pressBounce(ordersRow, notificationsRow, languageRow, privacyRow, termsRow, aboutUsRow);
+        UiAnimations.pressBounce(ordersRow, couponsRow, notificationsRow, languageRow, privacyRow, termsRow, aboutUsRow);
     }
 
     private void setupBottomNavigation() {

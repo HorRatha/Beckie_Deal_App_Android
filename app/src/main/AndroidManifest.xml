@@ -50,6 +50,9 @@
             android:name=".PayoutActivity"
             android:exported="false" />
         <activity
+            android:name=".CouponsActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
