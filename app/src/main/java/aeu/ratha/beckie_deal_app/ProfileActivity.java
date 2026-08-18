@@ -20,7 +20,7 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout .activity_profile);
+        setContentView(R.layout.activity_profile);
 
         AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();

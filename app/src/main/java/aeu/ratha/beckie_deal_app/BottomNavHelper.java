@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -161,7 +162,9 @@ public final class BottomNavHelper {
 
         int selectedIndex = item.ordinal();
 
-        if (animate && !ValueAnimator.areAnimatorsEnabled()) animate = false;
+        if (animate && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !ValueAnimator.areAnimatorsEnabled()) {
+            animate = false;
+        }
 
         for (int i = 0; i < ids.length; i++) {
             View itemFrame = ((Activity) context).findViewById(ids[i]);
