@@ -87,6 +87,9 @@ public class ProfileActivity extends BaseActivity {
             String name = tokenManager.getUserName();
             String email = tokenManager.getUserEmail();
             
+            android.util.Log.d("ProfileActivity", "TokenManager name: " + name);
+            android.util.Log.d("ProfileActivity", "TokenManager email: " + email);
+            
             if (userNameText != null) {
                 userNameText.setText(name != null ? name : "User");
             }
@@ -146,8 +149,8 @@ public class ProfileActivity extends BaseActivity {
         
         Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
         
-        // Navigate to login screen
-        Intent intent = new Intent(this, LoginActivity.class);
+        // Navigate to home screen (MainActivity) instead of login
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

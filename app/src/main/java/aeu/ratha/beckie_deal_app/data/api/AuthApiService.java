@@ -43,6 +43,15 @@ public interface AuthApiService {
     @POST("auth/logout")
     Call<Void> logout();
     
+    /**
+     * Get current authenticated user profile.
+     * GET /api/v1/auth/user
+     * 
+     * @return Call object with UserProfileResponse containing user data
+     */
+    @retrofit2.http.GET("auth/user")
+    Call<aeu.ratha.beckie_deal_app.data.models.UserProfileResponse> getUserProfile();
+    
     // Future auth endpoints can be added here:
     // @POST("auth/refresh")
     // Call<LoginResponse> refreshToken(@Body RefreshTokenRequest request);

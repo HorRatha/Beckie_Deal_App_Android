@@ -179,7 +179,7 @@ public class LoginActivity extends BaseActivity {
         if (response.isSuccess() && response.getData() != null) {
             LoginResponse.LoginData data = response.getData();
             
-            // Save authentication data
+            // Save authentication data (token first)
             tokenManager.saveAuthData(
                 data.getAccessToken(),
                 data.getTokenType(),
@@ -187,17 +187,77 @@ public class LoginActivity extends BaseActivity {
                 data.getUser()
             );
             
-            Log.d(TAG, "Login successful for user: " + data.getUser().getEmail());
-            
-            // Show success message
-            String userName = data.getUser().getFullName();
-            Toast.makeText(this, "Welcome back, " + userName + "!", Toast.LENGTH_SHORT).show();
-            
-            // Navigate to main activity
-            navigateToMainActivity();
+            // Log success
+            if (data.getUser() != null) {
+                Log.d(TAG, "Login successful for user: " + data.getUser().getEmail());
+                showWelcomeMessageAndNavigate(data.getUser().getFullName());
+            } else {
+                // User data not in login response, fetch it
+                Log.d(TAG, "Login successful - token saved, fetching user profile");
+                fetchUserProfileAndNavigate();
+            }
         } else {
             Toast.makeText(this, response.getMessage() != null ? response.getMessage() : "Login failed", Toast.LENGTH_LONG).show();
         }
+    }
+    
+    /**
+     * Fetch user profile after login when it's not included in login response.
+     */
+    private void fetchUserProfileAndNavigate() {
+        Log.d(TAG, "Fetching user profile from /auth/user");
+        Call<aeu.ratha.beckie_deal_app.data.models.UserProfileResponse> call = authApiService.getUserProfile();
+        call.enqueue(new Callback<aeu.ratha.beckie_deal_app.data.models.UserProfileResponse>() {
+            @Override
+            public void onResponse(Call<aeu.ratha.beckie_deal_app.data.models.UserProfileResponse> call, 
+                                 Response<aeu.ratha.beckie_deal_app.data.models.UserProfileResponse> response) {
+                Log.d(TAG, "Profile response code: " + response.code());
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d(TAG, "Profile response status: " + response.body().getStatus());
+                    
+                    if (response.body().getData() != null) {
+                        aeu.ratha.beckie_deal_app.data.models.User user = response.body().getData();
+                        
+                        Log.d(TAG, "User data received - Email: " + user.getEmail());
+                        Log.d(TAG, "User firstName: " + user.getFirstName());
+                        Log.d(TAG, "User lastName: " + user.getLastName());
+                        Log.d(TAG, "User name: " + user.getName());
+                        Log.d(TAG, "User fullName: " + user.getFullName());
+                        
+                        // Update user info in TokenManager
+                        String accessToken = tokenManager.getAccessToken();
+                        String tokenType = tokenManager.getTokenType();
+                        int expiresIn = tokenManager.getExpiresIn();
+                        tokenManager.saveAuthData(accessToken, tokenType, expiresIn, user);
+                        
+                        showWelcomeMessageAndNavigate(user.getFullName());
+                    } else {
+                        Log.w(TAG, "Profile response data is null");
+                        showWelcomeMessageAndNavigate("User");
+                    }
+                } else {
+                    // Profile fetch failed, but login was successful - still navigate
+                    Log.w(TAG, "Failed to fetch user profile - Status code: " + response.code());
+                    showWelcomeMessageAndNavigate("User");
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<aeu.ratha.beckie_deal_app.data.models.UserProfileResponse> call, Throwable t) {
+                // Profile fetch failed, but login was successful - still navigate
+                Log.e(TAG, "Error fetching user profile: " + t.getMessage(), t);
+                showWelcomeMessageAndNavigate("User");
+            }
+        });
+    }
+    
+    /**
+     * Show welcome message and navigate to main activity.
+     */
+    private void showWelcomeMessageAndNavigate(String userName) {
+        Toast.makeText(this, "Welcome back, " + userName + "!", Toast.LENGTH_SHORT).show();
+        navigateToMainActivity();
     }
     
     /**
