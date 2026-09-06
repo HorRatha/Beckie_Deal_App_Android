@@ -66,11 +66,20 @@ The app is designed around a real-world catalogue of laptops, smartphones, gamin
 - Favourite toggle
 
 ### 👤 Profile
-- Login and Register navigation buttons
+- Login and Register navigation buttons (fully integrated with Laravel backend API)
+- **Secure JWT Authentication** with encrypted token storage
 - My Orders row (coming soon)
 - Notifications toggle switch
 - Language preference row
 - Dark Mode toggle (system-wide via `AppCompatDelegate`)
+
+### 🔐 Authentication & Security
+- **Backend Integration:** Connects to Laravel API on Google Cloud Run
+- **JWT Token Management:** Automatic token injection in API requests
+- **Encrypted Storage:** AES-256-GCM encryption for sensitive data
+- **HTTPS-only:** Secure network communication
+- **Auto-login:** Session persists across app restarts
+- **Input Validation:** Email and password validation before API calls
 
 ### 📍 About
 - Contact form with name / email / message validation, sends via email intent to `beckiedeal@gmail.com`
@@ -88,11 +97,16 @@ The app is designed around a real-world catalogue of laptops, smartphones, gamin
 | Layer | Technology |
 |---|---|
 | Language | Java 11 |
+| Backend API | Laravel on Google Cloud Run |
+| Authentication | JWT with encrypted local storage |
+| Networking | Retrofit 2.9.0 + OkHttp 4.12.0 |
+| Security | AndroidX Security-Crypto (EncryptedSharedPreferences) |
+| JSON Parsing | Gson 2.10.1 |
 | UI toolkit | Material Design 3 (`com.google.android.material:material:1.13.0`) |
 | Image loading | Glide 5.0 |
 | Layout | ConstraintLayout, LinearLayout, GridLayout, MaterialCardView |
 | Navigation | Manual `Intent`-based, with bottom nav + side drawer |
-| State management | Singleton managers (`CartManager`, `FavoriteManager`) |
+| State management | Singleton managers (`CartManager`, `FavoriteManager`, `TokenManager`) |
 | Build system | Gradle with Kotlin DSL (`build.gradle.kts`) |
 | Min SDK | 24 (Android 7.0 Nougat) |
 | Target SDK | 36 |
@@ -104,30 +118,47 @@ The app is designed around a real-world catalogue of laptops, smartphones, gamin
 ```
 app/src/main/
 ├── java/aeu/ratha/beckie_deal_app/
-│   ├── MainActivity.java            # Home screen, mock data seed
-│   ├── CategoriesActivity.java      # All-categories grid
-│   ├── CategoryDetailActivity.java  # Per-category product list + CATALOGUE data
-│   ├── ProductDetailActivity.java   # Full product detail + add to cart
-│   ├── ProductListActivity.java     # Flat list mode (New Collection / Top Selling)
-│   ├── SearchActivity.java          # Full-text search
-│   ├── FavoritesActivity.java       # Saved favourites list
-│   ├── CartActivity.java            # Cart screen with quantity controls
-│   ├── PayoutActivity.java          # Checkout / payout
-│   ├── LoginActivity.java           # Login screen
-│   ├── RegisterActivity.java        # Registration screen
-│   ├── ProfileActivity.java         # User profile & settings
-│   ├── AboutActivity.java           # Contact form + map
-│   ├── AllBrandsActivity.java       # All brands directory
-│   ├── FilterBottomSheet.java       # Sort & filter bottom sheet
-│   ├── ProductCardBinder.java       # Shared product card view binding
-│   ├── CartManager.java             # Singleton cart state
-│   ├── FavoriteManager.java         # Singleton favourites state
-│   ├── AppDrawerHelper.java         # Side navigation drawer helper
-│   └── ScreenUtils.java             # Screen size utilities
+│   ├── data/
+│   │   ├── api/
+│   │   │   └── AuthApiService.java  # Authentication API endpoints
+│   │   └── models/                   # API data models
+│   │       ├── User.java
+│   │       ├── LoginRequest.java
+│   │       ├── LoginResponse.java
+│   │       ├── RegisterRequest.java
+│   │       └── RegisterResponse.java
+│   ├── network/
+│   │   ├── RetrofitClient.java       # API client configuration
+│   │   └── AuthInterceptor.java      # JWT auto-injection
+│   ├── security/
+│   │   ├── TokenManager.java         # JWT token management
+│   │   └── SecurePreferences.java    # Encrypted storage
+│   ├── MainActivity.java             # Home screen, mock data seed
+│   ├── CategoriesActivity.java       # All-categories grid
+│   ├── CategoryDetailActivity.java   # Per-category product list + CATALOGUE data
+│   ├── ProductDetailActivity.java    # Full product detail + add to cart
+│   ├── ProductListActivity.java      # Flat list mode (New Collection / Top Selling)
+│   ├── SearchActivity.java           # Full-text search
+│   ├── FavoritesActivity.java        # Saved favourites list
+│   ├── CartActivity.java             # Cart screen with quantity controls
+│   ├── PayoutActivity.java           # Checkout / payout
+│   ├── LoginActivity.java            # Login screen with API integration
+│   ├── RegisterActivity.java         # Registration screen with API integration
+│   ├── ProfileActivity.java          # User profile & settings
+│   ├── AboutActivity.java            # Contact form + map
+│   ├── AllBrandsActivity.java        # All brands directory
+│   ├── FilterBottomSheet.java        # Sort & filter bottom sheet
+│   ├── ProductCardBinder.java        # Shared product card view binding
+│   ├── CartManager.java              # Singleton cart state
+│   ├── FavoriteManager.java          # Singleton favourites state
+│   ├── AppDrawerHelper.java          # Side navigation drawer helper
+│   └── ScreenUtils.java              # Screen size utilities
 ├── res/
-│   ├── layout/                      # All activity & item layouts (XML)
-│   ├── drawable/                    # Icons, backgrounds, shapes
-│   └── color/                       # Color state lists (nav tint etc.)
+│   ├── layout/                       # All activity & item layouts (XML)
+│   ├── drawable/                     # Icons, backgrounds, shapes
+│   ├── xml/
+│   │   └── network_security_config.xml  # HTTPS security configuration
+│   └── color/                        # Color state lists (nav tint etc.)
 └── AndroidManifest.xml
 ```
 
@@ -176,9 +207,29 @@ The map card still works without a key — tapping it opens Google Maps or the d
 
 ```kotlin
 // build.gradle.kts
+
+// Networking & API
+implementation("com.squareup.retrofit2:retrofit:2.9.0")
+implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+implementation("com.squareup.okhttp3:okhttp:4.12.0")
+implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+implementation("com.google.code.gson:gson:2.10.1")
+
+// Security
+implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+// UI & Images
 implementation("com.github.bumptech.glide:glide:5.0.0-rc01")
 implementation("com.google.android.material:material:1.13.0-alpha03")
 implementation("androidx.cardview:cardview:1.0.0")
+```
+
+### API Configuration
+
+Backend API URL is configured in `build.gradle.kts`:
+```kotlin
+buildConfigField("String", "API_BASE_URL", 
+    "\"https://laravel-app-114227311375.asia-southeast1.run.app/api/v1/\"")
 ```
 
 ---

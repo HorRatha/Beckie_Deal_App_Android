@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupHeroBanner() {
-        // Hero banner data: 3 slides
+        // Hero banner data: 3 slides with Pinterest-style images
         String[][] heroBannerTexts = {
                 {"🔥 HOT DEAL", "Summer Sale", "Up to 50% off on all items"},
                 {"⚡ LIMITED", "New Arrivals", "Latest tech gadgets are here"},
@@ -166,6 +166,12 @@ public class MainActivity extends BaseActivity {
                 R.drawable.banner_gradient_2,
                 R.drawable.banner_gradient_3
         };
+        // Pinterest-style banner images
+        String[] heroBannerImages = {
+                "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=400&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=400&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=800&h=400&fit=crop&q=80"
+        };
 
         bannerViewPager = findViewById(R.id.bannerViewPager);
         setupBannerCarousel(
@@ -173,7 +179,7 @@ public class MainActivity extends BaseActivity {
                 findViewById(R.id.bannerArrowLeft),
                 findViewById(R.id.bannerArrowRight),
                 findViewById(R.id.bannerDotsContainer),
-                heroBannerTexts, heroBannerBgs, null,
+                heroBannerTexts, heroBannerBgs, heroBannerImages,
                 true // isHeroBanner flag
         );
     }
@@ -220,20 +226,25 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onBindViewHolder(@NonNull BannerViewHolder holder, int position) {
-                holder.background.setBackgroundResource(backgrounds[position]);
                 holder.tag.setText(texts[position][0]);
                 holder.title.setText(texts[position][1]);
                 holder.subtitle.setText(texts[position][2]);
 
-                // Support image banners (future-proof)
+                // Load banner images from Pinterest/Unsplash
                 if (imageUrls != null && imageUrls[position] != null && !imageUrls[position].isEmpty()) {
                     holder.bannerImage.setVisibility(View.VISIBLE);
+                    holder.background.setVisibility(View.GONE);
                     Glide.with(holder.itemView.getContext())
                             .load(imageUrls[position])
-                            .centerInside()
+                            .centerCrop()
+                            .placeholder(backgrounds[position])
+                            .error(backgrounds[position])
                             .into(holder.bannerImage);
                 } else {
+                    // Fallback to gradient backgrounds
                     holder.bannerImage.setVisibility(View.GONE);
+                    holder.background.setVisibility(View.VISIBLE);
+                    holder.background.setBackgroundResource(backgrounds[position]);
                 }
             }
 
@@ -531,7 +542,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupNewArrivalsBanner() {
-        // New Arrivals banner carousel: 3 slides (different content from hero)
+        // New Arrivals banner carousel: 3 slides with Pinterest-style images
         String[][] newArrivalTexts = {
                 {"✦ JUST LANDED", "New Arrivals", "Fresh tech drops, every week"},
                 {"🚀 TRENDING", "Top Picks", "Most popular this month"},
@@ -542,6 +553,12 @@ public class MainActivity extends BaseActivity {
                 R.drawable.banner_gradient_5,
                 R.drawable.banner_gradient_6
         };
+        // Pinterest-style banner images for new arrivals
+        String[] newArrivalImages = {
+                "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=800&h=400&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&h=400&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=400&fit=crop&q=80"
+        };
 
         newArrivalsBannerPager = findViewById(R.id.newArrivalsBannerViewPager);
         setupBannerCarousel(
@@ -549,7 +566,7 @@ public class MainActivity extends BaseActivity {
                 findViewById(R.id.newArrivalsArrowLeft),
                 findViewById(R.id.newArrivalsArrowRight),
                 findViewById(R.id.newArrivalsDotsContainer),
-                newArrivalTexts, newArrivalBgs, null,
+                newArrivalTexts, newArrivalBgs, newArrivalImages,
                 false // not hero banner
         );
     }

@@ -23,7 +23,8 @@
             <FrameLayout
                 android:id="@+id/loginHeaderWave"
                 android:layout_width="match_parent"
-                android:layout_height="260dp">
+                android:layout_height="300dp"
+                android:paddingTop="48dp">
 
                 <!-- Curved gradient background -->
                 <View
@@ -57,7 +58,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="start|top"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="16dp"
                     android:padding="8dp"
                     android:src="@drawable/ic_arrow_left"
                     android:contentDescription="Back"

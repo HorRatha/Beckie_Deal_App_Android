@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- 
+        Network Security Configuration for Beckie Deal App
+        Ensures secure HTTPS communication with backend API
+    -->
+    
+    <!-- Base configuration for all domains -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Trust system certificates (default) -->
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Production API configuration -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">laravel-app-114227311375.asia-southeast1.run.app</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+    
+    <!-- Debug configuration (allows localhost for testing) -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

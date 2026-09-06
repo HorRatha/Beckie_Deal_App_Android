@@ -1,0 +1,80 @@
+package aeu.ratha.beckie_deal_app.data.models;
+
+import com.google.gson.annotations.SerializedName;
+
+public class User {
+    @SerializedName("id")
+    private String id;
+    
+    @SerializedName("email")
+    private String email;
+    
+    @SerializedName("first_name")
+    private String firstName;
+    
+    @SerializedName("last_name")
+    private String lastName;
+    
+    @SerializedName("phone")
+    private String phone;
+    
+    @SerializedName("name")
+    private String name;
+
+    // Getters
+    public String getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getFullName() {
+        if (firstName != null && lastName != null) {
+            return firstName + " " + lastName;
+        }
+        return name != null ? name : email;
+    }
+
+    // Setters
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}

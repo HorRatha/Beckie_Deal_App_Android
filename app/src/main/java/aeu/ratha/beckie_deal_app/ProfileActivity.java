@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
@@ -15,15 +16,22 @@ import androidx.core.widget.NestedScrollView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
+import aeu.ratha.beckie_deal_app.security.TokenManager;
+
 public class ProfileActivity extends BaseActivity {
+    
+    private TokenManager tokenManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        tokenManager = TokenManager.getInstance(this);
+
         AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
+        setupUserProfile();
         setupAuthButtons();
         setupDarkModeSwitch();
         setupNotificationToggle();
@@ -70,16 +78,67 @@ public class ProfileActivity extends BaseActivity {
         UiAnimations.pressBounce(notificationContainer, editAvatarButton);
     }
 
+    private void setupUserProfile() {
+        TextView userNameText = findViewById(R.id.userName);
+        TextView userEmailText = findViewById(R.id.userEmail);
+        
+        if (tokenManager.isLoggedIn()) {
+            // User is logged in - show their info
+            String name = tokenManager.getUserName();
+            String email = tokenManager.getUserEmail();
+            
+            if (userNameText != null) {
+                userNameText.setText(name != null ? name : "User");
+            }
+            if (userEmailText != null) {
+                userEmailText.setText(email != null ? email : "");
+            }
+        }
+    }
+
     private void setupAuthButtons() {
         MaterialButton loginButton    = findViewById(R.id.loginButton);
         MaterialButton registerButton = findViewById(R.id.registerButton);
+        MaterialButton logoutButton   = findViewById(R.id.logoutButton);
 
-        if (loginButton != null) loginButton.setOnClickListener(v ->
-                startActivity(new Intent(this, LoginActivity.class)));
-        if (registerButton != null) registerButton.setOnClickListener(v ->
-                startActivity(new Intent(this, RegisterActivity.class)));
-
-        UiAnimations.pressBounce(loginButton, registerButton);
+        if (tokenManager.isLoggedIn()) {
+            // User is logged in - show logout button, hide login/register
+            if (loginButton != null) loginButton.setVisibility(View.GONE);
+            if (registerButton != null) registerButton.setVisibility(View.GONE);
+            if (logoutButton != null) {
+                logoutButton.setVisibility(View.VISIBLE);
+                logoutButton.setOnClickListener(v -> handleLogout());
+                UiAnimations.pressBounce(logoutButton);
+            }
+        } else {
+            // User is NOT logged in - show login/register, hide logout
+            if (logoutButton != null) logoutButton.setVisibility(View.GONE);
+            if (loginButton != null) {
+                loginButton.setVisibility(View.VISIBLE);
+                loginButton.setOnClickListener(v ->
+                        startActivity(new Intent(this, LoginActivity.class)));
+                UiAnimations.pressBounce(loginButton);
+            }
+            if (registerButton != null) {
+                registerButton.setVisibility(View.VISIBLE);
+                registerButton.setOnClickListener(v ->
+                        startActivity(new Intent(this, RegisterActivity.class)));
+                UiAnimations.pressBounce(registerButton);
+            }
+        }
+    }
+    
+    private void handleLogout() {
+        // Clear all authentication data
+        tokenManager.logout();
+        
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+        
+        // Navigate to login screen
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void setupDarkModeSwitch() {

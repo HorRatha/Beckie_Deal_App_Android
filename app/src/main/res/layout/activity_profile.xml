@@ -130,6 +130,7 @@
                 android:layout_height="72dp" />
 
             <TextView
+                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
@@ -139,6 +140,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/userEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -187,6 +189,22 @@
                 app:elevation="0dp" />
 
         </LinearLayout>
+
+        <!-- LOGOUT BUTTON (shown when logged in) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="20dp"
+            android:text="Logout"
+            android:textAllCaps="false"
+            android:textColor="@color/white_fixed"
+            android:textSize="@dimen/text_size_body_large"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:backgroundTint="@color/red_error"
+            app:elevation="2dp"
+            app:strokeWidth="0dp" />
 
     </LinearLayout>
 
