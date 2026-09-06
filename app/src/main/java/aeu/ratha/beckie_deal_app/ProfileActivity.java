@@ -100,19 +100,31 @@ public class ProfileActivity extends BaseActivity {
         MaterialButton loginButton    = findViewById(R.id.loginButton);
         MaterialButton registerButton = findViewById(R.id.registerButton);
         MaterialButton logoutButton   = findViewById(R.id.logoutButton);
+        MaterialButton floatingLogoutButton = findViewById(R.id.floatingLogoutButton);
 
-        if (tokenManager.isLoggedIn()) {
-            // User is logged in - show logout button, hide login/register
+        boolean isLoggedIn = tokenManager.isLoggedIn();
+        android.util.Log.d("ProfileActivity", "User logged in: " + isLoggedIn);
+
+        if (isLoggedIn) {
+            // User is logged in - hide all auth buttons in the header section
             if (loginButton != null) loginButton.setVisibility(View.GONE);
             if (registerButton != null) registerButton.setVisibility(View.GONE);
-            if (logoutButton != null) {
-                logoutButton.setVisibility(View.VISIBLE);
-                logoutButton.setOnClickListener(v -> handleLogout());
-                UiAnimations.pressBounce(logoutButton);
+            if (logoutButton != null) logoutButton.setVisibility(View.GONE);
+            
+            // Show floating logout button at bottom right
+            if (floatingLogoutButton != null) {
+                floatingLogoutButton.setVisibility(View.VISIBLE);
+                floatingLogoutButton.setOnClickListener(v -> handleLogout());
+                UiAnimations.pressBounce(floatingLogoutButton);
+                android.util.Log.d("ProfileActivity", "Floating logout button set to VISIBLE");
+            } else {
+                android.util.Log.e("ProfileActivity", "floatingLogoutButton is NULL!");
             }
         } else {
-            // User is NOT logged in - show login/register, hide logout
+            // User is NOT logged in - show login/register in header, hide logout everywhere
             if (logoutButton != null) logoutButton.setVisibility(View.GONE);
+            if (floatingLogoutButton != null) floatingLogoutButton.setVisibility(View.GONE);
+            
             if (loginButton != null) {
                 loginButton.setVisibility(View.VISIBLE);
                 loginButton.setOnClickListener(v ->
