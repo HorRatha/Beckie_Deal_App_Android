@@ -1,11 +1,57 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.ui.adapters;
+
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+
+import aeu.ratha.beckie_deal_app.R;
+
+
+import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
 
 import android.content.Context;
+
+import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
+
 import android.content.Intent;
+
+import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
+
 import android.view.LayoutInflater;
+
+import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
+
 import android.view.View;
+
+import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
+
 import android.view.ViewGroup;
+
+import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
+
 import android.widget.ImageView;
+
+import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
+
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

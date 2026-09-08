@@ -1,10 +1,36 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.ui.activities.profile;
+
+import aeu.ratha.beckie_deal_app.R;
+
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 
 import android.os.Bundle;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+
 import android.view.LayoutInflater;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+
 import android.view.View;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+
 import android.widget.ImageView;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+
 import android.widget.LinearLayout;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;

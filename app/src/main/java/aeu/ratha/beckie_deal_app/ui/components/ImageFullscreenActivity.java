@@ -1,12 +1,38 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.ui.components;
+
+import aeu.ratha.beckie_deal_app.R;
+
+
+import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 
 import android.graphics.Color;
+
+import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
+
 import android.os.Bundle;
+
+import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
+
 import android.view.View;
+
+import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
+
 import android.view.Window;
+
+import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
+
 import android.view.WindowManager;
+
+import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
+
 import android.widget.ImageView;
+
+import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
+
 import android.widget.LinearLayout;
+
+import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
+
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;

@@ -1,4 +1,4 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.ui.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,11 +15,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
+import aeu.ratha.beckie_deal_app.R;
 import aeu.ratha.beckie_deal_app.data.api.AuthApiService;
 import aeu.ratha.beckie_deal_app.data.models.LoginRequest;
 import aeu.ratha.beckie_deal_app.data.models.LoginResponse;
 import aeu.ratha.beckie_deal_app.network.RetrofitClient;
 import aeu.ratha.beckie_deal_app.security.TokenManager;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

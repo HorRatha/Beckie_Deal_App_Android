@@ -1,8 +1,24 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.ui.adapters;
+
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+
+import aeu.ratha.beckie_deal_app.R;
+
+
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 
 import android.content.Context;
+
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+
 import android.view.View;
+
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+
 import android.widget.ImageView;
+
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;

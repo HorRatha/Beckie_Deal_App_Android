@@ -1,12 +1,46 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.ui.components;
+
+import aeu.ratha.beckie_deal_app.R;
+
+
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 
 import android.graphics.Color;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
+
 import android.os.Bundle;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
+
 import android.view.LayoutInflater;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
+
 import android.view.View;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
+
 import android.view.ViewGroup;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
+
 import android.widget.LinearLayout;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
+
 import android.widget.SeekBar;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
+
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -1,4 +1,4 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.utils.helpers;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -18,6 +18,19 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.security.TokenManager;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.product.CategoriesActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.FavoritesActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.ProfileActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
 
 /**
  * AppDrawerHelper

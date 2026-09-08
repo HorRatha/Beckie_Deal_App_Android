@@ -1,9 +1,11 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.utils.helpers;
 
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
 
 /**
  * Base activity for the app.

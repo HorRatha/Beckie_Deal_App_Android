@@ -1,16 +1,102 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.ui.activities.profile;
+
+import aeu.ratha.beckie_deal_app.R;
+
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.content.Intent;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.graphics.Typeface;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.net.Uri;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.os.Bundle;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.text.TextUtils;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.view.View;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.view.ViewGroup;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.widget.Button;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.widget.EditText;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.widget.ImageView;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.widget.TextView;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+
 import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;

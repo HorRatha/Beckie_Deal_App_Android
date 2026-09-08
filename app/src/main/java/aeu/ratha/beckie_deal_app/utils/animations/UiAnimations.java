@@ -1,4 +1,4 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.utils.animations;
 
 import android.view.MotionEvent;
 import android.view.View;

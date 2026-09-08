@@ -1,4 +1,20 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.ui.activities.main;
+
+import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
+import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.product.ProductListActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.product.SearchActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.product.CategoriesActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.product.CategoryDetailActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,15 +30,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -811,22 +830,22 @@ public class MainActivity extends BaseActivity {
     }
 
     public static class Product {
-        String name, price, rating, imageUrl;
-        String sku;           // e.g. "BECKIE6036"
-        boolean inStock;      // true = Available In Stock
-        int warrantyYears;    // e.g. 1
-        String specs;         // short bullet specs, newline-separated, e.g. "-13.6\" Liquid Retina\n-Weight: 1.24Kg"
-        String freeItems;     // e.g. "Free 8 items"
-        boolean isFavorite;
+        public String name, price, rating, imageUrl;
+        public String sku;           // e.g. "BECKIE6036"
+        public boolean inStock;      // true = Available In Stock
+        public int warrantyYears;    // e.g. 1
+        public String specs;         // short bullet specs, newline-separated, e.g. "-13.6\" Liquid Retina\n-Weight: 1.24Kg"
+        public String freeItems;     // e.g. "Free 8 items"
+        public boolean isFavorite;
 
         // Minimal constructor (legacy — no SKU/stock/warranty/specs)
-        Product(String n, String p, String r, boolean f, String i) {
+        public Product(String n, String p, String r, boolean f, String i) {
             name=n; price=p; rating=r; isFavorite=f; imageUrl=i;
             inStock=true; warrantyYears=1; sku=""; specs=""; freeItems="";
         }
 
         // Full constructor
-        Product(String n, String p, String r, boolean f, String i,
+        public Product(String n, String p, String r, boolean f, String i,
                 String sku, boolean inStock, int warranty, String specs, String freeItems) {
             name=n; price=p; rating=r; isFavorite=f; imageUrl=i;
             this.sku=sku; this.inStock=inStock; this.warrantyYears=warranty;

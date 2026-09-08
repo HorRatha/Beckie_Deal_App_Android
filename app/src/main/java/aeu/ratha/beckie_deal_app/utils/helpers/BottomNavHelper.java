@@ -1,4 +1,4 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.utils.helpers;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -8,6 +8,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+
+import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.product.CategoriesActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.FavoritesActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.ProfileActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;

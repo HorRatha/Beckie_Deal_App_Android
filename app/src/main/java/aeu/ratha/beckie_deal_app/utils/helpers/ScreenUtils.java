@@ -1,4 +1,4 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.utils.helpers;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -7,6 +7,8 @@ import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.TextView;
+
+import aeu.ratha.beckie_deal_app.R;
 
 /**
  * Utility class for responsive layout helpers.

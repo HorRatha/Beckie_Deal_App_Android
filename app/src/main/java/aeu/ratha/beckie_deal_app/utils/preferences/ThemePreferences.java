@@ -1,4 +1,4 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.utils.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

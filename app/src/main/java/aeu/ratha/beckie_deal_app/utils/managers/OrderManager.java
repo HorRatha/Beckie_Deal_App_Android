@@ -1,4 +1,4 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.utils.managers;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

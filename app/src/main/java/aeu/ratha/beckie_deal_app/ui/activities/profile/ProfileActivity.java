@@ -1,14 +1,156 @@
-package aeu.ratha.beckie_deal_app;
+package aeu.ratha.beckie_deal_app.ui.activities.profile;
+
+import aeu.ratha.beckie_deal_app.R;
+
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
 
 import android.content.Intent;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+
 import android.content.res.Configuration;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+
 import android.os.Bundle;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+
 import android.view.View;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+
 import android.view.ViewGroup;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+
 import android.widget.FrameLayout;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+
 import android.widget.ImageView;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+
 import android.widget.LinearLayout;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+
 import android.widget.TextView;
+
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
