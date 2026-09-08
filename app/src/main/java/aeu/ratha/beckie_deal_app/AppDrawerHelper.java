@@ -168,6 +168,14 @@ public class AppDrawerHelper {
         return new AppDrawerHelper(activity, drawerLayoutId, menuIconId);
     }
 
+    /** 
+     * Refresh drawer content - call this after login/logout to update user info.
+     * This can be called from any activity that has the drawer attached.
+     */
+    public void refreshDrawerContent() {
+        setupDrawerContent();
+    }
+
     public void openDrawer() {
         if (drawerLayout == null) return;
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) return;
@@ -287,11 +295,35 @@ public class AppDrawerHelper {
     private void setupDrawerContent() {
         if (drawerLayout == null) return;
 
-        // ── Header: populate user info (guest for now) ───────────────────
+        // ── Header: populate user info ───────────────────────────────────
         TextView userName  = drawerLayout.findViewById(R.id.drawerUserName);
         TextView userEmail = drawerLayout.findViewById(R.id.drawerUserEmail);
-        if (userName  != null) userName.setText("Guest User");
-        if (userEmail != null) userEmail.setText("Sign in to your account");
+        
+        // Get TokenManager to check if user is logged in
+        aeu.ratha.beckie_deal_app.security.TokenManager tokenManager = 
+            aeu.ratha.beckie_deal_app.security.TokenManager.getInstance(activity);
+        
+        android.util.Log.d("AppDrawerHelper", "Setting up drawer - User logged in: " + tokenManager.isLoggedIn());
+        
+        if (tokenManager.isLoggedIn()) {
+            // User is logged in - show their info
+            String name = tokenManager.getUserName();
+            String email = tokenManager.getUserEmail();
+            
+            android.util.Log.d("AppDrawerHelper", "User name: " + name);
+            android.util.Log.d("AppDrawerHelper", "User email: " + email);
+            
+            if (userName != null) {
+                userName.setText(name != null ? name : "User");
+            }
+            if (userEmail != null) {
+                userEmail.setText(email != null ? email : "");
+            }
+        } else {
+            // User is not logged in - show guest
+            if (userName != null) userName.setText("Guest User");
+            if (userEmail != null) userEmail.setText("Sign in to your account");
+        }
 
         // ── Live favorites badge ─────────────────────────────────────────
         TextView favBadge = drawerLayout.findViewById(R.id.drawerFavBadge);
