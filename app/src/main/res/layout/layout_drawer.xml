@@ -40,11 +40,22 @@
                 app:tint="@color/white_fixed" />
         </LinearLayout>
 
+        <!-- Welcome back message for logged-in users -->
+        <TextView
+            android:id="@+id/drawerWelcomeBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Welcome back!"
+            android:textColor="#CCFFFFFF"
+            android:textSize="@dimen/text_size_caption"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/drawerUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:text="Guest User"
             android:textColor="@color/white_fixed"
             android:textSize="@dimen/text_size_title_small"
@@ -331,7 +342,7 @@
                     android:textSize="@dimen/text_size_body_large" />
             </LinearLayout>
 
-            <!-- Login / Logout -->
+            <!-- Login / Register (shown only when not logged in) -->
             <LinearLayout
                 android:id="@+id/drawerLogin"
                 android:layout_width="match_parent"
@@ -358,6 +369,35 @@
                     android:text="Login / Register"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_size_body_large" />
+            </LinearLayout>
+
+            <!-- Logout (shown only when logged in) -->
+            <LinearLayout
+                android:id="@+id/drawerLogout"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/drawer_item_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_logout"
+                    android:contentDescription="Logout"
+                    app:tint="@color/red_error" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:text="Logout"
+                    android:textColor="@color/red_error"
+                    android:textSize="@dimen/text_size_body_large"
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>

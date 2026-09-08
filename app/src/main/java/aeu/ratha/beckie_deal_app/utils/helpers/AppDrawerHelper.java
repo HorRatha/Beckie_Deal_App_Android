@@ -309,6 +309,7 @@ public class AppDrawerHelper {
         if (drawerLayout == null) return;
 
         // ── Header: populate user info ───────────────────────────────────
+        TextView welcomeBack = drawerLayout.findViewById(R.id.drawerWelcomeBack);
         TextView userName  = drawerLayout.findViewById(R.id.drawerUserName);
         TextView userEmail = drawerLayout.findViewById(R.id.drawerUserEmail);
         
@@ -319,13 +320,16 @@ public class AppDrawerHelper {
         android.util.Log.d("AppDrawerHelper", "Setting up drawer - User logged in: " + tokenManager.isLoggedIn());
         
         if (tokenManager.isLoggedIn()) {
-            // User is logged in - show their info
+            // User is logged in - show their info with welcome message
             String name = tokenManager.getUserName();
             String email = tokenManager.getUserEmail();
             
             android.util.Log.d("AppDrawerHelper", "User name: " + name);
             android.util.Log.d("AppDrawerHelper", "User email: " + email);
             
+            if (welcomeBack != null) {
+                welcomeBack.setVisibility(View.VISIBLE);
+            }
             if (userName != null) {
                 userName.setText(name != null ? name : "User");
             }
@@ -334,6 +338,9 @@ public class AppDrawerHelper {
             }
         } else {
             // User is not logged in - show guest
+            if (welcomeBack != null) {
+                welcomeBack.setVisibility(View.GONE);
+            }
             if (userName != null) userName.setText("Guest User");
             if (userEmail != null) userEmail.setText("Sign in to your account");
         }
@@ -454,13 +461,54 @@ public class AppDrawerHelper {
         prepareDrawerItem(aboutItem);
 
         View loginItem = drawerLayout.findViewById(R.id.drawerLogin);
-        if (loginItem != null) loginItem.setOnClickListener(v -> {
-            closeDrawer();
-            if (!(activity instanceof ProfileActivity)) {
-                activity.startActivity(new Intent(activity, ProfileActivity.class));
-                activity.overridePendingTransition(0, 0);
+        View logoutItem = drawerLayout.findViewById(R.id.drawerLogout);
+        
+        if (tokenManager.isLoggedIn()) {
+            // User is logged in - hide login button, show logout button
+            if (loginItem != null) {
+                loginItem.setVisibility(View.GONE);
             }
-        });
-        prepareDrawerItem(loginItem);
+            if (logoutItem != null) {
+                logoutItem.setVisibility(View.VISIBLE);
+                logoutItem.setOnClickListener(v -> {
+                    closeDrawer();
+                    // Show confirmation dialog before logout
+                    new android.app.AlertDialog.Builder(activity)
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Logout", (dialog, which) -> {
+                            // Clear token and user data
+                            tokenManager.logout();
+                            
+                            // Redirect to MainActivity
+                            Intent intent = new Intent(activity, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            activity.startActivity(intent);
+                            activity.finish();
+                            
+                            Toast.makeText(activity, "Logged out successfully", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+                });
+                prepareDrawerItem(logoutItem);
+            }
+        } else {
+            // User is not logged in - show login button, hide logout button
+            if (loginItem != null) {
+                loginItem.setVisibility(View.VISIBLE);
+                loginItem.setOnClickListener(v -> {
+                    closeDrawer();
+                    if (!(activity instanceof ProfileActivity)) {
+                        activity.startActivity(new Intent(activity, ProfileActivity.class));
+                        activity.overridePendingTransition(0, 0);
+                    }
+                });
+                prepareDrawerItem(loginItem);
+            }
+            if (logoutItem != null) {
+                logoutItem.setVisibility(View.GONE);
+            }
+        }
     }
 }
