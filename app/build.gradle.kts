@@ -52,6 +52,9 @@ dependencies {
     // RecyclerView for efficient scrolling product grids
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
+    // SwipeRefreshLayout for pull-to-refresh functionality
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
     // Glide - Image loading library for product images (Latest version)
     implementation("com.github.bumptech.glide:glide:5.0.0-rc01")
     annotationProcessor("com.github.bumptech.glide:compiler:5.0.0-rc01")

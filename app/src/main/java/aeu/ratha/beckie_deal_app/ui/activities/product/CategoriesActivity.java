@@ -1,7 +1,10 @@
 package aeu.ratha.beckie_deal_app.ui.activities.product;
 
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-
+import aeu.ratha.beckie_deal_app.data.models.Brand;
+import aeu.ratha.beckie_deal_app.data.models.Category;
+import aeu.ratha.beckie_deal_app.data.repository.BrandRepository;
+import aeu.ratha.beckie_deal_app.data.repository.CategoryRepository;
 import aeu.ratha.beckie_deal_app.R;
 
 
@@ -40,6 +43,7 @@ import aeu.ratha.beckie_deal_app.ui.activities.product.AllBrandsActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
@@ -123,8 +127,15 @@ import java.util.List;
 
 public class CategoriesActivity extends BaseActivity {
 
-    private List<Brand> brandsList = new ArrayList<>();
+    private static final String TAG = "CategoriesActivity";
+    private static final int BRANDS_PREVIEW_COUNT = 6;
+    
+    private List<BrandDisplay> brandsList = new ArrayList<>();
+    private List<CategoryItem> categoriesList = new ArrayList<>();
     private GridLayout brandsGrid;
+    private GridLayout allCategoriesGrid;
+    private BrandRepository brandRepository;
+    private CategoryRepository categoryRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,9 +144,9 @@ public class CategoriesActivity extends BaseActivity {
 
         AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
-        initBrandsData();
-        setupLaptopBrands();
-        setupAllCategories();
+        initRepository();
+        fetchFeaturedBrands(); // Fetch from API
+        fetchAllCategories(); // Fetch categories from API
         setupBottomNavigation();
         setupEntranceAnimation();
     }
@@ -162,20 +173,90 @@ public class CategoriesActivity extends BaseActivity {
         UiAnimations.fadeSlideUp(findViewById(R.id.laptopBrandsSectionHeader), 80);
         UiAnimations.fadeSlideUp(findViewById(R.id.allCategoriesTitle), 140);
     }
+    
+    /**
+     * Initialize brand and category repositories.
+     */
+    private void initRepository() {
+        brandRepository = BrandRepository.getInstance(this);
+        categoryRepository = CategoryRepository.getInstance(this);
+    }
+    
+    /**
+     * Fetch featured/famous brands from API.
+     * Endpoint: GET /master/brands?limit=20&offset=0
+     */
+    private void fetchFeaturedBrands() {
+        Log.d(TAG, "=== FETCHING BRANDS FROM API ===");
+        
+        // Fetch all brands from API
+        brandRepository.fetchBrands(20, 0, false, new BrandRepository.BrandCallback() {
+            @Override
+            public void onSuccess(List<Brand> brands, int total) {
+                Log.d(TAG, "✓ API SUCCESS: Received " + brands.size() + " brands from API");
+                
+                brandsList.clear();
+                
+                // Add first 6 active brands (no hardcoded filtering)
+                for (Brand brand : brands) {
+                    if (brand.isActive()) {
+                        int drawableId = getBrandDrawable(brand.getName());
+                        brandsList.add(new BrandDisplay(brand, drawableId, false));
+                        
+                        Log.d(TAG, "  - " + brand.getName() + 
+                            " (ID: " + brand.getId() + 
+                            ", products: " + brand.getProductsCount() + 
+                            ", featured: " + brand.isFeatured() + ")");
+                        
+                        if (brandsList.size() >= BRANDS_PREVIEW_COUNT) break;
+                    }
+                }
+                
+                Log.d(TAG, "=== RENDERING " + brandsList.size() + " BRANDS ===");
+                setupLaptopBrands();
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "✗ API ERROR: " + errorMessage);
+                initFallbackBrands();
+                setupLaptopBrands();
+            }
+        });
+    }
+    
+    /**
+     * Get drawable resource ID for a brand name from API.
+     * Maps brand names to local icon resources.
+     */
+    private int getBrandDrawable(String brandName) {
+        String name = brandName.toLowerCase();
+        if (name.contains("asus")) return R.drawable.ic_brand_asus;
+        if (name.contains("rog")) return R.drawable.ic_brand_rog;
+        if (name.contains("apple")) return R.drawable.ic_brand_apple;
+        if (name.contains("razer")) return R.drawable.ic_brand_razer;
+        if (name.contains("msi")) return R.drawable.ic_brand_msi;
+        if (name.contains("dell")) return R.drawable.ic_brand_dell;
+        if (name.contains("hp")) return R.drawable.ic_brand_hp;
+        if (name.contains("lenovo")) return R.drawable.ic_brand_lenovo;
+        if (name.contains("samsung")) return R.drawable.ic_brand_samsung;
+        if (name.contains("acer")) return R.drawable.ic_brand_acer;
+        if (name.contains("microsoft")) return R.drawable.ic_brand_microsoft;
+        return 0; // No icon
+    }
 
-    private void initBrandsData() {
+    /**
+     * Handle API error - show empty state or error message.
+     */
+    private void initFallbackBrands() {
+        Log.e(TAG, "Failed to load brands from API");
         brandsList.clear();
-        brandsList.add(new Brand("Apple",     R.drawable.ic_brand_apple,     false));
-        brandsList.add(new Brand("ASUS",      R.drawable.ic_brand_asus,      true));
-        brandsList.add(new Brand("ROG",       R.drawable.ic_brand_rog,       false));
-        brandsList.add(new Brand("Razer",     R.drawable.ic_brand_razer,     false));
-        brandsList.add(new Brand("MSI",       R.drawable.ic_brand_msi,       false));
-        brandsList.add(new Brand("Dell",      R.drawable.ic_brand_dell,      false));
-        brandsList.add(new Brand("HP",        R.drawable.ic_brand_hp,        false));
-        brandsList.add(new Brand("Lenovo",    R.drawable.ic_brand_lenovo,    false));
-        brandsList.add(new Brand("Acer",      R.drawable.ic_brand_acer,      false));
-        brandsList.add(new Brand("Microsoft", R.drawable.ic_brand_microsoft, false));
-        brandsList.add(new Brand("Samsung",   R.drawable.ic_brand_samsung,   false));
+        
+        // Show error message to user
+        runOnUiThread(() -> {
+            Toast.makeText(this, "Failed to load brands. Please check your connection.", 
+                Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void setupLaptopBrands() {
@@ -202,7 +283,6 @@ public class CategoriesActivity extends BaseActivity {
 
     /** How many brands to preview on this page before "View All" (keeps a clean
      *  2-column grid of 3 even rows). The full list lives in AllBrandsActivity. */
-    private static final int BRANDS_PREVIEW_COUNT = 6;
 
     private void renderBrands() {
         if (brandsGrid == null) return;
@@ -210,7 +290,9 @@ public class CategoriesActivity extends BaseActivity {
 
         int previewCount = Math.min(brandsList.size(), BRANDS_PREVIEW_COUNT);
         for (int i = 0; i < previewCount; i++) {
-            Brand brand = brandsList.get(i);
+            BrandDisplay brandDisplay = brandsList.get(i);
+            Brand brand = brandDisplay.brand;
+            
             View view = LayoutInflater.from(this)
                     .inflate(R.layout.item_brand_square, brandsGrid, false);
 
@@ -222,33 +304,50 @@ public class CategoriesActivity extends BaseActivity {
             TextView  countText            = view.findViewById(R.id.brandProductCount);
             View      checkBadge           = view.findViewById(R.id.selectedCheckBadge);
 
-            nameText.setText(brand.name);
+            nameText.setText(brand.getName());
 
-            // Show product count for each brand
+            // Show product count from API
             if (countText != null) {
-                int productCount = getBrandProductCount(brand.name);
+                int productCount = brand.getProductsCount();
                 if (productCount > 0) {
                     countText.setText(productCount + " items");
                     countText.setVisibility(View.VISIBLE);
+                } else {
+                    // Fallback to catalog count
+                    productCount = getBrandProductCount(brand.getName());
+                    if (productCount > 0) {
+                        countText.setText(productCount + " items");
+                        countText.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
-            if (brand.imageResId != 0) {
+            if (brandDisplay.imageResId != 0) {
                 brandIcon.setVisibility(View.VISIBLE);
                 iconText.setVisibility(View.GONE);
-                brandIcon.setImageResource(brand.imageResId);
+                brandIcon.setImageResource(brandDisplay.imageResId);
+            } else if (brand.getLogo() != null && !brand.getLogo().isEmpty()) {
+                // Load logo from URL with Glide
+                brandIcon.setVisibility(View.VISIBLE);
+                iconText.setVisibility(View.GONE);
+                Glide.with(this)
+                    .load(brand.getLogo())
+                    .placeholder(R.drawable.placeholder_image)
+                    .into(brandIcon);
             } else {
+                // Show initial letter
                 brandIcon.setVisibility(View.GONE);
                 iconText.setVisibility(View.VISIBLE);
-                iconText.setText(brand.name.substring(0,
-                        Math.min(brand.name.length(), 3)).toUpperCase());
+                String initial = brand.getName().substring(0, 
+                    Math.min(brand.getName().length(), 1)).toUpperCase();
+                iconText.setText(initial);
             }
 
             int[] tint = BRAND_TINTS[i % BRAND_TINTS.length];
             int tintBg = ContextCompat.getColor(this, tint[0]);
             int tintFg = ContextCompat.getColor(this, tint[1]);
 
-            if (brand.isSelected) {
+            if (brandDisplay.isSelected) {
                 int primaryColor = ContextCompat.getColor(this, R.color.primary);
                 card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.brand_selected_bg));
                 card.setStrokeWidth(dpToPx(2));
@@ -278,19 +377,21 @@ public class CategoriesActivity extends BaseActivity {
                 for (int j = 0; j < brandsList.size(); j++)
                     brandsList.get(j).isSelected = (j == index);
                 renderBrands();
-                // Open CategoryDetailActivity pre-filtered to this brand, using the
-                // category where the brand actually has products (e.g. gaming brands).
-                String category = brandToCategory(brand.name);
-                int total = getBrandProductCount(brand.name);
+                
+                // Open CategoryDetailActivity pre-filtered to this brand
+                String category = brandToCategory(brand.getName());
+                int total = brand.getProductsCount();
+                if (total == 0) total = getBrandProductCount(brand.getName());
+                
                 Intent intent = new Intent(this, CategoryDetailActivity.class);
                 intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,     category);
                 intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE,   heroImageFor(category));
                 intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT,   total + " Items");
-                intent.putExtra(CategoryDetailActivity.EXTRA_BRAND_FILTER, brand.name);
+                intent.putExtra(CategoryDetailActivity.EXTRA_BRAND_FILTER, brand.getName());
+                intent.putExtra("BRAND_ID", brand.getId());
+                intent.putExtra("BRAND_SLUG", brand.getSlug());
                 startActivity(intent);
             };
-            // Card is the clickable element (has ripple foreground); the root FrameLayout
-            // only exists to float the checkmark badge, so it must not intercept the click.
             card.setOnClickListener(onBrandClick);
 
             brandsGrid.addView(view);
@@ -336,35 +437,144 @@ public class CategoriesActivity extends BaseActivity {
         return (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
     }
 
+    /**
+     * Fetch all categories from API.
+     * Endpoint: GET /api/v1/master/categories?limit=20&offset=0
+     */
+    private void fetchAllCategories() {
+        Log.d(TAG, "=== FETCHING ALL CATEGORIES FROM API ===");
+        
+        categoryRepository.fetchActiveCategories(20, 0, new CategoryRepository.CategoryCallback() {
+            @Override
+            public void onSuccess(List<Category> categories, int total) {
+                Log.d(TAG, "✓ API SUCCESS: Received " + categories.size() + " categories");
+                
+                categoriesList.clear();
+                
+                if (categories != null) {
+                    for (Category category : categories) {
+                        if (category.isActive()) {
+                            int iconRes = getCategoryIcon(category.getName());
+                            String imageUrl = getCategoryImageUrl(category);
+                            String countText = category.getProductsCount() > 0 
+                                ? category.getProductsCount() + " Items" 
+                                : "0 Items";
+                            
+                            Log.d(TAG, "  - " + category.getName() + 
+                                " (ID: " + category.getId() + 
+                                ", products: " + category.getProductsCount() + 
+                                ", featured: " + category.isFeatured() + ")");
+                            
+                            categoriesList.add(new CategoryItem(
+                                category.getName(),
+                                countText,
+                                imageUrl,
+                                iconRes,
+                                category.isFeatured(),
+                                category.getId(),
+                                category.getSlug()
+                            ));
+                        }
+                    }
+                }
+                
+                Log.d(TAG, "=== RENDERING " + categoriesList.size() + " CATEGORIES ===");
+                setupAllCategories();
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "✗ API ERROR: " + errorMessage);
+                initFallbackCategories();
+            }
+        });
+    }
+    
+    /**
+     * Map category name from API to appropriate icon resource.
+     * This converts API category names to UI icons.
+     */
+    private int getCategoryIcon(String categoryName) {
+        String name = categoryName.toLowerCase();
+        if (name.contains("laptop") || name.contains("computer")) return R.drawable.devices_24;
+        if (name.contains("phone") || name.contains("mobile")) return R.drawable.mobile_24;
+        if (name.contains("accessor")) return R.drawable.widgets_24;
+        if (name.contains("gaming") || name.contains("game")) return R.drawable.sports_esports_24;
+        if (name.contains("wearable") || name.contains("watch")) return R.drawable.devices_wearables_24;
+        if (name.contains("monitor") || name.contains("display")) return R.drawable.devices_24;
+        if (name.contains("storage") || name.contains("drive")) return R.drawable.widgets_24;
+        if (name.contains("network")) return R.drawable.widgets_24;
+        if (name.contains("audio") || name.contains("sound")) return R.drawable.widgets_24;
+        return R.drawable.widgets_24; // Default icon
+    }
+    
+    /**
+     * Get image URL for category from API or generate fallback.
+     * Priority: 1) API image URL, 2) Default Unsplash images based on name
+     */
+    private String getCategoryImageUrl(Category category) {
+        // Use API image if available
+        if (category.getImage() != null && !category.getImage().isEmpty()) {
+            Log.d(TAG, "Using API image for " + category.getName() + ": " + category.getImage());
+            return category.getImage();
+        }
+        
+        // Generate default image based on category name
+        String name = category.getName().toLowerCase();
+        if (name.contains("laptop") || name.contains("computer")) 
+            return "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop";
+        if (name.contains("phone") || name.contains("mobile")) 
+            return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop";
+        if (name.contains("accessor")) 
+            return "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop";
+        if (name.contains("audio") || name.contains("sound")) 
+            return "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop";
+        if (name.contains("gaming") || name.contains("game")) 
+            return "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop";
+        if (name.contains("wearable") || name.contains("watch")) 
+            return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop";
+        if (name.contains("monitor") || name.contains("display")) 
+            return "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop";
+        if (name.contains("storage") || name.contains("drive")) 
+            return "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=600&h=400&fit=crop";
+        if (name.contains("network")) 
+            return "https://images.unsplash.com/photo-1606904825846-647eb07f5be2?w=600&h=400&fit=crop";
+        // Default image
+        return "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&h=400&fit=crop";
+    }
+    
+    /**
+     * Handle API error - show empty state or error message.
+     */
+    private void initFallbackCategories() {
+        Log.e(TAG, "Failed to load categories from API");
+        categoriesList.clear();
+        
+        // Show error message to user
+        runOnUiThread(() -> {
+            Toast.makeText(this, "Failed to load categories. Please check your connection.", 
+                Toast.LENGTH_SHORT).show();
+        });
+        
+        // Still call setup to show empty state
+        setupAllCategories();
+    }
+    
+    /**
+     * Render all categories in UI grid from API data.
+     * This method is called after fetchAllCategories() completes successfully.
+     */
     private void setupAllCategories() {
-        GridLayout allCategoriesGrid = findViewById(R.id.allCategoriesGrid);
+        allCategoriesGrid = findViewById(R.id.allCategoriesGrid);
         if (allCategoriesGrid == null) return;
         // Responsive column count
         allCategoriesGrid.setColumnCount(ScreenUtils.categoryGridColumns(this));
 
-        List<CategoryItem> categories = new ArrayList<>();
-        categories.add(new CategoryItem("Laptops",     "124 Items",
-                "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop",
-                R.drawable.devices_24, true));
-        categories.add(new CategoryItem("Smartphones", "210 Items",
-                "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop",
-                R.drawable.mobile_24, false));
-        categories.add(new CategoryItem("Accessories", "456 Items",
-                "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop",
-                R.drawable.widgets_24, false));
-        categories.add(new CategoryItem("Audio",       "89 Items",
-                "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop",
-                R.drawable.widgets_24, false));
-        categories.add(new CategoryItem("Gaming",      "167 Items",
-                "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop",
-                R.drawable.sports_esports_24, false));
-        categories.add(new CategoryItem("Wearables",   "54 Items",
-                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop",
-                R.drawable.devices_wearables_24, false));
-
         allCategoriesGrid.removeAllViews();
-        for (int i = 0; i < categories.size(); i++) {
-            CategoryItem item = categories.get(i);
+        
+        // Render each category from API
+        for (int i = 0; i < categoriesList.size(); i++) {
+            CategoryItem item = categoriesList.get(i);
             View view = LayoutInflater.from(this)
                     .inflate(R.layout.item_category_grid, allCategoriesGrid, false);
 
@@ -390,6 +600,8 @@ public class CategoriesActivity extends BaseActivity {
                 intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,   item.name);
                 intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, item.imageUrl);
                 intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT, item.count);
+                intent.putExtra("CATEGORY_ID", item.categoryId);
+                intent.putExtra("CATEGORY_SLUG", item.categorySlug);
                 startActivity(intent);
             });
             allCategoriesGrid.addView(view);
@@ -402,27 +614,35 @@ public class CategoriesActivity extends BaseActivity {
 
     // ── Data classes ──────────────────────────────────────────────────────────
 
-    public static class Brand {
-        String name, imageUrl;
-        int    imageResId;
-        boolean isSelected;
-
-        Brand(String name, String imageUrl, boolean isSelected) {
-            this.name = name; this.imageUrl = imageUrl; this.isSelected = isSelected;
-        }
-        Brand(String name, int imageResId, boolean isSelected) {
-            this.name = name; this.imageResId = imageResId; this.isSelected = isSelected;
+    /**
+     * Wrapper class to combine API Brand with display properties.
+     */
+    private static class BrandDisplay {
+        Brand brand;           // API brand data
+        int imageResId;        // Drawable resource ID
+        boolean isSelected;    // Selection state
+        
+        BrandDisplay(Brand brand, int imageResId, boolean isSelected) {
+            this.brand = brand;
+            this.imageResId = imageResId;
+            this.isSelected = isSelected;
         }
     }
 
     private static class CategoryItem {
-        String name, count, imageUrl;
-        int    iconRes;
+        String name, count, imageUrl, categorySlug;
+        int iconRes, categoryId;
         boolean isHot;
 
-        CategoryItem(String name, String count, String imageUrl, int iconRes, boolean isHot) {
-            this.name = name; this.count = count; this.imageUrl = imageUrl;
-            this.iconRes = iconRes; this.isHot = isHot;
+        CategoryItem(String name, String count, String imageUrl, int iconRes, boolean isHot, 
+                    int categoryId, String categorySlug) {
+            this.name = name; 
+            this.count = count; 
+            this.imageUrl = imageUrl;
+            this.iconRes = iconRes; 
+            this.isHot = isHot;
+            this.categoryId = categoryId;
+            this.categorySlug = categorySlug;
         }
     }
 }

@@ -15,11 +15,13 @@ import aeu.ratha.beckie_deal_app.ui.activities.product.SearchActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.CategoriesActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.CategoryDetailActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.data.repository.CategoryRepository;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,11 +50,15 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
+    private static final String TAG = "MainActivity";
+    
     private List<Product> products;
-    private List<Category> categories;
+    private List<CategoryDisplay> categoryDisplayList; // UI display list
+    private List<aeu.ratha.beckie_deal_app.data.models.Category> apiCategories; // API data
     private AppDrawerHelper drawerHelper;
     private ProductGridAdapter productAdapter;
     private ImageView viewModeIcon;
+    private CategoryRepository categoryRepository;
 
     // Auto-scroll for horizontal sections
     private Handler autoScrollHandler;
@@ -82,11 +88,12 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         initializeMockData();
+        initRepository();
+        fetchCategories(); // Fetch from API
         drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         setupSearchBar();
         setupHeroBanner();
-        setupCategories();
         setupProducts();
         setupNewArrivalsBanner();
         setupNewCollectionSection();
@@ -148,12 +155,110 @@ public class MainActivity extends BaseActivity {
             if (p.isFavorite) FavoriteManager.getInstance().addFavorite(p);
         }
 
-        categories = new ArrayList<>();
-        categories.add(new Category("Laptops", R.drawable.devices_24, false));
-        categories.add(new Category("Phones", R.drawable.mobile_24, false));
-        categories.add(new Category("Accessories", R.drawable.widgets_24, false));
-        categories.add(new Category("Gaming", R.drawable.sports_esports_24, true));
-        categories.add(new Category("Wearables", R.drawable.devices_wearables_24, false));
+        // Initialize empty category display list (will be populated from API)
+        categoryDisplayList = new ArrayList<>();
+        apiCategories = new ArrayList<>();
+    }
+    
+    /**
+     * Initialize category repository.
+     */
+    private void initRepository() {
+        categoryRepository = CategoryRepository.getInstance(this);
+    }
+    
+    /**
+     * Fetch categories from API.
+     * Endpoint: GET /api/v1/master/categories?limit=20&offset=0
+     */
+    private void fetchCategories() {
+        Log.d(TAG, "=== FETCHING CATEGORIES FROM API ===");
+        
+        categoryRepository.fetchActiveCategories(20, 0, new CategoryRepository.CategoryCallback() {
+            @Override
+            public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Category> categories, int total) {
+                Log.d(TAG, "✓ API SUCCESS: Received " + categories.size() + " categories");
+                
+                apiCategories.clear();
+                categoryDisplayList.clear();
+                
+                if (categories != null) {
+                    apiCategories.addAll(categories);
+                    
+                    // Map API categories to UI display format
+                    for (aeu.ratha.beckie_deal_app.data.models.Category category : categories) {
+                        int iconRes = getCategoryIcon(category.getName());
+                        int accentIconRes = getCategoryAccentIcon(category.getName());
+                        boolean isHighlighted = category.isFeatured();
+                        
+                        Log.d(TAG, "  - " + category.getName() + " (ID: " + category.getId() + 
+                            ", slug: " + category.getSlug() + ", featured: " + isHighlighted + ")");
+                        
+                        categoryDisplayList.add(new CategoryDisplay(
+                            category, 
+                            iconRes, 
+                            accentIconRes,
+                            isHighlighted
+                        ));
+                    }
+                }
+                
+                Log.d(TAG, "=== RENDERING " + categoryDisplayList.size() + " CATEGORIES ===");
+                setupCategories();
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "✗ API ERROR: " + errorMessage);
+                initFallbackCategories();
+                setupCategories();
+            }
+        });
+    }
+    
+    /**
+     * Map category name from API to appropriate icon resource.
+     * This converts API category names like "Computer Components" to UI icons.
+     */
+    private int getCategoryIcon(String categoryName) {
+        String name = categoryName.toLowerCase();
+        if (name.contains("laptop") || name.contains("computer")) return R.drawable.devices_24;
+        if (name.contains("phone") || name.contains("mobile")) return R.drawable.mobile_24;
+        if (name.contains("accessor")) return R.drawable.widgets_24;
+        if (name.contains("gaming") || name.contains("game")) return R.drawable.sports_esports_24;
+        if (name.contains("wearable") || name.contains("watch")) return R.drawable.devices_wearables_24;
+        if (name.contains("monitor") || name.contains("display")) return R.drawable.devices_24;
+        if (name.contains("storage") || name.contains("drive")) return R.drawable.widgets_24;
+        if (name.contains("network")) return R.drawable.widgets_24;
+        return R.drawable.widgets_24; // Default icon
+    }
+    
+    /**
+     * Get decorative accent icon for category.
+     * These are visual enhancements shown on category cards.
+     */
+    private int getCategoryAccentIcon(String categoryName) {
+        String name = categoryName.toLowerCase();
+        if (name.contains("laptop") || name.contains("computer")) return R.drawable.category_accent_laptop;
+        if (name.contains("phone") || name.contains("mobile")) return R.drawable.category_accent_phone;
+        if (name.contains("accessor")) return R.drawable.category_accent_accessories;
+        if (name.contains("gaming") || name.contains("game")) return R.drawable.category_accent_gaming;
+        if (name.contains("wearable") || name.contains("watch")) return R.drawable.category_accent_wearables;
+        return R.drawable.decorative_sparkle_outline; // Default
+    }
+    
+    /**
+     * Handle API error - show empty state or error message.
+     */
+    private void initFallbackCategories() {
+        Log.e(TAG, "Failed to load categories from API");
+        categoryDisplayList.clear();
+        
+        // Show error message to user
+        runOnUiThread(() -> {
+            Toast.makeText(this, "Failed to load categories. Please check your connection.", 
+                Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void setupTopBar() {
@@ -390,6 +495,10 @@ public class MainActivity extends BaseActivity {
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
+    /**
+     * Render categories in UI from API data.
+     * This method is called after fetchCategories() completes successfully.
+     */
     private void setupCategories() {
         TextView viewAllCategories = findViewById(R.id.viewAllCategories);
         if (viewAllCategories != null) {
@@ -401,14 +510,14 @@ public class MainActivity extends BaseActivity {
         if (categoriesContainer == null) return;
         categoriesContainer.removeAllViews();
 
-        // Show ALL categories in a wrapping 2-column grid of horizontal pills
-        // (icon on the left, name on the right).
+        // Render categories from API in 2-column grid layout
         final int columns = 2;
         final int spacing = Math.round(10 * getResources().getDisplayMetrics().density);
         LinearLayout currentRow = null;
 
-        for (int i = 0; i < categories.size(); i++) {
-            final Category category = categories.get(i);
+        for (int i = 0; i < categoryDisplayList.size(); i++) {
+            final CategoryDisplay categoryDisplay = categoryDisplayList.get(i);
+            final aeu.ratha.beckie_deal_app.data.models.Category category = categoryDisplay.category;
             final int col = i % columns;
 
             if (col == 0) {
@@ -433,51 +542,30 @@ public class MainActivity extends BaseActivity {
             TextView categoryName = categoryView.findViewById(R.id.categoryName);
             ImageView decorativeIcon = categoryView.findViewById(R.id.categoryDecorativeIcon);
 
-            categoryIcon.setImageResource(category.iconResId);
-            categoryName.setText(category.name);
+            categoryIcon.setImageResource(categoryDisplay.iconResId);
+            categoryName.setText(category.getName());
 
             // Assign category-specific accent icon
             if (decorativeIcon != null) {
-                int accentIconRes = R.drawable.decorative_sparkle_outline; // default
-                switch (category.name) {
-                    case "Laptops":
-                        accentIconRes = R.drawable.category_accent_laptop;
-                        break;
-                    case "Phones":
-                        accentIconRes = R.drawable.category_accent_phone;
-                        break;
-                    case "Accessories":
-                        accentIconRes = R.drawable.category_accent_accessories;
-                        break;
-                    case "Gaming":
-                        accentIconRes = R.drawable.category_accent_gaming;
-                        break;
-                    case "Wearables":
-                        accentIconRes = R.drawable.category_accent_wearables;
-                        break;
-                }
-                decorativeIcon.setImageResource(accentIconRes);
+                decorativeIcon.setImageResource(categoryDisplay.accentIconResId);
             }
 
-            if (category.isHighlighted) {
+            if (categoryDisplay.isHighlighted) {
                 categoryCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.badge_bg));
                 categoryCard.setStrokeColor(ContextCompat.getColor(this, R.color.primary));
             }
 
             categoryView.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, CategoryDetailActivity.class);
-                String heroUrl = "";
-                if      (category.name.equals("Laptops"))     heroUrl = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop";
-                else if (category.name.equals("Phones"))      heroUrl = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop";
-                else if (category.name.equals("Accessories")) heroUrl = "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop";
-                else if (category.name.equals("Gaming"))      heroUrl = "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop";
-                else if (category.name.equals("Wearables"))   heroUrl = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop";
-
+                String heroUrl = getHeroImageForCategory(category.getName());
+                
                 // Map home-screen category names to detail-page names
-                String detailName = category.name.equals("Phones") ? "Smartphones" : category.name;
+                String detailName = category.getName().equals("Phones") ? "Smartphones" : category.getName();
 
                 intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,   detailName);
                 intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, heroUrl);
+                intent.putExtra("CATEGORY_ID", category.getId());
+                intent.putExtra("CATEGORY_SLUG", category.getSlug());
                 startActivity(intent);
             });
 
@@ -486,7 +574,7 @@ public class MainActivity extends BaseActivity {
 
         // Fill trailing empty cell(s) so a lone last item keeps its column width.
         if (currentRow != null) {
-            int remainder = categories.size() % columns;
+            int remainder = categoryDisplayList.size() % columns;
             if (remainder != 0) {
                 for (int c = remainder; c < columns; c++) {
                     View spacer = new View(this);
@@ -852,9 +940,47 @@ public class MainActivity extends BaseActivity {
             this.specs=specs; this.freeItems=freeItems;
         }
     }
+    
+    /**
+     * Get hero image URL for a category name.
+     */
+    private String getHeroImageForCategory(String categoryName) {
+        String name = categoryName.toLowerCase();
+        if (name.contains("laptop") || name.contains("computer")) 
+            return "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop";
+        if (name.contains("phone") || name.contains("mobile")) 
+            return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop";
+        if (name.contains("accessor")) 
+            return "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop";
+        if (name.contains("gaming") || name.contains("game")) 
+            return "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop";
+        if (name.contains("wearable") || name.contains("watch")) 
+            return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop";
+        if (name.contains("monitor") || name.contains("display")) 
+            return "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop";
+        if (name.contains("storage") || name.contains("drive")) 
+            return "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=600&h=400&fit=crop";
+        if (name.contains("network")) 
+            return "https://images.unsplash.com/photo-1606904825846-647eb07f5be2?w=600&h=400&fit=crop";
+        // Default image
+        return "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&h=400&fit=crop";
+    }
 
-    private static class Category {
-        String name; int iconResId; boolean isHighlighted;
-        Category(String n, int i, boolean h) { name=n; iconResId=i; isHighlighted=h; }
+    /**
+     * Wrapper class combining API Category with UI display properties.
+     */
+    private static class CategoryDisplay {
+        aeu.ratha.beckie_deal_app.data.models.Category category;
+        int iconResId;
+        int accentIconResId;
+        boolean isHighlighted;
+        
+        CategoryDisplay(aeu.ratha.beckie_deal_app.data.models.Category category, 
+                       int iconResId, int accentIconResId, boolean isHighlighted) {
+            this.category = category;
+            this.iconResId = iconResId;
+            this.accentIconResId = accentIconResId;
+            this.isHighlighted = isHighlighted;
+        }
     }
 }
