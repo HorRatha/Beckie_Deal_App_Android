@@ -196,9 +196,9 @@ public final class BottomNavHelper {
             itemFrame.setLayoutParams(itemParams);
 
             if (isSelected) {
-                // Selected: show label with slide animation, orange icon (bold), orange pill bg
-                icon.setImageTintList(ContextCompat.getColorStateList(context, R.color.nav_glass_active));
-                label.setTextColor(ContextCompat.getColor(context, R.color.nav_glass_active));
+                // Selected: show label with slide animation, dark brown icon & text, gradient pill bg
+                icon.setImageTintList(ContextCompat.getColorStateList(context, R.color.dark_brown));
+                label.setTextColor(ContextCompat.getColor(context, R.color.dark_brown));
                 // Trigger checked state so animated-selector plays thin→bold transition
                 icon.setImageState(new int[]{android.R.attr.state_checked}, true);
 

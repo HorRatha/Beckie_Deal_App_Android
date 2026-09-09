@@ -652,7 +652,7 @@ public class CategoryDetailActivity extends BaseActivity {
     private void refreshFavIcon(ImageView icon, boolean fav) {
         icon.setImageResource(fav ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
         icon.setColorFilter(ContextCompat.getColor(this,
-                fav ? R.color.red_error : R.color.text_secondary));
+                fav ? R.color.primary : R.color.text_secondary));
     }
 
     /** Swap the toggle button's icon to reflect the current mode (shows the icon for the OTHER mode to switch to). */

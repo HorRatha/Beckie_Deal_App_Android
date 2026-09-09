@@ -152,7 +152,7 @@ public class ProductCardBinder {
     public static void refreshFavIcon(Context context, ImageView icon, boolean isFavorite) {
         icon.setImageResource(isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
         icon.setColorFilter(ContextCompat.getColor(context,
-                isFavorite ? R.color.red_error : R.color.text_secondary));
+                isFavorite ? R.color.primary : R.color.text_secondary));
     }
 
     /**

@@ -809,7 +809,7 @@ public class MainActivity extends BaseActivity {
         product.isFavorite = FavoriteManager.getInstance().isFavorite(product);
         favIcon.setImageResource(product.isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
         favIcon.setColorFilter(ContextCompat.getColor(this,
-                product.isFavorite ? R.color.red_error : R.color.text_secondary));
+                product.isFavorite ? R.color.primary : R.color.text_secondary));
 
         Glide.with(this).load(product.imageUrl).centerCrop()
              .placeholder(R.drawable.placeholder_image).into(imgView);
@@ -831,7 +831,7 @@ public class MainActivity extends BaseActivity {
             else FavoriteManager.getInstance().removeFavorite(product);
             favIcon.setImageResource(product.isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
             favIcon.setColorFilter(ContextCompat.getColor(this,
-                    product.isFavorite ? R.color.red_error : R.color.text_secondary));
+                    product.isFavorite ? R.color.primary : R.color.text_secondary));
         });
 
         container.addView(view);

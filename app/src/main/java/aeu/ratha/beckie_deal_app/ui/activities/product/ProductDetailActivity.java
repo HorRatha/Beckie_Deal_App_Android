@@ -503,7 +503,7 @@ public class ProductDetailActivity extends BaseActivity {
         detailFavoriteIcon.setImageResource(
                 isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
         detailFavoriteIcon.setColorFilter(ContextCompat.getColor(this,
-                isFavorite ? R.color.red_error : R.color.text_primary));
+                isFavorite ? R.color.primary : R.color.text_primary));
     }
 
     // ── Bottom nav ────────────────────────────────────────────────────────────

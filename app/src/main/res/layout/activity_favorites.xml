@@ -139,9 +139,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
+                    android:background="@drawable/button_add_to_cart_gradient"
                     android:text="Start Shopping"
                     android:textAllCaps="false"
-                    android:backgroundTint="@color/primary" />
+                    android:textColor="@color/dark_brown"
+                    app:backgroundTint="@null" />
             </LinearLayout>
 
             <!-- Favorites Grid -->
