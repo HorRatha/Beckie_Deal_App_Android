@@ -59,6 +59,7 @@ public class MainActivity extends BaseActivity {
     private ProductGridAdapter productAdapter;
     private ImageView viewModeIcon;
     private CategoryRepository categoryRepository;
+    private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
 
     // Auto-scroll for horizontal sections
     private Handler autoScrollHandler;
@@ -87,9 +88,10 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeMockData();
+        initializeData();
         initRepository();
         fetchCategories(); // Fetch from API
+        fetchProducts(); // Fetch from API
         drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         setupSearchBar();
@@ -140,20 +142,9 @@ public class MainActivity extends BaseActivity {
         stopBannerAutoScroll();
     }
 
-    private void initializeMockData() {
-        // Build the flat product list from the full catalogue (all categories + brands)
+    private void initializeData() {
+        // Initialize empty product list (will be populated from API)
         products = new ArrayList<>();
-        for (java.util.Map<String, List<Product>> brandMap
-                : CategoryDetailActivity.CATALOGUE.values()) {
-            for (List<Product> list : brandMap.values()) {
-                products.addAll(list);
-            }
-        }
-
-        // Sync existing favorites
-        for (Product p : products) {
-            if (p.isFavorite) FavoriteManager.getInstance().addFavorite(p);
-        }
 
         // Initialize empty category display list (will be populated from API)
         categoryDisplayList = new ArrayList<>();
@@ -161,10 +152,61 @@ public class MainActivity extends BaseActivity {
     }
     
     /**
-     * Initialize category repository.
+     * Initialize repositories.
      */
     private void initRepository() {
         categoryRepository = CategoryRepository.getInstance(this);
+        productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
+    }
+    
+    /**
+     * Fetch products from API.
+     * Endpoint: GET /api/v1/products?limit=100&offset=0
+     */
+    private void fetchProducts() {
+        Log.d(TAG, "=== FETCHING PRODUCTS FROM API ===");
+        
+        // Fetch all active products (limit 100 for now)
+        productRepository.fetchProducts(100, 0, false, 
+            new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
+            @Override
+            public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
+                Log.d(TAG, "✓ API SUCCESS: Received " + apiProducts.size() + " products (total: " + total + ")");
+                
+                // Convert API products to UI products
+                products.clear();
+                products.addAll(aeu.ratha.beckie_deal_app.utils.helpers.ProductMapper.toUiProducts(apiProducts));
+                
+                Log.d(TAG, "=== CONVERTED TO " + products.size() + " UI PRODUCTS ===");
+                
+                // Sync favorites
+                for (Product p : products) {
+                    p.isFavorite = FavoriteManager.getInstance().isFavorite(p);
+                }
+                
+                // Update UI on main thread
+                runOnUiThread(() -> {
+                    setupNewCollectionSection();
+                    setupTopSellingSection();
+                    setupProducts(); // Refresh product grid
+                });
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "✗ API ERROR: " + errorMessage);
+                runOnUiThread(() -> {
+                    Toast.makeText(MainActivity.this, 
+                        "Failed to load products. Please check your connection.", 
+                        Toast.LENGTH_SHORT).show();
+                    // Initialize with empty list
+                    products.clear();
+                    setupNewCollectionSection();
+                    setupTopSellingSection();
+                    setupProducts();
+                });
+            }
+        });
     }
     
     /**
@@ -557,7 +599,8 @@ public class MainActivity extends BaseActivity {
 
             categoryView.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, CategoryDetailActivity.class);
-                String heroUrl = getHeroImageForCategory(category.getName());
+                // Use category image from API
+                String heroUrl = category.getImage();
                 
                 // Map home-screen category names to detail-page names
                 String detailName = category.getName().equals("Phones") ? "Smartphones" : category.getName();
@@ -693,16 +736,11 @@ public class MainActivity extends BaseActivity {
         if (container == null) return;
         container.removeAllViews();
 
-        // New Collection = high-end products (price >= $800), show first 5
+        // New Collection = high-end products (price >= $800) from API, show first 6
         List<Product> newItems = new ArrayList<>();
-        for (java.util.Map<String, List<Product>> brandMap
-                : CategoryDetailActivity.CATALOGUE.values()) {
-            for (List<Product> list : brandMap.values()) {
-                for (Product p : list) {
-                    double price = parsePrice(p.price);
-                    if (price >= 800) newItems.add(p);
-                }
-            }
+        for (Product p : products) {
+            double price = parsePrice(p.price);
+            if (price >= 800) newItems.add(p);
         }
         // Sort by price descending (newest/flagship feel)
         java.util.Collections.sort(newItems, (a, b) ->
@@ -729,19 +767,24 @@ public class MainActivity extends BaseActivity {
         if (container == null) return;
         container.removeAllViews();
 
-        // Top Selling = rating >= 4.7, show first 6
+        // Top Selling = highest rated products (rating >= 4.7) from API, show first 6
         List<Product> topItems = new ArrayList<>();
-        for (java.util.Map<String, List<Product>> brandMap
-                : CategoryDetailActivity.CATALOGUE.values()) {
-            for (List<Product> list : brandMap.values()) {
-                for (Product p : list) {
-                    if (Double.parseDouble(p.rating) >= 4.7) topItems.add(p);
-                }
+        for (Product p : products) {
+            try {
+                double rating = Double.parseDouble(p.rating);
+                if (rating >= 4.7) topItems.add(p);
+            } catch (NumberFormatException e) {
+                // Skip products with invalid rating
             }
         }
         // Sort by rating descending
-        java.util.Collections.sort(topItems, (a, b) ->
-                Double.compare(Double.parseDouble(b.rating), Double.parseDouble(a.rating)));
+        java.util.Collections.sort(topItems, (a, b) -> {
+            try {
+                return Double.compare(Double.parseDouble(b.rating), Double.parseDouble(a.rating));
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        });
 
         int limit = Math.min(topItems.size(), 6);
         for (int i = 0; i < limit; i++) {
@@ -773,10 +816,12 @@ public class MainActivity extends BaseActivity {
 
         view.setOnClickListener(v -> {
             Intent intent = new Intent(this, ProductDetailActivity.class);
-            intent.putExtra("product_name",   product.name);
-            intent.putExtra("product_price",  product.price);
-            intent.putExtra("product_image",  product.imageUrl);
+            intent.putExtra("product_id", product.id);
+            intent.putExtra("product_name", product.name);
+            intent.putExtra("product_price", product.price);
             intent.putExtra("product_rating", product.rating);
+            intent.putExtra("product_image", product.imageUrl);
+            intent.putExtra("product_sku", product.sku);
             startActivity(intent);
         });
 
@@ -918,6 +963,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public static class Product {
+        public int id;               // Product ID from API
         public String name, price, rating, imageUrl;
         public String sku;           // e.g. "BECKIE6036"
         public boolean inStock;      // true = Available In Stock
@@ -928,44 +974,24 @@ public class MainActivity extends BaseActivity {
 
         // Minimal constructor (legacy — no SKU/stock/warranty/specs)
         public Product(String n, String p, String r, boolean f, String i) {
-            name=n; price=p; rating=r; isFavorite=f; imageUrl=i;
-            inStock=true; warrantyYears=1; sku=""; specs=""; freeItems="";
+            this(0, n, p, r, f, i, "", true, 1, "", "");
         }
 
-        // Full constructor
+        // Full constructor (without ID - legacy)
         public Product(String n, String p, String r, boolean f, String i,
                 String sku, boolean inStock, int warranty, String specs, String freeItems) {
+            this(0, n, p, r, f, i, sku, inStock, warranty, specs, freeItems);
+        }
+        
+        // Complete constructor (with ID)
+        public Product(int id, String n, String p, String r, boolean f, String i,
+                String sku, boolean inStock, int warranty, String specs, String freeItems) {
+            this.id = id;
             name=n; price=p; rating=r; isFavorite=f; imageUrl=i;
             this.sku=sku; this.inStock=inStock; this.warrantyYears=warranty;
             this.specs=specs; this.freeItems=freeItems;
         }
     }
-    
-    /**
-     * Get hero image URL for a category name.
-     */
-    private String getHeroImageForCategory(String categoryName) {
-        String name = categoryName.toLowerCase();
-        if (name.contains("laptop") || name.contains("computer")) 
-            return "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop";
-        if (name.contains("phone") || name.contains("mobile")) 
-            return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop";
-        if (name.contains("accessor")) 
-            return "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop";
-        if (name.contains("gaming") || name.contains("game")) 
-            return "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop";
-        if (name.contains("wearable") || name.contains("watch")) 
-            return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop";
-        if (name.contains("monitor") || name.contains("display")) 
-            return "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop";
-        if (name.contains("storage") || name.contains("drive")) 
-            return "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=600&h=400&fit=crop";
-        if (name.contains("network")) 
-            return "https://images.unsplash.com/photo-1606904825846-647eb07f5be2?w=600&h=400&fit=crop";
-        // Default image
-        return "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&h=400&fit=crop";
-    }
-
     /**
      * Wrapper class combining API Category with UI display properties.
      */

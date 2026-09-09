@@ -118,11 +118,12 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         // Card tap → ProductDetailActivity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
-            intent.putExtra("product_name",   product.name);
-            intent.putExtra("product_price",  product.price);
-            intent.putExtra("product_image",  product.imageUrl);
+            intent.putExtra("product_id", product.id);
+            intent.putExtra("product_name", product.name);
+            intent.putExtra("product_price", product.price);
             intent.putExtra("product_rating", product.rating);
-            intent.putExtra("is_favorite",    product.isFavorite);
+            intent.putExtra("product_image", product.imageUrl);
+            intent.putExtra("product_sku", product.sku);
             context.startActivity(intent);
         });
 

@@ -18,6 +18,7 @@ import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.content.Intent;
+import android.util.Log;
 
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
@@ -161,13 +162,23 @@ public class CategoryDetailActivity extends BaseActivity {
     public static final String EXTRA_HERO_IMAGE = "category_image_url";
     public static final String EXTRA_ITEM_COUNT = "category_item_count";
     public static final String EXTRA_BRAND_FILTER = "brand_filter";
+    
+    private static final String TAG = "CategoryDetailActivity";
 
     private String currentBrandFilter = "All";
     private String currentCategoryName = "";
+    private int currentCategoryId = -1;      // Category ID from API
+    private int currentBrandId = -1;         // Brand ID from API (when filtered)
+    private String currentCategorySlug = ""; // Category slug from API
+    private String currentBrandSlug = "";    // Brand slug from API
     private GridLayout productsGrid;
     private TextView resultsLabel;
     private LinearLayout brandFilterContainer;
     private ImageView viewModeIcon;
+    
+    private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
+    private List<MainActivity.Product> allProducts = new ArrayList<>(); // All products from API
+    private List<MainActivity.Product> filteredProducts = new ArrayList<>(); // Filtered/sorted products
 
     // Filter state (from FilterBottomSheet)
     private String currentSort     = FilterBottomSheet.SORT_DEFAULT;
@@ -175,6 +186,7 @@ public class CategoryDetailActivity extends BaseActivity {
     private int    currentMaxPrice = 3000;
 
     // Full catalogue: category → brand → product list (public so ProductListActivity can reuse it)
+    // DEPRECATED: Kept for backwards compatibility with other activities, will be removed gradually
     public static final Map<String, Map<String, List<MainActivity.Product>>> CATALOGUE = buildCatalogue();
 
     @Override
@@ -182,10 +194,21 @@ public class CategoryDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_detail);
 
+        // Initialize repository
+        productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
+
+        // Get intent extras
         currentCategoryName = getIntent().getStringExtra(EXTRA_CATEGORY);
         String heroImageUrl  = getIntent().getStringExtra(EXTRA_HERO_IMAGE);
         String itemCount     = getIntent().getStringExtra(EXTRA_ITEM_COUNT);
         String brandFilter   = getIntent().getStringExtra(EXTRA_BRAND_FILTER);
+        
+        // Get API IDs and slugs (new parameters from updated callers)
+        currentCategoryId = getIntent().getIntExtra("CATEGORY_ID", -1);
+        currentCategorySlug = getIntent().getStringExtra("CATEGORY_SLUG");
+        currentBrandId = getIntent().getIntExtra("BRAND_ID", -1);
+        currentBrandSlug = getIntent().getStringExtra("BRAND_SLUG");
+        
         if (currentCategoryName == null) currentCategoryName = "Category";
         if (brandFilter != null) currentBrandFilter = brandFilter;
 
@@ -195,7 +218,7 @@ public class CategoryDetailActivity extends BaseActivity {
 
         setupTopBar();
         setupHero(heroImageUrl, itemCount);
-        setupBrandFilters();
+        // setupBrandFilters() will be called after products are fetched
 
         // Wire Filter & Sort button
         View sortBtn = findViewById(R.id.sortButton);
@@ -209,11 +232,13 @@ public class CategoryDetailActivity extends BaseActivity {
                 ViewModeAnimator.transform(productsGrid, viewModeBtn, viewModeIcon, () -> {
                     ViewModePreferences.setListView(this, !ViewModePreferences.isListView(this));
                     updateViewModeIcon();
-                    loadProducts(currentBrandFilter);
+                    applyFiltersAndRender(); // Use filtered data, don't re-fetch
                 }));
         UiAnimations.pressBounce(sortBtn, viewModeBtn);
 
-        loadProducts(currentBrandFilter);
+        // Fetch products from API
+        fetchProducts();
+        
         setupBottomNavigation();
         setupEntranceAnimation();
     }
@@ -271,8 +296,20 @@ public class CategoryDetailActivity extends BaseActivity {
 
         List<String> chips = new ArrayList<>();
         chips.add("All");
-        Map<String, List<MainActivity.Product>> brandMap = CATALOGUE.get(currentCategoryName);
-        if (brandMap != null) chips.addAll(brandMap.keySet());
+        
+        // Extract unique brand names from fetched products
+        java.util.Set<String> uniqueBrands = new java.util.LinkedHashSet<>();
+        for (MainActivity.Product product : allProducts) {
+            // Extract brand from product name or SKU (since UI products don't have direct brand field)
+            // The brand is typically the first word in the product name
+            if (product.name != null && !product.name.isEmpty()) {
+                String[] parts = product.name.split(" ");
+                if (parts.length > 0) {
+                    uniqueBrands.add(parts[0]);
+                }
+            }
+        }
+        chips.addAll(uniqueBrands);
 
         brandFilterContainer.removeAllViews();
         for (String brand : chips) {
@@ -286,7 +323,7 @@ public class CategoryDetailActivity extends BaseActivity {
             chip.setOnClickListener(v -> {
                 currentBrandFilter = brand;
                 setupBrandFilters();
-                loadProducts(brand);
+                applyFiltersAndRender(); // Re-filter with new brand selection
             });
             UiAnimations.pressBounce(chip);
             brandFilterContainer.addView(chip);
@@ -309,17 +346,132 @@ public class CategoryDetailActivity extends BaseActivity {
 
     // ── Products grid ─────────────────────────────────────────────────────────
 
-    private void loadProducts(String brandFilter) {
-        List<MainActivity.Product> filtered = new ArrayList<>();
-        Map<String, List<MainActivity.Product>> brandMap = CATALOGUE.get(currentCategoryName);
-
-        if (brandMap != null) {
-            if ("All".equals(brandFilter)) {
-                for (List<MainActivity.Product> list : brandMap.values()) filtered.addAll(list);
-            } else {
-                List<MainActivity.Product> list = brandMap.get(brandFilter);
-                if (list != null) filtered.addAll(list);
+    /**
+     * Fetch products from API based on category ID and optional brand ID.
+     */
+    private void fetchProducts() {
+        android.util.Log.d(TAG, "=== FETCHING PRODUCTS FROM API ===");
+        android.util.Log.d(TAG, "Category: " + currentCategoryName + " (ID: " + currentCategoryId + ")");
+        android.util.Log.d(TAG, "Brand filter: " + currentBrandFilter + " (ID: " + currentBrandId + ")");
+        
+        // Show loading state
+        if (resultsLabel != null) {
+            resultsLabel.setText("Loading products...");
+        }
+        
+        // Determine which API call to make based on filters
+        if (currentCategoryId > 0 && currentBrandId > 0) {
+            // Fetch by category AND brand
+            productRepository.fetchProductsByCategoryAndBrand(currentCategoryId, currentBrandId, 100, 0,
+                new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
+                    @Override
+                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
+                        handleProductsFetched(apiProducts, total);
+                    }
+                    
+                    @Override
+                    public void onError(String errorMessage) {
+                        handleProductsError(errorMessage);
+                    }
+                });
+        } else if (currentCategoryId > 0) {
+            // Fetch by category only
+            productRepository.fetchProductsByCategory(currentCategoryId, 100, 0,
+                new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
+                    @Override
+                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
+                        handleProductsFetched(apiProducts, total);
+                    }
+                    
+                    @Override
+                    public void onError(String errorMessage) {
+                        handleProductsError(errorMessage);
+                    }
+                });
+        } else if (currentBrandId > 0) {
+            // Fetch by brand only
+            productRepository.fetchProductsByBrand(currentBrandId, 100, 0,
+                new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
+                    @Override
+                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
+                        handleProductsFetched(apiProducts, total);
+                    }
+                    
+                    @Override
+                    public void onError(String errorMessage) {
+                        handleProductsError(errorMessage);
+                    }
+                });
+        } else {
+            // Fallback: fetch all products (shouldn't normally happen)
+            android.util.Log.w(TAG, "No category or brand ID provided, fetching all products");
+            productRepository.fetchProducts(100, 0, false,
+                new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
+                    @Override
+                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
+                        handleProductsFetched(apiProducts, total);
+                    }
+                    
+                    @Override
+                    public void onError(String errorMessage) {
+                        handleProductsError(errorMessage);
+                    }
+                });
+        }
+    }
+    
+    /**
+     * Handle successful product fetch from API.
+     */
+    private void handleProductsFetched(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
+        android.util.Log.d(TAG, "✓ API SUCCESS: Received " + apiProducts.size() + " products (total: " + total + ")");
+        
+        // Convert API products to UI products
+        allProducts.clear();
+        allProducts.addAll(aeu.ratha.beckie_deal_app.utils.helpers.ProductMapper.toUiProducts(apiProducts));
+        
+        android.util.Log.d(TAG, "=== CONVERTED TO " + allProducts.size() + " UI PRODUCTS ===");
+        
+        // Apply filters and render on UI thread
+        runOnUiThread(() -> {
+            setupBrandFilters(); // Update brand chips with brands from fetched products
+            applyFiltersAndRender();
+        });
+    }
+    
+    /**
+     * Handle error fetching products from API.
+     */
+    private void handleProductsError(String errorMessage) {
+        android.util.Log.e(TAG, "✗ API ERROR: " + errorMessage);
+        
+        runOnUiThread(() -> {
+            Toast.makeText(this, "Failed to load products. Please try again.", Toast.LENGTH_SHORT).show();
+            
+            // Try fallback to mock data if available
+            loadProductsFromCatalogue(currentBrandFilter);
+        });
+    }
+    
+    /**
+     * Apply current filters (brand, year, price, sort) to allProducts and render.
+     * This replaces the old loadProducts() method.
+     */
+    private void applyFiltersAndRender() {
+        List<MainActivity.Product> filtered = new ArrayList<>(allProducts);
+        
+        // Apply brand filter (if not fetched by brand already)
+        if (currentBrandId <= 0 && !"All".equals(currentBrandFilter)) {
+            List<MainActivity.Product> brandFiltered = new ArrayList<>();
+            for (MainActivity.Product p : filtered) {
+                // Match by product name or SKU containing brand name
+                if (p.name != null && p.name.toLowerCase().contains(currentBrandFilter.toLowerCase())) {
+                    brandFiltered.add(p);
+                } else if (p.sku != null && p.sku.toLowerCase().contains(currentBrandFilter.toLowerCase())) {
+                    brandFiltered.add(p);
+                }
             }
+            if (!brandFiltered.isEmpty()) filtered = brandFiltered;
         }
 
         // Apply year filter (price-band simulation since products have no real year field)
@@ -353,8 +505,13 @@ public class CategoryDetailActivity extends BaseActivity {
                         Double.compare(parsePrice(b.price), parsePrice(a.price)));
                 break;
             case FilterBottomSheet.SORT_TOP_RATED:
-                Collections.sort(filtered, (a, b) ->
-                        Double.compare(Double.parseDouble(b.rating), Double.parseDouble(a.rating)));
+                Collections.sort(filtered, (a, b) -> {
+                    try {
+                        return Double.compare(Double.parseDouble(b.rating), Double.parseDouble(a.rating));
+                    } catch (NumberFormatException e) {
+                        return 0;
+                    }
+                });
                 break;
             default:
                 break;
@@ -364,11 +521,13 @@ public class CategoryDetailActivity extends BaseActivity {
         for (MainActivity.Product p : filtered)
             p.isFavorite = FavoriteManager.getInstance().isFavorite(p);
 
+        filteredProducts = filtered;
+
         // Build results label
         if (resultsLabel != null) {
             StringBuilder label = new StringBuilder();
             label.append(filtered.size()).append(" products");
-            if (!"All".equals(brandFilter)) label.append(" · ").append(brandFilter);
+            if (!"All".equals(currentBrandFilter)) label.append(" · ").append(currentBrandFilter);
             if (!currentSort.equals(FilterBottomSheet.SORT_DEFAULT))
                 label.append(" · ").append(currentSort);
             if (!currentYear.equals("All")) label.append(" · ").append(currentYear);
@@ -377,6 +536,30 @@ public class CategoryDetailActivity extends BaseActivity {
         }
 
         renderProducts(filtered);
+    }
+    
+    /**
+     * Fallback method to load products from static catalogue (DEPRECATED).
+     * Used only if API call fails.
+     */
+    private void loadProductsFromCatalogue(String brandFilter) {
+        android.util.Log.w(TAG, "Using fallback mock data from CATALOGUE");
+        
+        List<MainActivity.Product> filtered = new ArrayList<>();
+        Map<String, List<MainActivity.Product>> brandMap = CATALOGUE.get(currentCategoryName);
+
+        if (brandMap != null) {
+            if ("All".equals(brandFilter)) {
+                for (List<MainActivity.Product> list : brandMap.values()) filtered.addAll(list);
+            } else {
+                List<MainActivity.Product> list = brandMap.get(brandFilter);
+                if (list != null) filtered.addAll(list);
+            }
+        }
+
+        allProducts.clear();
+        allProducts.addAll(filtered);
+        applyFiltersAndRender();
     }
 
     /** Open the filter bottom sheet. */
@@ -387,7 +570,7 @@ public class CategoryDetailActivity extends BaseActivity {
             currentSort     = sortBy;
             currentYear     = year;
             currentMaxPrice = maxPrice;
-            loadProducts(currentBrandFilter);
+            applyFiltersAndRender(); // Re-filter and render with new filter settings
         });
         sheet.show(getSupportFragmentManager(), "filter");
     }
@@ -428,10 +611,12 @@ public class CategoryDetailActivity extends BaseActivity {
             // Open product detail on card tap
             view.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ProductDetailActivity.class);
-                intent.putExtra("product_name",   product.name);
-                intent.putExtra("product_price",  product.price);
-                intent.putExtra("product_image",  product.imageUrl);
+                intent.putExtra("product_id", product.id);
+                intent.putExtra("product_name", product.name);
+                intent.putExtra("product_price", product.price);
                 intent.putExtra("product_rating", product.rating);
+                intent.putExtra("product_image", product.imageUrl);
+                intent.putExtra("product_sku", product.sku);
                 startActivity(intent);
             });
 

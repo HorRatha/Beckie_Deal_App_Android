@@ -115,6 +115,8 @@ import java.util.Map;
 
 public class ProductDetailActivity extends BaseActivity {
 
+    private static final String TAG = "ProductDetailActivity";
+    
     private boolean isFavorite = false;
     private ImageView detailFavoriteIcon;
     private MainActivity.Product currentProduct;
@@ -131,6 +133,7 @@ public class ProductDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
+        
         setupTopBar();
         loadProductData();
         setupActions();
@@ -177,35 +180,74 @@ public class ProductDetailActivity extends BaseActivity {
     // ── Product data ──────────────────────────────────────────────────────────
 
     private void loadProductData() {
+        // Get product data from intent
+        int productId = getIntent().getIntExtra("product_id", 0);
         String name     = getIntent().getStringExtra("product_name");
         String price    = getIntent().getStringExtra("product_price");
         String imageUrl = getIntent().getStringExtra("product_image");
         String rating   = getIntent().getStringExtra("product_rating");
+        String sku      = getIntent().getStringExtra("product_sku");
+        
         if (name == null) name = "Product";
+        if (rating == null) rating = "4.9";
 
         currentProduct = new MainActivity.Product(name, price, rating, false, imageUrl);
         isFavorite = FavoriteManager.getInstance().isFavorite(currentProduct);
 
-        ProductInfo info = getProductInfo(name, imageUrl);
-
-        // Bind views
-        setTextSafe(R.id.detailProductName,  name);
+        // Bind basic info
+        setTextSafe(R.id.detailProductName, name);
         setTextSafe(R.id.detailProductPrice, price != null ? price : "");
-        setTextSafe(R.id.detailProductRating, rating != null ? rating : "4.9");
-        setTextSafe(R.id.reviewCount, "(" + info.reviewCount + " reviews)");
-        setTextSafe(R.id.detailProductDescription, info.description);
+        setTextSafe(R.id.detailProductRating, rating);
+        setTextSafe(R.id.reviewCount, "(2.5k reviews)"); // Static for now
 
-        // Gallery
-        setupGallery(info.images);
+        // Description - build from available data
+        String description = "High-quality product with excellent features and reliable performance. ";
+        if (sku != null && !sku.isEmpty()) {
+            description += "SKU: " + sku + ". ";
+        }
+        description += "Backed by manufacturer warranty and dedicated customer support. Check specifications below for detailed information.";
+        setTextSafe(R.id.detailProductDescription, description);
 
-        // Spec tags
-        setupSpecTags(info.tags);
+        // Gallery - use the product image
+        List<String> imgs = new ArrayList<>();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            imgs.add(imageUrl);
+            // Add same image 3 more times as placeholders
+            for (int i = 0; i < 3; i++) imgs.add(imageUrl);
+        } else {
+            // Fallback placeholder
+            String fallback = "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&h=500&fit=crop";
+            for (int i = 0; i < 4; i++) imgs.add(fallback);
+        }
+        setupGallery(imgs);
 
-        // 2x2 spec cards
-        setupSpecCards(info.specCards);
+        // Tags
+        List<String> tags = new ArrayList<>();
+        tags.add("Premium Quality");
+        tags.add("Fast Shipping");
+        if (sku != null && !sku.isEmpty()) tags.add("SKU: " + sku);
+        tags.add("1 Year Warranty");
+        setupSpecTags(tags);
 
-        // Detail spec rows
-        setupSpecRows(info.specRows);
+        // Spec cards
+        List<SpecCard> specCards = new ArrayList<>();
+        specCards.add(new SpecCard("QUALITY", "Premium", R.drawable.widgets_24));
+        specCards.add(new SpecCard("WARRANTY", "1 Year", R.drawable.devices_24));
+        specCards.add(new SpecCard("SHIPPING", "Fast", R.drawable.sports_esports_24));
+        specCards.add(new SpecCard("SUPPORT", "24/7", R.drawable.mobile_24));
+        setupSpecCards(specCards);
+
+        // Spec rows
+        Map<String, String> specRows = new LinkedHashMap<>();
+        if (sku != null && !sku.isEmpty()) {
+            specRows.put("SKU", sku);
+        }
+        specRows.put("Condition", "Brand New");
+        specRows.put("Warranty", "1 Year Manufacturer Warranty");
+        specRows.put("Shipping", "Free shipping on orders over $50");
+        specRows.put("Return Policy", "30-day money back guarantee");
+        specRows.put("Customer Support", "24/7 assistance available");
+        setupSpecRows(specRows);
 
         detailFavoriteIcon = findViewById(R.id.detailFavoriteIcon);
         updateFavoriteUI();
@@ -471,8 +513,15 @@ public class ProductDetailActivity extends BaseActivity {
     }
 
     // ── Per-product data ──────────────────────────────────────────────────────
-
+    
+    /**
+     * @deprecated This method contains HARDCODED MOCK DATA and should NOT be used.
+     * Use fetchProductFromAPI() instead to get real data from the backend.
+     * This method is kept only for backward compatibility with old intent-based calls.
+     */
+    @Deprecated
     private ProductInfo getProductInfo(String name, String fallbackImg) {
+        android.util.Log.w(TAG, "⚠️ WARNING: Using deprecated getProductInfo() with hardcoded data!");
         String n = name != null ? name.toLowerCase() : "";
 
         // Default 4 images (vary angles using different Unsplash IDs)

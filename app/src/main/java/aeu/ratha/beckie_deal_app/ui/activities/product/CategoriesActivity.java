@@ -313,12 +313,9 @@ public class CategoriesActivity extends BaseActivity {
                     countText.setText(productCount + " items");
                     countText.setVisibility(View.VISIBLE);
                 } else {
-                    // Fallback to catalog count
-                    productCount = getBrandProductCount(brand.getName());
-                    if (productCount > 0) {
-                        countText.setText(productCount + " items");
-                        countText.setVisibility(View.VISIBLE);
-                    }
+                    // No products available for this brand
+                    countText.setText("0 items");
+                    countText.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -381,7 +378,6 @@ public class CategoriesActivity extends BaseActivity {
                 // Open CategoryDetailActivity pre-filtered to this brand
                 String category = brandToCategory(brand.getName());
                 int total = brand.getProductsCount();
-                if (total == 0) total = getBrandProductCount(brand.getName());
                 
                 Intent intent = new Intent(this, CategoryDetailActivity.class);
                 intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,     category);
@@ -420,17 +416,6 @@ public class CategoriesActivity extends BaseActivity {
             default:
                 return "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop";
         }
-    }
-
-    /** Count products for a brand across all categories in the catalogue */
-    private int getBrandProductCount(String brandName) {
-        int count = 0;
-        for (java.util.Map.Entry<String, java.util.Map<String, java.util.List<MainActivity.Product>>> catEntry
-                : CategoryDetailActivity.CATALOGUE.entrySet()) {
-            java.util.List<MainActivity.Product> products = catEntry.getValue().get(brandName);
-            if (products != null) count += products.size();
-        }
-        return count;
     }
 
     private int dpToPx(int dp) {
@@ -509,38 +494,10 @@ public class CategoriesActivity extends BaseActivity {
     }
     
     /**
-     * Get image URL for category from API or generate fallback.
-     * Priority: 1) API image URL, 2) Default Unsplash images based on name
+     * Get image URL for category from API.
      */
     private String getCategoryImageUrl(Category category) {
-        // Use API image if available
-        if (category.getImage() != null && !category.getImage().isEmpty()) {
-            Log.d(TAG, "Using API image for " + category.getName() + ": " + category.getImage());
-            return category.getImage();
-        }
-        
-        // Generate default image based on category name
-        String name = category.getName().toLowerCase();
-        if (name.contains("laptop") || name.contains("computer")) 
-            return "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=400&fit=crop";
-        if (name.contains("phone") || name.contains("mobile")) 
-            return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop";
-        if (name.contains("accessor")) 
-            return "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop";
-        if (name.contains("audio") || name.contains("sound")) 
-            return "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop";
-        if (name.contains("gaming") || name.contains("game")) 
-            return "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop";
-        if (name.contains("wearable") || name.contains("watch")) 
-            return "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop";
-        if (name.contains("monitor") || name.contains("display")) 
-            return "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop";
-        if (name.contains("storage") || name.contains("drive")) 
-            return "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=600&h=400&fit=crop";
-        if (name.contains("network")) 
-            return "https://images.unsplash.com/photo-1606904825846-647eb07f5be2?w=600&h=400&fit=crop";
-        // Default image
-        return "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&h=400&fit=crop";
+        return category.getImage();
     }
     
     /**
