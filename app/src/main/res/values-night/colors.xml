@@ -60,6 +60,7 @@
 
     <color name="dark_bg">#0F1419</color>
     <color name="dark_text">#A0AEC0</color>
+    <color name="dark_brown">#3E2723</color>
 
     <!-- Order Status Colors (Dark Mode) -->
     <color name="status_processing">#FB923C</color>

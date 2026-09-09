@@ -35,15 +35,6 @@
                 android:contentDescription="Back"
                 app:tint="@color/text_primary" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Product Details"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_title_small"
-                android:textStyle="bold" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -527,14 +518,15 @@
                     android:layout_height="52dp"
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/primary"
+                    android:background="@drawable/button_add_to_cart_gradient"
                     android:text="Add to Cart"
                     android:textAllCaps="false"
-                    android:textColor="@color/white_fixed"
+                    android:textColor="@color/dark_brown"
                     android:textSize="@dimen/text_size_body_large"
                     android:textStyle="bold"
+                    app:backgroundTint="@null"
                     app:icon="@drawable/add_shopping_cart_24"
-                    app:iconTint="@color/white_fixed"
+                    app:iconTint="@color/dark_brown"
                     app:iconGravity="textStart"
                     app:iconPadding="8dp" />
 
