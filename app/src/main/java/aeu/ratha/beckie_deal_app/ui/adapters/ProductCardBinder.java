@@ -141,18 +141,18 @@ public class ProductCardBinder {
             }
         }
 
-        // ── Favorite icon ─────────────────────────────────────────────────
+        // ── Wishlist icon ─────────────────────────────────────────────────
         ImageView favIcon = cardView.findViewById(R.id.favoriteIcon);
         if (favIcon != null) {
-            refreshFavIcon(context, favIcon, product.isFavorite);
+            refreshFavIcon(context, favIcon, product.isInWishlist);
         }
     }
 
-    /** Update just the favourite icon state (called on toggle). */
-    public static void refreshFavIcon(Context context, ImageView icon, boolean isFavorite) {
-        icon.setImageResource(isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+    /** Update just the wishlist icon state (called on toggle). */
+    public static void refreshFavIcon(Context context, ImageView icon, boolean isInWishlist) {
+        icon.setImageResource(isInWishlist ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
         icon.setColorFilter(ContextCompat.getColor(context,
-                isFavorite ? R.color.primary : R.color.text_secondary));
+                isInWishlist ? R.color.primary : R.color.text_secondary));
     }
 
     /**

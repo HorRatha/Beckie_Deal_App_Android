@@ -76,7 +76,7 @@
             android:name=".ui.activities.profile.AboutActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.profile.FavoritesActivity"
+            android:name=".ui.activities.profile.WishlistActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activities.profile.CouponsActivity"

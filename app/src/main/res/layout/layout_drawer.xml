@@ -168,9 +168,9 @@
                     android:textSize="@dimen/text_size_body_large" />
             </LinearLayout>
 
-            <!-- Favorites -->
+            <!-- Wishlist -->
             <LinearLayout
-                android:id="@+id/drawerFavorites"
+                android:id="@+id/drawerWishlist"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:background="@drawable/drawer_item_bg"
@@ -183,19 +183,19 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_favorite"
-                    android:contentDescription="Favorites"
+                    android:contentDescription="Wishlist"
                     app:tint="@color/primary" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
-                    android:text="Favorites"
+                    android:text="Wishlist"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_size_body_large" />
-                <!-- Live favorites count badge -->
+                <!-- Live wishlist count badge -->
                 <TextView
-                    android:id="@+id/drawerFavBadge"
+                    android:id="@+id/drawerWishlistBadge"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:background="@drawable/badge_pill"

@@ -17,7 +17,7 @@ import aeu.ratha.beckie_deal_app.R;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.CategoriesActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.FavoritesActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.WishlistActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.ProfileActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
@@ -38,7 +38,7 @@ public final class BottomNavHelper {
 
     private BottomNavHelper() {}
 
-    public enum NavItem { HOME, CATEGORIES, FAVORITES, CART, ACCOUNT }
+    public enum NavItem { HOME, CATEGORIES, WISHLIST, CART, ACCOUNT }
 
     /**
      * Wire up the custom bottom nav in any activity.
@@ -49,7 +49,7 @@ public final class BottomNavHelper {
     public static void setup(Activity activity, NavItem currentItem) {
         ViewGroup homeFrame = activity.findViewById(R.id.navItemHome);
         ViewGroup categoriesFrame = activity.findViewById(R.id.navItemCategories);
-        ViewGroup favoritesFrame = activity.findViewById(R.id.navItemFavorites);
+        ViewGroup wishlistFrame = activity.findViewById(R.id.navItemWishlist);
         ViewGroup cartFrame = activity.findViewById(R.id.navItemCart);
         ViewGroup accountFrame = activity.findViewById(R.id.navItemAccount);
 
@@ -73,9 +73,9 @@ public final class BottomNavHelper {
             }
         });
 
-        favoritesFrame.setOnClickListener(v -> {
-            if (currentItem != NavItem.FAVORITES) {
-                activity.startActivity(new Intent(activity, FavoritesActivity.class));
+        wishlistFrame.setOnClickListener(v -> {
+            if (currentItem != NavItem.WISHLIST) {
+                activity.startActivity(new Intent(activity, WishlistActivity.class));
                 activity.overridePendingTransition(0, 0);
             }
         });
@@ -95,7 +95,7 @@ public final class BottomNavHelper {
         });
 
         // Optional: add press bounce to item frames
-        UiAnimations.pressBounce(homeFrame, categoriesFrame, favoritesFrame, cartFrame, accountFrame);
+        UiAnimations.pressBounce(homeFrame, categoriesFrame, wishlistFrame, cartFrame, accountFrame);
 
         // Initialize cart badge
         updateCartBadge(activity);
@@ -157,19 +157,19 @@ public final class BottomNavHelper {
      */
     private static void selectItem(Context context, NavItem item, boolean animate) {
         int[] ids = {
-                R.id.navItemHome, R.id.navItemCategories, R.id.navItemFavorites,
+                R.id.navItemHome, R.id.navItemCategories, R.id.navItemWishlist,
                 R.id.navItemCart, R.id.navItemAccount
         };
         int[] pillIds = {
-                R.id.navPillHome, R.id.navPillCategories, R.id.navPillFavorites,
+                R.id.navPillHome, R.id.navPillCategories, R.id.navPillWishlist,
                 R.id.navPillCart, R.id.navPillAccount
         };
         int[] iconIds = {
-                R.id.navIconHome, R.id.navIconCategories, R.id.navIconFavorites,
+                R.id.navIconHome, R.id.navIconCategories, R.id.navIconWishlist,
                 R.id.navIconCart, R.id.navIconAccount
         };
         int[] labelIds = {
-                R.id.navLabelHome, R.id.navLabelCategories, R.id.navLabelFavorites,
+                R.id.navLabelHome, R.id.navLabelCategories, R.id.navLabelWishlist,
                 R.id.navLabelCart, R.id.navLabelAccount
         };
 

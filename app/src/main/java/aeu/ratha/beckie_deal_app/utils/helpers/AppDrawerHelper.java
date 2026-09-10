@@ -24,12 +24,12 @@ import aeu.ratha.beckie_deal_app.security.TokenManager;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.CategoriesActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.FavoritesActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.WishlistActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.ProfileActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
 
 /**
@@ -345,15 +345,15 @@ public class AppDrawerHelper {
             if (userEmail != null) userEmail.setText("Sign in to your account");
         }
 
-        // ── Live favorites badge ─────────────────────────────────────────
-        TextView favBadge = drawerLayout.findViewById(R.id.drawerFavBadge);
-        if (favBadge != null) {
-            int favCount = FavoriteManager.getInstance().getFavorites().size();
-            if (favCount > 0) {
-                favBadge.setText(String.valueOf(favCount));
-                favBadge.setVisibility(View.VISIBLE);
+        // ── Live wishlist badge ──────────────────────────────────────────
+        TextView wishlistBadge = drawerLayout.findViewById(R.id.drawerWishlistBadge);
+        if (wishlistBadge != null) {
+            int wishlistCount = WishlistManager.getInstance().getWishlistItems().size();
+            if (wishlistCount > 0) {
+                wishlistBadge.setText(String.valueOf(wishlistCount));
+                wishlistBadge.setVisibility(View.VISIBLE);
             } else {
-                favBadge.setVisibility(View.GONE);
+                wishlistBadge.setVisibility(View.GONE);
             }
         }
 
@@ -426,15 +426,15 @@ public class AppDrawerHelper {
         });
         prepareDrawerItem(ordersItem);
 
-        View favItem = drawerLayout.findViewById(R.id.drawerFavorites);
-        if (favItem != null) favItem.setOnClickListener(v -> {
+        View wishlistItem = drawerLayout.findViewById(R.id.drawerWishlist);
+        if (wishlistItem != null) wishlistItem.setOnClickListener(v -> {
             closeDrawer();
-            if (!(activity instanceof FavoritesActivity)) {
-                activity.startActivity(new Intent(activity, FavoritesActivity.class));
+            if (!(activity instanceof WishlistActivity)) {
+                activity.startActivity(new Intent(activity, WishlistActivity.class));
                 activity.overridePendingTransition(0, 0);
             }
         });
-        prepareDrawerItem(favItem);
+        prepareDrawerItem(wishlistItem);
 
         View notifItem = drawerLayout.findViewById(R.id.drawerNotifications);
         if (notifItem != null) notifItem.setOnClickListener(v -> {

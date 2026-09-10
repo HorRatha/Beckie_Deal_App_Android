@@ -1,57 +1,17 @@
 package aeu.ratha.beckie_deal_app.ui.adapters;
 
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-
 import aeu.ratha.beckie_deal_app.R;
-
-
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
 
 import android.content.Context;
-
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.content.Intent;
-
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.LayoutInflater;
-
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.View;
-
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.ViewGroup;
-
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.ImageView;
-
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -109,8 +69,8 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         MainActivity.Product product = products.get(position);
 
-        // Sync favorite state before binding
-        product.isFavorite = FavoriteManager.getInstance().isFavorite(product);
+        // Sync wishlist state before binding
+        product.isInWishlist = WishlistManager.getInstance().isInWishlist(product);
 
         // Use the shared binder to fill all card fields (name, price, rating, image, etc.)
         ProductCardBinder.bind(context, holder.itemView, product);
@@ -127,17 +87,17 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
             context.startActivity(intent);
         });
 
-        // Favorite toggle
+        // Wishlist toggle
         ImageView favoriteIcon = holder.itemView.findViewById(R.id.favoriteIcon);
         if (favoriteIcon != null) {
             favoriteIcon.setOnClickListener(v -> {
-                product.isFavorite = !product.isFavorite;
-                if (product.isFavorite) FavoriteManager.getInstance().addFavorite(product);
-                else                    FavoriteManager.getInstance().removeFavorite(product);
-                ProductCardBinder.refreshFavIcon(context, favoriteIcon, product.isFavorite);
+                product.isInWishlist = !product.isInWishlist;
+                if (product.isInWishlist) WishlistManager.getInstance().addToWishlist(product);
+                else                      WishlistManager.getInstance().removeFromWishlist(product);
+                ProductCardBinder.refreshFavIcon(context, favoriteIcon, product.isInWishlist);
                 if (lastToast != null) lastToast.cancel();
                 lastToast = Toast.makeText(context,
-                        product.isFavorite ? "Added to Favorites" : "Removed from Favorites",
+                        product.isInWishlist ? "Added to Wishlist" : "Removed from Wishlist",
                         Toast.LENGTH_SHORT);
                 lastToast.show();
             });
@@ -149,7 +109,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         return products.size();
     }
 
-    /** Refresh a single item after favorite toggle from outside the adapter */
+    /** Refresh a single item after wishlist toggle from outside the adapter */
     public void notifyItemChanged(MainActivity.Product product) {
         int idx = products.indexOf(product);
         if (idx >= 0) notifyItemChanged(idx);

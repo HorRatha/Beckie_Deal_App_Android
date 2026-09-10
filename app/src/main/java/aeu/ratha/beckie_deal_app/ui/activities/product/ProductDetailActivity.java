@@ -10,7 +10,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
@@ -21,7 +21,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
@@ -32,7 +32,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
@@ -43,7 +43,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
@@ -54,7 +54,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
@@ -65,7 +65,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
@@ -76,7 +76,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
@@ -87,7 +87,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
@@ -98,7 +98,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
@@ -192,7 +192,7 @@ public class ProductDetailActivity extends BaseActivity {
         if (rating == null) rating = "4.9";
 
         currentProduct = new MainActivity.Product(name, price, rating, false, imageUrl);
-        isFavorite = FavoriteManager.getInstance().isFavorite(currentProduct);
+        isFavorite = WishlistManager.getInstance().isInWishlist(currentProduct);
 
         // Bind basic info
         setTextSafe(R.id.detailProductName, name);
@@ -249,7 +249,7 @@ public class ProductDetailActivity extends BaseActivity {
         specRows.put("Customer Support", "24/7 assistance available");
         setupSpecRows(specRows);
 
-        detailFavoriteIcon = findViewById(R.id.detailFavoriteIcon);
+        detailFavoriteIcon = findViewById(R.id.detailWishlistIcon);
         updateFavoriteUI();
     }
 
@@ -487,11 +487,11 @@ public class ProductDetailActivity extends BaseActivity {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         });
 
-        View favBtn = findViewById(R.id.favoriteButton);
+        View favBtn = findViewById(R.id.wishlistButton);
         if (favBtn != null) favBtn.setOnClickListener(v -> {
             isFavorite = !isFavorite;
-            if (isFavorite) FavoriteManager.getInstance().addFavorite(currentProduct);
-            else            FavoriteManager.getInstance().removeFavorite(currentProduct);
+            if (isFavorite) WishlistManager.getInstance().addToWishlist(currentProduct);
+            else            WishlistManager.getInstance().removeFromWishlist(currentProduct);
             updateFavoriteUI();
         });
 

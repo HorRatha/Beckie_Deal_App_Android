@@ -11,7 +11,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -24,7 +24,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -37,7 +37,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -50,7 +50,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -63,7 +63,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -76,7 +76,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -89,7 +89,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -102,7 +102,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -115,7 +115,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -128,7 +128,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -308,7 +308,7 @@ public class ProductListActivity extends BaseActivity
 
         // Sync favorites
         for (MainActivity.Product p : products)
-            p.isFavorite = FavoriteManager.getInstance().isFavorite(p);
+            p.isInWishlist = WishlistManager.getInstance().isInWishlist(p);
 
         updateFilterIndicators();
         renderProducts(products);
@@ -416,12 +416,12 @@ public class ProductListActivity extends BaseActivity
             ImageView favIcon = view.findViewById(R.id.favoriteIcon);
             if (favIcon != null) {
                 favIcon.setOnClickListener(v -> {
-                    product.isFavorite = !product.isFavorite;
-                    if (product.isFavorite) FavoriteManager.getInstance().addFavorite(product);
-                    else                    FavoriteManager.getInstance().removeFavorite(product);
-                    ProductCardBinder.refreshFavIcon(this, favIcon, product.isFavorite);
+                    product.isInWishlist = !product.isInWishlist;
+                    if (product.isInWishlist) WishlistManager.getInstance().addToWishlist(product);
+                    else                      WishlistManager.getInstance().removeFromWishlist(product);
+                    ProductCardBinder.refreshFavIcon(this, favIcon, product.isInWishlist);
                     Toast.makeText(this,
-                            product.isFavorite ? "Added to Favorites" : "Removed from Favorites",
+                            product.isInWishlist ? "Added to Wishlist" : "Removed from Wishlist",
                             Toast.LENGTH_SHORT).show();
                 });
             }

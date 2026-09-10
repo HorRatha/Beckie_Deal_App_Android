@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Beckie Deal â€” Product Card (1-column list row)
+    Beckie Deal — Product Card (1-column list row)
     Horizontal layout: square thumbnail on the left, details on the right.
     Shares the same view IDs as product_card.xml so ProductCardBinder works unchanged.
 -->
@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <!-- â”€â”€ Product image â€” fixed square thumbnail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ── Product image — fixed square thumbnail ─────────────────── -->
         <FrameLayout
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -33,7 +33,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_image" />
 
-            <!-- Favourite â€” semi-transparent pill, top-right -->
+            <!-- Wishlist — semi-transparent pill, top-right -->
             <ImageView
                 android:id="@+id/favoriteIcon"
                 android:layout_width="30dp"
@@ -47,13 +47,13 @@
 
         </FrameLayout>
 
-        <!-- â”€â”€ Hairline divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ── Hairline divider ───────────────────────────────────────── -->
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/border_color" />
 
-        <!-- â”€â”€ Info section â€” grows to fill remaining width â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ── Info section — grows to fill remaining width ──────────────── -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"

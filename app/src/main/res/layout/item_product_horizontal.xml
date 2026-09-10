@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Beckie Deal â€” Horizontal scroll product card
+    Beckie Deal — Horizontal scroll product card
     Used in "New Collection" and "Top Selling" sections on the home screen.
-    Flat design: no shadow, no border, no rounded corners â€” consistent with grid cards.
+    Flat design: no shadow, no border, no rounded corners — consistent with grid cards.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- â”€â”€ Image â€” full-width, tall â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ── Image — full-width, tall ──────────────────────────────── -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
@@ -33,7 +33,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_image" />
 
-            <!-- Favourite pill -->
+            <!-- Wishlist pill -->
             <ImageView
                 android:id="@+id/favoriteIcon"
                 android:layout_width="26dp"
@@ -47,13 +47,13 @@
 
         </FrameLayout>
 
-        <!-- â”€â”€ Hairline divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ── Hairline divider ───────────────────────────────────────── -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/border_color" />
 
-        <!-- â”€â”€ Info â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ── Info ──────────────────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

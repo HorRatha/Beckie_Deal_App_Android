@@ -117,9 +117,9 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Favorites -->
+        <!-- Wishlist -->
         <LinearLayout
-            android:id="@+id/navItemFavorites"
+            android:id="@+id/navItemWishlist"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -130,7 +130,7 @@
             android:background="?attr/selectableItemBackgroundBorderless">
 
             <LinearLayout
-                android:id="@+id/navPillFavorites"
+                android:id="@+id/navPillWishlist"
                 android:layout_width="wrap_content"
                 android:layout_height="34dp"
                 android:orientation="horizontal"
@@ -140,18 +140,18 @@
                 android:background="@drawable/nav_pill_background">
 
                 <ImageView
-                    android:id="@+id/navIconFavorites"
+                    android:id="@+id/navIconWishlist"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/bottom_nav_favorites_icon"
                     android:scaleType="fitCenter" />
 
                 <TextView
-                    android:id="@+id/navLabelFavorites"
+                    android:id="@+id/navLabelWishlist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="Favorites"
+                    android:text="Wishlist"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:visibility="gone"

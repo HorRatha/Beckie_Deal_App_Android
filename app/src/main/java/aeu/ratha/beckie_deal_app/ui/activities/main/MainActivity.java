@@ -7,7 +7,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.FavoriteManager;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductListActivity;
@@ -179,9 +179,9 @@ public class MainActivity extends BaseActivity {
                 
                 Log.d(TAG, "=== CONVERTED TO " + products.size() + " UI PRODUCTS ===");
                 
-                // Sync favorites
+                // Sync wishlist
                 for (Product p : products) {
-                    p.isFavorite = FavoriteManager.getInstance().isFavorite(p);
+                    p.isInWishlist = WishlistManager.getInstance().isInWishlist(p);
                 }
                 
                 // Update UI on main thread
@@ -605,9 +605,9 @@ public class MainActivity extends BaseActivity {
         RecyclerView productsGrid = findViewById(R.id.productsGrid);
         if (productsGrid == null) return;
 
-        // Sync favorite state for all items
+        // Sync wishlist state for all items
         for (Product p : products) {
-            p.isFavorite = FavoriteManager.getInstance().isFavorite(p);
+            p.isInWishlist = WishlistManager.getInstance().isInWishlist(p);
         }
 
         boolean isListView = ViewModePreferences.isListView(this);
@@ -622,7 +622,7 @@ public class MainActivity extends BaseActivity {
             productAdapter.setListMode(isListView);
             productsGrid.setAdapter(productAdapter);
         } else {
-            // onResume path: apply current view mode + refresh to pick up favorite changes
+            // onResume path: apply current view mode + refresh to pick up wishlist changes
             GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
             if (layoutManager != null) layoutManager.setSpanCount(isListView ? 1 : 2);
             productAdapter.setListMode(isListView);
@@ -776,10 +776,10 @@ public class MainActivity extends BaseActivity {
         priceView.setText(product.price);
         ratingView.setText(product.rating);
 
-        product.isFavorite = FavoriteManager.getInstance().isFavorite(product);
-        favIcon.setImageResource(product.isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+        product.isInWishlist = WishlistManager.getInstance().isInWishlist(product);
+        favIcon.setImageResource(product.isInWishlist ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
         favIcon.setColorFilter(ContextCompat.getColor(this,
-                product.isFavorite ? R.color.primary : R.color.text_secondary));
+                product.isInWishlist ? R.color.primary : R.color.text_secondary));
 
         Glide.with(this).load(product.imageUrl).centerCrop()
              .placeholder(R.drawable.placeholder_image).into(imgView);
@@ -796,12 +796,12 @@ public class MainActivity extends BaseActivity {
         });
 
         favIcon.setOnClickListener(v -> {
-            product.isFavorite = !product.isFavorite;
-            if (product.isFavorite) FavoriteManager.getInstance().addFavorite(product);
-            else FavoriteManager.getInstance().removeFavorite(product);
-            favIcon.setImageResource(product.isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+            product.isInWishlist = !product.isInWishlist;
+            if (product.isInWishlist) WishlistManager.getInstance().addToWishlist(product);
+            else WishlistManager.getInstance().removeFromWishlist(product);
+            favIcon.setImageResource(product.isInWishlist ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
             favIcon.setColorFilter(ContextCompat.getColor(this,
-                    product.isFavorite ? R.color.primary : R.color.text_secondary));
+                    product.isInWishlist ? R.color.primary : R.color.text_secondary));
         });
 
         container.addView(view);
@@ -940,24 +940,24 @@ public class MainActivity extends BaseActivity {
         public int warrantyYears;    // e.g. 1
         public String specs;         // short bullet specs, newline-separated, e.g. "-13.6\" Liquid Retina\n-Weight: 1.24Kg"
         public String freeItems;     // e.g. "Free 8 items"
-        public boolean isFavorite;
+        public boolean isInWishlist;
 
         // Minimal constructor (legacy — no SKU/stock/warranty/specs)
-        public Product(String n, String p, String r, boolean f, String i) {
-            this(0, n, p, r, f, i, "", true, 1, "", "");
+        public Product(String n, String p, String r, boolean w, String i) {
+            this(0, n, p, r, w, i, "", true, 1, "", "");
         }
 
         // Full constructor (without ID - legacy)
-        public Product(String n, String p, String r, boolean f, String i,
+        public Product(String n, String p, String r, boolean w, String i,
                 String sku, boolean inStock, int warranty, String specs, String freeItems) {
-            this(0, n, p, r, f, i, sku, inStock, warranty, specs, freeItems);
+            this(0, n, p, r, w, i, sku, inStock, warranty, specs, freeItems);
         }
         
         // Complete constructor (with ID)
-        public Product(int id, String n, String p, String r, boolean f, String i,
+        public Product(int id, String n, String p, String r, boolean w, String i,
                 String sku, boolean inStock, int warranty, String specs, String freeItems) {
             this.id = id;
-            name=n; price=p; rating=r; isFavorite=f; imageUrl=i;
+            name=n; price=p; rating=r; isInWishlist=w; imageUrl=i;
             this.sku=sku; this.inStock=inStock; this.warrantyYears=warranty;
             this.specs=specs; this.freeItems=freeItems;
         }
