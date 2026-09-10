@@ -538,7 +538,7 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * Render categories in UI from API data.
+     * Render categories in UI from API data - Horizontal scrollable layout.
      * This method is called after fetchCategories() completes successfully.
      */
     private void setupCategories() {
@@ -552,31 +552,19 @@ public class MainActivity extends BaseActivity {
         if (categoriesContainer == null) return;
         categoriesContainer.removeAllViews();
 
-        // Render categories from API in 2-column grid layout
-        final int columns = 2;
-        final int spacing = Math.round(10 * getResources().getDisplayMetrics().density);
-        LinearLayout currentRow = null;
+        // Render categories in horizontal scrollable layout (like chips)
+        categoriesContainer.setOrientation(LinearLayout.HORIZONTAL);
 
         for (int i = 0; i < categoryDisplayList.size(); i++) {
             final CategoryDisplay categoryDisplay = categoryDisplayList.get(i);
             final aeu.ratha.beckie_deal_app.data.models.Category category = categoryDisplay.category;
-            final int col = i % columns;
 
-            if (col == 0) {
-                currentRow = new LinearLayout(this);
-                currentRow.setOrientation(LinearLayout.HORIZONTAL);
-                LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                if (i > 0) rowParams.topMargin = spacing;
-                currentRow.setLayoutParams(rowParams);
-                categoriesContainer.addView(currentRow);
-            }
-
-            View categoryView = LayoutInflater.from(this).inflate(R.layout.category_item, currentRow, false);
+            View categoryView = LayoutInflater.from(this).inflate(R.layout.category_item, categoriesContainer, false);
+            
+            // Set wrap_content for horizontal layout
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
-                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-            if (col > 0) itemParams.setMarginStart(spacing);
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
             categoryView.setLayoutParams(itemParams);
 
             MaterialCardView categoryCard = categoryView.findViewById(R.id.categoryCard);
@@ -587,14 +575,11 @@ public class MainActivity extends BaseActivity {
             categoryIcon.setImageResource(categoryDisplay.iconResId);
             categoryName.setText(category.getName());
 
-            // Assign category-specific accent icon
-            if (decorativeIcon != null) {
-                decorativeIcon.setImageResource(categoryDisplay.accentIconResId);
-            }
-
+            // Apply highlight style for featured categories
             if (categoryDisplay.isHighlighted) {
                 categoryCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.badge_bg));
                 categoryCard.setStrokeColor(ContextCompat.getColor(this, R.color.primary));
+                categoryCard.setStrokeWidth(dpToPx(2));
             }
 
             categoryView.setOnClickListener(v -> {
@@ -612,22 +597,7 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             });
 
-            currentRow.addView(categoryView);
-        }
-
-        // Fill trailing empty cell(s) so a lone last item keeps its column width.
-        if (currentRow != null) {
-            int remainder = categoryDisplayList.size() % columns;
-            if (remainder != 0) {
-                for (int c = remainder; c < columns; c++) {
-                    View spacer = new View(this);
-                    LinearLayout.LayoutParams spacerParams = new LinearLayout.LayoutParams(
-                            0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                    spacerParams.setMarginStart(spacing);
-                    spacer.setLayoutParams(spacerParams);
-                    currentRow.addView(spacer);
-                }
-            }
+            categoriesContainer.addView(categoryView);
         }
     }
 

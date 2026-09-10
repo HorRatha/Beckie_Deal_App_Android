@@ -191,15 +191,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/page_margin"
                 android:layout_marginTop="@dimen/section_spacing">
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="Categories"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_title_small"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Curated Categories"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_size_title_small"
+                        android:textStyle="bold" />
+                </LinearLayout>
                 <TextView
                     android:id="@+id/viewAllCategories"
                     android:layout_width="wrap_content"
@@ -208,18 +214,27 @@
                     android:layout_centerVertical="true"
                     android:clickable="true"
                     android:focusable="true"
-                    android:text="View All"
+                    android:text="Explore ›"
                     android:textColor="@color/primary"
                     android:textSize="@dimen/text_size_body" />
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/categoriesContainer"
+            <!-- Horizontal scrollable categories -->
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp" />
+                android:layout_marginTop="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/categoriesContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp" />
+
+            </HorizontalScrollView>
 
             <!-- â•â• NEW COLLECTION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <RelativeLayout

@@ -1,73 +1,64 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<!-- Simplified compact category chip design -->
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/categoryCard"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="8dp"
     android:clickable="true"
     android:focusable="true"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="3dp"
-    app:strokeWidth="0dp"
-    app:cardBackgroundColor="@android:color/transparent"
-    app:rippleColor="@color/badge_bg">
+    android:background="?attr/selectableItemBackground">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/category_card_bg_gradient">
+    <!-- Category icon with circular background -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/categoryCard"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_color"
+        app:cardBackgroundColor="@color/surface">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="10dp">
+            android:layout_height="match_parent"
+            android:background="@drawable/category_icon_bg_gradient">
 
-            <FrameLayout
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/category_icon_bg_gradient">
+            <ImageView
+                android:id="@+id/categoryIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_menu_gallery"
+                app:tint="@color/dark_brown" />
 
-                <ImageView
-                    android:id="@+id/categoryIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:src="@android:drawable/ic_menu_gallery"
-                    app:tint="@color/dark_brown" />
+        </FrameLayout>
 
-            </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/categoryName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Category"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_body"
-                android:textStyle="bold" />
+    <!-- Category name below icon -->
+    <TextView
+        android:id="@+id/categoryName"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Category"
+        android:textAlignment="center"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp"
+        android:textStyle="normal" />
 
-        </LinearLayout>
+    <!-- Hidden decorative icon for compatibility -->
+    <ImageView
+        android:id="@+id/categoryDecorativeIcon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
 
-        <!-- Decorative icon - bottom right, half visible -->
-        <ImageView
-            android:id="@+id/categoryDecorativeIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="-12dp"
-            android:layout_marginBottom="-12dp"
-            android:src="@drawable/decorative_sparkle_outline"
-            android:scaleType="fitEnd"
-            android:alpha="0.3" />
-
-    </FrameLayout>
-
-</com.google.android.material.card.MaterialCardView>
+</LinearLayout>
