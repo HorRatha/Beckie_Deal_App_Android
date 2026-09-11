@@ -64,4 +64,55 @@
         <item name="textAllCaps">false</item>
         <item name="android:letterSpacing">0.02</item>
     </style>
+
+    <!-- Custom Alert Dialog with rounded corners and better styling -->
+    <style name="Theme.MaterialComponents.DayNight.Dialog.Alert.Rounded" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.MediumComponent</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.App.Title</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.App.Body</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button.Dialog.Outlined</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.App.Button.Dialog.Text</item>
+    </style>
+
+    <!-- Rounded corners for dialogs -->
+    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <!-- Dialog title style -->
+    <style name="MaterialAlertDialog.App.Title" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <!-- Dialog body style -->
+    <style name="MaterialAlertDialog.App.Body" parent="MaterialAlertDialog.Material3.Body.Text">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
+    <!-- Dialog button styles -->
+    <style name="Widget.App.Button.Dialog" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/white_fixed</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button.Pill</item>
+    </style>
+
+    <style name="Widget.App.Button.Dialog.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/primary</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button.Pill</item>
+    </style>
+
+    <style name="Widget.App.Button.Dialog.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
 </resources>

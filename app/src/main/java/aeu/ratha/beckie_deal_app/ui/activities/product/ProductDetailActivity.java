@@ -5,6 +5,7 @@ import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.R;
 
 
+import aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
@@ -480,6 +481,11 @@ public class ProductDetailActivity extends BaseActivity {
         // ── Add to cart ───────────────────────────────────────────────────────
         View addToCart = findViewById(R.id.addToCartButton);
         if (addToCart != null) addToCart.setOnClickListener(v -> {
+            // Check authentication before adding to cart
+            if (!AuthHelper.requireAuthForCart(this)) {
+                return; // User not logged in, prompt shown
+            }
+            
             CartManager.getInstance().addToCart(currentProduct, selectedQuantity);
             updateCartUI();
             
@@ -500,6 +506,11 @@ public class ProductDetailActivity extends BaseActivity {
         // ── Buy Now button ────────────────────────────────────────────────────
         View buyNow = findViewById(R.id.buyNowButton);
         if (buyNow != null) buyNow.setOnClickListener(v -> {
+            // Check authentication before purchase
+            if (!AuthHelper.requireAuthForPurchase(this)) {
+                return; // User not logged in, prompt shown
+            }
+            
             // Add to cart temporarily (will be cleared after checkout)
             CartManager.getInstance().addToCart(currentProduct, selectedQuantity);
             
@@ -509,8 +520,14 @@ public class ProductDetailActivity extends BaseActivity {
             startActivity(intent);
         });
 
+        // ── Wishlist button ───────────────────────────────────────────────────
         View favBtn = findViewById(R.id.wishlistButton);
         if (favBtn != null) favBtn.setOnClickListener(v -> {
+            // Check authentication before modifying wishlist
+            if (!AuthHelper.requireAuthForWishlist(this)) {
+                return; // User not logged in, prompt shown
+            }
+            
             isFavorite = !isFavorite;
             if (isFavorite) WishlistManager.getInstance().addToWishlist(currentProduct);
             else            WishlistManager.getInstance().removeFromWishlist(currentProduct);

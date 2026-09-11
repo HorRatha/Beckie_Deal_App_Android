@@ -57,16 +57,16 @@ public class WishlistActivity extends BaseActivity {
         List<MainActivity.Product> wishlistProducts = WishlistManager.getInstance().getWishlistItems();
         GridLayout wishlistGrid = findViewById(R.id.wishlistGrid);
         View emptyState = findViewById(R.id.emptyState);
+        
+        // Check if user is logged in
+        boolean isLoggedIn = aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this);
 
-        if (wishlistProducts == null || wishlistProducts.isEmpty()) {
+        if (wishlistProducts == null || wishlistProducts.isEmpty() || !isLoggedIn) {
             emptyState.setVisibility(View.VISIBLE);
             wishlistGrid.setVisibility(View.GONE);
-            View exploreButton = findViewById(R.id.exploreButton);
-            exploreButton.setOnClickListener(v -> {
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
-            });
-            UiAnimations.pressBounce(exploreButton);
+            
+            // Update empty state UI based on login status
+            setupWishlistEmptyState(isLoggedIn);
             UiAnimations.fadeSlideUp(emptyState, 60);
         } else {
             // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet
@@ -130,6 +130,57 @@ public class WishlistActivity extends BaseActivity {
                     wishlistGrid.addView(spacer);
                 }
             }
+        }
+    }
+    
+    /**
+     * Setup wishlist empty state UI based on whether user is logged in or not.
+     * Guest users see login prompt, logged-in users see "start shopping" message.
+     */
+    private void setupWishlistEmptyState(boolean isLoggedIn) {
+        ImageView icon = findViewById(R.id.wishlistEmptyIcon);
+        TextView title = findViewById(R.id.wishlistEmptyTitle);
+        TextView message = findViewById(R.id.wishlistEmptyMessage);
+        View exploreButton = findViewById(R.id.exploreButton);
+        View loginButtonsContainer = findViewById(R.id.wishlistLoginButtonsContainer);
+        View loginBtn = findViewById(R.id.wishlistLoginButton);
+        View registerBtn = findViewById(R.id.wishlistRegisterButton);
+        
+        if (!isLoggedIn) {
+            // Guest user - show login prompt
+            if (icon != null) icon.setImageResource(R.drawable.ic_lock);
+            if (title != null) title.setText("Login to View Wishlist");
+            if (message != null) message.setText("Sign in to save your favorite products and shop from any device.");
+            if (exploreButton != null) exploreButton.setVisibility(View.GONE);
+            if (loginButtonsContainer != null) loginButtonsContainer.setVisibility(View.VISIBLE);
+            
+            if (loginBtn != null) {
+                loginBtn.setOnClickListener(v -> {
+                    startActivity(new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity.class));
+                });
+                UiAnimations.pressBounce(loginBtn);
+            }
+            
+            if (registerBtn != null) {
+                registerBtn.setOnClickListener(v -> {
+                    startActivity(new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity.class));
+                });
+                UiAnimations.pressBounce(registerBtn);
+            }
+        } else {
+            // Logged in user - show regular empty wishlist message
+            if (icon != null) icon.setImageResource(R.drawable.ic_favorite);
+            if (title != null) title.setText("Your wishlist is empty");
+            if (message != null) message.setText("Tap the heart icon on products you love and they'll appear here.");
+            if (exploreButton != null) {
+                exploreButton.setVisibility(View.VISIBLE);
+                exploreButton.setOnClickListener(v -> {
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                });
+                UiAnimations.pressBounce(exploreButton);
+            }
+            if (loginButtonsContainer != null) loginButtonsContainer.setVisibility(View.GONE);
         }
     }
 

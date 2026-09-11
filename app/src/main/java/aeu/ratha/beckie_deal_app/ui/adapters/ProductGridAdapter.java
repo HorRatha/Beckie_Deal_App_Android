@@ -91,6 +91,11 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         ImageView favoriteIcon = holder.itemView.findViewById(R.id.favoriteIcon);
         if (favoriteIcon != null) {
             favoriteIcon.setOnClickListener(v -> {
+                // Check authentication before modifying wishlist
+                if (!aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.requireAuthForWishlist((android.app.Activity) context)) {
+                    return; // Prompt shown, operation cancelled
+                }
+                
                 product.isInWishlist = !product.isInWishlist;
                 if (product.isInWishlist) WishlistManager.getInstance().addToWishlist(product);
                 else                      WishlistManager.getInstance().removeFromWishlist(product);
@@ -107,6 +112,11 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         View quickAddBtn = holder.itemView.findViewById(R.id.quickAddToCartButton);
         if (quickAddBtn != null) {
             quickAddBtn.setOnClickListener(v -> {
+                // Check authentication before adding to cart
+                if (!aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.requireAuthForCart((android.app.Activity) context)) {
+                    return; // Prompt shown, operation cancelled
+                }
+                
                 // Stop click from propagating to parent card
                 v.setPressed(true);
                 

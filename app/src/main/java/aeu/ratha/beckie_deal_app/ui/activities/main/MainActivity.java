@@ -796,6 +796,11 @@ public class MainActivity extends BaseActivity {
         });
 
         favIcon.setOnClickListener(v -> {
+            // Check authentication before modifying wishlist
+            if (!aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.requireAuthForWishlist((android.app.Activity) this)) {
+                return; // Prompt shown, operation cancelled
+            }
+            
             product.isInWishlist = !product.isInWishlist;
             if (product.isInWishlist) WishlistManager.getInstance().addToWishlist(product);
             else WishlistManager.getInstance().removeFromWishlist(product);

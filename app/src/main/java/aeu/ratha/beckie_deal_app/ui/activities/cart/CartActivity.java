@@ -175,20 +175,18 @@ public class CartActivity extends BaseActivity {
         View couponReminder   = findViewById(R.id.couponReminderCard);
         View checkoutSection  = findViewById(R.id.checkoutSection);
         TextView totalText    = findViewById(R.id.totalPriceText);
+        
+        // Check if user is logged in
+        boolean isLoggedIn = aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this);
 
-        if (cartItems.isEmpty()) {
+        if (cartItems.isEmpty() || !isLoggedIn) {
             emptyState.setVisibility(View.VISIBLE);
             cartList.setVisibility(View.GONE);
             couponReminder.setVisibility(View.GONE);
             checkoutSection.setVisibility(View.GONE);
-            View shopBtn = findViewById(R.id.startShoppingButton);
-            if (shopBtn != null) {
-                shopBtn.setOnClickListener(v -> {
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
-                });
-                UiAnimations.pressBounce(shopBtn);
-            }
+            
+            // Update empty state UI based on login status
+            setupEmptyState(isLoggedIn);
         } else {
             emptyState.setVisibility(View.GONE);
             cartList.setVisibility(View.VISIBLE);
@@ -201,6 +199,57 @@ public class CartActivity extends BaseActivity {
             }
 
             updateTotal(totalText);
+        }
+    }
+    
+    /**
+     * Setup empty state UI based on whether user is logged in or not.
+     * Guest users see login prompt, logged-in users see "start shopping" message.
+     */
+    private void setupEmptyState(boolean isLoggedIn) {
+        ImageView icon = findViewById(R.id.emptyStateIcon);
+        TextView title = findViewById(R.id.emptyStateTitle);
+        TextView message = findViewById(R.id.emptyStateMessage);
+        View startShoppingBtn = findViewById(R.id.startShoppingButton);
+        View loginButtonsContainer = findViewById(R.id.loginButtonsContainer);
+        View loginBtn = findViewById(R.id.emptyStateLoginButton);
+        View registerBtn = findViewById(R.id.emptyStateRegisterButton);
+        
+        if (!isLoggedIn) {
+            // Guest user - show login prompt
+            if (icon != null) icon.setImageResource(R.drawable.ic_lock);
+            if (title != null) title.setText("Login to View Cart");
+            if (message != null) message.setText("Sign in to see items you've added and continue shopping.");
+            if (startShoppingBtn != null) startShoppingBtn.setVisibility(View.GONE);
+            if (loginButtonsContainer != null) loginButtonsContainer.setVisibility(View.VISIBLE);
+            
+            if (loginBtn != null) {
+                loginBtn.setOnClickListener(v -> {
+                    startActivity(new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity.class));
+                });
+                UiAnimations.pressBounce(loginBtn);
+            }
+            
+            if (registerBtn != null) {
+                registerBtn.setOnClickListener(v -> {
+                    startActivity(new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity.class));
+                });
+                UiAnimations.pressBounce(registerBtn);
+            }
+        } else {
+            // Logged in user - show regular empty cart message
+            if (icon != null) icon.setImageResource(R.drawable.shopping_cart_24);
+            if (title != null) title.setText("Your cart is empty");
+            if (message != null) message.setText("Looks like you haven't added anything yet.");
+            if (startShoppingBtn != null) {
+                startShoppingBtn.setVisibility(View.VISIBLE);
+                startShoppingBtn.setOnClickListener(v -> {
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                });
+                UiAnimations.pressBounce(startShoppingBtn);
+            }
+            if (loginButtonsContainer != null) loginButtonsContainer.setVisibility(View.GONE);
         }
     }
 

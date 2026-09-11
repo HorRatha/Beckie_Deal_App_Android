@@ -132,6 +132,17 @@ public class PayoutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payout);
 
+        // Check authentication - checkout requires login
+        if (!aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this)) {
+            aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.showCustomLoginPrompt(
+                this, 
+                "Login Required", 
+                "Please login to complete your purchase."
+            );
+            finish(); // Close checkout activity
+            return;
+        }
+
         setupTopBar();
         setupCouponSection();
         setupOrderSummary();

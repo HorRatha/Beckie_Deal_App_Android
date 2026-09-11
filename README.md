@@ -111,6 +111,14 @@ The app features a comprehensive catalogue of laptops, smartphones, gaming gear,
   - Auto-login with persisted sessions
   - Graceful token expiry handling
   - Secure token storage in EncryptedSharedPreferences
+- **Protected Features with Authentication Guards:**
+  - ✅ **Add to Cart** - Requires login before adding items
+  - ✅ **Buy Now** - Authentication required for direct purchase
+  - ✅ **Wishlist** - Login required to add/remove favorites
+  - ✅ **View Cart** - Must be logged in to access cart
+  - ✅ **Checkout** - Authentication enforced at payout
+  - User-friendly login prompts with Register option
+  - See [AUTHENTICATION_GUIDE.md](AUTHENTICATION_GUIDE.md) for implementation details
 
 ### 📍 About
 - Contact form with name / email / message validation, sends via email intent to `beckiedeal@gmail.com`

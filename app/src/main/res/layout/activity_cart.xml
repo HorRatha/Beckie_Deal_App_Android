@@ -102,7 +102,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Empty State -->
+            <!-- Empty State (default - logged in but empty) -->
             <LinearLayout
                 android:id="@+id/emptyState"
                 android:layout_width="match_parent"
@@ -112,12 +112,14 @@
                 android:visibility="gone">
 
                 <ImageView
+                    android:id="@+id/emptyStateIcon"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:src="@drawable/shopping_cart_24"
                     app:tint="@color/text_muted" />
 
                 <TextView
+                    android:id="@+id/emptyStateTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
@@ -127,9 +129,12 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/emptyStateMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:gravity="center"
                     android:text="Looks like you haven't added anything yet."
                     android:textColor="@color/text_muted"
                     android:textSize="@dimen/text_size_body" />
@@ -144,6 +149,39 @@
                     android:textAllCaps="false"
                     android:textColor="@color/dark_brown"
                     app:backgroundTint="@null"/>
+                    
+                <!-- Login buttons for guest users -->
+                <LinearLayout
+                    android:id="@+id/loginButtonsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone">
+                    
+                    <Button
+                        android:id="@+id/emptyStateLoginButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/button_primary"
+                        android:text="Login"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white_fixed"
+                        android:paddingHorizontal="32dp"
+                        app:backgroundTint="@null"/>
+                    
+                    <Button
+                        android:id="@+id/emptyStateRegisterButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_secondary"
+                        android:text="Register"
+                        android:textAllCaps="false"
+                        android:textColor="@color/primary"
+                        android:paddingHorizontal="32dp"
+                        app:backgroundTint="@null"/>
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Cart Items List -->
