@@ -45,6 +45,24 @@
                 android:src="@drawable/ic_favorite_border"
                 app:tint="@color/text_secondary" />
 
+            <!-- Quick Add to Cart button — bottom-right -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/quickAddToCartButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/primary">
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/add_shopping_cart_24"
+                    app:tint="@color/white_fixed" />
+            </com.google.android.material.card.MaterialCardView>
+
         </FrameLayout>
 
         <!-- ── Hairline divider ───────────────────────────────────────── -->

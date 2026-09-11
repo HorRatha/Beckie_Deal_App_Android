@@ -108,6 +108,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -481,10 +482,31 @@ public class ProductDetailActivity extends BaseActivity {
         if (addToCart != null) addToCart.setOnClickListener(v -> {
             CartManager.getInstance().addToCart(currentProduct, selectedQuantity);
             updateCartUI();
+            
+            // Enhanced feedback with Snackbar + "View Cart" action
             String msg = selectedQuantity == 1
                     ? "Added to cart!"
                     : selectedQuantity + "× added to cart!";
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            
+            Snackbar snackbar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+                    .setAction("View Cart", view -> {
+                        Intent intent = new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity.class);
+                        startActivity(intent);
+                    })
+                    .setActionTextColor(getResources().getColor(R.color.primary, null));
+            snackbar.show();
+        });
+
+        // ── Buy Now button ────────────────────────────────────────────────────
+        View buyNow = findViewById(R.id.buyNowButton);
+        if (buyNow != null) buyNow.setOnClickListener(v -> {
+            // Add to cart temporarily (will be cleared after checkout)
+            CartManager.getInstance().addToCart(currentProduct, selectedQuantity);
+            
+            // Go directly to checkout/payout, bypassing cart page
+            Intent intent = new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity.class);
+            intent.putExtra("buy_now_mode", true);  // Optional: to differentiate from cart checkout
+            startActivity(intent);
         });
 
         View favBtn = findViewById(R.id.wishlistButton);
@@ -495,7 +517,7 @@ public class ProductDetailActivity extends BaseActivity {
             updateFavoriteUI();
         });
 
-        UiAnimations.pressBounce(addToCart, favBtn);
+        UiAnimations.pressBounce(addToCart, buyNow, favBtn);
     }
 
     private void updateFavoriteUI() {

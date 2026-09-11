@@ -103,7 +103,7 @@ public final class BottomNavHelper {
 
     /**
      * Update the cart badge to show the number of items in cart.
-     * Minimal design - displays count as plain text next to icon/label.
+     * Displays as a small circular badge overlaying the cart icon.
      *
      * @param activity The activity containing the bottom nav
      */
@@ -113,7 +113,7 @@ public final class BottomNavHelper {
 
         int itemCount = CartManager.getInstance().getTotalUnits();
         String currentText = cartBadge.getText().toString();
-        String newText = itemCount > 99 ? "(99+)" : "(" + itemCount + ")";
+        String newText = itemCount > 9 ? "9+" : String.valueOf(itemCount);
         
         if (itemCount > 0) {
             boolean wasVisible = cartBadge.getVisibility() == View.VISIBLE;
@@ -123,7 +123,7 @@ public final class BottomNavHelper {
             cartBadge.setVisibility(View.VISIBLE);
             
             // Animate only if badge just appeared or count increased
-            if (!wasVisible || countChanged) {
+            if (!wasVisible || (countChanged && itemCount > Integer.parseInt(currentText.replace("+", "")))) {
                 animateBadgePop(cartBadge);
             }
         } else {

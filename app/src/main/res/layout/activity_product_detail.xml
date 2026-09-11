@@ -532,6 +532,24 @@
 
             </LinearLayout>
 
+            <!-- Buy Now button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buyNowButton"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_primary"
+                android:text="Buy Now"
+                android:textAllCaps="false"
+                android:textColor="@color/white_fixed"
+                android:textSize="@dimen/text_size_body_large"
+                android:textStyle="bold"
+                app:backgroundTint="@null"
+                app:icon="@drawable/ic_bolt_24"
+                app:iconTint="@color/white_fixed"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

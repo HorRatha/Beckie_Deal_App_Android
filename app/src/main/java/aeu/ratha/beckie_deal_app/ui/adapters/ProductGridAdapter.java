@@ -102,6 +102,30 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
                 lastToast.show();
             });
         }
+
+        // Quick Add to Cart button
+        View quickAddBtn = holder.itemView.findViewById(R.id.quickAddToCartButton);
+        if (quickAddBtn != null) {
+            quickAddBtn.setOnClickListener(v -> {
+                // Stop click from propagating to parent card
+                v.setPressed(true);
+                
+                // Add 1 quantity to cart
+                aeu.ratha.beckie_deal_app.utils.managers.CartManager.getInstance()
+                        .addToCart(product, 1);
+                
+                // Show feedback toast
+                if (lastToast != null) lastToast.cancel();
+                lastToast = Toast.makeText(context, "Added to cart!", Toast.LENGTH_SHORT);
+                lastToast.show();
+                
+                // Optional: trigger cart badge update if activity implements it
+                if (context instanceof aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity) {
+                    aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(
+                            (android.app.Activity) context);
+                }
+            });
+        }
     }
 
     @Override
