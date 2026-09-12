@@ -6,7 +6,11 @@ import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
+import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
+import aeu.ratha.beckie_deal_app.data.models.Wishlist;
+import aeu.ratha.beckie_deal_app.data.models.WishlistItem;
+import aeu.ratha.beckie_deal_app.data.models.WishlistResponse;
+import aeu.ratha.beckie_deal_app.data.models.Product;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
@@ -14,23 +18,34 @@ import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WishlistActivity extends BaseActivity {
+
+    private static final String TAG = "WishlistActivity";
+    private WishlistRepository wishlistRepository;
+    private ProgressBar loadingIndicator;
+    private List<MainActivity.Product> cachedWishlistProducts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wishlist);
+
+        wishlistRepository = new WishlistRepository(this);
+        loadingIndicator = findViewById(R.id.wishlistLoadingIndicator);
 
         AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
@@ -54,82 +69,165 @@ public class WishlistActivity extends BaseActivity {
     }
 
     private void displayWishlist() {
-        List<MainActivity.Product> wishlistProducts = WishlistManager.getInstance().getWishlistItems();
         GridLayout wishlistGrid = findViewById(R.id.wishlistGrid);
         View emptyState = findViewById(R.id.emptyState);
         
         // Check if user is logged in
         boolean isLoggedIn = aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this);
 
-        if (wishlistProducts == null || wishlistProducts.isEmpty() || !isLoggedIn) {
+        if (!isLoggedIn) {
+            // Show login prompt for guest users
             emptyState.setVisibility(View.VISIBLE);
             wishlistGrid.setVisibility(View.GONE);
-            
-            // Update empty state UI based on login status
-            setupWishlistEmptyState(isLoggedIn);
+            setupWishlistEmptyState(false);
             UiAnimations.fadeSlideUp(emptyState, 60);
-        } else {
-            // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet
-            int columns = ScreenUtils.productGridColumns(this);
-            wishlistGrid.setColumnCount(columns);
-            emptyState.setVisibility(View.GONE);
-            wishlistGrid.setVisibility(View.VISIBLE);
-            wishlistGrid.removeAllViews();
+            return;
+        }
 
-            for (MainActivity.Product product : wishlistProducts) {
-                product.isInWishlist = true;
-                View productView = LayoutInflater.from(this)
-                        .inflate(R.layout.product_card, wishlistGrid, false);
-
-                // Bind all fields via shared binder
-                ProductCardBinder.bind(this, productView, product);
-
-                productView.setOnClickListener(v -> {
-                    Intent intent = new Intent(this, ProductDetailActivity.class);
-                    intent.putExtra("product_name",  product.name);
-                    intent.putExtra("product_price", product.price);
-                    intent.putExtra("product_image", product.imageUrl);
-                    intent.putExtra("product_rating",product.rating);
-                    intent.putExtra("is_in_wishlist", true);
-                    startActivity(intent);
+        // User is logged in - fetch wishlist from API
+        showLoading(true);
+        
+        wishlistRepository.getWishlist(new WishlistRepository.WishlistCallback() {
+            @Override
+            public void onSuccess(WishlistResponse response) {
+                runOnUiThread(() -> {
+                    showLoading(false);
+                    
+                    Wishlist wishlist = response.getData();
+                    if (wishlist == null || wishlist.getItems() == null || wishlist.getItems().isEmpty()) {
+                        // Empty wishlist
+                        emptyState.setVisibility(View.VISIBLE);
+                        wishlistGrid.setVisibility(View.GONE);
+                        setupWishlistEmptyState(true);
+                        UiAnimations.fadeSlideUp(emptyState, 60);
+                    } else {
+                        // Convert WishlistItem to MainActivity.Product for display
+                        cachedWishlistProducts.clear();
+                        for (WishlistItem item : wishlist.getItems()) {
+                            Product apiProduct = item.getProduct();
+                            if (apiProduct != null) {
+                                MainActivity.Product displayProduct = new MainActivity.Product(
+                                    apiProduct.getId(),
+                                    apiProduct.getName(),
+                                    apiProduct.getPrice(),
+                                    apiProduct.getThumbnail(),
+                                    "0" // Default rating - API doesn't provide rating yet
+                                );
+                                displayProduct.isInWishlist = true;
+                                displayProduct.wishlistItemId = item.getId(); // Save for deletion
+                                cachedWishlistProducts.add(displayProduct);
+                            }
+                        }
+                        
+                        displayWishlistGrid(cachedWishlistProducts, wishlistGrid, emptyState);
+                    }
                 });
-
-                ImageView favoriteIcon = productView.findViewById(R.id.favoriteIcon);
-                if (favoriteIcon != null) {
-                    favoriteIcon.setOnClickListener(v -> {
-                        WishlistManager.getInstance().removeFromWishlist(product);
-                        displayWishlist();
-                        Toast.makeText(this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
-                    });
-                }
-
-                // Each card takes equal column weight but is capped to max column width
-                // This prevents a single item from stretching full width
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.width = 0;
-                params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-                params.setMargins(dp(2), dp(2), dp(2), dp(2));
-                productView.setLayoutParams(params);
-
-                wishlistGrid.addView(productView);
             }
 
-            // If items don't fill the last row, add invisible spacers to keep cards at correct size
-            int remainder = wishlistProducts.size() % columns;
-            if (remainder != 0) {
-                int spacersNeeded = columns - remainder;
-                for (int i = 0; i < spacersNeeded; i++) {
-                    View spacer = new View(this);
-                    GridLayout.LayoutParams spacerParams = new GridLayout.LayoutParams();
-                    spacerParams.width = 0;
-                    spacerParams.height = 0;
-                    spacerParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-                    spacerParams.setMargins(dp(2), 0, dp(2), 0);
-                    spacer.setLayoutParams(spacerParams);
-                    wishlistGrid.addView(spacer);
-                }
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    showLoading(false);
+                    Log.e(TAG, "Failed to load wishlist: " + error);
+                    Toast.makeText(WishlistActivity.this, "Failed to load wishlist", Toast.LENGTH_SHORT).show();
+                    
+                    // Show empty state on error
+                    emptyState.setVisibility(View.VISIBLE);
+                    wishlistGrid.setVisibility(View.GONE);
+                    setupWishlistEmptyState(true);
+                });
             }
+        });
+    }
+    
+    private void displayWishlistGrid(List<MainActivity.Product> products, GridLayout wishlistGrid, View emptyState) {
+        // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet
+        int columns = ScreenUtils.productGridColumns(this);
+        wishlistGrid.setColumnCount(columns);
+        emptyState.setVisibility(View.GONE);
+        wishlistGrid.setVisibility(View.VISIBLE);
+        wishlistGrid.removeAllViews();
+
+        for (MainActivity.Product product : products) {
+            View productView = LayoutInflater.from(this)
+                    .inflate(R.layout.product_card, wishlistGrid, false);
+
+            // Bind all fields via shared binder
+            ProductCardBinder.bind(this, productView, product);
+
+            productView.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ProductDetailActivity.class);
+                intent.putExtra("product_id", product.id);
+                intent.putExtra("product_name", product.name);
+                intent.putExtra("product_price", product.price);
+                intent.putExtra("product_image", product.imageUrl);
+                intent.putExtra("product_rating", product.rating);
+                intent.putExtra("is_in_wishlist", true);
+                startActivity(intent);
+            });
+
+            ImageView favoriteIcon = productView.findViewById(R.id.favoriteIcon);
+            if (favoriteIcon != null) {
+                favoriteIcon.setOnClickListener(v -> {
+                    removeFromWishlist(product);
+                });
+            }
+
+            // Each card takes equal column weight but is capped to max column width
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.width = 0;
+            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
+            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+            params.setMargins(dp(2), dp(2), dp(2), dp(2));
+            productView.setLayoutParams(params);
+
+            wishlistGrid.addView(productView);
+        }
+
+        // If items don't fill the last row, add invisible spacers
+        int remainder = products.size() % columns;
+        if (remainder != 0) {
+            int spacersNeeded = columns - remainder;
+            for (int i = 0; i < spacersNeeded; i++) {
+                View spacer = new View(this);
+                GridLayout.LayoutParams spacerParams = new GridLayout.LayoutParams();
+                spacerParams.width = 0;
+                spacerParams.height = 0;
+                spacerParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+                spacerParams.setMargins(dp(2), 0, dp(2), 0);
+                spacer.setLayoutParams(spacerParams);
+                wishlistGrid.addView(spacer);
+            }
+        }
+    }
+    
+    private void removeFromWishlist(MainActivity.Product product) {
+        showLoading(true);
+        
+        wishlistRepository.removeFromWishlist(product.wishlistItemId, new WishlistRepository.SimpleCallback() {
+            @Override
+            public void onSuccess() {
+                runOnUiThread(() -> {
+                    showLoading(false);
+                    Toast.makeText(WishlistActivity.this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
+                    displayWishlist(); // Refresh the list
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    showLoading(false);
+                    Log.e(TAG, "Failed to remove from wishlist: " + error);
+                    Toast.makeText(WishlistActivity.this, "Failed to remove item", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
+    
+    private void showLoading(boolean show) {
+        if (loadingIndicator != null) {
+            loadingIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
     

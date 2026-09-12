@@ -1,115 +1,55 @@
 package aeu.ratha.beckie_deal_app.ui.activities.cart;
 
 import aeu.ratha.beckie_deal_app.R;
-
-
+import aeu.ratha.beckie_deal_app.data.models.Cart;
+import aeu.ratha.beckie_deal_app.data.models.CartItem;
+import aeu.ratha.beckie_deal_app.data.models.CartItemResponse;
+import aeu.ratha.beckie_deal_app.data.models.CartResponse;
+import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.content.Intent;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.os.Bundle;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.view.LayoutInflater;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.view.View;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.widget.ImageView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.widget.LinearLayout;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.widget.TextView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.List;
 import java.util.Locale;
 
 public class CartActivity extends BaseActivity {
+
+    private CartRepository cartRepository;
+    private Cart currentCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
+        cartRepository = new CartRepository(this);
+
         AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         setupBottomNavigation();
         setupCouponReminder();
-        displayCartItems();
         setupCheckoutButton();
+        loadCartFromAPI();
         setupEntranceAnimation();
     }
 
@@ -132,7 +72,7 @@ public class CartActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        displayCartItems();
+        loadCartFromAPI();
         updateCartBadge();
     }
 
@@ -168,8 +108,46 @@ public class CartActivity extends BaseActivity {
         }
     }
 
-    private void displayCartItems() {
-        List<CartManager.CartItem> cartItems = CartManager.getInstance().getCartItems();
+    /**
+     * Load cart from API (dynamic data).
+     */
+    private void loadCartFromAPI() {
+        // Check if user is logged in
+        boolean isLoggedIn = aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this);
+        
+        if (!isLoggedIn) {
+            // Show login prompt
+            displayCartItems(null);
+            return;
+        }
+
+        // Show loading (optional - if layout has loading indicator)
+        // ProgressBar loadingIndicator = findViewById(R.id.loadingIndicator);
+        // if (loadingIndicator != null) loadingIndicator.setVisibility(View.VISIBLE);
+
+        cartRepository.getCart(new CartRepository.CartCallback() {
+            @Override
+            public void onSuccess(CartResponse response) {
+                // if (loadingIndicator != null) loadingIndicator.setVisibility(View.GONE);
+                
+                if (response.isSuccess() && response.hasData()) {
+                    currentCart = response.getData();
+                    displayCartItems(currentCart);
+                } else {
+                    displayCartItems(null);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                // if (loadingIndicator != null) loadingIndicator.setVisibility(View.GONE);
+                Toast.makeText(CartActivity.this, "Failed to load cart: " + error, Toast.LENGTH_SHORT).show();
+                displayCartItems(null);
+            }
+        });
+    }
+
+    private void displayCartItems(Cart cart) {
         LinearLayout cartList = findViewById(R.id.cartItemsList);
         View emptyState       = findViewById(R.id.emptyState);
         View couponReminder   = findViewById(R.id.couponReminderCard);
@@ -179,7 +157,7 @@ public class CartActivity extends BaseActivity {
         // Check if user is logged in
         boolean isLoggedIn = aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this);
 
-        if (cartItems.isEmpty() || !isLoggedIn) {
+        if (cart == null || cart.isEmpty() || !isLoggedIn) {
             emptyState.setVisibility(View.VISIBLE);
             cartList.setVisibility(View.GONE);
             couponReminder.setVisibility(View.GONE);
@@ -194,11 +172,11 @@ public class CartActivity extends BaseActivity {
             checkoutSection.setVisibility(View.VISIBLE);
             cartList.removeAllViews();
 
-            for (CartManager.CartItem item : cartItems) {
+            for (CartItem item : cart.getItems()) {
                 inflateCartItem(cartList, item);
             }
 
-            updateTotal(totalText);
+            updateTotal(totalText, cart);
         }
     }
     
@@ -253,7 +231,7 @@ public class CartActivity extends BaseActivity {
         }
     }
 
-    private void inflateCartItem(LinearLayout parent, CartManager.CartItem item) {
+    private void inflateCartItem(LinearLayout parent, CartItem item) {
         View v = LayoutInflater.from(this).inflate(R.layout.item_cart, parent, false);
 
         ImageView image       = v.findViewById(R.id.cartItemImage);
@@ -267,12 +245,12 @@ public class CartActivity extends BaseActivity {
         UiAnimations.pressBounce(decrement, increment, removeBtn);
 
         // Bind static data
-        name.setText(item.product.name);
-        String priceLabel = item.product.price != null ? item.product.price + " / unit" : "";
+        name.setText(item.getProductName());
+        String priceLabel = String.format(Locale.US, "$%.2f / unit", item.getPriceAsDouble());
         unitPrice.setText(priceLabel);
 
         Glide.with(this)
-                .load(item.product.imageUrl)
+                .load(item.getProductThumbnail())
                 .centerCrop()
                 .placeholder(R.drawable.placeholder_image)
                 .into(image);
@@ -282,57 +260,82 @@ public class CartActivity extends BaseActivity {
 
         // ── Increment ──────────────────────────────────────────────────────
         increment.setOnClickListener(btn -> {
-            CartManager.getInstance().incrementQuantity(item.product);
-            refreshItemRow(item, quantityTv, subtotalTv);
-            updateTotal(findViewById(R.id.totalPriceText));
-            updateCartBadge();
+            int newQuantity = item.getQuantity() + 1;
+            updateCartItemQuantity(item.getId(), newQuantity);
         });
 
         // ── Decrement ──────────────────────────────────────────────────────
         decrement.setOnClickListener(btn -> {
-            if (item.quantity <= 1) {
+            if (item.getQuantity() <= 1) {
                 // Last unit — remove from cart entirely
-                CartManager.getInstance().removeFromCart(item.product);
-                Toast.makeText(this, "Removed from cart", Toast.LENGTH_SHORT).show();
-                displayCartItems();   // full re-render to handle empty state
-                updateCartBadge();
+                removeCartItem(item.getId());
             } else {
-                CartManager.getInstance().decrementQuantity(item.product);
-                refreshItemRow(item, quantityTv, subtotalTv);
-                updateTotal(findViewById(R.id.totalPriceText));
-                updateCartBadge();
+                int newQuantity = item.getQuantity() - 1;
+                updateCartItemQuantity(item.getId(), newQuantity);
             }
         });
 
         // ── Remove ─────────────────────────────────────────────────────────
         removeBtn.setOnClickListener(btn -> {
-            CartManager.getInstance().removeFromCart(item.product);
-            Toast.makeText(this, "Removed from cart", Toast.LENGTH_SHORT).show();
-            displayCartItems();
-            updateCartBadge();
+            removeCartItem(item.getId());
         });
 
         parent.addView(v);
     }
 
+    /**
+     * Update cart item quantity via API.
+     */
+    private void updateCartItemQuantity(int cartItemId, int newQuantity) {
+        // Show loading (optional)
+        
+        cartRepository.updateQuantity(cartItemId, newQuantity, new CartRepository.CartItemCallback() {
+            @Override
+            public void onSuccess(CartItemResponse response) {
+                Toast.makeText(CartActivity.this, "Quantity updated", Toast.LENGTH_SHORT).show();
+                loadCartFromAPI(); // Reload cart
+                updateCartBadge();
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(CartActivity.this, "Failed to update: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Remove item from cart via API.
+     */
+    private void removeCartItem(int cartItemId) {
+        // Show loading (optional)
+        
+        cartRepository.removeFromCart(cartItemId, new CartRepository.SimpleCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(CartActivity.this, "Removed from cart", Toast.LENGTH_SHORT).show();
+                loadCartFromAPI(); // Reload cart
+                updateCartBadge();
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(CartActivity.this, "Failed to remove: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     /** Update the quantity label and subtotal for a single cart row (no full re-render). */
-    private void refreshItemRow(CartManager.CartItem item, TextView quantityTv, TextView subtotalTv) {
+    private void refreshItemRow(CartItem item, TextView quantityTv, TextView subtotalTv) {
         // Zero-padded to two digits so the stepper width never jumps (01, 02 ... 12)
-        quantityTv.setText(String.format(Locale.US, "%02d", item.quantity));
-        try {
-            String priceStr = item.product.price.replace("$", "").replace(",", "");
-            double subtotal = Double.parseDouble(priceStr) * item.quantity;
-            subtotalTv.setText(String.format(Locale.US, "$%.2f", subtotal));
-        } catch (Exception e) {
-            subtotalTv.setText(item.product.price != null ? item.product.price : "");
-        }
+        quantityTv.setText(String.format(Locale.US, "%02d", item.getQuantity()));
+        subtotalTv.setText(String.format(Locale.US, "$%.2f", item.getSubtotal()));
     }
 
     /** Refresh the grand total text in the checkout bar. */
-    private void updateTotal(TextView totalText) {
-        if (totalText == null) return;
-        totalText.setText(String.format(Locale.US, "$%.2f",
-                CartManager.getInstance().getTotalPrice()));
+    private void updateTotal(TextView totalText, Cart cart) {
+        if (totalText == null || cart == null) return;
+        totalText.setText(String.format(Locale.US, "$%.2f", cart.getTotalPrice()));
     }
 
     private void setupBottomNavigation() {

@@ -587,12 +587,12 @@ public class CategoriesActivity extends BaseActivity {
     }
 
     private static class CategoryItem {
-        String name, count, imageUrl, categorySlug;
-        int iconRes, categoryId;
+        String name, count, imageUrl, categorySlug, categoryId;  // categoryId changed to String
+        int iconRes;
         boolean isHot;
 
         CategoryItem(String name, String count, String imageUrl, int iconRes, boolean isHot, 
-                    int categoryId, String categorySlug) {
+                    String categoryId, String categorySlug) {  // categoryId parameter changed to String
             this.name = name; 
             this.count = count; 
             this.imageUrl = imageUrl;

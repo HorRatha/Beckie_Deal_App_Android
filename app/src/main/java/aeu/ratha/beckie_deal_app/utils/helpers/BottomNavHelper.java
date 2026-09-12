@@ -14,13 +14,15 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
+import aeu.ratha.beckie_deal_app.data.models.CartResponse;
+import aeu.ratha.beckie_deal_app.data.models.Cart;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.CategoriesActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.WishlistActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.ProfileActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -103,7 +105,7 @@ public final class BottomNavHelper {
 
     /**
      * Update the cart badge to show the number of items in cart.
-     * Displays as a small circular badge overlaying the cart icon.
+     * Loads cart count from API (dynamic data).
      *
      * @param activity The activity containing the bottom nav
      */
@@ -111,7 +113,43 @@ public final class BottomNavHelper {
         TextView cartBadge = activity.findViewById(R.id.cartBadge);
         if (cartBadge == null) return;
 
-        int itemCount = CartManager.getInstance().getTotalUnits();
+        // Check if user is logged in
+        boolean isLoggedIn = AuthHelper.isUserLoggedIn(activity);
+        if (!isLoggedIn) {
+            cartBadge.setVisibility(View.GONE);
+            return;
+        }
+
+        // Load cart from API
+        CartRepository cartRepository = new CartRepository(activity);
+        cartRepository.getCart(new CartRepository.CartCallback() {
+            @Override
+            public void onSuccess(CartResponse response) {
+                activity.runOnUiThread(() -> {
+                    if (response.isSuccess() && response.hasData()) {
+                        Cart cart = response.getData();
+                        int itemCount = cart.getTotalUnits();
+                        updateBadgeUI(cartBadge, itemCount);
+                    } else {
+                        updateBadgeUI(cartBadge, 0);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                activity.runOnUiThread(() -> {
+                    // On error, hide badge
+                    cartBadge.setVisibility(View.GONE);
+                });
+            }
+        });
+    }
+
+    /**
+     * Update badge UI with animation.
+     */
+    private static void updateBadgeUI(TextView cartBadge, int itemCount) {
         String currentText = cartBadge.getText().toString();
         String newText = itemCount > 9 ? "9+" : String.valueOf(itemCount);
         

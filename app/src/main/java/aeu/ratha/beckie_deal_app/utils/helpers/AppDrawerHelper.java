@@ -27,9 +27,10 @@ import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.WishlistActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
+import aeu.ratha.beckie_deal_app.data.models.WishlistResponse;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.ProfileActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
 
 /**
@@ -348,13 +349,28 @@ public class AppDrawerHelper {
         // ── Live wishlist badge ──────────────────────────────────────────
         TextView wishlistBadge = drawerLayout.findViewById(R.id.drawerWishlistBadge);
         if (wishlistBadge != null) {
-            int wishlistCount = WishlistManager.getInstance().getWishlistItems().size();
-            if (wishlistCount > 0) {
-                wishlistBadge.setText(String.valueOf(wishlistCount));
-                wishlistBadge.setVisibility(View.VISIBLE);
-            } else {
-                wishlistBadge.setVisibility(View.GONE);
-            }
+            // Fetch wishlist count from API
+            WishlistRepository wishlistRepository = new WishlistRepository(activity);
+            wishlistRepository.getWishlist(new WishlistRepository.WishlistCallback() {
+                @Override
+                public void onSuccess(WishlistResponse response) {
+                    activity.runOnUiThread(() -> {
+                        int wishlistCount = response.getData() != null ? response.getData().getItemCount() : 0;
+                        if (wishlistCount > 0) {
+                            wishlistBadge.setText(String.valueOf(wishlistCount));
+                            wishlistBadge.setVisibility(View.VISIBLE);
+                        } else {
+                            wishlistBadge.setVisibility(View.GONE);
+                        }
+                    });
+                }
+                
+                @Override
+                public void onError(String error) {
+                    // On error, hide badge
+                    activity.runOnUiThread(() -> wishlistBadge.setVisibility(View.GONE));
+                }
+            });
         }
 
         // ── Dark mode switch: reflect current state ──────────────────────

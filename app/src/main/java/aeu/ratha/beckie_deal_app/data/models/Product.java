@@ -9,13 +9,13 @@ import com.google.gson.annotations.SerializedName;
 public class Product {
     
     @SerializedName("id")
-    private int id;
+    private String id;  // UUID format from API
     
     @SerializedName("category_id")
-    private int categoryId;
+    private String categoryId;  // UUID format from API
     
     @SerializedName("brand_id")
-    private int brandId;
+    private String brandId;  // UUID format from API
     
     @SerializedName("name")
     private String name;
@@ -104,7 +104,7 @@ public class Product {
     // Constructors
     public Product() {}
     
-    public Product(int id, String name, String price, String thumbnail, 
+    public Product(String id, String name, String price, String thumbnail, 
                    boolean isFeatured, boolean inStock) {
         this.id = id;
         this.name = name;
@@ -115,15 +115,15 @@ public class Product {
     }
     
     // Getters
-    public int getId() {
+    public String getId() {
         return id;
     }
     
-    public int getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
     
-    public int getBrandId() {
+    public String getBrandId() {
         return brandId;
     }
     
@@ -271,15 +271,15 @@ public class Product {
     }
     
     // Setters
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
     
-    public void setCategoryId(int categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
     
-    public void setBrandId(int brandId) {
+    public void setBrandId(String brandId) {
         this.brandId = brandId;
     }
     

@@ -1,123 +1,43 @@
 package aeu.ratha.beckie_deal_app.ui.activities.cart;
 
 import aeu.ratha.beckie_deal_app.R;
-
-
+import aeu.ratha.beckie_deal_app.data.models.Cart;
+import aeu.ratha.beckie_deal_app.data.models.CartResponse;
+import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
 import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
 import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
 
 import android.content.Intent;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
 import android.os.Bundle;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
 import android.os.Handler;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
 import android.os.Looper;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
+import android.util.Log;
 import android.view.View;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
 import android.widget.Button;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
 import android.widget.EditText;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
 import android.widget.ImageView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
 import android.widget.LinearLayout;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
 import android.widget.TextView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
-
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.card.MaterialCardView;
+
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class PayoutActivity extends BaseActivity {
 
+    private static final String TAG = "PayoutActivity";
+    
+    private CartRepository cartRepository;
+    private Cart currentCart;
+    
     private TextView summarySubtotalText;
     private TextView summaryDiscountText;
     private TextView summaryTotalText;
@@ -126,6 +46,13 @@ public class PayoutActivity extends BaseActivity {
     private MaterialCardView appliedCouponCard;
     private TextView appliedCouponCode;
     private TextView appliedCouponDiscount;
+    
+    // Shipping info fields
+    private EditText shippingNameInput;
+    private EditText shippingPhoneInput;
+    private EditText shippingAddressInput;
+    private EditText shippingCityInput;
+    private EditText shippingPostalCodeInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,15 +66,21 @@ public class PayoutActivity extends BaseActivity {
                 "Login Required", 
                 "Please login to complete your purchase."
             );
-            finish(); // Close checkout activity
+            finish();
             return;
         }
 
+        cartRepository = new CartRepository(this);
+
         setupTopBar();
+        setupShippingFields();
         setupCouponSection();
         setupOrderSummary();
         setupConfirmButton();
         setupEntranceAnimation();
+        
+        // Load cart from API
+        loadCartFromAPI();
     }
 
     private void setupTopBar() {
@@ -170,6 +103,55 @@ public class PayoutActivity extends BaseActivity {
         }
         UiAnimations.fadeSlideUp(findViewById(R.id.bottomActionLayout), 200);
     }
+    
+    /**
+     * Setup shipping information fields.
+     */
+    private void setupShippingFields() {
+        // TODO: Add these fields to activity_payout.xml
+        // shippingNameInput = findViewById(R.id.shippingNameInput);
+        // shippingPhoneInput = findViewById(R.id.shippingPhoneInput);
+        // shippingAddressInput = findViewById(R.id.shippingAddressInput);
+        // shippingCityInput = findViewById(R.id.shippingCityInput);
+        // shippingPostalCodeInput = findViewById(R.id.shippingPostalCodeInput);
+        
+        // Pre-fill with user data if available
+        // TODO: Load from user profile
+        
+        // Note: These fields might not exist in the layout yet
+        // They will be added when the UI is updated
+    }
+
+    /**
+     * Load cart from API to get current items and prices.
+     */
+    private void loadCartFromAPI() {
+        cartRepository.getCart(new CartRepository.CartCallback() {
+            @Override
+            public void onSuccess(CartResponse response) {
+                if (response.isSuccess() && response.hasData()) {
+                    currentCart = response.getData();
+                    runOnUiThread(() -> {
+                        updateOrderSummary();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(PayoutActivity.this, "Cart is empty", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    Log.e(TAG, "Failed to load cart: " + error);
+                    Toast.makeText(PayoutActivity.this, "Failed to load cart", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }
+        });
+    }
 
     private void setupCouponSection() {
         couponInput = findViewById(R.id.couponInput);
@@ -184,7 +166,7 @@ public class PayoutActivity extends BaseActivity {
         if (applyCouponButton != null) {
             applyCouponButton.setOnClickListener(v -> {
                 String code = couponInput.getText().toString();
-                double subtotal = CartManager.getInstance().getTotalPrice();
+                double subtotal = currentCart != null ? currentCart.getTotalPrice() : 0.0;
                 
                 CouponManager.CouponResult result = 
                     CouponManager.getInstance().applyCoupon(code, subtotal);
@@ -212,26 +194,16 @@ public class PayoutActivity extends BaseActivity {
     }
 
     private void updateCouponUI() {
-        if (CouponManager.getInstance().hasCoupon()) {
-            CouponManager.Coupon coupon = CouponManager.getInstance().getAppliedCoupon();
-            if (appliedCouponCard != null) {
-                appliedCouponCard.setVisibility(View.VISIBLE);
-                UiAnimations.fadeSlideDown(appliedCouponCard, 0);
-            }
-            if (appliedCouponCode != null) {
-                appliedCouponCode.setText(coupon.code);
-            }
-            if (appliedCouponDiscount != null) {
-                appliedCouponDiscount.setText(coupon.getDiscountLabel());
-            }
-            if (couponInput != null) {
-                couponInput.setText("");
-                couponInput.clearFocus();
-            }
-        } else {
-            if (appliedCouponCard != null) {
-                appliedCouponCard.setVisibility(View.GONE);
-            }
+        boolean hasCoupon = CouponManager.getInstance().hasCoupon();
+        
+        if (couponInput != null) couponInput.setVisibility(hasCoupon ? View.GONE : View.VISIBLE);
+        if (appliedCouponCard != null) appliedCouponCard.setVisibility(hasCoupon ? View.VISIBLE : View.GONE);
+        
+        if (hasCoupon && appliedCouponCode != null && appliedCouponDiscount != null) {
+            // Show applied coupon info
+            // TODO: Get coupon details from CouponManager when available
+            appliedCouponCode.setText("Coupon Applied");
+            appliedCouponDiscount.setText("Discount");
         }
     }
 
@@ -240,12 +212,14 @@ public class PayoutActivity extends BaseActivity {
         summaryDiscountText = findViewById(R.id.summaryDiscount);
         summaryTotalText = findViewById(R.id.summaryTotal);
         discountRow = findViewById(R.id.discountRow);
-
+        
         updateOrderSummary();
     }
 
     private void updateOrderSummary() {
-        double subtotal = CartManager.getInstance().getTotalPrice();
+        if (currentCart == null) return;
+        
+        double subtotal = currentCart.getTotalPrice();
         double discount = CouponManager.getInstance().calculateDiscount(subtotal);
         double shipping = 15.00;
         double total = subtotal - discount + shipping;
@@ -258,12 +232,11 @@ public class PayoutActivity extends BaseActivity {
             if (discount > 0) {
                 discountRow.setVisibility(View.VISIBLE);
                 summaryDiscountText.setText(String.format(Locale.US, "-$%.2f", discount));
-                UiAnimations.fadeSlideDown(discountRow, 0);
             } else {
                 discountRow.setVisibility(View.GONE);
             }
         }
-
+        
         if (summaryTotalText != null) {
             summaryTotalText.setText(String.format(Locale.US, "$%.2f", total));
         }
@@ -271,68 +244,157 @@ public class PayoutActivity extends BaseActivity {
 
     private void setupConfirmButton() {
         Button confirmButton = findViewById(R.id.confirmPaymentButton);
-        View processingOverlay = findViewById(R.id.processingOverlay);
-        View successView = findViewById(R.id.successView);
-        Button backToHomeButton = findViewById(R.id.backToHomeButton);
-        Button viewOrdersButton = findViewById(R.id.viewOrdersButton);
-        TextView successOrderId = findViewById(R.id.successOrderId);
-        TextView successAmountPaid = findViewById(R.id.successAmountPaid);
-
-        UiAnimations.pressBounce(confirmButton, backToHomeButton, viewOrdersButton);
-
         if (confirmButton != null) {
-            confirmButton.setOnClickListener(v -> {
-                // Show processing overlay
-                if (processingOverlay != null) {
-                    processingOverlay.setVisibility(View.VISIBLE);
+            confirmButton.setOnClickListener(v -> processCheckout());
+            UiAnimations.pressBounce(confirmButton);
+        }
+    }
+
+    /**
+     * Process checkout - calls backend API to create order and get payment URL.
+     */
+    private void processCheckout() {
+        // Validate shipping information
+        if (!validateShippingInfo()) {
+            Toast.makeText(this, "Please fill in all shipping information", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        // Show loading
+        View confirmButton = findViewById(R.id.confirmPaymentButton);
+        if (confirmButton != null) confirmButton.setEnabled(false);
+        
+        // Prepare shipping address
+        Map<String, Object> shippingAddress = new HashMap<>();
+        if (shippingNameInput != null) {
+            shippingAddress.put("name", shippingNameInput.getText().toString());
+            shippingAddress.put("phone", shippingPhoneInput.getText().toString());
+            shippingAddress.put("address", shippingAddressInput.getText().toString());
+            shippingAddress.put("city", shippingCityInput != null ? shippingCityInput.getText().toString() : "");
+            shippingAddress.put("postal_code", shippingPostalCodeInput != null ? shippingPostalCodeInput.getText().toString() : "");
+        } else {
+            // Use default values if fields don't exist
+            shippingAddress.put("name", "Customer");
+            shippingAddress.put("phone", "+855");
+            shippingAddress.put("address", "Phnom Penh");
+            shippingAddress.put("city", "Phnom Penh");
+            shippingAddress.put("postal_code", "12000");
+        }
+        
+        // Call checkout API
+        cartRepository.checkout(
+            shippingAddress,
+            "aba_payway",  // Payment method
+            "",  // Notes
+            new CartRepository.CheckoutCallback() {
+                @Override
+                public void onSuccess(Map<String, Object> response) {
+                    runOnUiThread(() -> {
+                        Log.d(TAG, "Checkout response: " + response);
+                        
+                        // Check if response has payment_url (for ABA PayWay)
+                        if (response.containsKey("payment_url")) {
+                            String paymentUrl = (String) response.get("payment_url");
+                            openABAPayment(paymentUrl);
+                        } else {
+                            // Direct success (no payment gateway needed)
+                            showSuccessDialog(response);
+                        }
+                    });
                 }
 
-                // Simulate processing for 3 seconds
-                new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    if (processingOverlay != null) {
-                        processingOverlay.setVisibility(View.GONE);
-                    }
+                @Override
+                public void onError(String error) {
+                    runOnUiThread(() -> {
+                        if (confirmButton != null) confirmButton.setEnabled(true);
+                        Log.e(TAG, "Checkout failed: " + error);
+                        Toast.makeText(PayoutActivity.this, 
+                            "Checkout failed: " + error, Toast.LENGTH_LONG).show();
+                    });
+                }
+            }
+        );
+    }
 
-                    // Save the order before clearing cart
-                    double subtotal = CartManager.getInstance().getTotalPrice();
-                    double discount = CouponManager.getInstance().calculateDiscount(subtotal);
-                    double total = subtotal - discount + 15.00; // shipping
-                    OrderManager.Order order = OrderManager.getInstance().placeOrder(
-                            CartManager.getInstance().getCartItems(), total);
-
-                    if (successOrderId != null) successOrderId.setText(order.orderId);
-                    if (successAmountPaid != null) {
-                        successAmountPaid.setText(String.format(Locale.US, "$%.2f", total));
-                    }
-
-                    if (successView != null) {
-                        successView.setVisibility(View.VISIBLE);
-                        UiAnimations.popIn(successView, 0);
-                    }
-
-                    // Clear cart and coupon after successful "payment"
-                    CartManager.getInstance().getCartItems().clear();
-                    CouponManager.getInstance().removeCoupon();
-                }, 3000);
-            });
+    /**
+     * Validate shipping information.
+     */
+    private boolean validateShippingInfo() {
+        // If shipping fields don't exist in layout, skip validation for now
+        if (shippingNameInput == null || shippingPhoneInput == null || shippingAddressInput == null) {
+            return true;  // Allow checkout without shipping info for now
         }
+        
+        return !shippingNameInput.getText().toString().trim().isEmpty()
+            && !shippingPhoneInput.getText().toString().trim().isEmpty()
+            && !shippingAddressInput.getText().toString().trim().isEmpty();
+    }
 
-        if (backToHomeButton != null) {
-            backToHomeButton.setOnClickListener(v -> {
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-            });
-        }
+    /**
+     * Open ABA PayWay payment page in WebView.
+     * TODO: Create PaymentWebViewActivity for production.
+     */
+    private void openABAPayment(String paymentUrl) {
+        Log.d(TAG, "Opening ABA payment: " + paymentUrl);
+        
+        // TODO: For production, create PaymentWebViewActivity
+        // Intent intent = new Intent(this, PaymentWebViewActivity.class);
+        // intent.putExtra("payment_url", paymentUrl);
+        // startActivityForResult(intent, PAYMENT_REQUEST_CODE);
+        
+        // For now, show mock success after delay
+        Toast.makeText(this, "Opening payment gateway...", Toast.LENGTH_SHORT).show();
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            Map<String, Object> mockResponse = new HashMap<>();
+            mockResponse.put("order_id", "ORDER-" + System.currentTimeMillis());
+            mockResponse.put("status", "success");
+            showSuccessDialog(mockResponse);
+        }, 2000);
+    }
 
-        if (viewOrdersButton != null) {
-            viewOrdersButton.setOnClickListener(v -> {
-                Intent intent = new Intent(this, MyOrdersActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-            });
-        }
+    /**
+     * Show success dialog after payment.
+     */
+    private void showSuccessDialog(Map<String, Object> response) {
+        String orderId = response.get("order_id") != null ? 
+            response.get("order_id").toString() : "UNKNOWN";
+        
+        // Animate to success state
+        View processingOverlay = findViewById(R.id.processingOverlay);
+        View successView = findViewById(R.id.successView);
+        TextView successOrderId = findViewById(R.id.successOrderId);
+        Button viewOrdersButton = findViewById(R.id.viewOrdersButton);
+        Button backToHomeButton = findViewById(R.id.backToHomeButton);
+
+        if (processingOverlay != null) processingOverlay.setVisibility(View.VISIBLE);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (processingOverlay != null) processingOverlay.setVisibility(View.GONE);
+            if (successView != null) {
+                successView.setVisibility(View.VISIBLE);
+                UiAnimations.popIn(successView, 0);
+            }
+            
+            if (successOrderId != null) successOrderId.setText(orderId);
+            
+            if (viewOrdersButton != null) {
+                viewOrdersButton.setOnClickListener(v -> {
+                    startActivity(new Intent(this, MyOrdersActivity.class));
+                    finish();
+                });
+                UiAnimations.pressBounce(viewOrdersButton);
+            }
+            
+            if (backToHomeButton != null) {
+                backToHomeButton.setOnClickListener(v -> {
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                });
+                UiAnimations.pressBounce(backToHomeButton);
+            }
+
+            // Clear coupon
+            CouponManager.getInstance().removeCoupon();
+        }, 3000);
     }
 }

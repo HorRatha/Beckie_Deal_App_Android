@@ -27,9 +27,10 @@ import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
+import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 
 public class CategoryDetailActivity extends BaseActivity {
@@ -53,6 +54,7 @@ public class CategoryDetailActivity extends BaseActivity {
     private ImageView viewModeIcon;
     
     private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
+    private WishlistRepository wishlistRepository;
     private List<MainActivity.Product> allProducts = new ArrayList<>(); // All products from API
     private List<MainActivity.Product> filteredProducts = new ArrayList<>(); // Filtered/sorted products
 
@@ -68,6 +70,7 @@ public class CategoryDetailActivity extends BaseActivity {
 
         // Initialize repository
         productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
+        wishlistRepository = new WishlistRepository(this);
 
         // Get intent extras
         currentCategoryName = getIntent().getStringExtra(EXTRA_CATEGORY);
@@ -390,10 +393,8 @@ public class CategoryDetailActivity extends BaseActivity {
                 break;
         }
 
-        // Sync favorite state from FavoriteManager
-        for (MainActivity.Product p : filtered)
-            p.isInWishlist = WishlistManager.getInstance().isInWishlist(p);
-
+        // Wishlist state managed by click handlers
+        
         filteredProducts = filtered;
 
         // Build results label
@@ -473,20 +474,68 @@ public class CategoryDetailActivity extends BaseActivity {
             ImageView favIcon = view.findViewById(R.id.favoriteIcon);
             if (favIcon != null) {
                 favIcon.setOnClickListener(v -> {
-                    // Check authentication before modifying wishlist
                     if (!aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.requireAuthForWishlist(this)) {
-                        return; // Prompt shown, operation cancelled
+                        return;
                     }
                     
-                    product.isInWishlist = !product.isInWishlist;
-                    if (product.isInWishlist) {
-                        WishlistManager.getInstance().addToWishlist(product);
-                        Toast.makeText(this, "Added to Wishlist", Toast.LENGTH_SHORT).show();
-                    } else {
-                        WishlistManager.getInstance().removeFromWishlist(product);
-                        Toast.makeText(this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
+                    if (product.id == null || product.id.isEmpty()) {
+                        Toast.makeText(this, "Product ID not available", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                    ProductCardBinder.refreshFavIcon(this, favIcon, product.isInWishlist);
+                    
+                    favIcon.setEnabled(false);
+                    
+                    if (!product.isInWishlist) {
+                        wishlistRepository.addToWishlist(product.id, 1, new WishlistRepository.WishlistItemCallback() {
+                            @Override
+                            public void onSuccess(WishlistItemResponse response) {
+                                runOnUiThread(() -> {
+                                    product.isInWishlist = true;
+                                    if (response.getData() != null) {
+                                        product.wishlistItemId = response.getData().getId();
+                                    }
+                                    ProductCardBinder.refreshFavIcon(CategoryDetailActivity.this, favIcon, true);
+                                    Toast.makeText(CategoryDetailActivity.this, "Added to Wishlist", Toast.LENGTH_SHORT).show();
+                                    favIcon.setEnabled(true);
+                                });
+                            }
+                            
+                            @Override
+                            public void onError(String error) {
+                                runOnUiThread(() -> {
+                                    Toast.makeText(CategoryDetailActivity.this, "Failed to add", Toast.LENGTH_SHORT).show();
+                                    favIcon.setEnabled(true);
+                                });
+                            }
+                        });
+                    } else {
+                        if (product.wishlistItemId > 0) {
+                            wishlistRepository.removeFromWishlist(product.wishlistItemId, new WishlistRepository.SimpleCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    runOnUiThread(() -> {
+                                        product.isInWishlist = false;
+                                        product.wishlistItemId = 0;
+                                        ProductCardBinder.refreshFavIcon(CategoryDetailActivity.this, favIcon, false);
+                                        Toast.makeText(CategoryDetailActivity.this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
+                                        favIcon.setEnabled(true);
+                                    });
+                                }
+                                
+                                @Override
+                                public void onError(String error) {
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(CategoryDetailActivity.this, "Failed to remove", Toast.LENGTH_SHORT).show();
+                                        favIcon.setEnabled(true);
+                                    });
+                                }
+                            });
+                        } else {
+                            product.isInWishlist = false;
+                            ProductCardBinder.refreshFavIcon(this, favIcon, false);
+                            favIcon.setEnabled(true);
+                        }
+                    }
                 });
             }
 

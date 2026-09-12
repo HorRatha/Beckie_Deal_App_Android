@@ -67,6 +67,20 @@
         <activity
             android:name=".ui.activities.cart.OrderDetailActivity"
             android:exported="false" />
+        
+        <!-- Payment Activity with Deep Link Support -->
+        <activity
+            android:name=".ui.activities.payment.PaymentWebViewActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Deep links for payment result -->
+                <data android:scheme="beckiedeal" android:host="payment" />
+            </intent-filter>
+        </activity>
 
         <!-- Profile Activities -->
         <activity

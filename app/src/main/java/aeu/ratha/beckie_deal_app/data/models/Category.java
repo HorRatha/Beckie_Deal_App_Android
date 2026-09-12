@@ -9,10 +9,10 @@ import com.google.gson.annotations.SerializedName;
 public class Category {
     
     @SerializedName("id")
-    private int id;
+    private String id;  // UUID format from API
     
     @SerializedName("parent_id")
-    private Integer parentId;
+    private String parentId;  // UUID format from API
     
     @SerializedName("name")
     private String name;
@@ -46,18 +46,18 @@ public class Category {
     }
     
     // Constructor with essential fields
-    public Category(int id, String name, String slug) {
+    public Category(String id, String name, String slug) {
         this.id = id;
         this.name = name;
         this.slug = slug;
     }
     
     // Getters
-    public int getId() {
+    public String getId() {
         return id;
     }
     
-    public Integer getParentId() {
+    public String getParentId() {
         return parentId;
     }
     
@@ -98,11 +98,11 @@ public class Category {
     }
     
     // Setters
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
     
-    public void setParentId(Integer parentId) {
+    public void setParentId(String parentId) {
         this.parentId = parentId;
     }
     

@@ -1,21 +1,23 @@
 package aeu.ratha.beckie_deal_app.ui.activities.main;
 
 import aeu.ratha.beckie_deal_app.R;
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.data.repository.CategoryRepository;
+import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
+import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
+import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
+import aeu.ratha.beckie_deal_app.ui.activities.product.CategoriesActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.product.CategoryDetailActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductListActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.SearchActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.product.CategoriesActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.product.CategoryDetailActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-import aeu.ratha.beckie_deal_app.data.repository.CategoryRepository;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,6 +62,8 @@ public class MainActivity extends BaseActivity {
     private ImageView viewModeIcon;
     private CategoryRepository categoryRepository;
     private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
+    private WishlistRepository wishlistRepository;
+    private CartRepository cartRepository;
 
     // Auto-scroll for horizontal sections
     private Handler autoScrollHandler;
@@ -157,6 +161,8 @@ public class MainActivity extends BaseActivity {
     private void initRepository() {
         categoryRepository = CategoryRepository.getInstance(this);
         productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
+        wishlistRepository = new WishlistRepository(this);
+        cartRepository = new CartRepository(this);
     }
     
     /**
@@ -179,10 +185,8 @@ public class MainActivity extends BaseActivity {
                 
                 Log.d(TAG, "=== CONVERTED TO " + products.size() + " UI PRODUCTS ===");
                 
-                // Sync wishlist
-                for (Product p : products) {
-                    p.isInWishlist = WishlistManager.getInstance().isInWishlist(p);
-                }
+                // Wishlist state will be loaded on-demand when needed
+                // No need to sync here - ProductGridAdapter handles it
                 
                 // Update UI on main thread
                 runOnUiThread(() -> {
@@ -605,10 +609,8 @@ public class MainActivity extends BaseActivity {
         RecyclerView productsGrid = findViewById(R.id.productsGrid);
         if (productsGrid == null) return;
 
-        // Sync wishlist state for all items
-        for (Product p : products) {
-            p.isInWishlist = WishlistManager.getInstance().isInWishlist(p);
-        }
+        // Wishlist state managed by ProductGridAdapter
+        // No need to sync here
 
         boolean isListView = ViewModePreferences.isListView(this);
 
@@ -618,7 +620,7 @@ public class MainActivity extends BaseActivity {
             // control the scroll, so the whole page scrolls as one — smooth and natural.
             GridLayoutManager layoutManager = new GridLayoutManager(this, isListView ? 1 : 2);
             productsGrid.setLayoutManager(layoutManager);
-            productAdapter = new ProductGridAdapter(this, products);
+            productAdapter = new ProductGridAdapter(this, products, wishlistRepository, cartRepository);
             productAdapter.setListMode(isListView);
             productsGrid.setAdapter(productAdapter);
         } else {
@@ -776,7 +778,27 @@ public class MainActivity extends BaseActivity {
         priceView.setText(product.price);
         ratingView.setText(product.rating);
 
-        product.isInWishlist = WishlistManager.getInstance().isInWishlist(product);
+        // Check wishlist status via API
+        product.isInWishlist = false; // Default
+        if (product.id != null && !product.id.isEmpty()) {
+            wishlistRepository.checkProductInWishlist(product.id, new WishlistRepository.CheckCallback() {
+                @Override
+                public void onResult(boolean inWishlist) {
+                    runOnUiThread(() -> {
+                        product.isInWishlist = inWishlist;
+                        favIcon.setImageResource(inWishlist ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+                        favIcon.setColorFilter(ContextCompat.getColor(MainActivity.this,
+                                inWishlist ? R.color.primary : R.color.text_secondary));
+                    });
+                }
+                
+                @Override
+                public void onError(String error) {
+                    // Keep default false
+                }
+            });
+        }
+        
         favIcon.setImageResource(product.isInWishlist ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
         favIcon.setColorFilter(ContextCompat.getColor(this,
                 product.isInWishlist ? R.color.primary : R.color.text_secondary));
@@ -801,12 +823,69 @@ public class MainActivity extends BaseActivity {
                 return; // Prompt shown, operation cancelled
             }
             
-            product.isInWishlist = !product.isInWishlist;
-            if (product.isInWishlist) WishlistManager.getInstance().addToWishlist(product);
-            else WishlistManager.getInstance().removeFromWishlist(product);
-            favIcon.setImageResource(product.isInWishlist ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
-            favIcon.setColorFilter(ContextCompat.getColor(this,
-                    product.isInWishlist ? R.color.primary : R.color.text_secondary));
+            if (product.id == null || product.id.isEmpty()) {
+                Toast.makeText(this, "Product ID not available", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            favIcon.setEnabled(false);
+            
+            if (!product.isInWishlist) {
+                // Add to wishlist
+                wishlistRepository.addToWishlist(product.id, 1, new WishlistRepository.WishlistItemCallback() {
+                    @Override
+                    public void onSuccess(WishlistItemResponse response) {
+                        runOnUiThread(() -> {
+                            product.isInWishlist = true;
+                            if (response.getData() != null) {
+                                product.wishlistItemId = response.getData().getId();
+                            }
+                            favIcon.setImageResource(R.drawable.ic_favorite);
+                            favIcon.setColorFilter(ContextCompat.getColor(MainActivity.this, R.color.primary));
+                            Toast.makeText(MainActivity.this, "Added to Wishlist", Toast.LENGTH_SHORT).show();
+                            favIcon.setEnabled(true);
+                        });
+                    }
+                    
+                    @Override
+                    public void onError(String error) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(MainActivity.this, "Failed to add", Toast.LENGTH_SHORT).show();
+                            favIcon.setEnabled(true);
+                        });
+                    }
+                });
+            } else {
+                // Remove from wishlist
+                if (product.wishlistItemId > 0) {
+                    wishlistRepository.removeFromWishlist(product.wishlistItemId, new WishlistRepository.SimpleCallback() {
+                        @Override
+                        public void onSuccess() {
+                            runOnUiThread(() -> {
+                                product.isInWishlist = false;
+                                product.wishlistItemId = 0;
+                                favIcon.setImageResource(R.drawable.ic_favorite_border);
+                                favIcon.setColorFilter(ContextCompat.getColor(MainActivity.this, R.color.text_secondary));
+                                Toast.makeText(MainActivity.this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
+                                favIcon.setEnabled(true);
+                            });
+                        }
+                        
+                        @Override
+                        public void onError(String error) {
+                            runOnUiThread(() -> {
+                                Toast.makeText(MainActivity.this, "Failed to remove", Toast.LENGTH_SHORT).show();
+                                favIcon.setEnabled(true);
+                            });
+                        }
+                    });
+                } else {
+                    product.isInWishlist = false;
+                    favIcon.setImageResource(R.drawable.ic_favorite_border);
+                    favIcon.setColorFilter(ContextCompat.getColor(MainActivity.this, R.color.text_secondary));
+                    favIcon.setEnabled(true);
+                }
+            }
         });
 
         container.addView(view);
@@ -938,7 +1017,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public static class Product {
-        public int id;               // Product ID from API
+        public String id;            // Product ID (UUID) from API
         public String name, price, rating, imageUrl;
         public String sku;           // e.g. "BECKIE6036"
         public boolean inStock;      // true = Available In Stock
@@ -946,20 +1025,26 @@ public class MainActivity extends BaseActivity {
         public String specs;         // short bullet specs, newline-separated, e.g. "-13.6\" Liquid Retina\n-Weight: 1.24Kg"
         public String freeItems;     // e.g. "Free 8 items"
         public boolean isInWishlist;
+        public int wishlistItemId;   // Wishlist item ID for API removal
 
         // Minimal constructor (legacy — no SKU/stock/warranty/specs)
         public Product(String n, String p, String r, boolean w, String i) {
-            this(0, n, p, r, w, i, "", true, 1, "", "");
+            this("", n, p, r, w, i, "", true, 1, "", "");
+        }
+        
+        // Simplified constructor with ID only (for wishlist display)
+        public Product(String id, String n, String p, String i, String r) {
+            this(id, n, p, r, false, i, "", true, 1, "", "");
         }
 
         // Full constructor (without ID - legacy)
         public Product(String n, String p, String r, boolean w, String i,
                 String sku, boolean inStock, int warranty, String specs, String freeItems) {
-            this(0, n, p, r, w, i, sku, inStock, warranty, specs, freeItems);
+            this("", n, p, r, w, i, sku, inStock, warranty, specs, freeItems);
         }
         
         // Complete constructor (with ID)
-        public Product(int id, String n, String p, String r, boolean w, String i,
+        public Product(String id, String n, String p, String r, boolean w, String i,
                 String sku, boolean inStock, int warranty, String specs, String freeItems) {
             this.id = id;
             name=n; price=p; rating=r; isInWishlist=w; imageUrl=i;

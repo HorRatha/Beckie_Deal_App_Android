@@ -1,115 +1,38 @@
 package aeu.ratha.beckie_deal_app.ui.activities.product;
 
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-
 import aeu.ratha.beckie_deal_app.R;
-
-
+import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
+import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
+import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
+import aeu.ratha.beckie_deal_app.data.models.CartItemResponse;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
+import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.content.Intent;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.graphics.Color;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.os.Bundle;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
+import android.util.Log;
 import android.view.LayoutInflater;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.view.View;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.widget.ImageView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.widget.LinearLayout;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.widget.TextView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
-
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -122,6 +45,8 @@ public class ProductDetailActivity extends BaseActivity {
     private boolean isFavorite = false;
     private ImageView detailFavoriteIcon;
     private MainActivity.Product currentProduct;
+    private WishlistRepository wishlistRepository;
+    private CartRepository cartRepository;
     private aeu.ratha.beckie_deal_app.data.models.Product fullProduct; // Full product data from API
     private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
 
@@ -139,6 +64,8 @@ public class ProductDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_product_detail);
         
         productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
+        wishlistRepository = new WishlistRepository(this);
+        cartRepository = new CartRepository(this);
         
         setupTopBar();
         loadProductData();
@@ -186,19 +113,43 @@ public class ProductDetailActivity extends BaseActivity {
     // ── Product data ──────────────────────────────────────────────────────────
 
     private void loadProductData() {
-        // Get product data from intent
-        int productId = getIntent().getIntExtra("product_id", 0);
+        // Get product data from intent (ID should be UUID string)
+        String productIdString = getIntent().getStringExtra("product_id");
         String name     = getIntent().getStringExtra("product_name");
         String price    = getIntent().getStringExtra("product_price");
         String imageUrl = getIntent().getStringExtra("product_image");
         String rating   = getIntent().getStringExtra("product_rating");
         String sku      = getIntent().getStringExtra("product_sku");
         
+        Log.d(TAG, "Loading product - ID: " + productIdString + ", Name: " + name);
+        
         if (name == null) name = "Product";
         if (rating == null) rating = "4.9";
 
         currentProduct = new MainActivity.Product(name, price, rating, false, imageUrl);
-        isFavorite = WishlistManager.getInstance().isInWishlist(currentProduct);
+        currentProduct.id = productIdString; // ✅ SET THE ID!
+        currentProduct.sku = sku;
+        isFavorite = false; // Will be checked via API below
+
+        // Check if product is in wishlist via API
+        if (currentProduct.id != null && !currentProduct.id.isEmpty()) {
+            wishlistRepository.checkProductInWishlist(currentProduct.id, new WishlistRepository.CheckCallback() {
+                @Override
+                public void onResult(boolean inWishlist) {
+                    runOnUiThread(() -> {
+                        isFavorite = inWishlist;
+                        currentProduct.isInWishlist = inWishlist;
+                        updateFavoriteUI();
+                    });
+                }
+                
+                @Override
+                public void onError(String error) {
+                    Log.e(TAG, "Failed to check wishlist status: " + error);
+                    // Keep default false value
+                }
+            });
+        }
 
         // Display basic info immediately
         setTextSafe(R.id.detailProductName, name);
@@ -220,38 +171,12 @@ public class ProductDetailActivity extends BaseActivity {
         detailFavoriteIcon = findViewById(R.id.detailWishlistIcon);
         updateFavoriteUI();
 
-        // Fetch full product details from API if we have a product ID
-        if (productId > 0) {
-            fetchFullProductDetails(productId);
-        } else {
-            // Fallback to static data if no product ID
-            loadStaticProductData(sku, name);
-        }
-    }
-
-    /**
-     * Fetch full product details from API and populate dynamic data.
-     */
-    private void fetchFullProductDetails(int productId) {
-        productRepository.fetchProduct(productId, new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.SingleProductCallback() {
-            @Override
-            public void onSuccess(aeu.ratha.beckie_deal_app.data.models.Product product) {
-                fullProduct = product;
-                runOnUiThread(() -> populateProductDetails(product));
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                android.util.Log.e(TAG, "Failed to fetch product details: " + errorMessage);
-                runOnUiThread(() -> {
-                    Toast.makeText(ProductDetailActivity.this, 
-                        "Could not load full product details", Toast.LENGTH_SHORT).show();
-                    // Fallback to static data
-                    loadStaticProductData(fullProduct != null ? fullProduct.getSku() : null, 
-                        fullProduct != null ? fullProduct.getName() : "Product");
-                });
-            }
-        });
+        // Note: fullProduct fetching removed - we already have the product ID from Intent
+        // The cart functionality works with currentProduct.id which is now set
+        
+        // Optional: Load additional product details if needed
+        // For now, display with data from Intent
+        loadStaticProductData(sku, name);
     }
 
     /**
@@ -658,21 +583,53 @@ public class ProductDetailActivity extends BaseActivity {
                 return; // User not logged in, prompt shown
             }
             
-            CartManager.getInstance().addToCart(currentProduct, selectedQuantity);
-            updateCartUI();
+            // Use fullProduct (from API) instead of currentProduct (from Intent)
+            String productId = null;
+            if (fullProduct != null && fullProduct.getId() != null) {
+                productId = fullProduct.getId();
+            } else if (currentProduct != null && currentProduct.id != null) {
+                productId = currentProduct.id;
+            }
             
-            // Enhanced feedback with Snackbar + "View Cart" action
-            String msg = selectedQuantity == 1
-                    ? "Added to cart!"
-                    : selectedQuantity + "× added to cart!";
+            // Validate product ID
+            if (productId == null || productId.isEmpty()) {
+                Log.e(TAG, "Cannot add to cart - product ID is null or empty");
+                Toast.makeText(this, "Product information is missing. Please try refreshing.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             
-            Snackbar snackbar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
-                    .setAction("View Cart", view -> {
-                        Intent intent = new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity.class);
-                        startActivity(intent);
-                    })
-                    .setActionTextColor(getResources().getColor(R.color.primary, null));
-            snackbar.show();
+            Log.d(TAG, "Adding to cart - Product ID: " + productId + ", Quantity: " + selectedQuantity);
+            
+            // Add to cart via API
+            cartRepository.addToCart(productId, selectedQuantity, new CartRepository.CartItemCallback() {
+                @Override
+                public void onSuccess(CartItemResponse response) {
+                    runOnUiThread(() -> {
+                        updateCartUI();
+                        
+                        // Enhanced feedback with Snackbar + "View Cart" action
+                        String msg = selectedQuantity == 1
+                                ? "Added to cart!"
+                                : selectedQuantity + "× added to cart!";
+                        
+                        Snackbar snackbar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+                                .setAction("View Cart", view -> {
+                                    Intent intent = new Intent(ProductDetailActivity.this, aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity.class);
+                                    startActivity(intent);
+                                })
+                                .setActionTextColor(getResources().getColor(R.color.primary, null));
+                        snackbar.show();
+                    });
+                }
+                
+                @Override
+                public void onError(String error) {
+                    runOnUiThread(() -> {
+                        Log.e(TAG, "Failed to add to cart: " + error);
+                        Toast.makeText(ProductDetailActivity.this, "Failed to add to cart", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
         });
 
         // ── Buy Now button ────────────────────────────────────────────────────
@@ -683,13 +640,41 @@ public class ProductDetailActivity extends BaseActivity {
                 return; // User not logged in, prompt shown
             }
             
-            // Add to cart temporarily (will be cleared after checkout)
-            CartManager.getInstance().addToCart(currentProduct, selectedQuantity);
+            // Use fullProduct (from API) instead of currentProduct (from Intent)
+            String productId = null;
+            if (fullProduct != null && fullProduct.getId() != null) {
+                productId = fullProduct.getId();
+            } else if (currentProduct != null && currentProduct.id != null) {
+                productId = currentProduct.id;
+            }
             
-            // Go directly to checkout/payout, bypassing cart page
-            Intent intent = new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity.class);
-            intent.putExtra("buy_now_mode", true);  // Optional: to differentiate from cart checkout
-            startActivity(intent);
+            // Validate product ID
+            if (productId == null || productId.isEmpty()) {
+                Log.e(TAG, "Cannot buy now - product ID is null or empty");
+                Toast.makeText(this, "Product information is missing. Please try refreshing.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            // Add to cart via API, then go to checkout
+            cartRepository.addToCart(productId, selectedQuantity, new CartRepository.CartItemCallback() {
+                @Override
+                public void onSuccess(CartItemResponse response) {
+                    runOnUiThread(() -> {
+                        // Go directly to checkout/payout, bypassing cart page
+                        Intent intent = new Intent(ProductDetailActivity.this, aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity.class);
+                        intent.putExtra("buy_now_mode", true);  // Optional: to differentiate from cart checkout
+                        startActivity(intent);
+                    });
+                }
+                
+                @Override
+                public void onError(String error) {
+                    runOnUiThread(() -> {
+                        Log.e(TAG, "Failed to add to cart: " + error);
+                        Toast.makeText(ProductDetailActivity.this, "Failed to proceed to checkout", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
         });
 
         // ── Wishlist button ───────────────────────────────────────────────────
@@ -700,10 +685,73 @@ public class ProductDetailActivity extends BaseActivity {
                 return; // User not logged in, prompt shown
             }
             
-            isFavorite = !isFavorite;
-            if (isFavorite) WishlistManager.getInstance().addToWishlist(currentProduct);
-            else            WishlistManager.getInstance().removeFromWishlist(currentProduct);
-            updateFavoriteUI();
+            if (currentProduct.id == null || currentProduct.id.isEmpty()) {
+                Toast.makeText(this, "Product ID not available", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            // Disable button to prevent double-clicks
+            favBtn.setEnabled(false);
+            
+            if (!isFavorite) {
+                // Add to wishlist via API
+                wishlistRepository.addToWishlist(currentProduct.id, 1, new WishlistRepository.WishlistItemCallback() {
+                    @Override
+                    public void onSuccess(WishlistItemResponse response) {
+                        runOnUiThread(() -> {
+                            isFavorite = true;
+                            currentProduct.isInWishlist = true;
+                            if (response.getData() != null) {
+                                currentProduct.wishlistItemId = response.getData().getId();
+                            }
+                            updateFavoriteUI();
+                            Toast.makeText(ProductDetailActivity.this, "Added to Wishlist", Toast.LENGTH_SHORT).show();
+                            favBtn.setEnabled(true);
+                        });
+                    }
+                    
+                    @Override
+                    public void onError(String error) {
+                        runOnUiThread(() -> {
+                            Log.e(TAG, "Failed to add to wishlist: " + error);
+                            Toast.makeText(ProductDetailActivity.this, "Failed to add to wishlist", Toast.LENGTH_SHORT).show();
+                            favBtn.setEnabled(true);
+                        });
+                    }
+                });
+            } else {
+                // Remove from wishlist via API
+                if (currentProduct.wishlistItemId > 0) {
+                    wishlistRepository.removeFromWishlist(currentProduct.wishlistItemId, new WishlistRepository.SimpleCallback() {
+                        @Override
+                        public void onSuccess() {
+                            runOnUiThread(() -> {
+                                isFavorite = false;
+                                currentProduct.isInWishlist = false;
+                                currentProduct.wishlistItemId = 0;
+                                updateFavoriteUI();
+                                Toast.makeText(ProductDetailActivity.this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
+                                favBtn.setEnabled(true);
+                            });
+                        }
+                        
+                        @Override
+                        public void onError(String error) {
+                            runOnUiThread(() -> {
+                                Log.e(TAG, "Failed to remove from wishlist: " + error);
+                                Toast.makeText(ProductDetailActivity.this, "Failed to remove from wishlist", Toast.LENGTH_SHORT).show();
+                                favBtn.setEnabled(true);
+                            });
+                        }
+                    });
+                } else {
+                    // No wishlist item ID, just toggle locally
+                    isFavorite = false;
+                    currentProduct.isInWishlist = false;
+                    updateFavoriteUI();
+                    favBtn.setEnabled(true);
+                }
+            }
         });
 
         UiAnimations.pressBounce(addToCart, buyNow, favBtn);

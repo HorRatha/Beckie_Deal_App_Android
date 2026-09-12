@@ -20,7 +20,7 @@ public class ProductMapper {
         if (apiProduct == null) return null;
         
         // Extract product ID (CRITICAL for ProductDetailActivity API integration)
-        int id = apiProduct.getId();
+        String id = apiProduct.getId();  // Now returns String (UUID)
         android.util.Log.d("ProductMapper", "Converting API product - ID: " + id + ", Name: " + apiProduct.getName());
         
         // Extract basic fields
