@@ -126,6 +126,7 @@ public class AboutActivity extends BaseActivity {
 
         AppDrawerHelper.attach(this, R.id.drawerLayout, 0);
         setupTopBar();
+        setupAboutUsImage();
         setupSubmitButton();
         setupMapCard();
         setupBottomNavigation();
@@ -143,6 +144,23 @@ public class AboutActivity extends BaseActivity {
                 startActivity(new Intent(this, NotificationsActivity.class)));
 
         UiAnimations.pressBounce(backButton, notificationContainer);
+    }
+
+    /**
+     * Load and display the About Us image from the remote URL.
+     */
+    private void setupAboutUsImage() {
+        ImageView aboutUsImage = findViewById(R.id.aboutUsImage);
+        if (aboutUsImage != null) {
+            String imageUrl = "https://www.beckie-khmer.com/storage/about_us/jMTY9dOrs58PMFifuA3OHw821SfcL3BmwreIodlb.jpeg";
+            
+            Glide.with(this)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.placeholder_image)
+                    .centerCrop()
+                    .into(aboutUsImage);
+        }
     }
 
     /** Staggers every section of the About page's scroll body up into place on load. */

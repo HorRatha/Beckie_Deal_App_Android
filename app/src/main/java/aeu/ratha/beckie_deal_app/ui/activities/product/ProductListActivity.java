@@ -1,146 +1,32 @@
 package aeu.ratha.beckie_deal_app.ui.activities.product;
 
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-
-import aeu.ratha.beckie_deal_app.R;
-
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.content.Intent;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
-import android.graphics.Color;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.os.Bundle;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.LayoutInflater;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.View;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.GridLayout;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.ImageView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.LinearLayout;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.TextView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.core.content.ContextCompat;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.card.MaterialCardView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
+import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 
 /**
  * Full-list screen reached from "View All" on New Collection / Top Selling sections.
@@ -167,6 +53,9 @@ public class ProductListActivity extends BaseActivity
     private LinearLayout activeFiltersContainer;
     private View activeFiltersScroll;
     private ImageView viewModeIcon;
+    
+    private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
+    private List<MainActivity.Product> allProducts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +64,9 @@ public class ProductListActivity extends BaseActivity
 
         mode = getIntent().getStringExtra(EXTRA_MODE);
         if (mode == null) mode = MODE_NEW_COLLECTION;
+
+        // Initialize repository
+        productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
 
         productsGrid         = findViewById(R.id.productsGrid);
         resultsLabel         = findViewById(R.id.resultsLabel);
@@ -207,11 +99,13 @@ public class ProductListActivity extends BaseActivity
                 }));
 
         setupBottomNavigation();
-        applyAndRender();
-
+        
         UiAnimations.pressBounce(backBtn, filterBtn, viewModeBtn);
         UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
         UiAnimations.fadeSlideUp(findViewById(R.id.resultsLabel), 80);
+        
+        // Fetch products from API
+        fetchProducts();
     }
 
     @Override
@@ -239,35 +133,57 @@ public class ProductListActivity extends BaseActivity
 
     // ── Data + filtering ──────────────────────────────────────────────────────
 
-    private List<MainActivity.Product> getAllProducts() {
-        // Pull from the same catalogue used by CategoryDetailActivity
-        List<MainActivity.Product> all = new ArrayList<>();
-        for (java.util.Map<String, List<MainActivity.Product>> brandMap
-                : CategoryDetailActivity.CATALOGUE.values()) {
-            for (List<MainActivity.Product> list : brandMap.values())
-                all.addAll(list);
+    private void fetchProducts() {
+        if (resultsLabel != null) {
+            resultsLabel.setText("Loading products...");
         }
-        return all;
+        
+        // Fetch all products and filter based on mode
+        productRepository.fetchProducts(100, 0, MODE_TOP_SELLING.equals(mode),
+            new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
+                @Override
+                public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
+                    allProducts.clear();
+                    allProducts.addAll(aeu.ratha.beckie_deal_app.utils.helpers.ProductMapper.toUiProducts(apiProducts));
+                    
+                    runOnUiThread(() -> applyAndRender());
+                }
+                
+                @Override
+                public void onError(String errorMessage) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(ProductListActivity.this, 
+                            "Failed to load products. Please try again.", Toast.LENGTH_SHORT).show();
+                        if (resultsLabel != null) {
+                            resultsLabel.setText("No products available");
+                        }
+                    });
+                }
+            });
     }
 
     /**
-     * "New Collection" = we treat higher price as newer/flagship model (mock data has no date).
-     * In a real app you'd add a releaseYear field. Here we simulate: products with price ≥ $800 =
-     * new collection; products with rating ≥ 4.7 = top selling.
+     * "New Collection" = higher priced products (flagship models).
+     * "Top Selling" = high rated products (rating ≥ 4.7).
      */
     private List<MainActivity.Product> getBaseProducts() {
-        List<MainActivity.Product> base = getAllProducts();
         List<MainActivity.Product> filtered = new ArrayList<>();
+        
         if (MODE_NEW_COLLECTION.equals(mode)) {
-            for (MainActivity.Product p : base) {
+            // New collection: price ≥ $800
+            for (MainActivity.Product p : allProducts) {
                 double price = parsePrice(p.price);
                 if (price >= 800) filtered.add(p);
             }
         } else {
-            // top_selling: rating ≥ 4.7
-            for (MainActivity.Product p : base) {
-                double rating = Double.parseDouble(p.rating);
-                if (rating >= 4.7) filtered.add(p);
+            // Top selling: rating ≥ 4.7
+            for (MainActivity.Product p : allProducts) {
+                try {
+                    double rating = Double.parseDouble(p.rating);
+                    if (rating >= 4.7) filtered.add(p);
+                } catch (NumberFormatException e) {
+                    // Skip products with invalid rating
+                }
             }
         }
         return filtered;
@@ -299,8 +215,13 @@ public class ProductListActivity extends BaseActivity
                         Double.compare(parsePrice(b.price), parsePrice(a.price)));
                 break;
             case FilterBottomSheet.SORT_TOP_RATED:
-                Collections.sort(products, (a, b) ->
-                        Double.compare(Double.parseDouble(b.rating), Double.parseDouble(a.rating)));
+                Collections.sort(products, (a, b) -> {
+                    try {
+                        return Double.compare(Double.parseDouble(b.rating), Double.parseDouble(a.rating));
+                    } catch (NumberFormatException e) {
+                        return 0;
+                    }
+                });
                 break;
             default:
                 break; // Default order
@@ -317,20 +238,22 @@ public class ProductListActivity extends BaseActivity
     /**
      * Simulate year mapping: divide $0–$3000 range into per-year buckets.
      * Each year maps to a rough price tier so the filter does something visible.
-     * 2010→$0-200, ..., 2024→$1200-1600, 2025/2026→$1600+
      */
     private List<MainActivity.Product> filterByYear(List<MainActivity.Product> list, String year) {
-        int y = Integer.parseInt(year);
-        // Each year = price band of ~200 dollars starting from 2010=$0
-        int minP = (y - 2010) * 100;
-        int maxP = minP + 400;
-        List<MainActivity.Product> result = new ArrayList<>();
-        for (MainActivity.Product p : list) {
-            double price = parsePrice(p.price);
-            if (price >= minP && price <= maxP) result.add(p);
+        try {
+            int y = Integer.parseInt(year);
+            int minP = (y - 2010) * 100;
+            int maxP = minP + 400;
+            List<MainActivity.Product> result = new ArrayList<>();
+            for (MainActivity.Product p : list) {
+                double price = parsePrice(p.price);
+                if (price >= minP && price <= maxP) result.add(p);
+            }
+            // Fallback: if band produces nothing, return all (avoid empty list confusion)
+            return result.isEmpty() ? list : result;
+        } catch (NumberFormatException e) {
+            return list;
         }
-        // Fallback: if band produces nothing, return all (avoid empty list confusion)
-        return result.isEmpty() ? list : result;
     }
 
     private void updateFilterIndicators() {
@@ -406,10 +329,12 @@ public class ProductListActivity extends BaseActivity
 
             view.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ProductDetailActivity.class);
+                intent.putExtra("product_id", product.id);
                 intent.putExtra("product_name",   product.name);
                 intent.putExtra("product_price",  product.price);
                 intent.putExtra("product_image",  product.imageUrl);
                 intent.putExtra("product_rating", product.rating);
+                intent.putExtra("product_sku", product.sku);
                 startActivity(intent);
             });
 

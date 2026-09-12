@@ -1,183 +1,39 @@
 package aeu.ratha.beckie_deal_app.ui.activities.product;
 
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-
-import aeu.ratha.beckie_deal_app.R;
-
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.content.Intent;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.os.Bundle;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.text.Editable;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.text.TextWatcher;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.KeyEvent;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.LayoutInflater;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.View;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.inputmethod.EditorInfo;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.view.inputmethod.InputMethodManager;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.EditText;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.GridLayout;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.ImageView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.LinearLayout;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
-import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
-import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
-import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
-
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.utils.managers.WishlistManager;
+import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 
 /**
  * Full-screen search activity.
- *
- * Searches the entire {@link CategoryDetailActivity#CATALOGUE} against:
- *  - product name
- *  - brand name
- *  - category name
- *  - specs / SKU text
- *
- * Results are shown in the same 2-column product-card grid used everywhere else.
- * Launched by clicking the search bar on MainActivity or the search icon on
- * CategoriesActivity.
+ * Searches products from API by product name, brand, category, specs, or SKU.
  */
 public class SearchActivity extends BaseActivity {
 
@@ -191,11 +47,17 @@ public class SearchActivity extends BaseActivity {
     private TextView  emptySubtitle;
     private ImageView viewModeIcon;
     private String    lastQuery = "";
+    
+    private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
+    private List<MainActivity.Product> allProducts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        // Initialize repository
+        productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
 
         searchEditText   = findViewById(R.id.searchEditText);
         clearButton      = findViewById(R.id.clearButton);
@@ -263,6 +125,31 @@ public class SearchActivity extends BaseActivity {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             if (imm != null) imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
         }, 100);
+        
+        // Load all products for search
+        loadProducts();
+    }
+
+    // ── Data loading ──────────────────────────────────────────────────────────
+
+    private void loadProducts() {
+        // Fetch all products from API for searching
+        productRepository.fetchProducts(200, 0, false,
+            new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
+                @Override
+                public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
+                    allProducts.clear();
+                    allProducts.addAll(aeu.ratha.beckie_deal_app.utils.helpers.ProductMapper.toUiProducts(apiProducts));
+                }
+                
+                @Override
+                public void onError(String errorMessage) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(SearchActivity.this, 
+                            "Failed to load products for search.", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
     }
 
     // ── Search logic ──────────────────────────────────────────────────────────
@@ -278,24 +165,12 @@ public class SearchActivity extends BaseActivity {
         }
 
         String lower = query.toLowerCase();
-        List<ProductResult> results = new ArrayList<>();
+        List<MainActivity.Product> results = new ArrayList<>();
 
-        // Walk the full catalogue: category → brand → products
-        for (Map.Entry<String, Map<String, List<MainActivity.Product>>> catEntry
-                : CategoryDetailActivity.CATALOGUE.entrySet()) {
-
-            String categoryName = catEntry.getKey();
-
-            for (Map.Entry<String, List<MainActivity.Product>> brandEntry
-                    : catEntry.getValue().entrySet()) {
-
-                String brandName = brandEntry.getKey();
-
-                for (MainActivity.Product p : brandEntry.getValue()) {
-                    if (matches(p, brandName, categoryName, lower)) {
-                        results.add(new ProductResult(p, brandName, categoryName));
-                    }
-                }
+        // Search through all products
+        for (MainActivity.Product p : allProducts) {
+            if (matches(p, lower)) {
+                results.add(p);
             }
         }
 
@@ -305,18 +180,17 @@ public class SearchActivity extends BaseActivity {
     /**
      * Returns true if the product matches the query against any searchable field.
      */
-    private boolean matches(MainActivity.Product p, String brand, String category, String lower) {
+    private boolean matches(MainActivity.Product p, String lower) {
         if (p.name  != null && p.name.toLowerCase().contains(lower))     return true;
-        if (brand   != null && brand.toLowerCase().contains(lower))       return true;
-        if (category != null && category.toLowerCase().contains(lower))   return true;
         if (p.sku   != null && p.sku.toLowerCase().contains(lower))       return true;
         if (p.specs != null && p.specs.toLowerCase().contains(lower))     return true;
+        // Note: Brand and category info could be added to Product model if needed
         return false;
     }
 
     // ── Render ────────────────────────────────────────────────────────────────
 
-    private void renderResults(List<ProductResult> results, String query) {
+    private void renderResults(List<MainActivity.Product> results, String query) {
         resultsGrid.removeAllViews();
 
         boolean isListView = ViewModePreferences.isListView(this);
@@ -337,9 +211,7 @@ public class SearchActivity extends BaseActivity {
         resultsLabel.setText(results.size() + (results.size() == 1 ? " result" : " results")
                 + " for \"" + query + "\"");
 
-        for (ProductResult result : results) {
-            final MainActivity.Product product = result.product;
-
+        for (MainActivity.Product product : results) {
             View view = LayoutInflater.from(this)
                     .inflate(cardLayout, resultsGrid, false);
 
@@ -352,6 +224,7 @@ public class SearchActivity extends BaseActivity {
             // Tap → product detail
             view.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ProductDetailActivity.class);
+                intent.putExtra("product_id", product.id);
                 intent.putExtra("product_name",     product.name);
                 intent.putExtra("product_price",    product.price);
                 intent.putExtra("product_image",    product.imageUrl);
@@ -381,7 +254,7 @@ public class SearchActivity extends BaseActivity {
                 });
             }
 
-            // Set layout params so each card takes exactly half the grid width (2 per row)
+            // Set layout params so each card takes exactly 1/columns of the grid width
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = 0;
             params.height = GridLayout.LayoutParams.WRAP_CONTENT;
@@ -413,19 +286,5 @@ public class SearchActivity extends BaseActivity {
         if (viewModeIcon == null) return;
         boolean isListView = ViewModePreferences.isListView(this);
         viewModeIcon.setImageResource(isListView ? R.drawable.grid_view_24 : R.drawable.event_list_24);
-    }
-
-    // ── Lightweight result wrapper ────────────────────────────────────────────
-
-    private static class ProductResult {
-        final MainActivity.Product product;
-        final String brand;
-        final String category;
-
-        ProductResult(MainActivity.Product product, String brand, String category) {
-            this.product  = product;
-            this.brand    = brand;
-            this.category = category;
-        }
     }
 }
