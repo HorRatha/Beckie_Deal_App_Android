@@ -290,7 +290,7 @@
                     android:orientation="horizontal"
                     android:background="@color/border_color"
                     android:paddingStart="2dp"
-                    android:paddingEnd="16dp"
+                    android:paddingEnd="2dp"
                     android:paddingBottom="2dp" />
             </HorizontalScrollView>
 
@@ -405,7 +405,7 @@
                     android:orientation="horizontal"
                     android:background="@color/border_color"
                     android:paddingStart="2dp"
-                    android:paddingEnd="16dp"
+                    android:paddingEnd="2dp"
                     android:paddingBottom="2dp" />
             </HorizontalScrollView>
 

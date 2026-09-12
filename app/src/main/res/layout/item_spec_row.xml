@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingHorizontal="16dp"
-    android:paddingVertical="13dp">
+    android:paddingVertical="14dp"
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/specKey"
@@ -13,16 +14,19 @@
         android:layout_weight="1"
         android:text="Key"
         android:textColor="@color/text_secondary"
-        android:textSize="@dimen/text_size_body" />
+        android:textSize="@dimen/text_size_body"
+        android:paddingEnd="8dp" />
 
     <TextView
         android:id="@+id/specValue"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="Value"
         android:textColor="@color/text_primary"
         android:textSize="@dimen/text_size_body"
         android:textStyle="bold"
-        android:gravity="end" />
+        android:gravity="end"
+        android:paddingStart="8dp" />
 
 </LinearLayout>

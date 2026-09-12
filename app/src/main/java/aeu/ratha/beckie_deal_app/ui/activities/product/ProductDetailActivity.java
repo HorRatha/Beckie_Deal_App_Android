@@ -122,6 +122,8 @@ public class ProductDetailActivity extends BaseActivity {
     private boolean isFavorite = false;
     private ImageView detailFavoriteIcon;
     private MainActivity.Product currentProduct;
+    private aeu.ratha.beckie_deal_app.data.models.Product fullProduct; // Full product data from API
+    private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
 
     // Gallery state
     private int currentImageIndex = 0;
@@ -135,6 +137,8 @@ public class ProductDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
+        
+        productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
         
         setupTopBar();
         loadProductData();
@@ -196,12 +200,196 @@ public class ProductDetailActivity extends BaseActivity {
         currentProduct = new MainActivity.Product(name, price, rating, false, imageUrl);
         isFavorite = WishlistManager.getInstance().isInWishlist(currentProduct);
 
-        // Bind basic info
+        // Display basic info immediately
         setTextSafe(R.id.detailProductName, name);
         setTextSafe(R.id.detailProductPrice, price != null ? price : "");
         setTextSafe(R.id.detailProductRating, rating);
         setTextSafe(R.id.reviewCount, "(2.5k reviews)"); // Static for now
 
+        // Set up basic gallery with available image
+        List<String> imgs = new ArrayList<>();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            imgs.add(imageUrl);
+            for (int i = 0; i < 3; i++) imgs.add(imageUrl);
+        } else {
+            String fallback = "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&h=500&fit=crop";
+            for (int i = 0; i < 4; i++) imgs.add(fallback);
+        }
+        setupGallery(imgs);
+
+        detailFavoriteIcon = findViewById(R.id.detailWishlistIcon);
+        updateFavoriteUI();
+
+        // Fetch full product details from API if we have a product ID
+        if (productId > 0) {
+            fetchFullProductDetails(productId);
+        } else {
+            // Fallback to static data if no product ID
+            loadStaticProductData(sku, name);
+        }
+    }
+
+    /**
+     * Fetch full product details from API and populate dynamic data.
+     */
+    private void fetchFullProductDetails(int productId) {
+        productRepository.fetchProduct(productId, new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.SingleProductCallback() {
+            @Override
+            public void onSuccess(aeu.ratha.beckie_deal_app.data.models.Product product) {
+                fullProduct = product;
+                runOnUiThread(() -> populateProductDetails(product));
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                android.util.Log.e(TAG, "Failed to fetch product details: " + errorMessage);
+                runOnUiThread(() -> {
+                    Toast.makeText(ProductDetailActivity.this, 
+                        "Could not load full product details", Toast.LENGTH_SHORT).show();
+                    // Fallback to static data
+                    loadStaticProductData(fullProduct != null ? fullProduct.getSku() : null, 
+                        fullProduct != null ? fullProduct.getName() : "Product");
+                });
+            }
+        });
+    }
+
+    /**
+     * Populate UI with full product details from API.
+     */
+    private void populateProductDetails(aeu.ratha.beckie_deal_app.data.models.Product product) {
+        // Update name and price with API data
+        setTextSafe(R.id.detailProductName, product.getName());
+        setTextSafe(R.id.detailProductPrice, product.getFormattedPrice());
+        
+        // Update stock status with real data
+        TextView stockLabel = findViewById(R.id.stockLabel);
+        if (stockLabel != null) {
+            if (product.isInStock()) {
+                stockLabel.setText("In Stock");
+                stockLabel.setTextColor(getColor(android.R.color.white));
+            } else {
+                stockLabel.setText("Out of Stock");
+                stockLabel.setTextColor(getColor(android.R.color.white));
+                stockLabel.setBackgroundColor(getColor(R.color.red_error));
+            }
+        }
+
+        // Description - use API description
+        String description = product.getDescription();
+        if (description == null || description.trim().isEmpty()) {
+            description = product.getShortDescription();
+        }
+        if (description == null || description.trim().isEmpty()) {
+            description = "High-quality product with excellent features and reliable performance.";
+        }
+        setTextSafe(R.id.detailProductDescription, description);
+
+        // Tags - build from product data
+        List<String> tags = new ArrayList<>();
+        if (product.isFeatured()) tags.add("Featured");
+        if (product.hasDiscount()) tags.add(product.getDiscountPercentage() + "% Off");
+        if (product.getSku() != null && !product.getSku().isEmpty()) {
+            tags.add("SKU: " + product.getSku());
+        }
+        if (product.getBrand() != null) {
+            tags.add(product.getBrand().getName());
+        }
+        if (tags.isEmpty()) {
+            tags.add("Premium Quality");
+            tags.add("Fast Shipping");
+        }
+        setupSpecTags(tags);
+
+        // Spec cards - dynamic based on product data
+        List<SpecCard> specCards = new ArrayList<>();
+        
+        // Brand card
+        if (product.getBrand() != null) {
+            specCards.add(new SpecCard("BRAND", product.getBrand().getName(), R.drawable.widgets_24));
+        }
+        
+        // Category card
+        if (product.getCategory() != null) {
+            specCards.add(new SpecCard("CATEGORY", product.getCategory().getName(), R.drawable.devices_24));
+        }
+        
+        // Stock status card
+        if (product.isTrackInventory()) {
+            String stockText = product.getStockQuantity() + " units";
+            specCards.add(new SpecCard("STOCK", stockText, R.drawable.sports_esports_24));
+        }
+        
+        // Product type card
+        String typeText = product.isDigital() ? "Digital" : "Physical";
+        specCards.add(new SpecCard("TYPE", typeText, R.drawable.mobile_24));
+        
+        setupSpecCards(specCards);
+
+        // Spec rows - dynamic based on product data
+        Map<String, String> specRows = new LinkedHashMap<>();
+        
+        // Product identifiers
+        if (product.getSku() != null && !product.getSku().isEmpty()) {
+            specRows.put("SKU", product.getSku());
+        }
+        if (product.getBarcode() != null && !product.getBarcode().isEmpty()) {
+            specRows.put("Barcode", product.getBarcode());
+        }
+        
+        // Brand and Category
+        if (product.getBrand() != null) {
+            specRows.put("Brand", product.getBrand().getName());
+        }
+        if (product.getCategory() != null) {
+            specRows.put("Category", product.getCategory().getName());
+        }
+        
+        // Physical dimensions
+        if (product.getWeight() != null && !product.getWeight().isEmpty()) {
+            specRows.put("Weight", product.getWeight());
+        }
+        if (product.getLength() != null && !product.getLength().isEmpty()) {
+            specRows.put("Length", product.getLength());
+        }
+        if (product.getWidth() != null && !product.getWidth().isEmpty()) {
+            specRows.put("Width", product.getWidth());
+        }
+        if (product.getHeight() != null && !product.getHeight().isEmpty()) {
+            specRows.put("Height", product.getHeight());
+        }
+        
+        // Stock information
+        if (product.isTrackInventory()) {
+            specRows.put("Stock Quantity", String.valueOf(product.getStockQuantity()));
+            if (product.isLowStock()) {
+                specRows.put("Stock Status", "Low Stock - Order Soon!");
+            }
+        }
+        
+        // Product status
+        specRows.put("Condition", "Brand New");
+        specRows.put("Product Type", product.isDigital() ? "Digital Product" : "Physical Product");
+        
+        // Pricing
+        if (product.hasDiscount()) {
+            specRows.put("Regular Price", "$" + product.getPrice());
+            specRows.put("Sale Price", "$" + product.getSalePrice());
+            specRows.put("Discount", product.getDiscountPercentage() + "% Off");
+        }
+        
+        // Static policies (these should come from API in the future)
+        specRows.put("Warranty", "1 Year Manufacturer Warranty");
+        specRows.put("Shipping", product.isDigital() ? "Instant Delivery" : "Free shipping on orders over $50");
+        specRows.put("Return Policy", "30-day money back guarantee");
+        
+        setupSpecRows(specRows);
+    }
+
+    /**
+     * Fallback to static product data when API call fails or no product ID.
+     */
+    private void loadStaticProductData(String sku, String productName) {
         // Description - build from available data
         String description = "High-quality product with excellent features and reliable performance. ";
         if (sku != null && !sku.isEmpty()) {
@@ -209,19 +397,6 @@ public class ProductDetailActivity extends BaseActivity {
         }
         description += "Backed by manufacturer warranty and dedicated customer support. Check specifications below for detailed information.";
         setTextSafe(R.id.detailProductDescription, description);
-
-        // Gallery - use the product image
-        List<String> imgs = new ArrayList<>();
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            imgs.add(imageUrl);
-            // Add same image 3 more times as placeholders
-            for (int i = 0; i < 3; i++) imgs.add(imageUrl);
-        } else {
-            // Fallback placeholder
-            String fallback = "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&h=500&fit=crop";
-            for (int i = 0; i < 4; i++) imgs.add(fallback);
-        }
-        setupGallery(imgs);
 
         // Tags
         List<String> tags = new ArrayList<>();
@@ -250,9 +425,6 @@ public class ProductDetailActivity extends BaseActivity {
         specRows.put("Return Policy", "30-day money back guarantee");
         specRows.put("Customer Support", "24/7 assistance available");
         setupSpecRows(specRows);
-
-        detailFavoriteIcon = findViewById(R.id.detailWishlistIcon);
-        updateFavoriteUI();
     }
 
     private void setTextSafe(int id, String text) {
@@ -383,7 +555,7 @@ public class ProductDetailActivity extends BaseActivity {
             chip.setText(tags.get(i));
             ScreenUtils.applyTextSize(chip, R.dimen.text_size_caption);
             chip.setTextColor(Color.parseColor("#F97316"));
-            chip.setBackground(ContextCompat.getDrawable(this, R.drawable.badge_pill));
+            chip.setBackground(ContextCompat.getDrawable(this, R.drawable.badge_rect));
             chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
                     Color.parseColor("#FFF0E6")));
             int h = dpToPx(10); int v = dpToPx(5);

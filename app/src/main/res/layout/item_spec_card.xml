@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_columnWeight="1"
     android:layout_margin="5dp"
-    app:cardCornerRadius="14dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
     app:strokeColor="@color/border_color"
@@ -17,20 +17,32 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:padding="14dp">
+        android:padding="16dp"
+        android:minHeight="100dp">
 
-        <ImageView
-            android:id="@+id/specCardIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/devices_24"
-            app:tint="@color/primary" />
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:cardCornerRadius="22dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="#FFF7ED">
+
+            <ImageView
+                android:id="@+id/specCardIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/devices_24"
+                app:tint="@color/primary" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/specCardLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:text="LABEL"
             android:textColor="@color/text_muted"
             android:textSize="@dimen/text_size_overline"
@@ -46,7 +58,9 @@
             android:textColor="@color/text_primary"
             android:textSize="@dimen/text_size_body"
             android:textStyle="bold"
-            android:gravity="center" />
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
     </LinearLayout>
 

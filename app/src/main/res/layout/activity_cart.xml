@@ -285,14 +285,15 @@
                 android:id="@+id/checkoutButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:backgroundTint="@color/primary"
+                android:background="@drawable/button_buy_now_gradient"
                 android:text="Proceed to Checkout"
                 android:textAllCaps="false"
-                android:textColor="@color/white_fixed"
+                android:textColor="@color/dark_brown"
                 android:textSize="@dimen/text_size_body_large"
                 android:textStyle="bold"
+                app:backgroundTint="@null"
                 app:icon="@drawable/shopping_cart_checkout_24"
-                app:iconTint="@color/white_fixed"
+                app:iconTint="@color/dark_brown"
                 app:iconGravity="textStart"
                 app:iconPadding="8dp" />
 

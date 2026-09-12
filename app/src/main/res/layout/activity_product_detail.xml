@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".ProductDetailActivity">
 
-    <!-- â”€â”€ TOP BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── TOP BAR ──────────────────────────────────────────────────────────────── -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
@@ -84,7 +84,7 @@
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- â”€â”€ SCROLLABLE CONTENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── SCROLLABLE CONTENT ────────────────────────────────────────────────────── -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -98,14 +98,14 @@
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
-            <!-- â”€â”€ IMAGE GALLERY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+            <!-- ── IMAGE GALLERY ───────────────────────────────────────────────────── -->
             <FrameLayout
                 android:id="@+id/galleryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/hero_banner_height_product"
                 android:background="@color/surface">
 
-                <!-- Main image â€” fills the frame edge-to-edge, fit-center keeps aspect ratio -->
+                <!-- Main image – fills the frame edge-to-edge, fit-center keeps aspect ratio -->
                 <ImageView
                     android:id="@+id/detailProductImage"
                     android:layout_width="match_parent"
@@ -185,7 +185,7 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <!-- â”€â”€ THUMBNAIL ROW (4 images) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+            <!-- ── THUMBNAIL ROW (4 images) ──────────────────────────────────────────── -->
             <LinearLayout
                 android:id="@+id/thumbnailRow"
                 android:layout_width="match_parent"
@@ -260,56 +260,25 @@
 
             </LinearLayout>
 
-            <!-- â”€â”€ PRODUCT INFO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+            <!-- ── PRODUCT INFO ───────────────────────────────────────────────────────── -->
             <LinearLayout
                 android:id="@+id/productInfoBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp"
-                android:paddingTop="16dp">
+                android:paddingTop="20dp">
 
-                <!-- Name + Price row -->
-                <LinearLayout
+                <!-- Product Name -->
+                <TextView
+                    android:id="@+id/detailProductName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/detailProductName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Product Name"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_headline"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
-
-                        <TextView
-                            android:id="@+id/detailProductPrice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$0.00"
-                            android:textColor="@color/primary"
-                            android:textSize="@dimen/text_size_title"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/stockLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="In Stock"
-                            android:textColor="#22C55E"
-                            android:textSize="@dimen/text_size_caption" />
-                    </LinearLayout>
-                </LinearLayout>
+                    android:text="Product Name"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_size_headline"
+                    android:textStyle="bold"
+                    android:lineSpacingMultiplier="1.2" />
 
                 <!-- Star + reviews row -->
                 <LinearLayout
@@ -317,11 +286,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="6dp">
+                    android:layout_marginTop="8dp">
 
                     <ImageView
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:src="@android:drawable/btn_star_big_on"
                         app:tint="@color/yellow_star" />
 
@@ -339,10 +308,99 @@
                         android:id="@+id/reviewCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
+                        android:layout_marginStart="6dp"
                         android:text="(120 reviews)"
                         android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_caption" />
+                        android:textSize="@dimen/text_size_body" />
+                </LinearLayout>
+
+                <!-- Price Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
+                    app:cardBackgroundColor="#FFF7ED">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Price"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="@dimen/text_size_caption" />
+
+                            <TextView
+                                android:id="@+id/detailProductPrice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="$0.00"
+                                android:textColor="@color/primary"
+                                android:textSize="28sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="4dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp"
+                            app:cardBackgroundColor="#22C55E">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="6dp">
+
+                                <View
+                                    android:layout_width="6dp"
+                                    android:layout_height="6dp"
+                                    android:background="@drawable/dot_active"
+                                    android:backgroundTint="@color/white_fixed" />
+
+                                <TextView
+                                    android:id="@+id/stockLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:text="In Stock"
+                                    android:textColor="@color/white_fixed"
+                                    android:textSize="@dimen/text_size_caption"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Spec tag pills -->
+                <LinearLayout
+                    android:id="@+id/specTagsRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical">
+                    <!-- Tags added programmatically -->
                 </LinearLayout>
 
                 <!-- Description -->
@@ -350,47 +408,51 @@
                     android:id="@+id/detailProductDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="20dp"
                     android:text=""
                     android:textColor="@color/text_secondary"
                     android:textSize="@dimen/text_size_body"
-                    android:lineSpacingExtra="4dp" />
+                    android:lineSpacingMultiplier="1.5" />
 
-                <!-- Spec tag pills -->
+                <!-- ── TECHNICAL SPECIFICATIONS SECTION ────────────────────────── -->
                 <LinearLayout
-                    android:id="@+id/specTagsRow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="vertical">
-                    <!-- Tags added programmatically -->
-                </LinearLayout>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginBottom="4dp">
 
-                <!-- â”€â”€ TECHNICAL SPECIFICATIONS HEADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="Technical Specifications"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_title_small"
-                    android:textStyle="bold" />
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="24dp"
+                        android:background="#F97316" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Technical Specifications"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_size_title_small"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <!-- 2x2 spec cards grid -->
                 <GridLayout
                     android:id="@+id/specCardsGrid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="16dp"
                     android:columnCount="2"
                     android:useDefaultMargins="false" />
 
-                <!-- â”€â”€ DETAIL SPEC ROWS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+                <!-- ── DETAIL SPEC ROWS ──────────────────────────────────────────── -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    app:cardCornerRadius="16dp"
+                    app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="1dp"
                     app:strokeColor="@color/border_color"
@@ -401,7 +463,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingVertical="4dp" />
+                        android:paddingVertical="6dp" />
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -409,7 +471,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- â”€â”€ BOTTOM ACTION BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── BOTTOM ACTION BAR ──────────────────────────────────────────────────────── -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomActionLayout"
         android:layout_width="match_parent"
@@ -443,7 +505,7 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="@dimen/text_size_body" />
 
-                <!-- âˆ’ qty + stepper pill -->
+                <!-- ∙ qty + stepper pill -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -499,7 +561,7 @@
                     android:id="@+id/wishlistButton"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
-                    app:cardCornerRadius="14dp"
+                    app:cardCornerRadius="26dp"
                     app:cardElevation="0dp"
                     app:cardBackgroundColor="@color/card_bg_secondary"
                     app:strokeWidth="1dp"
@@ -518,15 +580,15 @@
                     android:layout_height="52dp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/button_add_to_cart_gradient"
+                    android:background="@drawable/button_add_to_cart_outline_gradient"
                     android:text="Add to Cart"
                     android:textAllCaps="false"
-                    android:textColor="@color/dark_brown"
+                    android:textColor="@color/primary"
                     android:textSize="@dimen/text_size_body_large"
                     android:textStyle="bold"
                     app:backgroundTint="@null"
                     app:icon="@drawable/add_shopping_cart_24"
-                    app:iconTint="@color/dark_brown"
+                    app:iconTint="@color/primary"
                     app:iconGravity="textStart"
                     app:iconPadding="8dp" />
 
@@ -536,15 +598,15 @@
                     android:layout_height="52dp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/button_primary"
+                    android:background="@drawable/button_buy_now_gradient"
                     android:text="Buy Now"
                     android:textAllCaps="false"
-                    android:textColor="@color/white_fixed"
+                    android:textColor="@color/dark_brown"
                     android:textSize="@dimen/text_size_body_large"
                     android:textStyle="bold"
                     app:backgroundTint="@null"
-                    app:icon="@drawable/ic_bolt_24"
-                    app:iconTint="@color/white_fixed"
+                    app:icon="@drawable/ic_shopping_bag_24"
+                    app:iconTint="@color/dark_brown"
                     app:iconGravity="textStart"
                     app:iconPadding="8dp" />
 
@@ -553,7 +615,7 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- â”€â”€ FLOATING BOTTOM NAV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── FLOATING BOTTOM NAV ─────────────────────────────────────────────────────── -->
     <include layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
