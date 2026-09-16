@@ -45,9 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="Checkout"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             </RelativeLayout>
 
@@ -73,9 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Shipping Address"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -86,22 +82,22 @@
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/border_color"
                 app:cardBackgroundColor="@color/surface">
-                
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
-                    
+
                     <!-- Recipient Name -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Recipient Name *"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_caption"
-                        android:textStyle="bold" />
-                    
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
+
                     <EditText
                         android:id="@+id/shippingNameInput"
                         android:layout_width="match_parent"
@@ -113,18 +109,18 @@
                         android:inputType="textPersonName"
                         android:textColor="@color/text_primary"
                         android:textColorHint="@color/text_muted"
-                        android:textSize="@dimen/text_size_body" />
-                    
+                        android:textAppearance="@style/TextAppearance.App.CardProductName" />
+
                     <!-- Phone Number -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="Phone Number *"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_caption"
-                        android:textStyle="bold" />
-                    
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
+
                     <EditText
                         android:id="@+id/shippingPhoneInput"
                         android:layout_width="match_parent"
@@ -136,18 +132,18 @@
                         android:inputType="phone"
                         android:textColor="@color/text_primary"
                         android:textColorHint="@color/text_muted"
-                        android:textSize="@dimen/text_size_body" />
-                    
+                        android:textAppearance="@style/TextAppearance.App.CardProductName" />
+
                     <!-- Street Address -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="Street Address *"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_caption"
-                        android:textStyle="bold" />
-                    
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
+
                     <EditText
                         android:id="@+id/shippingAddressInput"
                         android:layout_width="match_parent"
@@ -159,30 +155,30 @@
                         android:inputType="textPostalAddress"
                         android:textColor="@color/text_primary"
                         android:textColorHint="@color/text_muted"
-                        android:textSize="@dimen/text_size_body" />
-                    
+                        android:textAppearance="@style/TextAppearance.App.CardProductName" />
+
                     <!-- City and Postal Code Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal">
-                        
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginEnd="8dp"
                             android:orientation="vertical">
-                            
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="City *"
-                                android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_caption"
-                                android:textStyle="bold" />
-                            
+                                android:textAppearance="@style/TextAppearance.App.Label"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_secondary" />
+
                             <EditText
                                 android:id="@+id/shippingCityInput"
                                 android:layout_width="match_parent"
@@ -194,24 +190,24 @@
                                 android:inputType="text"
                                 android:textColor="@color/text_primary"
                                 android:textColorHint="@color/text_muted"
-                                android:textSize="@dimen/text_size_body" />
+                                android:textAppearance="@style/TextAppearance.App.CardProductName" />
                         </LinearLayout>
-                        
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="8dp"
                             android:orientation="vertical">
-                            
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Postal Code *"
-                                android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_caption"
-                                android:textStyle="bold" />
-                            
+                                android:textAppearance="@style/TextAppearance.App.Label"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_secondary" />
+
                             <EditText
                                 android:id="@+id/shippingPostalCodeInput"
                                 android:layout_width="match_parent"
@@ -223,20 +219,20 @@
                                 android:inputType="number"
                                 android:textColor="@color/text_primary"
                                 android:textColorHint="@color/text_muted"
-                                android:textSize="@dimen/text_size_body" />
+                                android:textAppearance="@style/TextAppearance.App.CardProductName" />
                         </LinearLayout>
                     </LinearLayout>
-                    
+
                     <!-- State/Province (Optional) -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="State/Province (Optional)"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_caption"
-                        android:textStyle="bold" />
-                    
+                        android:text="State / Province (Optional)"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
+
                     <EditText
                         android:id="@+id/shippingStateInput"
                         android:layout_width="match_parent"
@@ -248,18 +244,18 @@
                         android:inputType="text"
                         android:textColor="@color/text_primary"
                         android:textColorHint="@color/text_muted"
-                        android:textSize="@dimen/text_size_body" />
-                    
-                    <!-- Country (Optional) -->
+                        android:textAppearance="@style/TextAppearance.App.CardProductName" />
+
+                    <!-- Country -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="Country"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_caption"
-                        android:textStyle="bold" />
-                    
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
+
                     <EditText
                         android:id="@+id/shippingCountryInput"
                         android:layout_width="match_parent"
@@ -271,8 +267,8 @@
                         android:inputType="text"
                         android:textColor="@color/text_primary"
                         android:textColorHint="@color/text_muted"
-                        android:textSize="@dimen/text_size_body" />
-                    
+                        android:textAppearance="@style/TextAppearance.App.CardProductName" />
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -282,9 +278,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Payment Method"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -295,14 +289,14 @@
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/border_color"
                 app:cardBackgroundColor="@color/surface">
-                
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="16dp"
                     android:gravity="center_vertical">
-                    
+
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
@@ -317,18 +311,20 @@
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Credit Card"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="**** **** **** 4582"
-                            android:textColor="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
                     </LinearLayout>
 
                     <RadioButton
@@ -345,9 +341,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Promo Code"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -358,19 +352,19 @@
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/border_color"
                 app:cardBackgroundColor="@color/surface">
-                
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
-                    
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-                        
+
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -392,7 +386,7 @@
                             android:inputType="textCapCharacters"
                             android:textColor="@color/text_primary"
                             android:textColorHint="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/applyCouponButton"
@@ -401,9 +395,8 @@
                             android:backgroundTint="@color/primary"
                             android:text="Apply"
                             android:textAllCaps="false"
+                            android:textAppearance="@style/TextAppearance.App.Button"
                             android:textColor="@color/white_fixed"
-                            android:textSize="@dimen/text_size_body"
-                            android:textStyle="bold"
                             app:cornerRadius="12dp" />
                     </LinearLayout>
 
@@ -417,14 +410,14 @@
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
                         app:cardBackgroundColor="@color/success_light_bg">
-                        
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:padding="12dp"
                             android:gravity="center_vertical">
-                            
+
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
@@ -437,23 +430,22 @@
                                 android:layout_marginStart="12dp"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
-                                
+
                                 <TextView
                                     android:id="@+id/appliedCouponCode"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="WELCOME10"
-                                    android:textColor="@color/green_stock"
-                                    android:textStyle="bold"
-                                    android:textSize="@dimen/text_size_body" />
-                                
+                                    android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                    android:textColor="@color/green_stock" />
+
                                 <TextView
                                     android:id="@+id/appliedCouponDiscount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="10% OFF"
-                                    android:textColor="@color/green_stock"
-                                    android:textSize="@dimen/text_size_caption" />
+                                    android:textAppearance="@style/TextAppearance.App.Body"
+                                    android:textColor="@color/green_stock" />
                             </LinearLayout>
 
                             <ImageView
@@ -476,9 +468,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Order Summary"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -487,33 +477,38 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/surface">
-                
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
-                    
+
+                    <!-- Subtotal row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginBottom="12dp">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Subtotal"
+                            android:textAppearance="@style/TextAppearance.App.Body"
                             android:textColor="@color/text_muted" />
+
                         <TextView
                             android:id="@+id/summarySubtotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$0.00"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
+                    <!-- Discount row -->
                     <LinearLayout
                         android:id="@+id/discountRow"
                         android:layout_width="match_parent"
@@ -521,68 +516,77 @@
                         android:orientation="horizontal"
                         android:layout_marginBottom="12dp"
                         android:visibility="gone">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Coupon Discount"
+                            android:textAppearance="@style/TextAppearance.App.Body"
                             android:textColor="@color/text_muted" />
+
                         <TextView
                             android:id="@+id/summaryDiscount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-$0.00"
-                            android:textColor="@color/red_error"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/red_error" />
                     </LinearLayout>
 
+                    <!-- Shipping Fee row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginBottom="12dp">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Shipping Fee"
+                            android:textAppearance="@style/TextAppearance.App.Body"
                             android:textColor="@color/text_muted" />
+
                         <TextView
                             android:id="@+id/summaryShipping"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$15.00"
-                            android:textColor="@color/green_stock"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/green_stock" />
                     </LinearLayout>
 
-                    <View 
-                        android:layout_width="match_parent" 
-                        android:layout_height="1dp" 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
                         android:background="@color/border_color"
                         android:layout_marginBottom="12dp" />
 
+                    <!-- Total row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Total"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_title_small"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
+
                         <TextView
                             android:id="@+id/summaryTotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$15.00"
-                            android:textColor="@color/primary"
-                            android:textSize="@dimen/text_size_title_small"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/primary" />
                     </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -598,7 +602,7 @@
         app:cardCornerRadius="0dp"
         app:cardBackgroundColor="@color/surface"
         app:layout_constraintBottom_toBottomOf="parent">
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -612,9 +616,8 @@
                 android:background="@drawable/button_add_to_cart_gradient"
                 android:text="Confirm Payment"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.App.Button"
                 android:textColor="@color/dark_brown"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold"
                 app:backgroundTint="@null" />
 
         </LinearLayout>
@@ -630,33 +633,33 @@
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true">
-        
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical">
-            
+
             <ProgressBar
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:indeterminateTint="@color/primary" />
-            
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Processing Payout..."
-                android:textColor="@color/white_fixed"
-                android:textSize="@dimen/text_size_title_small"
-                android:textStyle="bold" />
-                
+                android:text="Processing Payment..."
+                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                android:textColor="@color/white_fixed" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Please wait a moment."
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:textColor="@color/white_fixed"
                 android:alpha="0.7" />
         </LinearLayout>
@@ -711,9 +714,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 android:text="Payment Successful!"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_headline_large"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.ProductName" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -721,8 +722,8 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="Your order has been placed. We'll notify you when it's on the way."
-                android:textColor="@color/text_muted"
-                android:textSize="@dimen/text_size_body_large" />
+                android:textAppearance="@style/TextAppearance.App.Body"
+                android:textColor="@color/text_muted" />
 
             <!-- Order receipt summary card -->
             <com.google.android.material.card.MaterialCardView
@@ -741,25 +742,27 @@
                     android:orientation="vertical"
                     android:padding="18dp">
 
+                    <!-- Order ID row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Order ID"
-                            android:textColor="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
+
                         <TextView
                             android:id="@+id/successOrderId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="BD-1001"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
                     <View
@@ -768,25 +771,27 @@
                         android:layout_marginVertical="12dp"
                         android:background="@color/border_color" />
 
+                    <!-- Amount Paid row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Amount Paid"
-                            android:textColor="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
+
                         <TextView
                             android:id="@+id/successAmountPaid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$0.00"
-                            android:textColor="@color/primary"
-                            android:textSize="@dimen/text_size_body_large"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/primary" />
                     </LinearLayout>
 
                     <View
@@ -795,24 +800,26 @@
                         android:layout_marginVertical="12dp"
                         android:background="@color/border_color" />
 
+                    <!-- Payment Method row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Payment Method"
-                            android:textColor="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="**** 4582"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -826,9 +833,8 @@
                 android:backgroundTint="@color/primary"
                 android:text="Back to Home"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.App.Button"
                 android:textColor="@color/white_fixed"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold"
                 app:icon="@drawable/ic_home"
                 app:iconTint="@color/white_fixed"
                 app:iconGravity="textStart"
@@ -842,9 +848,8 @@
                 android:layout_marginTop="12dp"
                 android:text="View My Orders"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.App.Button"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold"
                 app:strokeColor="@color/border_color"
                 app:strokeWidth="1dp" />
 

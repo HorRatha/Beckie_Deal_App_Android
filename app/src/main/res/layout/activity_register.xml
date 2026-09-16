@@ -95,9 +95,8 @@
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginBottom="20dp"
                     android:text="@string/app_name"
+                    android:textAppearance="@style/TextAppearance.App.PriceHero"
                     android:textColor="@color/white_fixed"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
                     android:letterSpacing="0.05"
                     android:shadowColor="#40000000"
                     android:shadowDx="0"
@@ -129,9 +128,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Create Account"
-                        android:textColor="@color/text_primary"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.App.ScreenTitle"
                         android:letterSpacing="0.02" />
 
                     <!-- Subtitle with icon -->
@@ -153,8 +150,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="Sign up to get started"
-                            android:textColor="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
                     </LinearLayout>
 
                     <!-- First Name Field -->
@@ -163,9 +160,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="First Name"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
                         android:letterSpacing="0.03" />
 
                     <EditText
@@ -180,9 +177,8 @@
                         android:hint="Enter your first name"
                         android:inputType="textPersonName"
                         android:paddingHorizontal="18dp"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
-                        android:textSize="15sp" />
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColorHint="@color/text_muted" />
 
                     <!-- Last Name Field -->
                     <TextView
@@ -190,9 +186,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Last Name"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
                         android:letterSpacing="0.03" />
 
                     <EditText
@@ -207,9 +203,8 @@
                         android:hint="Enter your last name"
                         android:inputType="textPersonName"
                         android:paddingHorizontal="18dp"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
-                        android:textSize="15sp" />
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColorHint="@color/text_muted" />
 
                     <!-- Email Field -->
                     <TextView
@@ -217,9 +212,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Email"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
                         android:letterSpacing="0.03" />
 
                     <EditText
@@ -234,9 +229,8 @@
                         android:hint="Enter your email"
                         android:inputType="textEmailAddress"
                         android:paddingHorizontal="18dp"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
-                        android:textSize="15sp" />
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColorHint="@color/text_muted" />
 
                     <!-- Password Field -->
                     <TextView
@@ -244,9 +238,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Password"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
                         android:letterSpacing="0.03" />
 
                     <EditText
@@ -261,9 +255,8 @@
                         android:hint="Min. 8 characters"
                         android:inputType="textPassword"
                         android:paddingHorizontal="18dp"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
-                        android:textSize="15sp" />
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColorHint="@color/text_muted" />
 
                     <!-- Confirm Password Field -->
                     <TextView
@@ -271,9 +264,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Confirm Password"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
                         android:letterSpacing="0.03" />
 
                     <EditText
@@ -288,9 +281,8 @@
                         android:hint="Confirm your password"
                         android:inputType="textPassword"
                         android:paddingHorizontal="18dp"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
-                        android:textSize="15sp" />
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColorHint="@color/text_muted" />
 
                     <!-- Terms Checkbox -->
                     <CheckBox
@@ -301,8 +293,8 @@
                         android:button="@drawable/login_checkbox_selector"
                         android:paddingStart="8dp"
                         android:text="I agree to the Terms and Privacy Policy"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_body" />
+                        android:textAppearance="@style/TextAppearance.App.Body"
+                        android:textColor="@color/text_secondary" />
 
                     <!-- Register Button -->
                     <Button
@@ -313,9 +305,8 @@
                         android:background="@drawable/login_button_white_bg"
                         android:text="Create Account"
                         android:textAllCaps="false"
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
                         android:textColor="@color/white_fixed"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:letterSpacing="0.05"
                         android:elevation="4dp"
                         android:stateListAnimator="@null" />
@@ -332,17 +323,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Already have an account? "
-                            android:textColor="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
 
                         <TextView
                             android:id="@+id/loginLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Login"
-                            android:textColor="@color/primary"
-                            android:textSize="@dimen/text_size_body"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/primary" />
 
                     </LinearLayout>
 

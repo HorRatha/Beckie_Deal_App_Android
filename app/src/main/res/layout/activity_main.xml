@@ -253,15 +253,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="New Collection"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_title_small"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.App.SectionHeader" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Latest flagship arrivals"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_caption" />
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/viewAllNewCollection"
@@ -481,15 +480,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Top Selling"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_title_small"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.App.SectionHeader" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Highest rated by customers"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_caption" />
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/viewAllTopSelling"

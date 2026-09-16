@@ -52,10 +52,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="My Orders"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_title"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.01" />
+                        android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
                 </LinearLayout>
 
@@ -150,8 +147,8 @@
                     android:layout_marginHorizontal="20dp"
                     android:gravity="center"
                     android:text="When you place an order, it will appear here."
+                    android:textAppearance="@style/TextAppearance.App.Body"
                     android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_body"
                     android:lineSpacingExtra="4dp" />
 
                 <com.google.android.material.button.MaterialButton

@@ -49,9 +49,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="AS"
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
                         android:textColor="@color/primary"
-                        android:textSize="@dimen/text_size_body"
-                        android:textStyle="bold"
                         android:visibility="gone" />
 
                     <ImageView
@@ -78,9 +77,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Brand"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.App.CardProductName"
                     android:fontFamily="sans-serif-medium"
                     android:maxLines="1"
                     android:ellipsize="end" />
@@ -91,8 +88,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text=""
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="false"
                     android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_caption"
                     android:visibility="gone" />
 
             </LinearLayout>

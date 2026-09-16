@@ -50,10 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Product Name"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_title_small"
-                android:textStyle="bold"
-                android:lineSpacingMultiplier="1.1"
+                android:textAppearance="@style/TextAppearance.App.CardProductName"
                 android:maxLines="2"
                 android:ellipsize="end" />
 
@@ -64,8 +61,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="$0.00 / unit"
-                android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_caption" />
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary" />
 
             <!-- Quantity stepper + subtotal row -->
             <LinearLayout
@@ -95,9 +93,7 @@
                     android:minWidth="34dp"
                     android:gravity="center"
                     android:text="01"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.CardPrice" />
 
                 <!-- Increment -->
                 <ImageView
@@ -123,9 +119,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="$0.00"
-                    android:textColor="@color/primary"
-                    android:textSize="@dimen/text_size_title_small"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.SectionHeader"
+                    android:textColor="@color/primary" />
 
             </LinearLayout>
 

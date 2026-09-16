@@ -68,12 +68,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Product Name"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_caption"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.App.CardProductName"
                 android:maxLines="2"
-                android:ellipsize="end"
-                android:lineSpacingMultiplier="1.2" />
+                android:ellipsize="end" />
 
             <!-- Price -->
             <TextView
@@ -82,9 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="$999"
-                android:textColor="@color/red_error"
-                android:textSize="@dimen/text_size_body"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.CardPrice"
+                android:textColor="@color/red_error" />
 
             <!-- Rating row -->
             <LinearLayout
@@ -106,8 +102,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
                     android:text="4.9"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_overline" />
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_secondary" />
 
             </LinearLayout>
 

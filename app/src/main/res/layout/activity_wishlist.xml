@@ -48,9 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="My Wishlist"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_title"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             <RelativeLayout
                 android:id="@+id/notificationContainer"
@@ -78,9 +76,9 @@
                     android:backgroundTint="@color/red_error"
                     android:gravity="center"
                     android:text="3"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="false"
                     android:textColor="@color/white_fixed"
-                    android:textSize="@dimen/text_size_badge"
-                    android:textStyle="bold"
                     android:visibility="visible" />
 
             </RelativeLayout>
@@ -136,9 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="Your wishlist is empty"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
                 <TextView
                     android:id="@+id/wishlistEmptyMessage"
@@ -148,8 +144,8 @@
                     android:layout_marginHorizontal="24dp"
                     android:gravity="center"
                     android:text="Tap the heart icon on products you love and they'll appear here."
-                    android:textColor="@color/text_muted"
-                    android:textSize="@dimen/text_size_body" />
+                    android:textAppearance="@style/TextAppearance.App.Body"
+                    android:textColor="@color/text_muted" />
 
                 <Button
                     android:id="@+id/exploreButton"

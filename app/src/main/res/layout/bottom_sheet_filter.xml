@@ -30,9 +30,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:text="Filter &amp; Sort"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_size_title_small"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
         <TextView
             android:id="@+id/resetButton"
@@ -45,9 +43,8 @@
             android:paddingHorizontal="14dp"
             android:paddingVertical="7dp"
             android:text="Reset"
-            android:textColor="@color/primary"
-            android:textSize="@dimen/text_size_body"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.App.CardPrice"
+            android:textColor="@color/primary" />
 
     </RelativeLayout>
 
@@ -65,9 +62,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="10dp"
         android:text="Sort By"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/text_size_body"
-        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.App.CardProductName"
         android:letterSpacing="0.05" />
 
     <!-- Scrollable so chips never wrap/overflow -->
@@ -93,7 +88,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:text="Default"
-                android:textSize="@dimen/text_size_body"
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:singleLine="true"
                 android:background="@drawable/chip_selected"
                 android:textColor="@color/white_fixed" />
@@ -106,7 +101,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:text="Price: Low â†’ High"
-                android:textSize="@dimen/text_size_body"
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:singleLine="true"
                 android:background="@drawable/chip_unselected"
                 android:textColor="@color/text_secondary" />
@@ -119,7 +114,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:text="Price: High â†’ Low"
-                android:textSize="@dimen/text_size_body"
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:singleLine="true"
                 android:background="@drawable/chip_unselected"
                 android:textColor="@color/text_secondary" />
@@ -131,7 +126,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:text="Top Rated"
-                android:textSize="@dimen/text_size_body"
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:singleLine="true"
                 android:background="@drawable/chip_unselected"
                 android:textColor="@color/text_secondary" />
@@ -154,9 +149,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="10dp"
         android:text="Release Year"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/text_size_body"
-        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.App.CardProductName"
         android:letterSpacing="0.05" />
 
     <HorizontalScrollView
@@ -190,9 +183,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="6dp"
         android:text="Price Range"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/text_size_body"
-        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.App.CardProductName"
         android:letterSpacing="0.05" />
 
     <!-- Live price label centred above slider -->
@@ -206,9 +197,8 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="6dp"
         android:text="$0 â€“ $3,000"
-        android:textColor="@color/white_fixed"
-        android:textSize="@dimen/text_size_body"
-        android:textStyle="bold" />
+        android:textAppearance="@style/TextAppearance.App.CardPrice"
+        android:textColor="@color/white_fixed" />
 
     <!-- Slider -->
     <SeekBar
@@ -234,8 +224,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="$0"
-            android:textColor="@color/text_secondary"
-            android:textSize="@dimen/text_size_caption" />
+            android:textAppearance="@style/TextAppearance.App.Label"
+            android:textAllCaps="false"
+            android:textColor="@color/text_secondary" />
 
         <TextView
             android:id="@+id/priceMaxLabel"
@@ -257,8 +248,7 @@
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/primary"
         android:text="Apply Filters"
-        android:textColor="@color/white_fixed"
-        android:textSize="@dimen/text_size_body_large"
-        android:textStyle="bold" />
+        android:textAppearance="@style/TextAppearance.App.Button"
+        android:textColor="@color/white_fixed" />
 
 </LinearLayout>

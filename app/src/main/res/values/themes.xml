@@ -9,6 +9,17 @@
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/on_surface</item>
         
+        <!-- Typography -->
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.App.ScreenTitle</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.App.ProductName</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.App.PriceHero</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.App.SectionHeader</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.App.CardProductName</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.App.Body</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.App.Specs</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.App.Label</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.App.Button</item>
+        
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
     </style>
 
@@ -51,16 +62,18 @@
 
     <style name="Widget.App.Button" parent="Widget.Material3.Button">
         <item name="shapeAppearance">@style/ShapeAppearance.App.Button.Pill</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Button</item>
     </style>
 
     <style name="Widget.App.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
         <item name="shapeAppearance">@style/ShapeAppearance.App.Button.Pill</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Button</item>
     </style>
 
     <!-- Tab text style for orders screen -->
     <style name="Tab.OrderText" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/synonym_semibold</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
         <item name="textAllCaps">false</item>
         <item name="android:letterSpacing">0.02</item>
     </style>
@@ -87,16 +100,18 @@
 
     <!-- Dialog title style -->
     <style name="MaterialAlertDialog.App.Title" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:fontFamily">@font/amulya_bold</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.01</item>
         <item name="android:textColor">@color/text_primary</item>
     </style>
 
     <!-- Dialog body style -->
     <style name="MaterialAlertDialog.App.Body" parent="MaterialAlertDialog.Material3.Body.Text">
-        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/synonym_regular</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/text_secondary</item>
-        <item name="android:lineSpacingExtra">4dp</item>
+        <item name="android:lineSpacingMultiplier">1.6</item>
     </style>
 
     <!-- Dialog button styles -->

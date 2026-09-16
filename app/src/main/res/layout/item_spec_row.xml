@@ -13,8 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Key"
-        android:textColor="@color/text_secondary"
-        android:textSize="@dimen/text_size_body"
+        android:textAppearance="@style/TextAppearance.App.Body"
         android:paddingEnd="8dp" />
 
     <TextView
@@ -23,9 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Value"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/text_size_body"
-        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.App.CardPrice"
         android:gravity="end"
         android:paddingStart="8dp" />
 

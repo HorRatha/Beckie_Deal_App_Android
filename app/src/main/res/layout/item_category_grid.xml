@@ -35,9 +35,8 @@
         android:paddingHorizontal="8dp"
         android:paddingVertical="3dp"
         android:text="HOT"
+        android:textAppearance="@style/TextAppearance.App.Label"
         android:textColor="@color/white_fixed"
-        android:textSize="@dimen/text_size_badge"
-        android:textStyle="bold"
         android:visibility="gone" />
 
     <!-- Category icon top-right -->
@@ -74,17 +73,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Laptops"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_body_large"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.App.CardPrice"
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/categoryItemsCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="124 Items"
-            android:textColor="#CCFFFFFF"
-            android:textSize="@dimen/text_size_caption" />
+            android:textAppearance="@style/TextAppearance.App.Label"
+            android:textAllCaps="false"
+            android:textColor="#CCFFFFFF" />
 
     </LinearLayout>
 

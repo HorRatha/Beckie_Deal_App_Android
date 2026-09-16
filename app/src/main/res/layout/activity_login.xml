@@ -96,9 +96,8 @@
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginBottom="24dp"
                     android:text="@string/app_name"
+                    android:textAppearance="@style/TextAppearance.App.ProductName"
                     android:textColor="@color/white_fixed"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
                     android:letterSpacing="0.05"
                     android:shadowColor="#40000000"
                     android:shadowDx="0"
@@ -130,9 +129,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Welcome Back"
-                        android:textColor="@color/text_primary"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.App.ScreenTitle"
                         android:letterSpacing="0.02" />
 
                     <!-- Subtitle with icon -->
@@ -154,8 +151,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="Enter your login and password"
-                            android:textColor="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
                     </LinearLayout>
 
                     <!-- Email Field -->
@@ -164,9 +161,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="Email"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
                         android:letterSpacing="0.03" />
 
                     <EditText
@@ -181,9 +178,8 @@
                         android:hint="Enter your email"
                         android:inputType="textEmailAddress"
                         android:paddingHorizontal="18dp"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
-                        android:textSize="15sp" />
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColorHint="@color/text_muted" />
 
                     <!-- Password Field -->
                     <TextView
@@ -191,9 +187,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Password"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
                         android:letterSpacing="0.03" />
 
                     <EditText
@@ -208,9 +204,8 @@
                         android:hint="Enter your password"
                         android:inputType="textPassword"
                         android:paddingHorizontal="18dp"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
-                        android:textSize="15sp" />
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColorHint="@color/text_muted" />
 
                     <!-- Remember me + Forgot password row -->
                     <LinearLayout
@@ -227,8 +222,8 @@
                             android:button="@drawable/login_checkbox_selector"
                             android:paddingStart="8dp"
                             android:text="Remember me"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_secondary" />
 
                         <View
                             android:layout_width="0dp"
@@ -240,9 +235,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Forgot Password?"
-                            android:textColor="@color/primary"
-                            android:textSize="@dimen/text_size_body"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/primary" />
 
                     </LinearLayout>
 
@@ -274,17 +268,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Don't have an account? "
-                            android:textColor="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
 
                         <TextView
                             android:id="@+id/registerLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Register"
-                            android:textColor="@color/primary"
-                            android:textSize="@dimen/text_size_body"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/primary" />
 
                     </LinearLayout>
 

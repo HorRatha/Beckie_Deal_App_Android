@@ -43,9 +43,8 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="4dp"
             android:text="HOT DEAL"
+            android:textAppearance="@style/TextAppearance.App.Label"
             android:textColor="#FFFFFF"
-            android:textSize="@dimen/text_size_overline"
-            android:textStyle="bold"
             android:letterSpacing="0.05" />
 
         <!-- Title -->
@@ -55,9 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Summer Sale"
+            android:textAppearance="@style/TextAppearance.App.PriceHero"
             android:textColor="#FFFFFF"
-            android:textSize="@dimen/text_size_headline"
-            android:textStyle="bold"
             android:shadowColor="#80000000"
             android:shadowDx="0"
             android:shadowDy="2"
@@ -70,8 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Up to 50% off"
+            android:textAppearance="@style/TextAppearance.App.CardProductName"
             android:textColor="#FFFFFF"
-            android:textSize="@dimen/text_size_body"
             android:shadowColor="#80000000"
             android:shadowDx="0"
             android:shadowDy="1"

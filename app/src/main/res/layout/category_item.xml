@@ -50,9 +50,9 @@
         android:maxLines="1"
         android:text="Category"
         android:textAlignment="center"
-        android:textColor="@color/text_primary"
-        android:textSize="12sp"
-        android:textStyle="normal" />
+        android:textAppearance="@style/TextAppearance.App.Label"
+        android:textAllCaps="false"
+        android:textColor="@color/text_primary" />
 
     <!-- Hidden decorative icon for compatibility -->
     <ImageView

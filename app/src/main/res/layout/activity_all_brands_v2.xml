@@ -40,9 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="All Brands"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_title"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
@@ -72,7 +70,7 @@
                 android:paddingEnd="48dp"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_secondary"
-                android:textSize="@dimen/text_size_body"
+                android:textAppearance="@style/TextAppearance.App.CardProductName"
                 android:singleLine="true"
                 android:imeOptions="actionSearch" />
 
@@ -136,8 +134,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No brands available"
+        android:textAppearance="@style/TextAppearance.App.Body"
         android:textColor="@color/text_secondary"
-        android:textSize="@dimen/text_size_body"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/searchContainer"
         app:layout_constraintBottom_toBottomOf="parent"

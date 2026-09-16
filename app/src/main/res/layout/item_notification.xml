@@ -58,9 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Notification Title"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_body"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.App.CardProductName"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -70,8 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="Notification body text goes here"
-                android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_caption"
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:maxLines="2"
                 android:ellipsize="end" />
 
@@ -81,8 +78,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="2 hours ago"
-                android:textColor="@color/text_muted"
-                android:textSize="@dimen/text_size_caption" />
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textAllCaps="false"
+                android:textColor="@color/text_muted" />
 
         </LinearLayout>
 

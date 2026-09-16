@@ -44,9 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="About Us"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_title"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             <RelativeLayout
                 android:id="@+id/notificationContainer"
@@ -74,9 +72,9 @@
                     android:backgroundTint="@color/red_error"
                     android:gravity="center"
                     android:text="3"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="false"
                     android:textColor="@color/white_fixed"
-                    android:textSize="@dimen/text_size_badge"
-                    android:textStyle="bold"
                     android:visibility="visible" />
             </RelativeLayout>
         </RelativeLayout>
@@ -112,32 +110,30 @@
                     android:orientation="vertical"
                     android:background="@drawable/about_header_gradient"
                     android:padding="24dp">
-                    
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="About Us"
+                        android:textAppearance="@style/TextAppearance.App.Body"
                         android:textColor="@color/white_fixed"
-                        android:textSize="16sp"
-                        android:textStyle="normal"
                         android:alpha="0.9" />
-                    
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Beckie Deal Cambodia"
-                        android:textColor="@color/white_fixed"
-                        android:textSize="@dimen/text_size_headline_large"
-                        android:textStyle="bold" />
-                    
+                        android:textAppearance="@style/TextAppearance.App.ScreenTitle"
+                        android:textColor="@color/white_fixed" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="Bringing innovation first to Cambodia"
+                        android:textAppearance="@style/TextAppearance.App.Body"
                         android:textColor="@color/white_fixed"
-                        android:textSize="@dimen/text_size_body"
                         android:alpha="0.95" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -164,11 +160,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Beckie Deal តែងតែនាំមកផលិតផលថ្មីៗ មុនគេនៅក្នុងប្រទេសកម្ពុជា។\nសូមទំនាក់ទំនងផ្នែកលក់របស់ Beckie Deal Cambodia។"
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_body"
                 android:lineSpacingExtra="6dp" />
 
-            <!-- Stats Row with Gradients -->
+            <!-- Stats Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -189,26 +185,28 @@
                         android:background="@drawable/about_stat_gradient_orange"
                         android:orientation="vertical"
                         android:padding="20dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="100%"
+                            android:textAppearance="@style/TextAppearance.App.ScreenTitle"
                             android:textColor="@color/white_fixed"
-                            android:textSize="32sp"
-                            android:textStyle="bold" />
+                            android:textSize="32sp" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="Official Products"
-                            android:textColor="#FFFFFF"
-                            android:textSize="13sp"
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/white_fixed"
                             android:alpha="0.95"
                             android:fontFamily="@font/khmer_font" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Brown gradient stat: Years in Business -->
+                <!-- Brown gradient stat: Guaranteed -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -222,33 +220,35 @@
                         android:background="@drawable/about_stat_gradient_brown"
                         android:orientation="vertical"
                         android:padding="20dp">
+
                         <ImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:src="@android:drawable/btn_star_big_on"
                             android:contentDescription="Guaranteed"
                             app:tint="@color/white_fixed" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="Guaranteed"
-                            android:textColor="@color/white_fixed"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/white_fixed" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Official Partner"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/white_fixed"
                             android:alpha="0.9" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- New Products First badge with gradient border -->
+            <!-- New Products First badge -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -277,20 +277,21 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:layout_marginStart="16dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="New Products First"
-                        android:textColor="@color/dark_brown"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColor="@color/dark_brown" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Always first in Cambodia."
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_caption" />
+                        android:textAppearance="@style/TextAppearance.App.Body"
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -308,9 +309,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="លក្ខខណ្ឌការធានា / Warranty Terms"
-                android:textColor="@color/text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.ProductName"
+                android:textColor="@color/text_primary" />
 
             <!-- Khmer warranty block -->
             <com.google.android.material.card.MaterialCardView
@@ -330,8 +330,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="• រាល់ Password Log-in សំរាប់ម៉ាសុីនទិញថ្មី setup រួចគឺ : 1234\n• រាល់ទំនិញទិញរួចមិនអាចប្ដូរ ឬ ដូរវិញបានឡើយ\n• ធានាលើគ្រឿងបន្លាស់តាមរយៈពេលដែលបានកំណត់\n• មិនធានាលើរបស់ដែលថែមជូន\n• មិនធានាលើទំនិញដែលបាត់បង់លក្ខណៈដើម ឆេះ ធ្លាក់ បាក់បែក ចូលទឹក និងបាត់/រហែក Warranty Seal\n• រាល់ឥវ៉ាន់របស់ ASUS/MSI Cambodia គឺធានាទៅតាមលក្ខខ័ណ្ឌរបស់ក្រុមហ៊ុន\n• សម្រាប់ Apple ជាប់ iCloud ដែលធ្វើអោយការធានាបញ្ជូនត្រលប់មកវិញ ដូច្នេះការធានាទុកជាមោឃៈ\n• រាល់ផលិតផល Gaming Laptop (VGA ដាច់) មិនធានាលើដុំសាក និង អេក្រង់\n• រយៈពេលនៃការធ្វើ Warranty ពេលជួបបញ្ហា អាចចន្លោះពី 2-6 សប្តាហ៍\n• ក្រដាសនេះមិនអាចយកទៅប្រកាសពន្ធបានទេ"
+                        android:textAppearance="@style/TextAppearance.App.Specs"
                         android:textColor="@color/text_secondary"
-                        android:textSize="14sp"
                         android:lineSpacingExtra="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -354,8 +354,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="• Password Log in After Setup : 1234\n• Goods are sold — no refund and return.\n• Warranty covers parts according to the specified period.\n• Extra Free Items are not under Warranty.\n• No Warranty on Adapter / Lost / Broken / Damage / Water-Damage or Missing Warranty Seal.\n• ASUS/MSI Cambodia products are warranted according to the company\'s terms and conditions.\n• For Apple devices with iCloud lock, the warranty return will be voided.\n• Gaming Laptop (GPU) — Not Warranty on Screen and Adapter.\n• Warranty processing time in case of issues can range from 2 to 6 weeks.\n• VAT is not included in this invoice / Cannot be used for Tax Declaration."
+                        android:textAppearance="@style/TextAppearance.App.Specs"
                         android:textColor="@color/text_secondary"
-                        android:textSize="14sp"
                         android:lineSpacingExtra="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -368,23 +368,22 @@
                 android:layout_marginBottom="8dp"
                 android:background="@color/border_color" />
 
-            <!-- Contact Section -->
+            <!-- Contact Section header -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="ទំនាក់ទំនងមកយើង / Contact Us"
-                android:textColor="@color/text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.ProductName"
+                android:textColor="@color/text_primary" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="សូមទំនាក់ទំនងតាមរយះទូរស័ព្ទ ឬ ផ្ញើសាររបស់លោកអ្នកមកយើង។"
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_body"
                 android:lineSpacingExtra="4dp" />
 
             <!-- Contact Form Card -->
@@ -401,14 +400,14 @@
                     android:padding="24dp"
                     android:background="@color/surface">
 
-                    <!-- Full Name -->
+                    <!-- Full Name label -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ឈ្មោះ / Full Name"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
 
                     <EditText
                         android:id="@+id/inputName"
@@ -419,20 +418,20 @@
                         android:hint="John Doe"
                         android:textColorHint="@color/text_muted"
                         android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_body"
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
                         android:paddingHorizontal="16dp"
                         android:inputType="textPersonName"
                         android:importantForAutofill="no" />
 
-                    <!-- Email Address -->
+                    <!-- Email label -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="អ៊ីម៉ែល / Email Address"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary"
                         android:fontFamily="@font/khmer_font" />
 
                     <EditText
@@ -444,20 +443,20 @@
                         android:hint="john@example.com"
                         android:textColorHint="@color/text_muted"
                         android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_body"
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
                         android:paddingHorizontal="16dp"
                         android:inputType="textEmailAddress"
                         android:importantForAutofill="no" />
 
-                    <!-- Message -->
+                    <!-- Message label -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="សាររបស់អ្នក / Message"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
 
                     <EditText
                         android:id="@+id/inputMessage"
@@ -468,13 +467,13 @@
                         android:hint="How can we assist you today?"
                         android:textColorHint="@color/text_muted"
                         android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_body"
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
                         android:padding="16dp"
                         android:inputType="textMultiLine"
                         android:gravity="top|start"
                         android:importantForAutofill="no" />
 
-                    <!-- Submit Button with Brown Gradient -->
+                    <!-- Submit Button -->
                     <Button
                         android:id="@+id/btnSubmit"
                         android:layout_width="match_parent"
@@ -482,9 +481,8 @@
                         android:layout_marginTop="24dp"
                         android:background="@drawable/about_submit_button_gradient"
                         android:text="Submit Message ➤"
+                        android:textAppearance="@style/TextAppearance.App.Button"
                         android:textColor="@color/white_fixed"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:stateListAnimator="@null"
                         android:elevation="2dp" />
                 </LinearLayout>
@@ -498,7 +496,7 @@
                 android:layout_marginBottom="4dp"
                 android:background="@color/border_color" />
 
-            <!-- Phone Support with gradient border -->
+            <!-- Phone Support -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -527,21 +525,22 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:layout_marginStart="16dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ទំនាក់ទំនងផ្នែកលក់"
-                        android:textColor="@color/text_muted"
-                        android:textSize="12sp"
-                        android:letterSpacing="0.08" />
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_muted" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="077 999 776 / 081 999 776"
-                        android:textColor="@color/dark_brown"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColor="@color/dark_brown" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -562,7 +561,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Static Google Map snapshot -->
+                    <!-- Static map snapshot -->
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="200dp">
@@ -575,7 +574,7 @@
                             android:src="@drawable/placeholder_image"
                             android:contentDescription="Headquarters map" />
 
-                        <!-- Marker overlay with gradient -->
+                        <!-- Marker overlay -->
                         <LinearLayout
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -591,7 +590,7 @@
                         </LinearLayout>
                     </FrameLayout>
 
-                    <!-- Address strip with gradient -->
+                    <!-- Address strip -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -610,54 +609,50 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Beckie Deal Cambodia"
-                                android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="ប្រទេសកម្ពុជា / Cambodia"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
+                                android:textAppearance="@style/TextAppearance.App.Body"
+                                android:textColor="@color/text_secondary" />
                         </LinearLayout>
 
-                        <!-- "Open Maps" arrow -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Open Maps ›"
-                            android:textColor="@color/primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/primary" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Thank You with gradient accent -->
+            <!-- Thank You footer -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 android:orientation="vertical"
                 android:gravity="center">
-                
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="សូមអរគុណ!"
-                    android:textColor="@color/text_primary"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-                
+                    android:textAppearance="@style/TextAppearance.App.ProductName"
+                    android:textColor="@color/text_primary" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Thank You 🙏"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="16sp" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName"
+                    android:textColor="@color/text_secondary" />
             </LinearLayout>
 
         </LinearLayout>
@@ -671,4 +666,3 @@
 <include layout="@layout/layout_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
-

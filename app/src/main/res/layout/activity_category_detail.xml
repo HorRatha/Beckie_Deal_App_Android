@@ -43,9 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="Category"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_title_small"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             <!-- Notification icon -->
             <RelativeLayout
@@ -74,9 +72,9 @@
                     android:backgroundTint="@color/red_error"
                     android:gravity="center"
                     android:text="3"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="false"
                     android:textColor="@color/white_fixed"
-                    android:textSize="@dimen/text_size_badge"
-                    android:textStyle="bold"
                     android:visibility="visible" />
             </RelativeLayout>
 
@@ -129,17 +127,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Laptops"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_headline_large"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.App.ScreenTitle"
+                        android:textColor="@android:color/white" />
 
                     <TextView
                         android:id="@+id/heroSubtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="124 Items"
-                        android:textColor="#CCFFFFFF"
-                        android:textSize="@dimen/text_size_body" />
+                        android:textAppearance="@style/TextAppearance.App.Body"
+                        android:textColor="#CCFFFFFF" />
                 </LinearLayout>
             </FrameLayout>
 
@@ -177,8 +174,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Showing all products"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_body" />
+                    android:textAppearance="@style/TextAppearance.App.Body"
+                    android:textColor="@color/text_secondary" />
 
                 <!-- View mode toggle (grid / list) -->
                 <RelativeLayout
@@ -209,9 +206,8 @@
                     android:drawableStart="@drawable/ic_filter"
                     android:drawablePadding="4dp"
                     android:text="Filter &amp; Sort"
+                    android:textAppearance="@style/TextAppearance.App.CardPrice"
                     android:textColor="@color/primary"
-                    android:textSize="@dimen/text_size_body"
-                    android:textStyle="bold"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="6dp"
                     android:background="@drawable/chip_unselected" />

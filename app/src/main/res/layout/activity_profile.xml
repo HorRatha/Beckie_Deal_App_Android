@@ -54,9 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="Profile"
-                android:textColor="@color/white_fixed"
-                android:textSize="@dimen/text_size_title_small"
-                android:fontFamily="sans-serif-medium" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader"
+                android:textColor="@color/white_fixed" />
 
             <RelativeLayout
                 android:id="@+id/notificationContainer"
@@ -84,24 +83,15 @@
                     android:backgroundTint="@color/red_error"
                     android:gravity="center"
                     android:text="3"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="false"
                     android:textColor="@color/white_fixed"
-                    android:textSize="@dimen/text_size_badge"
-                    android:textStyle="bold"
                     android:visibility="visible" />
             </RelativeLayout>
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- ══ FIXED IDENTITY HEADER ═══════════════════════════════════════════
-         Avatar + name + subtitle + auth buttons form ONE fixed block that sits
-         half on the gradient, half on the white sheet below. It is a direct
-         sibling in the outer ConstraintLayout (never inside the NestedScrollView),
-         because ScrollView-family views clip overflowing content to their own
-         bounds even with clipChildren=false — regular ViewGroups don't have that
-         limitation, so the negative-margin overlap renders correctly here.
-         The whole block stays fixed together (not just the avatar alone), so
-         nothing looks like it's floating independently while the settings list
-         scrolls beneath it. -->
+    <!-- ══ FIXED IDENTITY HEADER ══════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/profileHeaderCard"
         android:layout_width="match_parent"
@@ -121,10 +111,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <!-- Reserved space for the avatar, which is now drawn as a separate
-                 top-level element below (see avatarOverlay), positioned last in
-                 this file so it always renders above every other view with no
-                 dependency on elevation/shadow rendering. -->
+            <!-- Reserved space for the avatar overlay -->
             <Space
                 android:layout_width="1dp"
                 android:layout_height="72dp" />
@@ -135,9 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="Guest User"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_headline"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.ProductName" />
 
             <TextView
                 android:id="@+id/userEmail"
@@ -145,12 +130,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Sign in to sync your wishlist and orders"
-                android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_body" />
+                android:textAppearance="@style/TextAppearance.App.Body"
+                android:textColor="@color/text_secondary" />
 
         </LinearLayout>
 
-        <!-- ══ AUTH BUTTONS ══════════════════════════════════════════ -->
+        <!-- ══ AUTH BUTTONS ══════════════════════════════════════════════ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -165,9 +150,8 @@
                 android:layout_marginEnd="8dp"
                 android:text="Login"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.App.Button"
                 android:textColor="@color/white_fixed"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold"
                 app:backgroundTint="@color/primary"
                 app:elevation="2dp"
                 app:strokeWidth="0dp" />
@@ -180,9 +164,8 @@
                 android:layout_marginStart="8dp"
                 android:text="Register"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.App.Button"
                 android:textColor="@color/primary"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold"
                 app:backgroundTint="@android:color/transparent"
                 app:strokeColor="@color/primary"
                 app:strokeWidth="2dp"
@@ -198,9 +181,8 @@
             android:layout_marginTop="20dp"
             android:text="Logout"
             android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.App.Button"
             android:textColor="@color/white_fixed"
-            android:textSize="@dimen/text_size_body_large"
-            android:textStyle="bold"
             android:visibility="gone"
             app:backgroundTint="@color/red_error"
             app:elevation="2dp"
@@ -208,7 +190,7 @@
 
     </LinearLayout>
 
-    <!-- ── Scrollable body — Account / Preferences / Legal settings lists only ── -->
+    <!-- ── Scrollable body ─────────────────────────────────────────────── -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentScroll"
         android:layout_width="match_parent"
@@ -226,15 +208,15 @@
             android:paddingTop="8dp"
             android:paddingBottom="24dp">
 
-            <!-- ══ ACCOUNT SECTION (My Orders + Notifications) ═══════════ -->
+            <!-- ══ ACCOUNT SECTION ════════════════════════════════════════ -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="Account"
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textAllCaps="true"
                 android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_caption"
-                android:textStyle="bold"
                 android:letterSpacing="0.08" />
 
             <com.google.android.material.card.MaterialCardView
@@ -284,16 +266,16 @@
                             android:layout_weight="1"
                             android:layout_marginStart="14dp"
                             android:text="My Orders"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body_large" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:text="3 active"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_secondary" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -338,8 +320,8 @@
                             android:layout_weight="1"
                             android:layout_marginStart="14dp"
                             android:text="My Coupons"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body_large" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
 
                         <TextView
                             android:id="@+id/availableCouponsCount"
@@ -347,9 +329,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:text="4 available"
-                            android:textColor="@color/primary"
-                            android:textSize="@dimen/text_size_body"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/primary" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -361,7 +342,7 @@
                     <View android:layout_width="match_parent" android:layout_height="1dp"
                         android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
 
-                    <!-- Notifications (toggle) --> — Segmented Pill Toggle (ON / OFF) -->
+                    <!-- Notifications toggle -->
                     <LinearLayout
                         android:id="@+id/notificationsRow"
                         android:layout_width="match_parent"
@@ -391,10 +372,10 @@
                             android:layout_weight="1"
                             android:layout_marginStart="14dp"
                             android:text="Notifications"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body_large" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
 
-                        <!-- Modern Segmented Pill Toggle (ON / OFF) -->
+                        <!-- Segmented Pill Toggle (ON / OFF) -->
                         <LinearLayout
                             android:id="@+id/notifToggleContainer"
                             android:layout_width="wrap_content"
@@ -404,7 +385,6 @@
                             android:orientation="horizontal"
                             android:padding="3dp">
 
-                            <!-- ON option -->
                             <FrameLayout
                                 android:id="@+id/notifOnOption"
                                 android:layout_width="40dp"
@@ -421,7 +401,6 @@
                                     app:tint="@color/white_fixed" />
                             </FrameLayout>
 
-                            <!-- OFF option -->
                             <FrameLayout
                                 android:id="@+id/notifOffOption"
                                 android:layout_width="40dp"
@@ -451,9 +430,9 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="10dp"
                 android:text="Preferences"
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textAllCaps="true"
                 android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_caption"
-                android:textStyle="bold"
                 android:letterSpacing="0.08" />
 
             <com.google.android.material.card.MaterialCardView
@@ -503,16 +482,16 @@
                             android:layout_weight="1"
                             android:layout_marginStart="14dp"
                             android:text="Language"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body_large" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:text="English"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_secondary" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -524,7 +503,7 @@
                     <View android:layout_width="match_parent" android:layout_height="1dp"
                         android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
 
-                    <!-- Dark Mode — Segmented Pill Toggle -->
+                    <!-- Dark Mode toggle -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
@@ -553,10 +532,10 @@
                             android:layout_weight="1"
                             android:layout_marginStart="14dp"
                             android:text="Dark Mode"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body_large" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
 
-                        <!-- Modern Segmented Pill Toggle (Sun / Moon) -->
+                        <!-- Segmented Pill Toggle (Sun / Moon) -->
                         <LinearLayout
                             android:id="@+id/darkModeToggleContainer"
                             android:layout_width="wrap_content"
@@ -566,7 +545,6 @@
                             android:orientation="horizontal"
                             android:padding="3dp">
 
-                            <!-- Light (Sun) option -->
                             <FrameLayout
                                 android:id="@+id/lightModeOption"
                                 android:layout_width="40dp"
@@ -583,7 +561,6 @@
                                     app:tint="@color/white_fixed" />
                             </FrameLayout>
 
-                            <!-- Dark (Moon) option -->
                             <FrameLayout
                                 android:id="@+id/darkModeOption"
                                 android:layout_width="40dp"
@@ -613,9 +590,9 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="10dp"
                 android:text="Legal"
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textAllCaps="true"
                 android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_caption"
-                android:textStyle="bold"
                 android:letterSpacing="0.08" />
 
             <com.google.android.material.card.MaterialCardView
@@ -665,8 +642,8 @@
                             android:layout_weight="1"
                             android:layout_marginStart="14dp"
                             android:text="About Us"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body_large" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -711,8 +688,8 @@
                             android:layout_weight="1"
                             android:layout_marginStart="14dp"
                             android:text="Privacy Policy"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body_large" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -757,8 +734,8 @@
                             android:layout_weight="1"
                             android:layout_marginStart="14dp"
                             android:text="Terms of Service"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body_large" />
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary" />
 
                         <ImageView
                             android:layout_width="18dp"
@@ -778,9 +755,8 @@
                 android:layout_marginTop="24dp"
                 android:text="Logout"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.App.Button"
                 android:textColor="@color/white_fixed"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold"
                 android:visibility="gone"
                 app:backgroundTint="@color/red_error"
                 app:cornerRadius="16dp"
@@ -811,32 +787,23 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Beckie Deal"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_body"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName"
+                    android:textColor="@color/text_secondary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Version 1.0.0"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_caption" />
+                    android:textAppearance="@style/TextAppearance.App.Body"
+                    android:textColor="@color/text_secondary" />
 
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ══ FLOATING AVATAR ═══════════════════════════════════════════════
-         Deliberately placed LAST in this ConstraintLayout (drawn after the
-         hero, toolbar, header card and scrolling content) so it always
-         renders on top of everything with plain view stacking order — no
-         dependency on elevation/shadow rendering, which was inconsistent
-         on-device. A MaterialCardView is used instead of a shape drawable
-         because its cardElevation/shadow already rendered correctly for the
-         edit-pencil badge; the colored stroke ring also guarantees the
-         avatar reads as "elevated" even if shadows don't render at all. -->
+    <!-- ══ FLOATING AVATAR ═══════════════════════════════════════════════ -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/avatarOverlay"
         android:layout_width="120dp"

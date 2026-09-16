@@ -47,8 +47,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Welcome back!"
+            android:textAppearance="@style/TextAppearance.App.Label"
+            android:textAllCaps="false"
             android:textColor="#CCFFFFFF"
-            android:textSize="@dimen/text_size_caption"
             android:visibility="gone" />
 
         <TextView
@@ -57,9 +58,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Guest User"
-            android:textColor="@color/white_fixed"
-            android:textSize="@dimen/text_size_title_small"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.App.CardPrice"
+            android:textColor="@color/white_fixed" />
 
         <TextView
             android:id="@+id/drawerUserEmail"
@@ -67,8 +67,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="Sign in to your account"
-            android:textColor="#CCFFFFFF"
-            android:textSize="@dimen/text_size_caption" />
+            android:textAppearance="@style/TextAppearance.App.Label"
+            android:textAllCaps="false"
+            android:textColor="#CCFFFFFF" />
 
     </LinearLayout>
 
@@ -110,8 +111,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="Home"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
             </LinearLayout>
 
             <!-- Categories -->
@@ -137,8 +137,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="Categories"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
             </LinearLayout>
 
             <!-- My Orders -->
@@ -164,8 +163,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="My Orders"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
             </LinearLayout>
 
             <!-- Wishlist -->
@@ -191,8 +189,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="Wishlist"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
                 <!-- Live wishlist count badge -->
                 <TextView
                     android:id="@+id/drawerWishlistBadge"
@@ -202,9 +199,8 @@
                     android:backgroundTint="@color/red_error"
                     android:gravity="center"
                     android:text="0"
+                    android:textAppearance="@style/TextAppearance.App.Label"
                     android:textColor="@color/white_fixed"
-                    android:textSize="@dimen/text_size_overline"
-                    android:textStyle="bold"
                     android:visibility="gone" />
             </LinearLayout>
 
@@ -238,8 +234,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="Notifications"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
             </LinearLayout>
 
             <!-- Dark Mode toggle row -->
@@ -265,8 +260,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="Dark Mode"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/drawerDarkModeSwitch"
                     android:layout_width="wrap_content"
@@ -297,15 +291,13 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="Language"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
                 <TextView
                     android:id="@+id/drawerLanguageValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="English"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_body" />
+                    android:textAppearance="@style/TextAppearance.App.Body" />
             </LinearLayout>
 
             <!-- Divider -->
@@ -338,8 +330,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="About Us"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
             </LinearLayout>
 
             <!-- Login / Register (shown only when not logged in) -->
@@ -367,8 +358,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="Login / Register"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body_large" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
             </LinearLayout>
 
             <!-- Logout (shown only when logged in) -->
@@ -395,9 +385,8 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="Logout"
-                    android:textColor="@color/red_error"
-                    android:textSize="@dimen/text_size_body_large"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.CardProductName"
+                    android:textColor="@color/red_error" />
             </LinearLayout>
 
         </LinearLayout>
@@ -409,7 +398,8 @@
         android:layout_height="40dp"
         android:gravity="center"
         android:text="TechStore v1.0"
-        android:textColor="@color/text_muted"
-        android:textSize="@dimen/text_size_caption" />
+        android:textAppearance="@style/TextAppearance.App.Label"
+        android:textAllCaps="false"
+        android:textColor="@color/text_muted" />
 
 </LinearLayout>

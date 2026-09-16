@@ -75,9 +75,9 @@
                         android:backgroundTint="@color/red_error"
                         android:gravity="center"
                         android:text="3"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
                         android:textColor="@color/white_fixed"
-                        android:textSize="@dimen/text_size_badge"
-                        android:textStyle="bold"
                         android:visibility="visible" />
                 </RelativeLayout>
             </LinearLayout>
@@ -275,9 +275,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Product Name"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_headline"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.App.ProductName"
                     android:lineSpacingMultiplier="1.2" />
 
                 <!-- Star + reviews row -->
@@ -300,9 +298,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:text="4.9"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_body"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.App.CardPrice" />
 
                     <TextView
                         android:id="@+id/reviewCount"
@@ -310,8 +306,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
                         android:text="(120 reviews)"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_body" />
+                        android:textAppearance="@style/TextAppearance.App.Body"
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
 
                 <!-- Price Card -->
@@ -341,8 +337,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Price"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="@dimen/text_size_caption" />
+                                android:textAppearance="@style/TextAppearance.App.Label"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_secondary" />
 
                             <TextView
                                 android:id="@+id/detailProductPrice"
@@ -383,9 +380,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="6dp"
                                     android:text="In Stock"
-                                    android:textColor="@color/white_fixed"
-                                    android:textSize="@dimen/text_size_caption"
-                                    android:textStyle="bold" />
+                                    android:textAppearance="@style/TextAppearance.App.Label"
+                                    android:textColor="@color/white_fixed" />
                             </LinearLayout>
 
                         </com.google.android.material.card.MaterialCardView>
@@ -410,8 +406,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text=""
+                    android:textAppearance="@style/TextAppearance.App.Body"
                     android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_body"
                     android:lineSpacingMultiplier="1.5" />
 
                 <!-- ── TECHNICAL SPECIFICATIONS SECTION ────────────────────────── -->
@@ -433,9 +429,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:text="Technical Specifications"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_title_small"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.App.SectionHeader" />
                 </LinearLayout>
 
                 <!-- 2x2 spec cards grid -->
@@ -518,9 +512,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="1"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_body"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.CardPrice" />
 
                 <!-- Increment button -->
                 <ImageView

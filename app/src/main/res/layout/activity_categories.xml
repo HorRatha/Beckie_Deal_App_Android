@@ -93,9 +93,9 @@
                     android:backgroundTint="@color/red_error"
                     android:gravity="center"
                     android:text="3"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="false"
                     android:textColor="@color/white_fixed"
-                    android:textSize="@dimen/text_size_badge"
-                    android:textStyle="bold"
                     android:visibility="visible" />
 
             </RelativeLayout>

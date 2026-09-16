@@ -48,8 +48,7 @@
                 android:background="@drawable/search_background"
                 android:hint="Search products, brands..."
                 android:textColorHint="@color/text_secondary"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_body"
+                android:textAppearance="@style/TextAppearance.App.Body"
                 android:paddingStart="44dp"
                 android:paddingEnd="12dp"
                 android:drawableStart="@android:drawable/ic_menu_search"
@@ -105,8 +104,8 @@
         android:paddingTop="10dp"
         android:paddingBottom="4dp"
         android:text="Type to search products..."
+        android:textAppearance="@style/TextAppearance.App.Body"
         android:textColor="@color/text_secondary"
-        android:textSize="@dimen/text_size_body"
         app:layout_constraintTop_toBottomOf="@id/topAppBar" />
 
     <!-- Products grid (scrollable results) -->
@@ -157,9 +156,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Search for products"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_size_body_large"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.App.CardProductName"
             android:gravity="center" />
 
         <TextView
@@ -168,8 +165,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="Try searching by product name, brand, or category"
+            android:textAppearance="@style/TextAppearance.App.Body"
             android:textColor="@color/text_secondary"
-            android:textSize="@dimen/text_size_body"
             android:gravity="center" />
 
     </LinearLayout>

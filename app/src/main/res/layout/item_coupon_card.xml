@@ -49,9 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="WELCOME10"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_title_small"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.App.SectionHeader"
                     android:fontFamily="monospace" />
                 
                 <TextView
@@ -60,9 +58,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="10% OFF"
-                    android:textColor="@color/primary"
-                    android:textSize="@dimen/text_size_headline"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.PriceHero"
+                    android:textColor="@color/primary" />
             </LinearLayout>
         </LinearLayout>
 
@@ -73,8 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="10% off for new users"
-            android:textColor="@color/text_secondary"
-            android:textSize="@dimen/text_size_body_large" />
+            android:textAppearance="@style/TextAppearance.App.Body" />
 
         <!-- Divider -->
         <View
@@ -109,8 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="No minimum"
-                    android:textColor="@color/text_muted"
-                    android:textSize="@dimen/text_size_body" />
+                    android:textAppearance="@style/TextAppearance.App.Body" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -121,9 +116,8 @@
                 android:backgroundTint="@color/primary"
                 android:paddingHorizontal="20dp"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.App.CardProductName"
                 android:textColor="@color/white_fixed"
-                android:textSize="@dimen/text_size_body"
-                android:textStyle="bold"
                 app:cornerRadius="12dp"
                 app:icon="@drawable/ic_copy"
                 app:iconTint="@color/white_fixed"

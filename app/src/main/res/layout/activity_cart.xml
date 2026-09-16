@@ -48,9 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="My Cart"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_title"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             <RelativeLayout
                 android:id="@+id/notificationContainer"
@@ -78,9 +76,9 @@
                     android:backgroundTint="@color/red_error"
                     android:gravity="center"
                     android:text="3"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="false"
                     android:textColor="@color/white_fixed"
-                    android:textSize="@dimen/text_size_badge"
-                    android:textStyle="bold"
                     android:visibility="visible" />
 
             </RelativeLayout>
@@ -124,9 +122,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="Your cart is empty"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
                 <TextView
                     android:id="@+id/emptyStateMessage"
@@ -136,8 +132,8 @@
                     android:layout_marginHorizontal="32dp"
                     android:gravity="center"
                     android:text="Looks like you haven't added anything yet."
-                    android:textColor="@color/text_muted"
-                    android:textSize="@dimen/text_size_body" />
+                    android:textAppearance="@style/TextAppearance.App.Body"
+                    android:textColor="@color/text_muted" />
 
                 <Button
                     android:id="@+id/startShoppingButton"
@@ -227,8 +223,8 @@
                 android:layout_weight="1"
                 android:layout_marginStart="12dp"
                 android:text="Have a promo code?"
-                android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_body_large" />
+                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                android:textColor="@color/text_secondary" />
             
             <TextView
                 android:id="@+id/couponReminderButton"
@@ -236,9 +232,8 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="Apply →"
+                android:textAppearance="@style/TextAppearance.App.CardPrice"
                 android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_body_large"
                 android:background="?attr/selectableItemBackgroundBorderless" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -269,16 +264,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Total Amount"
-                    android:textColor="@color/text_muted"
-                    android:textSize="@dimen/text_size_body" />
+                    android:textAppearance="@style/TextAppearance.App.Body"
+                    android:textColor="@color/text_muted" />
                 <TextView
                     android:id="@+id/totalPriceText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$0.00"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.SectionHeader" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -288,9 +281,8 @@
                 android:background="@drawable/button_buy_now_gradient"
                 android:text="Proceed to Checkout"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.App.Button"
                 android:textColor="@color/dark_brown"
-                android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold"
                 app:backgroundTint="@null"
                 app:icon="@drawable/shopping_cart_checkout_24"
                 app:iconTint="@color/dark_brown"

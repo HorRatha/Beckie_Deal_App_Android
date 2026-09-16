@@ -44,9 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="LABEL"
+            android:textAppearance="@style/TextAppearance.App.Label"
             android:textColor="@color/text_muted"
-            android:textSize="@dimen/text_size_overline"
-            android:textStyle="bold"
             android:letterSpacing="0.08" />
 
         <TextView
@@ -55,9 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Value"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_size_body"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.App.CardPrice"
             android:gravity="center"
             android:maxLines="2"
             android:ellipsize="end" />

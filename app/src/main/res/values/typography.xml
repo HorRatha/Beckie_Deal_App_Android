@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Typography Scale based on design specification -->
+    
+    <!-- Screen Title - Amulya Bold 28sp, tracking -0.02em -->
+    <style name="TextAppearance.App.ScreenTitle" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/amulya_bold</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!-- Product Name (Detail Page) - Amulya Bold 24sp, tracking -0.02em -->
+    <style name="TextAppearance.App.ProductName" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/amulya_bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!-- Price (Hero) - Amulya Bold 22sp, tracking -0.01em -->
+    <style name="TextAppearance.App.PriceHero" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/amulya_bold</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!-- Section Header - Amulya Bold 18sp, tracking -0.01em -->
+    <style name="TextAppearance.App.SectionHeader" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/amulya_bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!-- Card Product Name - Synonym Medium 15sp, tracking 0 -->
+    <style name="TextAppearance.App.CardProductName" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/synonym_medium</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!-- Card Price - Synonym Semibold 15sp, tracking 0 -->
+    <style name="TextAppearance.App.CardPrice" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/synonym_semibold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!-- Body / Description - Synonym Regular 15sp, line-height 1.6, tracking 0 -->
+    <style name="TextAppearance.App.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/synonym_regular</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:lineSpacingMultiplier">1.6</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+    
+    <!-- Specs List - Synonym Regular 14sp, line-height 1.5, tracking 0 -->
+    <style name="TextAppearance.App.Specs" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:fontFamily">@font/synonym_regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+    
+    <!-- Labels / Meta - Synonym Medium 12sp, tracking +0.04em, uppercase -->
+    <style name="TextAppearance.App.Label" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">@font/synonym_medium</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+    
+    <!-- Button Label - Synonym Semibold 15sp, tracking +0.01em -->
+    <style name="TextAppearance.App.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/synonym_semibold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    
+    <!-- Additional helper styles for common use cases -->
+    
+    <!-- Category Title (e.g., "Laptops") -->
+    <style name="TextAppearance.App.CategoryTitle" parent="TextAppearance.App.ScreenTitle" />
+    
+    <!-- "Top Picks", "Featured", etc. -->
+    <style name="TextAppearance.App.FeaturedSection" parent="TextAppearance.App.SectionHeader" />
+    
+    <!-- Free shipping badge -->
+    <style name="TextAppearance.App.ShippingBadge" parent="TextAppearance.App.Label">
+        <item name="android:textColor">@color/primary</item>
+    </style>
+    
+    <!-- Product card title in grid/list -->
+    <style name="TextAppearance.App.ProductCardTitle" parent="TextAppearance.App.CardProductName" />
+    
+    <!-- Product card price in grid/list -->
+    <style name="TextAppearance.App.ProductCardPrice" parent="TextAppearance.App.CardPrice" />
+    
+    <!-- Product description in detail page -->
+    <style name="TextAppearance.App.ProductDescription" parent="TextAppearance.App.Body" />
+    
+    <!-- Product specifications -->
+    <style name="TextAppearance.App.ProductSpecs" parent="TextAppearance.App.Specs" />
+</resources>
