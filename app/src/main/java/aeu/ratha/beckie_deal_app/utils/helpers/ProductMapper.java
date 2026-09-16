@@ -31,9 +31,7 @@ public class ProductMapper {
         String rating = generateRating(apiProduct);
         
         boolean isFavorite = false; // Will be synced with FavoriteManager later
-        String imageUrl = apiProduct.getThumbnail() != null && !apiProduct.getThumbnail().isEmpty()
-            ? apiProduct.getThumbnail()
-            : "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=400&fit=crop";
+        String imageUrl = ImageUrlHelper.getImageUrlOrFallback(apiProduct.getThumbnail());
         
         // Extract extended fields
         String sku = apiProduct.getSku() != null ? apiProduct.getSku() : "";

@@ -407,12 +407,16 @@ public class ProductListActivity extends BaseActivity
                 });
             }
 
-            // Set layout params so each card takes exactly 1/columns of the grid width
+            // Set layout params so each card takes exactly 1/columns of the grid width with fixed size
+            // Calculate fixed width based on screen width divided by number of columns
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
-            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL, 1f);
-            params.setMargins(dp(2), dp(2), dp(2), dp(2));
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            int margins = dp(2);
+            int cardWidth = (screenWidth / 2) - (margins * 2);
+            params.width = cardWidth;
+            params.height = dp(380); // Match the fixed height in XML
+            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1);
+            params.setMargins(margins, margins, margins, margins);
             view.setLayoutParams(params);
 
             productsGrid.addView(view);

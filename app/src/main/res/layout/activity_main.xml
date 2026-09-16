@@ -14,7 +14,7 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- â”€â”€ Top bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!--  Top bar  -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
@@ -85,7 +85,7 @@
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- â”€â”€ Scrollable body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!--  Scrollable body  -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -201,7 +201,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="• Curated Categories"
+                        android:text=" Curated Categories"
                         android:textColor="@color/text_primary"
                         android:textSize="@dimen/text_size_title_small"
                         android:textStyle="bold" />
@@ -214,7 +214,7 @@
                     android:layout_centerVertical="true"
                     android:clickable="true"
                     android:focusable="true"
-                    android:text="Explore ›"
+                    android:text="Explore "
                     android:textColor="@color/primary"
                     android:textSize="@dimen/text_size_body" />
             </RelativeLayout>
@@ -236,7 +236,7 @@
 
             </HorizontalScrollView>
 
-            <!-- â•â• NEW COLLECTION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+            <!--  NEW COLLECTION  -->
             <RelativeLayout
                 android:id="@+id/newCollectionSectionHeader"
                 android:layout_width="match_parent"
@@ -294,7 +294,120 @@
                     android:paddingBottom="2dp" />
             </HorizontalScrollView>
 
-            <!-- â•â• NEW ARRIVALS BANNER â€” Carousel (reusable) â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+
+            <!-- COUPON SECTION -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/couponCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+                
+                <!-- Background with gradient -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/coupon_gradient_bg">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+                    
+                    <!-- Left: Gift Icon -->
+                    <FrameLayout
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/coupon_icon_bg">
+                        
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_gift_24"
+                            app:tint="@color/coupon_accent" />
+                    </FrameLayout>
+                    
+                    <!-- Middle: Coupon Info -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+                        
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DEAL OF THE DAY"
+                            android:textColor="@color/coupon_label"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.05" />
+                        
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Extra 10% Off Cart"
+                            android:textColor="@color/white_fixed"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="2dp" />
+                        
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center_vertical">
+                            
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Use code "
+                                android:textColor="@color/coupon_subtext"
+                                android:textSize="12sp" />
+                            
+                            <TextView
+                                android:id="@+id/couponCodeText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="WELCOME10"
+                                android:textColor="@color/coupon_code_highlight"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    
+                    <!-- Right: Copy Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/copyCouponButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Copy"
+                        android:textColor="@color/coupon_dark"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:backgroundTint="@color/coupon_button_bg"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_copy_24"
+                        app:iconTint="@color/coupon_dark"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="16dp"
+                        android:minWidth="0dp"
+                        style="@style/Widget.Material3.Button.ElevatedButton" />
+                </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <!--  NEW ARRIVALS BANNER  Carousel (reusable)  -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
@@ -351,7 +464,7 @@
 
             </FrameLayout>
 
-            <!-- â•â• TOP SELLING â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+            <!--  TOP SELLING  -->
             <RelativeLayout
                 android:id="@+id/topSellingSectionHeader"
                 android:layout_width="match_parent"
@@ -409,7 +522,7 @@
                     android:paddingBottom="2dp" />
             </HorizontalScrollView>
 
-            <!-- â•â• FEATURED PRODUCTS (moved to bottom) â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+            <!--  FEATURED PRODUCTS (moved to bottom)  -->
             <RelativeLayout
                 android:id="@+id/featuredProductsHeader"
                 android:layout_width="match_parent"
@@ -460,12 +573,12 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- â”€â”€ Floating bottom nav â€” iOS glass style (shared include) â”€â”€â”€â”€â”€â”€â”€ -->
+    <!--  Floating bottom nav  iOS glass style (shared include)  -->
     <include layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!-- â”€â”€ Side Drawer (include shared panel) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+<!--  Side Drawer (include shared panel)  -->
 <include layout="@layout/layout_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

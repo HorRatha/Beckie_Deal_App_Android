@@ -288,13 +288,49 @@ public class OrderDetailActivity extends BaseActivity {
 
     private void displaySummary() {
         TextView subtotalTv = findViewById(R.id.detailSubtotal);
+        TextView shippingTv = findViewById(R.id.detailShipping);
         TextView totalTv = findViewById(R.id.detailTotal);
 
-        double subtotal = order.totalAmount - 15.0; // shipping was $15
-        if (subtotalTv != null)
+        // Calculate shipping based on total - since Order doesn't store shipping separately,
+        // we use the same logic as PayoutActivity
+        double total = order.totalAmount;
+        
+        // Free shipping threshold (matches product detail spec and PayoutActivity)
+        final double FREE_SHIPPING_THRESHOLD = 50.00;
+        final double STANDARD_SHIPPING = 15.00;
+        
+        // Reverse calculate: try to determine if shipping was included
+        // First assume shipping was applied, calculate subtotal
+        double potentialSubtotal = total - STANDARD_SHIPPING;
+        double shipping;
+        double subtotal;
+        
+        if (potentialSubtotal >= FREE_SHIPPING_THRESHOLD) {
+            // If subtotal >= $50, shipping should have been free
+            shipping = 0.0;
+            subtotal = total; // No shipping was added
+        } else {
+            // Shipping was applied
+            shipping = STANDARD_SHIPPING;
+            subtotal = potentialSubtotal;
+        }
+
+        if (subtotalTv != null) {
             subtotalTv.setText(String.format(Locale.US, "$%.2f", subtotal));
-        if (totalTv != null)
+        }
+        
+        if (shippingTv != null) {
+            if (shipping == 0.0) {
+                shippingTv.setText("FREE");
+                shippingTv.setTextColor(getResources().getColor(R.color.green_stock, null));
+            } else {
+                shippingTv.setText(String.format(Locale.US, "$%.2f", shipping));
+            }
+        }
+        
+        if (totalTv != null) {
             totalTv.setText(String.format(Locale.US, "$%.2f", order.totalAmount));
+        }
     }
 
     private int dpToPx(int dp) {

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beckie-Deal ER Diagram</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        
+        .diagram-container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: inline-block;
+            min-width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .title h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 32px;
+        }
+        
+        .title p {
+            color: #7f8c8d;
+            margin: 10px 0 0 0;
+        }
+        
+        .er-diagram {
+            position: relative;
+            width: 1600px;
+            height: 1400px;
+            margin: 0 auto;
+        }
+        
+        .entity {
+            position: absolute;
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 180px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .entity.working {
+            border-color: #4CAF50;
+        }
+        
+        .entity.working .entity-header {
+            background: #4CAF50;
+        }
+        
+        .entity.pending {
+            border-color: #FF9800;
+            border-style: dashed;
+        }
+        
+        .entity.pending .entity-header {
+            background: #FF9800;
+        }
+        
+        .entity-header {
+            background: #3498db;
+            color: white;
+            padding: 8px 12px;
+            margin: -15px -15px 10px -15px;
+            border-radius: 6px 6px 0 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .entity-attribute {
+            font-size: 12px;
+            padding: 3px 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .entity-attribute:last-child {
+            border-bottom: none;
+        }
+        
+        .pk {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .fk {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        .relationship {
+            position: absolute;
+            background: #95a5a6;
+            z-index: -1;
+        }
+        
+        .relationship-h {
+            height: 2px;
+        }
+        
+        .relationship-v {
+            width: 2px;
+        }
+        
+        .relationship-label {
+            position: absolute;
+            background: white;
+            padding: 2px 8px;
+            font-size: 11px;
+            color: #7f8c8d;
+            border: 1px solid #95a5a6;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .legend {
+            margin-top: 40px;
+            padding: 20px;
+            background: #ecf0f1;
+            border-radius: 8px;
+        }
+        
+        .legend h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin-right: 30px;
+            font-size: 13px;
+        }
+        
+        /* Specific entity positions */
+        #user { top: 50px; left: 700px; }
+        #cart { top: 300px; left: 500px; }
+        #wishlist { top: 300px; left: 900px; }
+        #cart-item { top: 550px; left: 450px; }
+        #wishlist-item { top: 550px; left: 900px; }
+        #product { top: 800px; left: 650px; }
+        #category { top: 1100px; left: 450px; }
+        #brand { top: 1100px; left: 850px; }
+        #product-variant { top: 800px; left: 1100px; }
+        #coupon { top: 300px; left: 100px; }
+    </style>
+</head>
+<body>
+    <div class="diagram-container">
+        <div class="title">
+            <h1>🛒 BECKIE-DEAL E-COMMERCE SYSTEM</h1>
+            <p>Entity Relationship Diagram - Database Schema Design</p>
+            <p style="font-size: 12px; margin-top: 10px;">
+                <span style="background: #4CAF50; color: white; padding: 4px 12px; border-radius: 12px; margin-right: 10px;">✅ Working</span>
+                <span style="background: #FF9800; color: white; padding: 4px 12px; border-radius: 12px;">⏳ Pending API</span>
+            </p>
+        </div>
+        
+        <div class="er-diagram">
+            <!-- USER Entity -->
+            <div class="entity working" id="user">
+                <div class="entity-header">USER ✅</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (UUID)</div>
+                <div class="entity-attribute">email</div>
+                <div class="entity-attribute">first_name</div>
+                <div class="entity-attribute">last_name</div>
+                <div class="entity-attribute">phone</div>
+                <div class="entity-attribute">name</div>
+            </div>
+            
+            <!-- CART Entity -->
+            <div class="entity pending" id="cart">
+                <div class="entity-header">CART ⏳</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (int)</div>
+                <div class="entity-attribute"><span class="fk">FK</span> user_id</div>
+                <div class="entity-attribute">session_id</div>
+                <div class="entity-attribute">status</div>
+                <div class="entity-attribute">coupon_code</div>
+                <div class="entity-attribute">discount_total</div>
+                <div class="entity-attribute">subtotal</div>
+                <div class="entity-attribute">grand_total</div>
+                <div class="entity-attribute">metadata</div>
+            </div>
+            
+            <!-- WISHLIST Entity -->
+            <div class="entity pending" id="wishlist">
+                <div class="entity-header">WISHLIST ⏳</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (int)</div>
+                <div class="entity-attribute"><span class="fk">FK</span> user_id</div>
+                <div class="entity-attribute">session_id</div>
+                <div class="entity-attribute">name</div>
+                <div class="entity-attribute">description</div>
+                <div class="entity-attribute">is_public</div>
+                <div class="entity-attribute">is_active</div>
+                <div class="entity-attribute">metadata</div>
+            </div>
+            
+            <!-- CART_ITEM Entity -->
+            <div class="entity pending" id="cart-item">
+                <div class="entity-header">CART_ITEM ⏳</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (int)</div>
+                <div class="entity-attribute"><span class="fk">FK</span> cart_id</div>
+                <div class="entity-attribute"><span class="fk">FK</span> product_id</div>
+                <div class="entity-attribute"><span class="fk">FK</span> variant_id</div>
+                <div class="entity-attribute">quantity</div>
+                <div class="entity-attribute">price</div>
+                <div class="entity-attribute">metadata</div>
+            </div>
+            
+            <!-- WISHLIST_ITEM Entity -->
+            <div class="entity pending" id="wishlist-item">
+                <div class="entity-header">WISHLIST_ITEM ⏳</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (int)</div>
+                <div class="entity-attribute"><span class="fk">FK</span> wishlist_id</div>
+                <div class="entity-attribute"><span class="fk">FK</span> product_id</div>
+                <div class="entity-attribute"><span class="fk">FK</span> variant_id</div>
+                <div class="entity-attribute">quantity</div>
+                <div class="entity-attribute">metadata</div>
+            </div>
+            
+            <!-- PRODUCT Entity -->
+            <div class="entity working" id="product">
+                <div class="entity-header">PRODUCT ✅</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (UUID)</div>
+                <div class="entity-attribute"><span class="fk">FK</span> category_id</div>
+                <div class="entity-attribute"><span class="fk">FK</span> brand_id</div>
+                <div class="entity-attribute">name</div>
+                <div class="entity-attribute">slug</div>
+                <div class="entity-attribute">sku</div>
+                <div class="entity-attribute">barcode</div>
+                <div class="entity-attribute">short_description</div>
+                <div class="entity-attribute">description</div>
+                <div class="entity-attribute">price</div>
+                <div class="entity-attribute">sale_price</div>
+                <div class="entity-attribute">cost_price</div>
+                <div class="entity-attribute">stock_quantity</div>
+                <div class="entity-attribute">min_stock_alert</div>
+                <div class="entity-attribute">track_inventory</div>
+                <div class="entity-attribute">in_stock</div>
+                <div class="entity-attribute">thumbnail</div>
+                <div class="entity-attribute">is_active</div>
+                <div class="entity-attribute">is_featured</div>
+                <div class="entity-attribute">views_count</div>
+                <div class="entity-attribute">sales_count</div>
+            </div>
+            
+            <!-- CATEGORY Entity -->
+            <div class="entity working" id="category">
+                <div class="entity-header">CATEGORY ✅</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (UUID)</div>
+                <div class="entity-attribute"><span class="fk">FK</span> parent_id</div>
+                <div class="entity-attribute">name</div>
+                <div class="entity-attribute">slug</div>
+                <div class="entity-attribute">description</div>
+                <div class="entity-attribute">image</div>
+                <div class="entity-attribute">icon</div>
+                <div class="entity-attribute">is_active</div>
+                <div class="entity-attribute">is_featured</div>
+                <div class="entity-attribute">sort_order</div>
+                <div class="entity-attribute">products_count</div>
+            </div>
+            
+            <!-- BRAND Entity -->
+            <div class="entity working" id="brand">
+                <div class="entity-header">BRAND ✅</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (UUID)</div>
+                <div class="entity-attribute">name</div>
+                <div class="entity-attribute">slug</div>
+                <div class="entity-attribute">logo</div>
+                <div class="entity-attribute">website</div>
+                <div class="entity-attribute">description</div>
+                <div class="entity-attribute">is_active</div>
+                <div class="entity-attribute">is_featured</div>
+                <div class="entity-attribute">sort_order</div>
+                <div class="entity-attribute">products_count</div>
+            </div>
+            
+            <!-- PRODUCT_VARIANT Entity -->
+            <div class="entity pending" id="product-variant">
+                <div class="entity-header">PRODUCT_VARIANT ⏳</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (UUID)</div>
+                <div class="entity-attribute"><span class="fk">FK</span> product_id</div>
+                <div class="entity-attribute">sku</div>
+                <div class="entity-attribute">name</div>
+                <div class="entity-attribute">price</div>
+                <div class="entity-attribute">stock_quantity</div>
+                <div class="entity-attribute">attributes</div>
+            </div>
+            
+            <!-- COUPON Entity -->
+            <div class="entity pending" id="coupon">
+                <div class="entity-header">COUPON ⏳</div>
+                <div class="entity-attribute"><span class="pk">PK</span> id (UUID)</div>
+                <div class="entity-attribute">code</div>
+                <div class="entity-attribute">type</div>
+                <div class="entity-attribute">value</div>
+                <div class="entity-attribute">min_purchase</div>
+                <div class="entity-attribute">max_discount</div>
+                <div class="entity-attribute">valid_from</div>
+                <div class="entity-attribute">valid_until</div>
+                <div class="entity-attribute">is_active</div>
+                <div class="entity-attribute">usage_limit</div>
+            </div>
+            
+            <!-- Relationships -->
+            <!-- User to Cart -->
+            <div class="relationship relationship-v" style="left: 780px; top: 180px; height: 120px;"></div>
+            <div class="relationship relationship-h" style="left: 650px; top: 300px; width: 130px;"></div>
+            <div class="relationship-label" style="top: 230px; left: 720px;">1:N</div>
+            
+            <!-- User to Wishlist -->
+            <div class="relationship relationship-v" style="left: 780px; top: 180px; height: 120px;"></div>
+            <div class="relationship relationship-h" style="left: 780px; top: 300px; width: 130px;"></div>
+            <div class="relationship-label" style="top: 230px; left: 820px;">1:N</div>
+            
+            <!-- Cart to Cart Item -->
+            <div class="relationship relationship-v" style="left: 580px; top: 470px; height: 80px;"></div>
+            <div class="relationship-label" style="top: 500px; left: 540px;">1:N</div>
+            
+            <!-- Wishlist to Wishlist Item -->
+            <div class="relationship relationship-v" style="left: 980px; top: 470px; height: 80px;"></div>
+            <div class="relationship-label" style="top: 500px; left: 940px;">1:N</div>
+            
+            <!-- Cart Item to Product -->
+            <div class="relationship relationship-v" style="left: 530px; top: 680px; height: 120px;"></div>
+            <div class="relationship relationship-h" style="left: 530px; top: 800px; width: 130px;"></div>
+            <div class="relationship-label" style="top: 730px; left: 480px;">N:1</div>
+            
+            <!-- Wishlist Item to Product -->
+            <div class="relationship relationship-v" style="left: 980px; top: 680px; height: 120px;"></div>
+            <div class="relationship relationship-h" style="left: 850px; top: 800px; width: 130px;"></div>
+            <div class="relationship-label" style="top: 730px; left: 930px;">N:1</div>
+            
+            <!-- Product to Category -->
+            <div class="relationship relationship-v" style="left: 680px; top: 1020px; height: 80px;"></div>
+            <div class="relationship relationship-h" style="left: 580px; top: 1100px; width: 100px;"></div>
+            <div class="relationship-label" style="top: 1050px; left: 610px;">N:1</div>
+            
+            <!-- Product to Brand -->
+            <div class="relationship relationship-v" style="left: 780px; top: 1020px; height: 80px;"></div>
+            <div class="relationship relationship-h" style="left: 780px; top: 1100px; width: 90px;"></div>
+            <div class="relationship-label" style="top: 1050px; left: 800px;">N:1</div>
+            
+            <!-- Product to Variant -->
+            <div class="relationship relationship-h" style="left: 870px; top: 900px; width: 240px;"></div>
+            <div class="relationship-label" style="top: 885px; left: 960px;">1:N</div>
+            
+            <!-- Coupon to Cart -->
+            <div class="relationship relationship-h" style="left: 290px; top: 370px; width: 220px;"></div>
+            <div class="relationship-label" style="top: 355px; left: 370px;">applied</div>
+        </div>
+        
+        <div class="legend" style="margin-top: 20px;">
+            <h3>📋 Implementation Status</h3>
+            <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px;">
+                <li><strong style="color: #4CAF50;">✅ Working:</strong> User, Product, Category, Brand - APIs fully functional</li>
+                <li><strong style="color: #FF9800;">⏳ Pending:</strong> Cart, Wishlist, Order, Coupon, Product Variant - Models designed, APIs return 404</li>
+                <li><strong>Current Workaround:</strong> Using local CartManager and OrderManager singletons for in-memory management</li>
+                <li><strong>Ready for Migration:</strong> All models designed to switch to API integration when backend is ready</li>
+            </ul>
+        </div>
+        
+        <div class="legend">
+            <h3>📋 Legend</h3>
+            <div class="legend-item"><span class="pk">PK</span> - Primary Key</div>
+            <div class="legend-item"><span class="fk">FK</span> - Foreign Key</div>
+            <div class="legend-item"><strong>1:N</strong> - One to Many</div>
+            <div class="legend-item"><strong>N:1</strong> - Many to One</div>
+            <div class="legend-item"><strong>UUID</strong> - Universally Unique Identifier</div>
+        </div>
+        
+        <div class="legend" style="margin-top: 20px;">
+            <h3>🔑 Key Relationships</h3>
+            <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px;">
+                <li><strong>User</strong> can have multiple Carts, Wishlists, and Orders (1:N relationships)</li>
+                <li><strong>Cart & Wishlist</strong> support guest users via session_id (nullable user_id)</li>
+                <li><strong>Cart & Wishlist</strong> contain multiple items referencing Products (1:N → N:1)</li>
+                <li><strong>Product</strong> belongs to one Category and one Brand (N:1 relationships)</li>
+                <li><strong>Product</strong> can have multiple Variants (size, color, etc.) - optional (1:N)</li>
+                <li><strong>Category</strong> supports hierarchical structure via self-referencing parent_id</li>
+                <li><strong>Coupon</strong> can be applied to Cart for discount calculation</li>
+                <li><strong>Order</strong> captures cart snapshot at checkout time with status tracking</li>
+            </ul>
+        </div>
+        
+        <div class="legend" style="margin-top: 20px;">
+            <h3>💡 Design Features</h3>
+            <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px;">
+                <li><strong>Guest Support:</strong> Cart and Wishlist use nullable user_id + session_id for unauthenticated users</li>
+                <li><strong>Flexible Pricing:</strong> Regular price, sale_price, and cost_price for comprehensive pricing management</li>
+                <li><strong>Inventory Tracking:</strong> Stock quantity management with min_stock_alert thresholds</li>
+                <li><strong>SEO Optimization:</strong> Meta fields (meta_title, meta_description) for products, categories, and brands</li>
+                <li><strong>Extensibility:</strong> Metadata fields (JSON) for custom data without schema changes</li>
+                <li><strong>Product Variants:</strong> Support for variations (size, color, material, etc.) via optional variant_id</li>
+                <li><strong>Status Tracking:</strong> Boolean flags (is_active, is_featured, is_public) for feature control</li>
+                <li><strong>Order Snapshots:</strong> Order items store product details at purchase time (price freeze)</li>
+                <li><strong>Hierarchical Categories:</strong> Self-referencing parent_id enables multi-level category trees</li>
+            </ul>
+        </div>
+        
+        <div class="legend" style="margin-top: 20px; background: #e8f5e9;">
+            <h3>🔗 API Endpoints Mapping</h3>
+            
+            <h4 style="color: #4CAF50; margin-top: 15px;">✅ Working Endpoints</h4>
+            <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px;">
+                <li><code>/api/v1/auth/login</code> → User authentication (JWT token)</li>
+                <li><code>/api/v1/auth/register</code> → User registration</li>
+                <li><code>/api/v1/products</code> → Product catalog with Category & Brand (18 products)</li>
+                <li><code>/api/v1/products/{id}</code> → Single product details</li>
+                <li><code>/api/v1/master/categories</code> → Category hierarchy</li>
+                <li><code>/api/v1/master/brands</code> → Brand listings</li>
+                <li><code>/api/v1/orders</code> → Order history (empty currently)</li>
+                <li><code>/api/v1/orders/{id}</code> → Order details</li>
+            </ul>
+            
+            <h4 style="color: #FF9800; margin-top: 15px;">⏳ Pending Implementation (404)</h4>
+            <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px;">
+                <li><code>/api/v1/cart</code> → Get/Update cart</li>
+                <li><code>/api/v1/cart/items</code> → Add/Update/Delete cart items</li>
+                <li><code>/api/v1/cart/checkout</code> → Convert cart to order</li>
+                <li><code>/api/v1/wishlist</code> → Get/Update wishlist</li>
+                <li><code>/api/v1/wishlist/items</code> → Add/Delete wishlist items</li>
+                <li><code>/api/v1/wishlist/check</code> → Check product in wishlist</li>
+                <li><code>/api/v1/coupons/apply</code> → Validate and apply coupon</li>
+            </ul>
+            
+            <h4 style="margin-top: 15px;">🔧 Current Workarounds</h4>
+            <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px;">
+                <li><strong>CartManager:</strong> In-memory singleton for cart management</li>
+                <li><strong>OrderManager:</strong> In-memory singleton for order history with status tracking</li>
+                <li><strong>Migration Ready:</strong> All models designed to switch to API when backend completes</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px; color: #7f8c8d; font-size: 13px;">
+        <p><strong>Beckie-Deal E-Commerce System</strong> | Generated from actual Android app data models</p>
+        <p>Version 1.1 | Last API Test: September 10, 2026 | Corrected with actual implementation status</p>
+        <p style="font-size: 11px; margin-top: 10px;">
+            API Base: <code>https://laravel-app-114227311375.asia-southeast1.run.app/api/v1</code>
+        </p>
+    </div>
+</body>
+</html>

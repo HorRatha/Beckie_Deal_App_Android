@@ -90,43 +90,189 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
+                    android:orientation="vertical"
+                    android:padding="16dp">
                     
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/form_field_background"
-                        android:padding="10dp"
-                        android:src="@android:drawable/ic_dialog_map"
-                        app:tint="@color/primary" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <!-- Recipient Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:text="Recipient Name *"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_size_caption"
+                        android:textStyle="bold" />
+                    
+                    <EditText
+                        android:id="@+id/shippingNameInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/form_field_background"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Enter recipient name"
+                        android:inputType="textPersonName"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_muted"
+                        android:textSize="@dimen/text_size_body" />
+                    
+                    <!-- Phone Number -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Phone Number *"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_size_caption"
+                        android:textStyle="bold" />
+                    
+                    <EditText
+                        android:id="@+id/shippingPhoneInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/form_field_background"
+                        android:paddingHorizontal="16dp"
+                        android:hint="+855 12 345 678"
+                        android:inputType="phone"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_muted"
+                        android:textSize="@dimen/text_size_body" />
+                    
+                    <!-- Street Address -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Street Address *"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_size_caption"
+                        android:textStyle="bold" />
+                    
+                    <EditText
+                        android:id="@+id/shippingAddressInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/form_field_background"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Enter street address"
+                        android:inputType="textPostalAddress"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_muted"
+                        android:textSize="@dimen/text_size_body" />
+                    
+                    <!-- City and Postal Code Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+                        
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Home Address"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical">
+                            
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="City *"
+                                android:textColor="@color/text_primary"
+                                android:textSize="@dimen/text_size_caption"
+                                android:textStyle="bold" />
+                            
+                            <EditText
+                                android:id="@+id/shippingCityInput"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:layout_marginTop="6dp"
+                                android:background="@drawable/form_field_background"
+                                android:paddingHorizontal="16dp"
+                                android:hint="Phnom Penh"
+                                android:inputType="text"
+                                android:textColor="@color/text_primary"
+                                android:textColorHint="@color/text_muted"
+                                android:textSize="@dimen/text_size_body" />
+                        </LinearLayout>
+                        
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="123 Tech Avenue, Silicon Valley, CA"
-                            android:textColor="@color/text_muted"
-                            android:textSize="@dimen/text_size_body" />
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:orientation="vertical">
+                            
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Postal Code *"
+                                android:textColor="@color/text_primary"
+                                android:textSize="@dimen/text_size_caption"
+                                android:textStyle="bold" />
+                            
+                            <EditText
+                                android:id="@+id/shippingPostalCodeInput"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:layout_marginTop="6dp"
+                                android:background="@drawable/form_field_background"
+                                android:paddingHorizontal="16dp"
+                                android:hint="12000"
+                                android:inputType="number"
+                                android:textColor="@color/text_primary"
+                                android:textColorHint="@color/text_muted"
+                                android:textSize="@dimen/text_size_body" />
+                        </LinearLayout>
                     </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@android:drawable/ic_menu_edit"
-                        app:tint="@color/text_muted" />
+                    
+                    <!-- State/Province (Optional) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="State/Province (Optional)"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_size_caption"
+                        android:textStyle="bold" />
+                    
+                    <EditText
+                        android:id="@+id/shippingStateInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/form_field_background"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Kandal"
+                        android:inputType="text"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_muted"
+                        android:textSize="@dimen/text_size_body" />
+                    
+                    <!-- Country (Optional) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Country"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_size_caption"
+                        android:textStyle="bold" />
+                    
+                    <EditText
+                        android:id="@+id/shippingCountryInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/form_field_background"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Cambodia"
+                        android:inputType="text"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_muted"
+                        android:textSize="@dimen/text_size_body" />
+                    
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -402,6 +548,7 @@
                             android:text="Shipping Fee"
                             android:textColor="@color/text_muted" />
                         <TextView
+                            android:id="@+id/summaryShipping"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$15.00"
@@ -458,16 +605,17 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/confirmPaymentButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:backgroundTint="@color/primary"
+                android:background="@drawable/button_add_to_cart_gradient"
                 android:text="Confirm Payment"
                 android:textAllCaps="false"
-                android:textColor="@color/white_fixed"
+                android:textColor="@color/dark_brown"
                 android:textSize="@dimen/text_size_body_large"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:backgroundTint="@null" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

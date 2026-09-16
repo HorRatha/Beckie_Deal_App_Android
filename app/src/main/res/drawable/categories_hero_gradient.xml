@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Modern hero gradient for the Categories header, continues the status bar color
-     smoothly into the page so the orange status bar doesn't hard-cut into a white bar. -->
+<!-- Modern hero gradient for the Categories header with yellow color -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="135"
-        android:startColor="#F97316"
-        android:centerColor="#F97316"
-        android:endColor="#EA580C"
+        android:startColor="#FFC107"
+        android:centerColor="#FFC107"
+        android:endColor="#FFB300"
         android:type="linear" />
 </shape>

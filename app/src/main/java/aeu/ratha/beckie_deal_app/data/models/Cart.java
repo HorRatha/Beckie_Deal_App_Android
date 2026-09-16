@@ -21,6 +21,18 @@ public class Cart {
     @SerializedName("status")
     private String status; // active, completed, abandoned
     
+    @SerializedName("coupon_code")
+    private String couponCode;
+    
+    @SerializedName("discount_total")
+    private String discountTotal;
+    
+    @SerializedName("subtotal")
+    private String subtotal;
+    
+    @SerializedName("grand_total")
+    private String grandTotal;
+    
     @SerializedName("metadata")
     private Object metadata;
     
@@ -50,6 +62,37 @@ public class Cart {
     
     public String getStatus() {
         return status;
+    }
+    
+    public String getCouponCode() {
+        return couponCode;
+    }
+    
+    public double getDiscountTotal() {
+        if (discountTotal == null || discountTotal.isEmpty()) return 0.0;
+        try {
+            return Double.parseDouble(discountTotal);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+    
+    public double getSubtotalFromAPI() {
+        if (subtotal == null || subtotal.isEmpty()) return 0.0;
+        try {
+            return Double.parseDouble(subtotal);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+    
+    public double getGrandTotal() {
+        if (grandTotal == null || grandTotal.isEmpty()) return 0.0;
+        try {
+            return Double.parseDouble(grandTotal);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
     
     public Object getMetadata() {

@@ -10,6 +10,7 @@ import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.ImageUrlHelper;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
@@ -249,9 +250,11 @@ public class CartActivity extends BaseActivity {
         String priceLabel = String.format(Locale.US, "$%.2f / unit", item.getPriceAsDouble());
         unitPrice.setText(priceLabel);
 
+        // Load image with full URL
+        String imageUrl = ImageUrlHelper.getImageUrlOrFallback(item.getProductThumbnail());
         Glide.with(this)
-                .load(item.getProductThumbnail())
-                .centerCrop()
+                .load(imageUrl)
+                .centerInside()
                 .placeholder(R.drawable.placeholder_image)
                 .into(image);
 
@@ -335,7 +338,16 @@ public class CartActivity extends BaseActivity {
     /** Refresh the grand total text in the checkout bar. */
     private void updateTotal(TextView totalText, Cart cart) {
         if (totalText == null || cart == null) return;
-        totalText.setText(String.format(Locale.US, "$%.2f", cart.getTotalPrice()));
+        
+        // Use API subtotal (dynamic from backend)
+        double total = cart.getSubtotalFromAPI();
+        
+        // Fallback to client calculation if API doesn't provide subtotal
+        if (total == 0.0) {
+            total = cart.getTotalPrice(); // Calculate from items as fallback
+        }
+        
+        totalText.setText(String.format(Locale.US, "$%.2f", total));
     }
 
     private void setupBottomNavigation() {

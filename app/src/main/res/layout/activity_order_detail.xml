@@ -233,6 +233,7 @@
                             android:textColor="@color/text_muted"
                             android:textSize="@dimen/text_size_body" />
                         <TextView
+                            android:id="@+id/detailShipping"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$15.00"

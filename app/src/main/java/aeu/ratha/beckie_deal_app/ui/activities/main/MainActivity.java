@@ -103,6 +103,7 @@ public class MainActivity extends BaseActivity {
         setupProducts();
         setupNewArrivalsBanner();
         setupNewCollectionSection();
+        setupCouponSection();
         setupTopSellingSection();
         setupBottomNavigation();
         setupAutoScroll();
@@ -119,6 +120,7 @@ public class MainActivity extends BaseActivity {
         UiAnimations.fadeSlideUp(findViewById(R.id.bannerCard), 100);
         UiAnimations.fadeSlideUp(findViewById(R.id.categoriesSectionHeader), 150);
         UiAnimations.fadeSlideUp(findViewById(R.id.newCollectionSectionHeader), 190);
+        UiAnimations.fadeSlideUp(findViewById(R.id.couponCard), 210);
         UiAnimations.fadeSlideUp(findViewById(R.id.topSellingSectionHeader), 230);
         UiAnimations.fadeSlideUp(findViewById(R.id.featuredProductsHeader), 270);
     }
@@ -722,6 +724,47 @@ public class MainActivity extends BaseActivity {
         for (int i = 0; i < limit; i++) {
             addHorizontalProductCard(container, newItems.get(i));
         }
+    }
+
+    // ── Coupon Section ────────────────────────────────────────────────────────
+
+    private void setupCouponSection() {
+        MaterialCardView couponCard = findViewById(R.id.couponCard);
+        TextView couponCodeText = findViewById(R.id.couponCodeText);
+        com.google.android.material.button.MaterialButton copyButton = findViewById(R.id.copyCouponButton);
+
+        if (couponCard == null || couponCodeText == null || copyButton == null) return;
+
+        // Add bounce animation to the card
+        UiAnimations.pressBounce(couponCard);
+        UiAnimations.pressBounce(copyButton);
+
+        // Copy button click handler
+        copyButton.setOnClickListener(v -> {
+            String couponCode = couponCodeText.getText().toString();
+            
+            // Copy to clipboard
+            android.content.ClipboardManager clipboard = 
+                (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Coupon Code", couponCode);
+            clipboard.setPrimaryClip(clip);
+            
+            // Show feedback
+            Toast.makeText(this, "Coupon code copied: " + couponCode, Toast.LENGTH_SHORT).show();
+            
+            // Change button text temporarily
+            copyButton.setText("Copied!");
+            copyButton.setIconResource(R.drawable.ic_check_circle_24);
+            
+            // Reset after 2 seconds
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                copyButton.setText("Copy");
+                copyButton.setIconResource(R.drawable.ic_copy_24);
+            }, 2000);
+        });
+
+        // Make entire card clickable to copy
+        couponCard.setOnClickListener(v -> copyButton.performClick());
     }
 
     // ── Top Selling horizontal scroll ─────────────────────────────────────────

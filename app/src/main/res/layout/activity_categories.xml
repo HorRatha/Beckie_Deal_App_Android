@@ -12,7 +12,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/dark_brown">
 
     <!-- Gradient hero header â€” continues the status bar color into the page and
          hosts the top bar + page title, replacing the flat white toolbar. -->
@@ -115,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Categories"
-            android:textColor="@color/white_fixed"
+            android:textColor="@color/dark_brown"
             android:textSize="@dimen/text_size_headline_large"
             android:fontFamily="sans-serif-medium" />
         <TextView
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Explore our premium collection by hardware type"
-            android:textColor="#E6FFFFFF"
+            android:textColor="@color/dark_brown"
             android:textSize="@dimen/text_size_body" />
 
     </LinearLayout>

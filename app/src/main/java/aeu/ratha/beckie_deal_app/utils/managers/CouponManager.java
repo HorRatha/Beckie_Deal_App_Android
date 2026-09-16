@@ -1,75 +1,37 @@
 package aeu.ratha.beckie_deal_app.utils.managers;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
+
+import aeu.ratha.beckie_deal_app.data.api.CouponApiService;
+import aeu.ratha.beckie_deal_app.data.models.Cart;
+import aeu.ratha.beckie_deal_app.data.models.CouponResponse;
+import aeu.ratha.beckie_deal_app.network.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Manages coupon codes, validation, and discount calculation.
- * Singleton pattern for app-wide coupon state.
+ * Now uses real API instead of mock data.
  */
 public class CouponManager {
+    private static final String TAG = "CouponManager";
     private static CouponManager instance;
-    private Coupon appliedCoupon;
     
-    // Predefined coupons (in production, these would come from a backend)
-    private final Map<String, Coupon> availableCoupons = new HashMap<>();
-
-    public static class Coupon {
-        public final String code;
-        public final DiscountType type;
-        public final double value;
-        public final double minPurchase;
-        public final String description;
-
-        public Coupon(String code, DiscountType type, double value, double minPurchase, String description) {
-            this.code = code;
-            this.type = type;
-            this.value = value;
-            this.minPurchase = minPurchase;
-            this.description = description;
-        }
-
-        /**
-         * Calculate discount amount based on subtotal
-         */
-        public double calculateDiscount(double subtotal) {
-            if (subtotal < minPurchase) {
-                return 0.0;
-            }
-            
-            switch (type) {
-                case PERCENTAGE:
-                    return subtotal * (value / 100.0);
-                case FIXED_AMOUNT:
-                    return Math.min(value, subtotal); // Can't discount more than subtotal
-                default:
-                    return 0.0;
-            }
-        }
-
-        /**
-         * Get formatted discount display string
-         */
-        public String getDiscountLabel() {
-            switch (type) {
-                case PERCENTAGE:
-                    return String.format(Locale.US, "%.0f%% OFF", value);
-                case FIXED_AMOUNT:
-                    return String.format(Locale.US, "$%.2f OFF", value);
-                default:
-                    return "";
-            }
-        }
-    }
-
-    public enum DiscountType {
-        PERCENTAGE,
-        FIXED_AMOUNT
-    }
+    private Context context;
+    private CouponApiService apiService;
+    
+    // Current applied coupon state
+    private String appliedCouponCode;
+    private double appliedDiscountAmount;
+    private Cart updatedCart;
 
     private CouponManager() {
-        initializeCoupons();
+        // Constructor is private for singleton
     }
 
     public static synchronized CouponManager getInstance() {
@@ -78,113 +40,159 @@ public class CouponManager {
         }
         return instance;
     }
-
+    
     /**
-     * Initialize sample coupons (in production, fetch from API)
+     * Initialize with context (call this early in app lifecycle)
      */
-    private void initializeCoupons() {
-        availableCoupons.put("WELCOME10", new Coupon(
-            "WELCOME10",
-            DiscountType.PERCENTAGE,
-            10.0,
-            0.0,
-            "10% off for new users"
-        ));
-        
-        availableCoupons.put("SAVE20", new Coupon(
-            "SAVE20",
-            DiscountType.FIXED_AMOUNT,
-            20.0,
-            50.0,
-            "$20 off orders over $50"
-        ));
-        
-        availableCoupons.put("DEAL50", new Coupon(
-            "DEAL50",
-            DiscountType.PERCENTAGE,
-            50.0,
-            100.0,
-            "50% off orders over $100"
-        ));
-        
-        availableCoupons.put("FREESHIP", new Coupon(
-            "FREESHIP",
-            DiscountType.FIXED_AMOUNT,
-            15.0,
-            30.0,
-            "Free shipping on orders over $30"
-        ));
+    public void initialize(Context context) {
+        this.context = context.getApplicationContext();
+        this.apiService = RetrofitClient.getClient(context).create(CouponApiService.class);
+    }
+    
+    /**
+     * Get API service, initializing if needed
+     */
+    private CouponApiService getApiService() {
+        if (apiService == null && context != null) {
+            apiService = RetrofitClient.getClient(context).create(CouponApiService.class);
+        }
+        return apiService;
     }
 
     /**
-     * Validate and apply coupon code
-     * @return CouponResult with success status and message
+     * Apply coupon code via API
+     * @param code Coupon code to apply
+     * @param cartId Cart ID to apply coupon to
+     * @param callback Callback with result
      */
-    public CouponResult applyCoupon(String code, double subtotal) {
+    public void applyCoupon(String code, String cartId, Context context, final CouponCallback callback) {
         if (code == null || code.trim().isEmpty()) {
-            return new CouponResult(false, "Please enter a coupon code", null);
+            callback.onError("Please enter a coupon code");
+            return;
         }
-
-        String upperCode = code.trim().toUpperCase();
-        Coupon coupon = availableCoupons.get(upperCode);
-
-        if (coupon == null) {
-            return new CouponResult(false, "Invalid coupon code", null);
+        
+        if (cartId == null || cartId.isEmpty()) {
+            callback.onError("Cart not found");
+            return;
         }
-
-        if (subtotal < coupon.minPurchase) {
-            String message = String.format(Locale.US, 
-                "Minimum purchase of $%.2f required", coupon.minPurchase);
-            return new CouponResult(false, message, null);
+        
+        // Initialize if needed
+        if (apiService == null) {
+            initialize(context);
         }
-
-        appliedCoupon = coupon;
-        double discount = coupon.calculateDiscount(subtotal);
-        String message = String.format(Locale.US, 
-            "Coupon applied! You saved $%.2f", discount);
-        return new CouponResult(true, message, coupon);
+        
+        Map<String, Object> requestData = new HashMap<>();
+        requestData.put("code", code.trim().toUpperCase());
+        requestData.put("cart_id", cartId);
+        
+        Log.d(TAG, "Applying coupon: " + code + " to cart: " + cartId);
+        
+        getApiService().applyCoupon(requestData).enqueue(new Callback<Map<String, Object>>() {
+            @Override
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Map<String, Object> body = response.body();
+                    String status = (String) body.get("status");
+                    
+                    if ("success".equals(status)) {
+                        // Extract coupon data
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> data = (Map<String, Object>) body.get("data");
+                        
+                        if (data != null) {
+                            appliedCouponCode = (String) data.get("coupon");
+                            
+                            Object discountObj = data.get("discount_amount");
+                            if (discountObj instanceof Number) {
+                                appliedDiscountAmount = ((Number) discountObj).doubleValue();
+                            }
+                            
+                            Log.d(TAG, "✓ Coupon applied: " + appliedCouponCode + 
+                                ", Discount: $" + appliedDiscountAmount);
+                            
+                            callback.onSuccess(appliedCouponCode, appliedDiscountAmount);
+                        } else {
+                            callback.onError("Invalid response from server");
+                        }
+                    } else {
+                        String message = (String) body.get("message");
+                        callback.onError(message != null ? message : "Failed to apply coupon");
+                    }
+                } else {
+                    Log.e(TAG, "✗ Failed to apply coupon: " + response.code());
+                    callback.onError("Invalid coupon code or server error");
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                Log.e(TAG, "✗ Network error applying coupon", t);
+                callback.onError("Network error: " + t.getMessage());
+            }
+        });
     }
 
     /**
-     * Remove currently applied coupon
+     * Remove currently applied coupon (local state only)
+     * Note: Backend doesn't have a remove endpoint, so we just clear local state
+     * The cart will be refreshed to get the updated state without coupon
      */
     public void removeCoupon() {
-        appliedCoupon = null;
-    }
-
-    /**
-     * Get currently applied coupon
-     */
-    public Coupon getAppliedCoupon() {
-        return appliedCoupon;
+        appliedCouponCode = null;
+        appliedDiscountAmount = 0.0;
+        updatedCart = null;
+        Log.d(TAG, "Coupon removed from local state");
     }
 
     /**
      * Check if a coupon is currently applied
      */
     public boolean hasCoupon() {
-        return appliedCoupon != null;
+        return appliedCouponCode != null && !appliedCouponCode.isEmpty();
     }
-
+    
+    /**
+     * Get currently applied coupon code
+     */
+    public String getAppliedCouponCode() {
+        return appliedCouponCode;
+    }
+    
+    /**
+     * Get current discount amount
+     */
+    public double getDiscountAmount() {
+        return appliedDiscountAmount;
+    }
+    
     /**
      * Calculate discount for current applied coupon
+     * @deprecated Use getDiscountAmount() instead - discount is calculated by backend
      */
+    @Deprecated
     public double calculateDiscount(double subtotal) {
-        if (appliedCoupon == null) {
-            return 0.0;
-        }
-        return appliedCoupon.calculateDiscount(subtotal);
+        return appliedDiscountAmount;
     }
-
+    
     /**
-     * Result object for coupon application attempts
+     * Callback interface for coupon operations
      */
+    public interface CouponCallback {
+        void onSuccess(String couponCode, double discountAmount);
+        void onError(String errorMessage);
+    }
+    
+    /**
+     * Legacy compatibility: Result object for coupon application attempts
+     * @deprecated Use CouponCallback instead
+     */
+    @Deprecated
     public static class CouponResult {
         public final boolean success;
         public final String message;
-        public final Coupon coupon;
+        public final Object coupon;
 
-        public CouponResult(boolean success, String message, Coupon coupon) {
+        public CouponResult(boolean success, String message, Object coupon) {
             this.success = success;
             this.message = message;
             this.coupon = coupon;

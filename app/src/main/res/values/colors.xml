@@ -74,4 +74,12 @@
     <color name="black">#000000</color>
     <color name="secondary">#8F4D27</color>
     <color name="on_secondary">#FFFFFF</color>
+    
+    <!-- Coupon Card Colors -->
+    <color name="coupon_accent">#F59E0B</color>
+    <color name="coupon_label">#FCD34D</color>
+    <color name="coupon_subtext">#D1D5DB</color>
+    <color name="coupon_code_highlight">#FDE68A</color>
+    <color name="coupon_button_bg">#F59E0B</color>
+    <color name="coupon_dark">#1F2937</color>
 </resources>

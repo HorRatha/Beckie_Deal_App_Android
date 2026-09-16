@@ -12,6 +12,7 @@ import aeu.ratha.beckie_deal_app.data.models.WishlistItem;
 import aeu.ratha.beckie_deal_app.data.models.WishlistResponse;
 import aeu.ratha.beckie_deal_app.data.models.Product;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.utils.helpers.ProductMapper;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
@@ -106,16 +107,13 @@ public class WishlistActivity extends BaseActivity {
                         for (WishlistItem item : wishlist.getItems()) {
                             Product apiProduct = item.getProduct();
                             if (apiProduct != null) {
-                                MainActivity.Product displayProduct = new MainActivity.Product(
-                                    apiProduct.getId(),
-                                    apiProduct.getName(),
-                                    apiProduct.getPrice(),
-                                    apiProduct.getThumbnail(),
-                                    "0" // Default rating - API doesn't provide rating yet
-                                );
-                                displayProduct.isInWishlist = true;
-                                displayProduct.wishlistItemId = item.getId(); // Save for deletion
-                                cachedWishlistProducts.add(displayProduct);
+                                // Use ProductMapper to properly convert API product to UI product
+                                MainActivity.Product displayProduct = ProductMapper.toUiProduct(apiProduct);
+                                if (displayProduct != null) {
+                                    displayProduct.isInWishlist = true;
+                                    displayProduct.wishlistItemId = item.getId(); // Save for deletion
+                                    cachedWishlistProducts.add(displayProduct);
+                                }
                             }
                         }
                         
@@ -173,32 +171,23 @@ public class WishlistActivity extends BaseActivity {
                 });
             }
 
-            // Each card takes equal column weight but is capped to max column width
+            // Each card takes fixed width based on available width divided by columns
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
-            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-            params.setMargins(dp(2), dp(2), dp(2), dp(2));
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            int parentPadding = dp(16) * 2; // LinearLayout has 16dp padding on each side
+            int availableWidth = screenWidth - parentPadding;
+            int margins = dp(2);
+            int cardWidth = (availableWidth / columns) - (margins * 2);
+            params.width = cardWidth;
+            params.height = dp(380); // Match the fixed height in XML
+            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1);
+            params.setMargins(margins, margins, margins, margins);
             productView.setLayoutParams(params);
 
             wishlistGrid.addView(productView);
         }
-
-        // If items don't fill the last row, add invisible spacers
-        int remainder = products.size() % columns;
-        if (remainder != 0) {
-            int spacersNeeded = columns - remainder;
-            for (int i = 0; i < spacersNeeded; i++) {
-                View spacer = new View(this);
-                GridLayout.LayoutParams spacerParams = new GridLayout.LayoutParams();
-                spacerParams.width = 0;
-                spacerParams.height = 0;
-                spacerParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-                spacerParams.setMargins(dp(2), 0, dp(2), 0);
-                spacer.setLayoutParams(spacerParams);
-                wishlistGrid.addView(spacer);
-            }
-        }
+        
+        // Cards now have fixed width, no spacers needed
     }
     
     private void removeFromWishlist(MainActivity.Product product) {

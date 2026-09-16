@@ -175,18 +175,13 @@ public class CartRepository {
     
     /**
      * Checkout cart (create order).
+     * New API structure - sends all fields flat, not nested in shipping_address
      * 
-     * @param shippingAddress Shipping address data
-     * @param paymentMethod Payment method
-     * @param notes Order notes
+     * @param checkoutData All checkout data (cart_id, shipping fields, payment method, etc.)
      * @param callback Callback with checkout response or error
      */
-    public void checkout(Map<String, Object> shippingAddress, String paymentMethod, 
-                         String notes, final CheckoutCallback callback) {
-        Map<String, Object> checkoutData = new HashMap<>();
-        checkoutData.put("shipping_address", shippingAddress != null ? shippingAddress : new HashMap<>());
-        checkoutData.put("payment_method", paymentMethod != null ? paymentMethod : "card");
-        checkoutData.put("notes", notes != null ? notes : "");
+    public void checkout(Map<String, Object> checkoutData, final CheckoutCallback callback) {
+        Log.d(TAG, "Checkout request: " + checkoutData);
         
         cartApiService.checkout(checkoutData).enqueue(new Callback<Map<String, Object>>() {
             @Override
@@ -197,6 +192,17 @@ public class CartRepository {
                 } else {
                     String error = "Checkout failed: " + response.code();
                     Log.e(TAG, "✗ " + error);
+                    
+                    // Try to get error details
+                    try {
+                        if (response.errorBody() != null) {
+                            String errorBody = response.errorBody().string();
+                            Log.e(TAG, "Error response: " + errorBody);
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Could not read error body", e);
+                    }
+                    
                     callback.onError(error);
                 }
             }

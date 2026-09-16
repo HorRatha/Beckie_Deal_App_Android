@@ -540,11 +540,14 @@ public class CategoryDetailActivity extends BaseActivity {
             }
 
             // Set layout params so each card takes exactly half the grid width (2 per row)
+            // Calculate fixed width based on screen width divided by 2
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
-            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL, 1f);
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
             int gap = (int) (2 * getResources().getDisplayMetrics().density);
+            int cardWidth = (screenWidth / 2) - (gap * 2);
+            params.width = cardWidth;
+            params.height = (int) (380 * getResources().getDisplayMetrics().density); // Match the fixed height in XML
+            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1);
             params.setMargins(gap, gap, gap, gap);
             view.setLayoutParams(params);
 
