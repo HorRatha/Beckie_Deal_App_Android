@@ -2,26 +2,25 @@
 <!--
     Beckie Deal — Product Card (2-column grid)
     Flat, no border, no shadow, no rounded corners. Full-bleed image.
-    layout_gravity="fill_vertical" ensures both cards in a row match height.
+    Height is wrap_content so the card expands to fit all visible fields.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="380dp"
+    android:layout_height="wrap_content"
     android:layout_margin="2dp"
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp"
-    app:cardBackgroundColor="@color/surface">
+    app:cardBackgroundColor="@color/product_card_bg">
 
-    <!-- Root fills the card height so info section can push to top -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- ── Product image — full-width, tall ──────────────────────── -->
+        <!-- ── Product image — full-width, fixed tall ────────────────────── -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="155dp"
@@ -66,17 +65,16 @@
 
         </FrameLayout>
 
-        <!-- ── Hairline divider ───────────────────────────────────────── -->
+        <!-- ── Hairline divider ───────────────────────────────────────────── -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/border_color" />
 
-        <!-- ── Info section — grows to fill remaining height ────────────── -->
+        <!-- ── Info section — wraps all visible content ──────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="8dp"
             android:paddingTop="8dp"
@@ -106,17 +104,12 @@
                 android:ellipsize="end"
                 android:visibility="gone" />
 
-            <!-- Spacer pushes badges / price to a consistent vertical position -->
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
             <!-- Stock status -->
             <TextView
                 android:id="@+id/stockStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:text="Available In Stock"
                 android:textAppearance="@style/TextAppearance.App.Label"
                 android:textColor="#1565C0" />
@@ -160,7 +153,7 @@
                 android:layout_marginTop="4dp"
                 android:text=""
                 android:textAppearance="@style/TextAppearance.App.Specs"
-                android:maxLines="3"
+                android:maxLines="4"
                 android:ellipsize="end"
                 android:visibility="gone" />
 

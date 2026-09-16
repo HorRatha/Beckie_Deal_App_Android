@@ -414,7 +414,7 @@ public class ProductListActivity extends BaseActivity
             int margins = dp(2);
             int cardWidth = (screenWidth / 2) - (margins * 2);
             params.width = cardWidth;
-            params.height = dp(380); // Match the fixed height in XML
+            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1);
             params.setMargins(margins, margins, margins, margins);
             view.setLayoutParams(params);

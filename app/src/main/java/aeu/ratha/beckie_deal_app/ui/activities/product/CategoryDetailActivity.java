@@ -546,7 +546,7 @@ public class CategoryDetailActivity extends BaseActivity {
             int gap = (int) (2 * getResources().getDisplayMetrics().density);
             int cardWidth = (screenWidth / 2) - (gap * 2);
             params.width = cardWidth;
-            params.height = (int) (380 * getResources().getDisplayMetrics().density); // Match the fixed height in XML
+            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1);
             params.setMargins(gap, gap, gap, gap);
             view.setLayoutParams(params);

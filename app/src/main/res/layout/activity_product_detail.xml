@@ -566,13 +566,16 @@
                 android:text="Add to Cart"
                 android:textAllCaps="false"
                 android:textColor="@color/primary"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="none"
                 app:backgroundTint="@null"
                 app:icon="@drawable/add_shopping_cart_24"
                 app:iconTint="@color/primary"
                 app:iconGravity="textStart"
-                app:iconPadding="2dp" />
+                app:iconPadding="2dp"
+                app:iconSize="16dp" />
 
             <!-- Buy Now Button -->
             <com.google.android.material.button.MaterialButton
@@ -585,7 +588,7 @@
                 android:text="Buy Now"
                 android:textAllCaps="false"
                 android:textColor="@color/dark_brown"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:backgroundTint="@null"
                 app:icon="@drawable/ic_shopping_bag_24"

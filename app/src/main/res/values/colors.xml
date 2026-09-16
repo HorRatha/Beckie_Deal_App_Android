@@ -16,6 +16,7 @@
     <color name="border_color">#E2E8F0</color>
     <color name="input_background">#F1F5F9</color>
     <color name="card_bg_secondary">#F1F5F9</color>
+    <color name="product_card_bg">#FEFEFE</color>
     <color name="badge_bg">#FFF7ED</color>
 
     <!-- Brand icon tint palette (rotated across brand grid for visual variety) -->
