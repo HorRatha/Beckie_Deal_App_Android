@@ -175,14 +175,18 @@ public class CartRepository {
     
     /**
      * Checkout cart (create order).
-     * New API structure - sends all fields flat, not nested in shipping_address
-     * 
+     *
+     * On 422 the backend returns a structured validation error:
+     * {"status":"error","message":"...","errors":{"field":["msg"]}}
+     * We parse that and return the first human-readable message so the UI
+     * can surface it directly instead of showing a raw HTTP code.
+     *
      * @param checkoutData All checkout data (cart_id, shipping fields, payment method, etc.)
      * @param callback Callback with checkout response or error
      */
     public void checkout(Map<String, Object> checkoutData, final CheckoutCallback callback) {
         Log.d(TAG, "Checkout request: " + checkoutData);
-        
+
         cartApiService.checkout(checkoutData).enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
@@ -190,30 +194,75 @@ public class CartRepository {
                     Log.d(TAG, "✓ Checkout successful");
                     callback.onSuccess(response.body());
                 } else {
-                    String error = "Checkout failed: " + response.code();
-                    Log.e(TAG, "✗ " + error);
-                    
-                    // Try to get error details
-                    try {
-                        if (response.errorBody() != null) {
-                            String errorBody = response.errorBody().string();
-                            Log.e(TAG, "Error response: " + errorBody);
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Could not read error body", e);
-                    }
-                    
-                    callback.onError(error);
+                    // Try to parse a human-readable validation message from the error body
+                    String friendlyError = parseCheckoutError(response);
+                    Log.e(TAG, "✗ Checkout failed: " + response.code() + " — " + friendlyError);
+                    callback.onError(friendlyError);
                 }
             }
-            
+
             @Override
             public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                String error = "Network error: " + t.getMessage();
+                String error = "Network error — please check your connection.";
                 Log.e(TAG, "✗ " + error, t);
                 callback.onError(error);
             }
         });
+    }
+
+    /**
+     * Parse the error body from a failed checkout response into a user-friendly string.
+     * Handles the Laravel validation error shape:
+     * {"status":"error","message":"The given data was invalid.","errors":{"field":["msg1"]}}
+     */
+    private String parseCheckoutError(Response<Map<String, Object>> response) {
+        try {
+            if (response.errorBody() == null) {
+                return "Checkout failed. Please try again.";
+            }
+            String raw = response.errorBody().string();
+            Log.e(TAG, "Error response body: " + raw);
+
+            // Parse with Gson
+            com.google.gson.JsonObject json = new com.google.gson.JsonParser()
+                    .parse(raw).getAsJsonObject();
+
+            // Check for a structured "errors" map first (Laravel validation)
+            if (json.has("errors") && json.get("errors").isJsonObject()) {
+                com.google.gson.JsonObject errors = json.getAsJsonObject("errors");
+
+                // Special case: shipping_method_id not configured on the backend yet
+                if (errors.has("shipping_method_id")) {
+                    return "Shipping is not configured yet. Please contact the store — no shipping methods are set up.";
+                }
+
+                // Return the first validation message we find
+                for (Map.Entry<String, com.google.gson.JsonElement> entry : errors.entrySet()) {
+                    if (entry.getValue().isJsonArray()
+                            && entry.getValue().getAsJsonArray().size() > 0) {
+                        String field = entry.getKey().replace("_", " ");
+                        String msg   = entry.getValue().getAsJsonArray().get(0).getAsString();
+                        // Capitalise first letter
+                        if (!msg.isEmpty()) {
+                            msg = Character.toUpperCase(msg.charAt(0)) + msg.substring(1);
+                        }
+                        return msg;
+                    }
+                }
+            }
+
+            // Fall back to the top-level "message" field
+            if (json.has("message") && !json.get("message").isJsonNull()) {
+                String msg = json.get("message").getAsString();
+                if (!msg.isEmpty() && !"The given data was invalid.".equals(msg)) {
+                    return msg;
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Could not parse error body", e);
+        }
+        return "Checkout failed. Please check your details and try again.";
     }
     
     // Callback interfaces

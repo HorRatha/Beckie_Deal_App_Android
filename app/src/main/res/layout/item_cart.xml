@@ -54,16 +54,61 @@
                 android:maxLines="2"
                 android:ellipsize="end" />
 
-            <!-- Unit price -->
+            <!-- SKU -->
             <TextView
-                android:id="@+id/cartItemUnitPrice"
+                android:id="@+id/cartItemSku"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="$0.00 / unit"
-                android:textAppearance="@style/TextAppearance.App.Label"
-                android:textAllCaps="false"
-                android:textColor="@color/text_secondary" />
+                android:text="SKU: —"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="monospace" />
+
+            <!-- Price row: sale price + original price (strikethrough) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp">
+
+                <!-- Effective unit price (sale or regular) -->
+                <TextView
+                    android:id="@+id/cartItemUnitPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$0.00"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_secondary" />
+
+                <!-- Original price (strikethrough, visible only when on sale) -->
+                <TextView
+                    android:id="@+id/cartItemOriginalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="$0.00"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- Out of Stock badge (hidden when in stock) -->
+            <TextView
+                android:id="@+id/cartItemOutOfStock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="Out of Stock"
+                android:textSize="10sp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/badge_out_of_stock"
+                android:visibility="gone" />
 
             <!-- Quantity stepper + subtotal row -->
             <LinearLayout

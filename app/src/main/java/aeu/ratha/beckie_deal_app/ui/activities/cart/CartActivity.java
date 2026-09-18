@@ -235,22 +235,50 @@ public class CartActivity extends BaseActivity {
     private void inflateCartItem(LinearLayout parent, CartItem item) {
         View v = LayoutInflater.from(this).inflate(R.layout.item_cart, parent, false);
 
-        ImageView image       = v.findViewById(R.id.cartItemImage);
-        TextView  name        = v.findViewById(R.id.cartItemName);
-        TextView  unitPrice   = v.findViewById(R.id.cartItemUnitPrice);
-        TextView  quantityTv  = v.findViewById(R.id.cartItemQuantity);
-        TextView  subtotalTv  = v.findViewById(R.id.cartItemSubtotal);
-        ImageView decrement   = v.findViewById(R.id.cartItemDecrement);
-        ImageView increment   = v.findViewById(R.id.cartItemIncrement);
-        ImageView removeBtn   = v.findViewById(R.id.cartItemRemove);
+        ImageView image         = v.findViewById(R.id.cartItemImage);
+        TextView  name          = v.findViewById(R.id.cartItemName);
+        TextView  skuTv         = v.findViewById(R.id.cartItemSku);
+        TextView  unitPrice     = v.findViewById(R.id.cartItemUnitPrice);
+        TextView  originalPrice = v.findViewById(R.id.cartItemOriginalPrice);
+        TextView  outOfStock    = v.findViewById(R.id.cartItemOutOfStock);
+        TextView  quantityTv    = v.findViewById(R.id.cartItemQuantity);
+        TextView  subtotalTv    = v.findViewById(R.id.cartItemSubtotal);
+        ImageView decrement     = v.findViewById(R.id.cartItemDecrement);
+        ImageView increment     = v.findViewById(R.id.cartItemIncrement);
+        ImageView removeBtn     = v.findViewById(R.id.cartItemRemove);
         UiAnimations.pressBounce(decrement, increment, removeBtn);
 
-        // Bind static data
+        // ── Product name ───────────────────────────────────────────────────
         name.setText(item.getProductName());
-        String priceLabel = String.format(Locale.US, "$%.2f / unit", item.getPriceAsDouble());
-        unitPrice.setText(priceLabel);
 
-        // Load image with full URL
+        // ── SKU ────────────────────────────────────────────────────────────
+        aeu.ratha.beckie_deal_app.data.models.Product product = item.getProduct();
+        if (product != null && product.getSku() != null && !product.getSku().isEmpty()) {
+            skuTv.setText("SKU: " + product.getSku());
+            skuTv.setVisibility(View.VISIBLE);
+        } else {
+            skuTv.setVisibility(View.GONE);
+        }
+
+        // ── Price: show effective price; reveal strikethrough when on sale ─
+        double effectivePrice = (product != null && product.hasDiscount())
+                ? product.getSalePriceAsDouble()
+                : item.getPriceAsDouble();
+        unitPrice.setText(String.format(Locale.US, "$%.2f / unit", effectivePrice));
+
+        if (product != null && product.hasDiscount()) {
+            originalPrice.setText(String.format(Locale.US, "$%.2f", product.getPriceAsDouble()));
+            originalPrice.setPaintFlags(originalPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
+            originalPrice.setVisibility(View.VISIBLE);
+        } else {
+            originalPrice.setVisibility(View.GONE);
+        }
+
+        // ── Stock badge ────────────────────────────────────────────────────
+        boolean inStock = product == null || product.isInStock();
+        outOfStock.setVisibility(inStock ? View.GONE : View.VISIBLE);
+
+        // ── Thumbnail ──────────────────────────────────────────────────────
         String imageUrl = ImageUrlHelper.getImageUrlOrFallback(item.getProductThumbnail());
         Glide.with(this)
                 .load(imageUrl)

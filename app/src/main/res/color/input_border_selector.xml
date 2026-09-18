@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused state: use the Golden Yellow from your brand gradient -->
+    <item android:color="@color/brand_yellow" android:state_focused="true" />
+    <!-- Default idle state: soft neutral grey -->
+    <item android:color="@color/border_color" />
+</selector>

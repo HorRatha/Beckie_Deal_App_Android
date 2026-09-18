@@ -133,6 +133,18 @@ public class CouponManager {
     }
 
     /**
+     * Restore coupon state from an already-applied backend cart response.
+     * Called when the cart loads and already has a coupon_code + discount_total.
+     * Does NOT make an API call — it just syncs local state with what the backend reports.
+     */
+    public void applyCouponFromCart(String couponCode, double discountAmount) {
+        if (couponCode == null || couponCode.isEmpty()) return;
+        this.appliedCouponCode = couponCode;
+        this.appliedDiscountAmount = discountAmount;
+        Log.d(TAG, "Coupon state restored from cart: " + couponCode + " / $" + discountAmount);
+    }
+
+    /**
      * Remove currently applied coupon (local state only)
      * Note: Backend doesn't have a remove endpoint, so we just clear local state
      * The cart will be refreshed to get the updated state without coupon

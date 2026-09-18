@@ -95,6 +95,9 @@ public class Product {
     @SerializedName("sort_order")
     private int sortOrder;
     
+    @SerializedName("average_rating")
+    private String averageRating; // "0" format from API
+
     @SerializedName("category")
     private Category category;
     
@@ -261,7 +264,23 @@ public class Product {
     public int getSortOrder() {
         return sortOrder;
     }
-    
+
+    public String getAverageRating() {
+        return averageRating;
+    }
+
+    /**
+     * Get average rating as a float for display/calculations.
+     */
+    public float getAverageRatingAsFloat() {
+        if (averageRating == null || averageRating.isEmpty()) return 0f;
+        try {
+            return Float.parseFloat(averageRating);
+        } catch (NumberFormatException e) {
+            return 0f;
+        }
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -386,7 +405,11 @@ public class Product {
     public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
     }
-    
+
+    public void setAverageRating(String averageRating) {
+        this.averageRating = averageRating;
+    }
+
     public void setCategory(Category category) {
         this.category = category;
     }
