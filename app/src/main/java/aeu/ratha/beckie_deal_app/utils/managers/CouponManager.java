@@ -16,7 +16,31 @@ import retrofit2.Response;
 
 /**
  * Manages coupon codes, validation, and discount calculation.
- * Now uses real API instead of mock data.
+ * Handles API calls for coupon application to cart.
+ * 
+ * ⚠️ IMPORTANT: Backend Implementation Status
+ * 
+ * The CouponApiService endpoint is NOT YET IMPLEMENTED (404) on the backend.
+ * This manager gracefully handles 404 errors and allows the app to continue functioning.
+ * 
+ * Architecture:
+ * - All coupon API calls enqueue via CouponApiService
+ * - 404 responses are caught and logged (not treated as fatal errors)
+ * - When backend implements the endpoint, callbacks will receive proper responses
+ * - No code changes needed in this manager once backend is ready
+ * 
+ * Expected Backend Implementation:
+ * [ ] POST /api/v1/coupons/apply - Apply coupon code to cart
+ *      Request: { "code": "WELCOME10", "cart_id": "1" }
+ *      Response: { "status": "success", "data": { "coupon": "WELCOME10", 
+ *                  "discount_amount": 159.9, "grand_total": 1439.1, "cart": {...} } }
+ * 
+ * Current Functionality:
+ * - Coupon input field in checkout (UI ready)
+ * - Methods implemented but handle 404 gracefully
+ * - Checkout proceeds even if coupon endpoint unavailable
+ * 
+ * See CouponApiService.java for endpoint contract details.
  */
 public class CouponManager {
     private static final String TAG = "CouponManager";

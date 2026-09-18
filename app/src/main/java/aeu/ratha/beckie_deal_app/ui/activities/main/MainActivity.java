@@ -12,6 +12,7 @@ import aeu.ratha.beckie_deal_app.ui.activities.product.ProductListActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.SearchActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
+import aeu.ratha.beckie_deal_app.ui.adapters.PromotionBannerAdapter;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
@@ -64,6 +65,7 @@ public class MainActivity extends BaseActivity {
     private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
     private WishlistRepository wishlistRepository;
     private CartRepository cartRepository;
+    private aeu.ratha.beckie_deal_app.data.repository.PromotionRepository promotionRepository;
 
     // Auto-scroll for horizontal sections
     private Handler autoScrollHandler;
@@ -96,9 +98,11 @@ public class MainActivity extends BaseActivity {
         initRepository();
         fetchCategories(); // Fetch from API
         fetchProducts(); // Fetch from API
+        fetchPromotions(); // Fetch from API - promotions displayed automatically when ready
         drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         setupSearchBar();
+        setupPromotionsCarousel(); // Setup arrow controls (data displayed when fetched)
         setupHeroBanner();
         setupProducts();
         setupNewArrivalsBanner();
@@ -110,17 +114,14 @@ public class MainActivity extends BaseActivity {
         setupEntranceAnimation();
     }
 
-    /** Fades/slides the top bar, search bar, hero banner and section headers into
-     *  place on load. productsGrid (the RecyclerView of product cards) is left
-     *  completely untouched — same for the horizontal product-card rows and
-     *  category chips, since those render product-like cards too. */
     private void setupEntranceAnimation() {
         UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
         UiAnimations.fadeSlideUp(findViewById(R.id.searchBar), 60);
+        UiAnimations.fadeSlideUp(findViewById(R.id.promotionBannerCard), 80);
         UiAnimations.fadeSlideUp(findViewById(R.id.bannerCard), 100);
         UiAnimations.fadeSlideUp(findViewById(R.id.categoriesSectionHeader), 150);
         UiAnimations.fadeSlideUp(findViewById(R.id.newCollectionSectionHeader), 190);
-        UiAnimations.fadeSlideUp(findViewById(R.id.couponCard), 210);
+        UiAnimations.fadeSlideUp(findViewById(R.id.newArrivalsBannerViewPager), 210);
         UiAnimations.fadeSlideUp(findViewById(R.id.topSellingSectionHeader), 230);
         UiAnimations.fadeSlideUp(findViewById(R.id.featuredProductsHeader), 270);
     }
@@ -165,6 +166,7 @@ public class MainActivity extends BaseActivity {
         productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
         wishlistRepository = new WishlistRepository(this);
         cartRepository = new CartRepository(this);
+        promotionRepository = new aeu.ratha.beckie_deal_app.data.repository.PromotionRepository(this);
     }
     
     /**
@@ -307,6 +309,176 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, "Failed to load categories. Please check your connection.", 
                 Toast.LENGTH_SHORT).show();
         });
+    }
+
+    /**
+     * Fetch active promotions from backend API.
+     * Endpoint: GET /api/v1/promotions
+     */
+    private void fetchPromotions() {
+        Log.d(TAG, "=== FETCHING PROMOTIONS FROM API ===");
+        
+        promotionRepository.getPromotions(new aeu.ratha.beckie_deal_app.data.repository.PromotionRepository.PromotionCallback() {
+            @Override
+            public void onSuccess(java.util.List<aeu.ratha.beckie_deal_app.data.models.Promotion> promotions) {
+                Log.d(TAG, "✓ Loaded " + promotions.size() + " promotions from API");
+                runOnUiThread(() -> {
+                    displayPromotionsCarousel(promotions);
+                });
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "✗ Failed to fetch promotions: " + errorMessage);
+                runOnUiThread(() -> {
+                    // Show error state
+                    ViewPager2 promotionPager = findViewById(R.id.promotionBannerViewPager);
+                    if (promotionPager != null) {
+                        promotionPager.setVisibility(View.GONE);
+                        Log.e(TAG, "Hiding promotions banner due to error");
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Setup promotions banner carousel section on home screen.
+     * Note: Adapter is created in displayPromotionsCarousel after data is fetched
+     */
+    private void setupPromotionsCarousel() {
+        ImageView arrowLeft = findViewById(R.id.promotionBannerArrowLeft);
+        ImageView arrowRight = findViewById(R.id.promotionBannerArrowRight);
+        ViewPager2 promotionPager = findViewById(R.id.promotionBannerViewPager);
+        
+        if (promotionPager == null) {
+            Log.w(TAG, "Promotion banner UI elements not found in layout");
+            return;
+        }
+        
+        // Setup navigation arrows
+        arrowLeft.setOnClickListener(v -> {
+            int currentItem = promotionPager.getCurrentItem();
+            if (currentItem > 0) {
+                promotionPager.setCurrentItem(currentItem - 1, true);
+            }
+        });
+        
+        arrowRight.setOnClickListener(v -> {
+            RecyclerView.Adapter adapter = promotionPager.getAdapter();
+            if (adapter != null) {
+                int currentItem = promotionPager.getCurrentItem();
+                if (currentItem < adapter.getItemCount() - 1) {
+                    promotionPager.setCurrentItem(currentItem + 1, true);
+                }
+            }
+        });
+        
+        Log.d(TAG, "✓ Promotion banner arrow controls setup");
+    }
+    
+    /**
+     * Setup dot indicators for promotion carousel.
+     */
+    private void setupPromotionDots(ViewPager2 viewPager, LinearLayout dotsContainer, int count) {
+        dotsContainer.removeAllViews();
+        
+        for (int i = 0; i < count; i++) {
+            View dot = new View(this);
+            dot.setLayoutParams(new LinearLayout.LayoutParams(8, 8));
+            dot.setBackgroundResource(R.drawable.dot_indicator);
+            dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                i == 0 ? getResources().getColor(R.color.primary, getTheme()) 
+                       : getResources().getColor(R.color.text_muted, getTheme())));
+            
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(8, 8);
+            params.setMargins(4, 0, 4, 0);
+            dot.setLayoutParams(params);
+            dotsContainer.addView(dot);
+        }
+        
+        // Update dots on page change
+        viewPager.registerOnPageChangeCallback(new androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < dotsContainer.getChildCount(); i++) {
+                    View dot = dotsContainer.getChildAt(i);
+                    dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                        i == position ? getResources().getColor(R.color.primary, getTheme())
+                                     : getResources().getColor(R.color.text_muted, getTheme())));
+                }
+            }
+        });
+    }
+
+    /**
+     * Display promotions in the banner carousel (called when data is fetched).
+     */
+    private void displayPromotionsCarousel(java.util.List<aeu.ratha.beckie_deal_app.data.models.Promotion> promotions) {
+        ViewPager2 promotionPager = findViewById(R.id.promotionBannerViewPager);
+        LinearLayout dotsContainer = findViewById(R.id.promotionBannerDotsContainer);
+        
+        Log.d(TAG, "displayPromotionsCarousel called with " + (promotions != null ? promotions.size() : "null") + " promotions");
+        
+        if (promotionPager == null) {
+            Log.e(TAG, "❌ Promotion pager is NULL! Cannot find R.id.promotionBannerViewPager");
+            return;
+        }
+        
+        if (promotions == null || promotions.isEmpty()) {
+            Log.e(TAG, "❌ Promotions list is null or empty!");
+            // Set red background so we know it's empty
+            promotionPager.setBackgroundColor(0xFFFF0000);
+            return;
+        }
+        
+        Log.d(TAG, "✓ Creating adapter with " + promotions.size() + " promotions");
+        for (aeu.ratha.beckie_deal_app.data.models.Promotion p : promotions) {
+            Log.d(TAG, "  Promotion: " + p.getCode() + " - " + p.getName());
+        }
+        
+        // Create and set adapter
+        try {
+            PromotionBannerAdapter adapter = new PromotionBannerAdapter(this, promotions);
+            promotionPager.setAdapter(adapter);
+            promotionPager.setVisibility(View.VISIBLE);
+            promotionPager.setBackgroundColor(0x00000000); // Transparent
+            
+            Log.d(TAG, "✓ Adapter set successfully, item count: " + adapter.getItemCount());
+            
+            // Setup dot indicators
+            if (dotsContainer != null) {
+                setupPromotionDots(promotionPager, dotsContainer, adapter.getItemCount());
+                Log.d(TAG, "✓ Dots setup complete");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Error setting adapter: " + e.getMessage(), e);
+            promotionPager.setBackgroundColor(0xFFFFFF00); // Yellow for error
+        }
+    }
+
+    /**
+     * Parse ISO 8601 date string to short date format (e.g., "Oct 13").
+     */
+    private String parseExpiryDate(String isoDate) {
+        if (isoDate == null || isoDate.isEmpty()) {
+            return "Unlimited";
+        }
+        
+        try {
+            // Parse ISO date like "2026-10-13T01:34:03+00:00"
+            java.text.SimpleDateFormat isoFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", 
+                java.util.Locale.getDefault());
+            java.util.Date date = isoFormat.parse(isoDate);
+            
+            // Format as "Oct 13"
+            java.text.SimpleDateFormat displayFormat = new java.text.SimpleDateFormat("MMM dd", 
+                java.util.Locale.getDefault());
+            return displayFormat.format(date);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to parse date: " + isoDate, e);
+            return "Soon";
+        }
     }
 
     private void setupTopBar() {
@@ -727,44 +899,11 @@ public class MainActivity extends BaseActivity {
     }
 
     // ── Coupon Section ────────────────────────────────────────────────────────
-
+    // DEPRECATED - Coupons now shown in promotions carousel
+    
+    @Deprecated
     private void setupCouponSection() {
-        MaterialCardView couponCard = findViewById(R.id.couponCard);
-        TextView couponCodeText = findViewById(R.id.couponCodeText);
-        com.google.android.material.button.MaterialButton copyButton = findViewById(R.id.copyCouponButton);
-
-        if (couponCard == null || couponCodeText == null || copyButton == null) return;
-
-        // Add bounce animation to the card
-        UiAnimations.pressBounce(couponCard);
-        UiAnimations.pressBounce(copyButton);
-
-        // Copy button click handler
-        copyButton.setOnClickListener(v -> {
-            String couponCode = couponCodeText.getText().toString();
-            
-            // Copy to clipboard
-            android.content.ClipboardManager clipboard = 
-                (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            android.content.ClipData clip = android.content.ClipData.newPlainText("Coupon Code", couponCode);
-            clipboard.setPrimaryClip(clip);
-            
-            // Show feedback
-            Toast.makeText(this, "Coupon code copied: " + couponCode, Toast.LENGTH_SHORT).show();
-            
-            // Change button text temporarily
-            copyButton.setText("Copied!");
-            copyButton.setIconResource(R.drawable.ic_check_circle_24);
-            
-            // Reset after 2 seconds
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                copyButton.setText("Copy");
-                copyButton.setIconResource(R.drawable.ic_copy_24);
-            }, 2000);
-        });
-
-        // Make entire card clickable to copy
-        couponCard.setOnClickListener(v -> copyButton.performClick());
+        // Removed - promotions carousel now displays all promotions with codes
     }
 
     // ── Top Selling horizontal scroll ─────────────────────────────────────────

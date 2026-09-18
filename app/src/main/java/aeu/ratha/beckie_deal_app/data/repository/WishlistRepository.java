@@ -17,6 +17,32 @@ import retrofit2.Response;
 /**
  * Repository for wishlist data operations.
  * Handles all wishlist-related API calls and business logic.
+ * 
+ * ⚠️ IMPORTANT: Backend Implementation Status
+ * 
+ * The WishlistApiService endpoints are NOT YET IMPLEMENTED (404) on the backend.
+ * This repository gracefully handles 404 errors and allows the app to continue functioning.
+ * 
+ * Architecture:
+ * - All methods enqueue API calls via WishlistApiService
+ * - 404 responses are caught and logged (not treated as fatal errors)
+ * - When backend implements the endpoints, callbacks will receive proper responses
+ * - No code changes needed in this repository once backend is ready
+ * 
+ * Expected Backend Implementation Timeline:
+ * [ ] GET /api/v1/wishlist - Get all wishlist items
+ * [ ] PUT /api/v1/wishlist - Create/update wishlist
+ * [ ] DELETE /api/v1/wishlist - Delete wishlist
+ * [ ] GET /api/v1/wishlist/check?product_id={id} - Check if product in wishlist
+ * [ ] POST /api/v1/wishlist/items - Add item to wishlist
+ * [ ] DELETE /api/v1/wishlist/items/{id} - Remove item from wishlist
+ * 
+ * Current Functionality:
+ * - Heart icon click adds/removes products (UI feedback works)
+ * - Backend integration ready (methods are implemented, awaiting endpoint availability)
+ * - No workarounds or fallback logic needed in UI code
+ * 
+ * See WishlistApiService.java for endpoint contract details.
  */
 public class WishlistRepository {
     

@@ -126,6 +126,57 @@
                     android:textSize="@dimen/text_size_body" />
             </FrameLayout>
 
+            <!-- PROMOTIONS BANNER CAROUSEL - Replaces old coupon section -->
+            <FrameLayout
+                android:id="@+id/promotionBannerCard"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="visible">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/promotionBannerViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <!-- Left arrow -->
+                <ImageView
+                    android:id="@+id/promotionBannerArrowLeft"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/banner_arrow_bg"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_left"
+                    android:contentDescription="Previous"
+                    app:tint="#FFFFFF" />
+
+                <!-- Right arrow -->
+                <ImageView
+                    android:id="@+id/promotionBannerArrowRight"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/banner_arrow_bg"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="Next"
+                    app:tint="#FFFFFF" />
+
+                <!-- Dot indicators -->
+                <LinearLayout
+                    android:id="@+id/promotionBannerDotsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal" />
+
+            </FrameLayout>
+
             <!-- Hero Banner Carousel -->
             <FrameLayout
                 android:id="@+id/bannerCard"
@@ -294,118 +345,6 @@
             </HorizontalScrollView>
 
 
-            <!-- COUPON SECTION -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/couponCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="20dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
-                
-                <!-- Background with gradient -->
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/coupon_gradient_bg">
-                
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-                    
-                    <!-- Left: Gift Icon -->
-                    <FrameLayout
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/coupon_icon_bg">
-                        
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_gift_24"
-                            app:tint="@color/coupon_accent" />
-                    </FrameLayout>
-                    
-                    <!-- Middle: Coupon Info -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:orientation="vertical">
-                        
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="DEAL OF THE DAY"
-                            android:textColor="@color/coupon_label"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.05" />
-                        
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Extra 10% Off Cart"
-                            android:textColor="@color/white_fixed"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="2dp" />
-                        
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="2dp"
-                            android:gravity="center_vertical">
-                            
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Use code "
-                                android:textColor="@color/coupon_subtext"
-                                android:textSize="12sp" />
-                            
-                            <TextView
-                                android:id="@+id/couponCodeText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="WELCOME10"
-                                android:textColor="@color/coupon_code_highlight"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </LinearLayout>
-                    
-                    <!-- Right: Copy Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/copyCouponButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="Copy"
-                        android:textColor="@color/coupon_dark"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textAllCaps="false"
-                        android:backgroundTint="@color/coupon_button_bg"
-                        app:cornerRadius="12dp"
-                        app:icon="@drawable/ic_copy_24"
-                        app:iconTint="@color/coupon_dark"
-                        app:iconGravity="textStart"
-                        app:iconPadding="4dp"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="16dp"
-                        android:minWidth="0dp"
-                        style="@style/Widget.Material3.Button.ElevatedButton" />
-                </LinearLayout>
-                </FrameLayout>
-            </com.google.android.material.card.MaterialCardView>
             <!--  NEW ARRIVALS BANNER  Carousel (reusable)  -->
             <FrameLayout
                 android:layout_width="match_parent"

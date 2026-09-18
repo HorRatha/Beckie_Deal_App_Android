@@ -137,25 +137,15 @@ public class ProductMapper {
     
     /**
      * Generate free items text from product details.
+     * Backend does not provide free shipping info, so always return empty string.
+     * Free shipping will be determined by backend in future updates.
      * 
      * @param apiProduct Product from API
-     * @return Free items text (e.g., "Free shipping" or "")
+     * @return Free items text (currently always empty)
      */
     private static String generateFreeItems(aeu.ratha.beckie_deal_app.data.models.Product apiProduct) {
-        // Check if product is featured or has sale price
-        if (apiProduct.isFeatured()) {
-            return "Free shipping included";
-        }
-        
-        if (apiProduct.hasDiscount()) {
-            return "Special offer!";
-        }
-        
-        // Check if high value product (free shipping threshold)
-        if (apiProduct.getPriceAsDouble() >= 99.0) {
-            return "Free shipping";
-        }
-        
+        // Backend does not provide free shipping information
+        // This will be removed or updated when backend adds free_shipping_info field
         return "";
     }
     

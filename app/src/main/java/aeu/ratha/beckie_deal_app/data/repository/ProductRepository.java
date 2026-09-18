@@ -4,328 +4,398 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import aeu.ratha.beckie_deal_app.data.api.ProductApiService;
 import aeu.ratha.beckie_deal_app.data.models.Product;
+import aeu.ratha.beckie_deal_app.data.models.ProductDetail;
 import aeu.ratha.beckie_deal_app.data.models.ProductResponse;
+import aeu.ratha.beckie_deal_app.data.models.SingleProductResponse;
 import aeu.ratha.beckie_deal_app.network.RetrofitClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Repository for managing product data from API.
- * Handles API calls, caching, and error handling.
+ * Repository for managing product data from the API.
+ *
+ * Architecture notes:
+ *  - The product LIST endpoint (GET /products) returns flat items with NO category/brand info.
+ *  - The product DETAIL endpoint (GET /products/{uuid}) returns the full object with
+ *    category, brand, variants, and images.
+ *  - Category/brand filtering is done client-side: fetch all products, then load each
+ *    product's detail (cached) to get its category and brand.
+ *  - There are only ~18 products total, so individual detail fetches are acceptable.
  */
 public class ProductRepository {
-    
+
     private static final String TAG = "ProductRepository";
     private static ProductRepository instance;
+
     private final ProductApiService apiService;
-    private List<Product> cachedProducts;
-    
+
+    /** Full list cache — reset on each fresh fetch (offset == 0). */
+    private final List<Product> cachedProducts = new ArrayList<>();
+
+    /** Detail cache keyed by product UUID. */
+    private final Map<String, ProductDetail> detailCache = new HashMap<>();
+
     private ProductRepository(Context context) {
         this.apiService = RetrofitClient.getClient(context).create(ProductApiService.class);
-        this.cachedProducts = new ArrayList<>();
     }
-    
-    /**
-     * Get singleton instance of ProductRepository.
-     */
+
     public static synchronized ProductRepository getInstance(Context context) {
         if (instance == null) {
             instance = new ProductRepository(context.getApplicationContext());
         }
         return instance;
     }
-    
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // List
+    // ─────────────────────────────────────────────────────────────────────────
+
     /**
      * Fetch all products with pagination.
-     * 
-     * @param limit Maximum number of products to return
-     * @param offset Number of products to skip
-     * @param useCache Whether to use cached data if available
-     * @param callback Callback with products or error message
+     *
+     * @param limit      Max items to return
+     * @param offset     Starting offset
+     * @param useCache   Return cached list if available
+     * @param callback   Result callback
      */
-    public void fetchProducts(int limit, int offset, boolean useCache, ProductCallback callback) {
+    public void fetchProducts(int limit, int offset, boolean useCache,
+                              @NonNull ProductCallback callback) {
         if (useCache && !cachedProducts.isEmpty()) {
-            Log.d(TAG, "Returning cached products: " + cachedProducts.size());
-            callback.onSuccess(cachedProducts, cachedProducts.size());
+            Log.d(TAG, "Returning " + cachedProducts.size() + " cached products");
+            callback.onSuccess(new ArrayList<>(cachedProducts), cachedProducts.size());
             return;
         }
-        
-        Log.d(TAG, "Fetching products from API (limit=" + limit + ", offset=" + offset + ")");
-        
-        Call<ProductResponse> call = apiService.getProducts(limit, offset);
-        call.enqueue(new Callback<ProductResponse>() {
+
+        Log.d(TAG, "Fetching products list (limit=" + limit + ", offset=" + offset + ")");
+        apiService.getProducts(limit, offset).enqueue(new Callback<ProductResponse>() {
             @Override
-            public void onResponse(@NonNull Call<ProductResponse> call, 
+            public void onResponse(@NonNull Call<ProductResponse> call,
                                    @NonNull Response<ProductResponse> response) {
+                handleListResponse(response, offset, callback, "all products");
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
+                handleFailure(t, callback);
+            }
+        });
+    }
+
+    /**
+     * Search products by keyword (name-based, server-side).
+     */
+    public void searchProducts(String query, int limit, int offset,
+                               @NonNull ProductCallback callback) {
+        Log.d(TAG, "Searching products: '" + query + "'");
+        apiService.searchProducts(query, limit, offset).enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ProductResponse> call,
+                                   @NonNull Response<ProductResponse> response) {
+                handleListResponse(response, -1, callback, "search: " + query);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
+                handleFailure(t, callback);
+            }
+        });
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Client-side category / brand filtering
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Fetch all products then filter client-side by category integer ID.
+     *
+     * Backend Constraint:
+     * - GET /products returns a flat list; category_id field is NOT included per product
+     * - The ?category_id= query filter expects UUID format, but master/categories returns integer IDs
+     * - Solution: fetch all products and individual product details to get category information
+     *
+     * Category Hierarchy:
+     * - Categories have parent_id relationships (0 = root, otherwise parent ID)
+     * - This method filters by EXACT category ID match (not including subcategories)
+     * - Pass the exact category ID you want (root ID or subcategory ID)
+     * - Products are returned only if their category.getId() exactly matches categoryId
+     *
+     * @param categoryId  Integer ID from master/categories (both root and subcategory IDs supported)
+     */
+    public void fetchProductsByCategory(int categoryId, int limit, int offset,
+                                        @NonNull ProductCallback callback) {
+        Log.d(TAG, "Fetching products for category id=" + categoryId + " (client-side filter)");
+        fetchAllProductsWithDetails(limit, offset, new ProductCallback() {
+            @Override
+            public void onSuccess(List<Product> products, int total) {
+                List<Product> filtered = new ArrayList<>();
+                for (Product p : products) {
+                    ProductDetail detail = detailCache.get(p.getId());
+                    if (detail != null && detail.getCategory() != null
+                            && detail.getCategory().getId() == categoryId) {
+                        filtered.add(p);
+                    }
+                }
+                Log.d(TAG, "Category filter id=" + categoryId + " → " + filtered.size() + " products");
+                callback.onSuccess(filtered, filtered.size());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                callback.onError(errorMessage);
+            }
+        });
+    }
+
+    /**
+     * Fetch all products then filter client-side by brand integer ID.
+     *
+     * @param brandId  Integer ID from master/brands
+     */
+    public void fetchProductsByBrand(int brandId, int limit, int offset,
+                                     @NonNull ProductCallback callback) {
+        Log.d(TAG, "Fetching products for brand id=" + brandId + " (client-side filter)");
+        fetchAllProductsWithDetails(limit, offset, new ProductCallback() {
+            @Override
+            public void onSuccess(List<Product> products, int total) {
+                List<Product> filtered = new ArrayList<>();
+                for (Product p : products) {
+                    ProductDetail detail = detailCache.get(p.getId());
+                    if (detail != null && detail.getBrand() != null
+                            && detail.getBrand().getId() == brandId) {
+                        filtered.add(p);
+                    }
+                }
+                Log.d(TAG, "Brand filter id=" + brandId + " → " + filtered.size() + " products");
+                callback.onSuccess(filtered, filtered.size());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                callback.onError(errorMessage);
+            }
+        });
+    }
+
+    /**
+     * Fetch all products then filter client-side by both category AND brand.
+     */
+    public void fetchProductsByCategoryAndBrand(int categoryId, int brandId,
+                                                int limit, int offset,
+                                                @NonNull ProductCallback callback) {
+        Log.d(TAG, "Fetching products for category=" + categoryId + " & brand=" + brandId);
+        fetchAllProductsWithDetails(limit, offset, new ProductCallback() {
+            @Override
+            public void onSuccess(List<Product> products, int total) {
+                List<Product> filtered = new ArrayList<>();
+                for (Product p : products) {
+                    ProductDetail detail = detailCache.get(p.getId());
+                    if (detail != null
+                            && detail.getCategory() != null
+                            && detail.getCategory().getId() == categoryId
+                            && detail.getBrand() != null
+                            && detail.getBrand().getId() == brandId) {
+                        filtered.add(p);
+                    }
+                }
+                Log.d(TAG, "Category+Brand filter → " + filtered.size() + " products");
+                callback.onSuccess(filtered, filtered.size());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                callback.onError(errorMessage);
+            }
+        });
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Single product detail
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Fetch a single product's full detail by UUID.
+     * Uses an in-memory cache to avoid redundant calls.
+     *
+     * @param productId  UUID string (e.g. "01a09874-da51-7036-96ce-42b1fca277ce")
+     * @param callback   Result callback
+     */
+    public void fetchProductDetail(String productId,
+                                   @NonNull SingleProductCallback callback) {
+        // Return from cache if available
+        if (detailCache.containsKey(productId)) {
+            Log.d(TAG, "Returning cached detail for " + productId);
+            callback.onSuccess(detailCache.get(productId));
+            return;
+        }
+
+        Log.d(TAG, "Fetching detail for product " + productId);
+        apiService.getProduct(productId).enqueue(new Callback<SingleProductResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<SingleProductResponse> call,
+                                   @NonNull Response<SingleProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    ProductResponse productResponse = response.body();
-                    
-                    if (productResponse.isSuccess() && productResponse.getData() != null) {
-                        List<Product> products = productResponse.getData();
-                        int total = productResponse.getTotalCount();
-                        
-                        Log.d(TAG, "✓ Successfully fetched " + products.size() + " products (total: " + total + ")");
-                        
-                        // Update cache
-                        if (offset == 0) {
-                            cachedProducts.clear();
+                    SingleProductResponse spr = response.body();
+                    if (spr.isSuccess() && spr.getData() != null) {
+                        ProductDetail detail = spr.getData();
+                        detailCache.put(productId, detail);
+                        Log.d(TAG, "✓ Fetched detail: " + detail.getName()
+                                + " | category=" + (detail.getCategory() != null ? detail.getCategory().getName() : "null")
+                                + " | brand=" + (detail.getBrand() != null ? detail.getBrand().getName() : "null")
+                                + " | variants=" + (detail.getVariants() != null ? detail.getVariants().size() : 0)
+                                + " | images=" + (detail.getImages() != null ? detail.getImages().size() : 0));
+                        callback.onSuccess(detail);
+                    } else {
+                        callback.onError("API returned non-success: " + spr.getStatus());
+                    }
+                } else {
+                    callback.onError("HTTP " + response.code() + ": " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<SingleProductResponse> call,
+                                  @NonNull Throwable t) {
+                callback.onError("Network error: " + t.getMessage());
+            }
+        });
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Internal helpers
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Fetches all products from the list endpoint, then fetches each product's detail
+     * (in parallel, cached) so that category/brand info is available for filtering.
+     */
+    private void fetchAllProductsWithDetails(int limit, int offset,
+                                              @NonNull ProductCallback callback) {
+        fetchProducts(limit, offset, false, new ProductCallback() {
+            @Override
+            public void onSuccess(List<Product> products, int total) {
+                if (products.isEmpty()) {
+                    callback.onSuccess(products, total);
+                    return;
+                }
+
+                // Fetch details in parallel; use a counter to know when all are done
+                final int[] remaining = {products.size()};
+                final boolean[] failed = {false};
+
+                for (Product product : products) {
+                    // Skip if already cached
+                    if (detailCache.containsKey(product.getId())) {
+                        synchronized (remaining) {
+                            remaining[0]--;
+                            if (remaining[0] == 0) {
+                                callback.onSuccess(products, total);
+                            }
                         }
-                        cachedProducts.addAll(products);
-                        
-                        callback.onSuccess(products, total);
-                    } else {
-                        String errorMsg = "API returned non-success status: " + productResponse.getStatus();
-                        Log.e(TAG, "✗ " + errorMsg);
-                        callback.onError(errorMsg);
+                        continue;
                     }
-                } else {
-                    String errorMsg = "API error: " + response.code() + " - " + response.message();
-                    Log.e(TAG, "✗ " + errorMsg);
-                    callback.onError(errorMsg);
+
+                    fetchProductDetail(product.getId(), new SingleProductCallback() {
+                        @Override
+                        public void onSuccess(ProductDetail detail) {
+                            synchronized (remaining) {
+                                remaining[0]--;
+                                if (remaining[0] == 0 && !failed[0]) {
+                                    callback.onSuccess(products, total);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            Log.w(TAG, "Could not fetch detail for product " +
+                                    product.getId() + ": " + errorMessage);
+                            // Don't fail the whole request — just skip this product's detail
+                            synchronized (remaining) {
+                                remaining[0]--;
+                                if (remaining[0] == 0 && !failed[0]) {
+                                    callback.onSuccess(products, total);
+                                }
+                            }
+                        }
+                    });
                 }
             }
-            
+
             @Override
-            public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
-                String errorMsg = "Network error: " + t.getMessage();
-                Log.e(TAG, "✗ " + errorMsg, t);
-                callback.onError(errorMsg);
+            public void onError(String errorMessage) {
+                callback.onError(errorMessage);
             }
         });
     }
-    
-    /**
-     * Fetch products filtered by category.
-     * 
-     * @param categoryId Category ID to filter by
-     * @param limit Maximum number of products to return
-     * @param offset Number of products to skip
-     * @param callback Callback with products or error message
-     */
-    public void fetchProductsByCategory(int categoryId, int limit, int offset, ProductCallback callback) {
-        Log.d(TAG, "Fetching products for category " + categoryId + 
-            " (limit=" + limit + ", offset=" + offset + ")");
-        
-        Call<ProductResponse> call = apiService.getProductsByCategory(categoryId, limit, offset);
-        call.enqueue(new Callback<ProductResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ProductResponse> call, 
-                                   @NonNull Response<ProductResponse> response) {
-                handleProductResponse(response, callback, "category " + categoryId);
-            }
-            
-            @Override
-            public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
-                handleFailure(t, callback);
-            }
-        });
-    }
-    
-    /**
-     * Fetch products filtered by brand.
-     * 
-     * @param brandId Brand ID to filter by
-     * @param limit Maximum number of products to return
-     * @param offset Number of products to skip
-     * @param callback Callback with products or error message
-     */
-    public void fetchProductsByBrand(int brandId, int limit, int offset, ProductCallback callback) {
-        Log.d(TAG, "Fetching products for brand " + brandId + 
-            " (limit=" + limit + ", offset=" + offset + ")");
-        
-        Call<ProductResponse> call = apiService.getProductsByBrand(brandId, limit, offset);
-        call.enqueue(new Callback<ProductResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ProductResponse> call, 
-                                   @NonNull Response<ProductResponse> response) {
-                handleProductResponse(response, callback, "brand " + brandId);
-            }
-            
-            @Override
-            public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
-                handleFailure(t, callback);
-            }
-        });
-    }
-    
-    /**
-     * Fetch products filtered by both category and brand.
-     * 
-     * @param categoryId Category ID to filter by
-     * @param brandId Brand ID to filter by
-     * @param limit Maximum number of products to return
-     * @param offset Number of products to skip
-     * @param callback Callback with products or error message
-     */
-    public void fetchProductsByCategoryAndBrand(int categoryId, int brandId, 
-                                                int limit, int offset, ProductCallback callback) {
-        Log.d(TAG, "Fetching products for category " + categoryId + 
-            " and brand " + brandId + " (limit=" + limit + ", offset=" + offset + ")");
-        
-        Call<ProductResponse> call = apiService.getProductsByCategoryAndBrand(
-            categoryId, brandId, limit, offset);
-        call.enqueue(new Callback<ProductResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ProductResponse> call, 
-                                   @NonNull Response<ProductResponse> response) {
-                handleProductResponse(response, callback, 
-                    "category " + categoryId + " and brand " + brandId);
-            }
-            
-            @Override
-            public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
-                handleFailure(t, callback);
-            }
-        });
-    }
-    
-    /**
-     * Fetch featured products.
-     * 
-     * @param limit Maximum number of products to return
-     * @param offset Number of products to skip
-     * @param callback Callback with products or error message
-     */
-    public void fetchFeaturedProducts(int limit, int offset, ProductCallback callback) {
-        Log.d(TAG, "Fetching featured products (limit=" + limit + ", offset=" + offset + ")");
-        
-        Call<ProductResponse> call = apiService.getFeaturedProducts(true, limit, offset);
-        call.enqueue(new Callback<ProductResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ProductResponse> call, 
-                                   @NonNull Response<ProductResponse> response) {
-                handleProductResponse(response, callback, "featured products");
-            }
-            
-            @Override
-            public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
-                handleFailure(t, callback);
-            }
-        });
-    }
-    
-    /**
-     * Fetch a single product by ID.
-     * 
-     * @param productId Product ID
-     * @param callback Callback with product or error message
-     */
-    public void fetchProduct(int productId, SingleProductCallback callback) {
-        Log.d(TAG, "Fetching product " + productId);
-        
-        Call<ProductResponse> call = apiService.getProduct(productId);
-        call.enqueue(new Callback<ProductResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ProductResponse> call, 
-                                   @NonNull Response<ProductResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    ProductResponse productResponse = response.body();
-                    
-                    if (productResponse.isSuccess() && productResponse.getData() != null 
-                        && !productResponse.getData().isEmpty()) {
-                        Product product = productResponse.getData().get(0);
-                        Log.d(TAG, "✓ Successfully fetched product: " + product.getName());
-                        callback.onSuccess(product);
-                    } else {
-                        String errorMsg = "API returned no product data";
-                        Log.e(TAG, "✗ " + errorMsg);
-                        callback.onError(errorMsg);
-                    }
-                } else {
-                    String errorMsg = "API error: " + response.code() + " - " + response.message();
-                    Log.e(TAG, "✗ " + errorMsg);
-                    callback.onError(errorMsg);
-                }
-            }
-            
-            @Override
-            public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
-                handleFailure(t, new ProductCallback() {
-                    @Override
-                    public void onSuccess(List<Product> products, int total) {}
-                    
-                    @Override
-                    public void onError(String errorMessage) {
-                        callback.onError(errorMessage);
-                    }
-                });
-            }
-        });
-    }
-    
-    /**
-     * Common response handler for product list endpoints.
-     */
-    private void handleProductResponse(Response<ProductResponse> response, 
-                                       ProductCallback callback, String context) {
+
+    private void handleListResponse(Response<ProductResponse> response, int offset,
+                                    ProductCallback callback, String ctx) {
         if (response.isSuccessful() && response.body() != null) {
-            ProductResponse productResponse = response.body();
-            
-            if (productResponse.isSuccess() && productResponse.getData() != null) {
-                List<Product> products = productResponse.getData();
-                int total = productResponse.getTotalCount();
-                
-                Log.d(TAG, "✓ Successfully fetched " + products.size() + 
-                    " products for " + context + " (total: " + total + ")");
-                
+            ProductResponse pr = response.body();
+            if (pr.isSuccess() && pr.getData() != null) {
+                List<Product> products = pr.getData();
+                int total = pr.getTotalCount();
+                Log.d(TAG, "✓ Fetched " + products.size() + " products [" + ctx + "] total=" + total);
+                if (offset == 0) {
+                    cachedProducts.clear();
+                    cachedProducts.addAll(products);
+                }
                 callback.onSuccess(products, total);
             } else {
-                String errorMsg = "API returned non-success status: " + productResponse.getStatus();
-                Log.e(TAG, "✗ " + errorMsg + " for " + context);
-                callback.onError(errorMsg);
+                callback.onError("API non-success: " + pr.getStatus());
             }
         } else {
-            String errorMsg = "API error: " + response.code() + " - " + response.message();
-            Log.e(TAG, "✗ " + errorMsg + " for " + context);
-            callback.onError(errorMsg);
+            callback.onError("HTTP " + response.code() + ": " + response.message());
         }
     }
-    
-    /**
-     * Common failure handler.
-     */
+
     private void handleFailure(Throwable t, ProductCallback callback) {
-        String errorMsg = "Network error: " + t.getMessage();
-        Log.e(TAG, "✗ " + errorMsg, t);
-        callback.onError(errorMsg);
+        String msg = "Network error: " + t.getMessage();
+        Log.e(TAG, msg, t);
+        callback.onError(msg);
     }
-    
-    /**
-     * Clear cached products.
-     */
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Cache management
+    // ─────────────────────────────────────────────────────────────────────────
+
     public void clearCache() {
-        Log.d(TAG, "Clearing product cache");
         cachedProducts.clear();
+        detailCache.clear();
+        Log.d(TAG, "Cache cleared");
     }
-    
-    /**
-     * Get cached products (for offline mode or quick access).
-     */
+
     public List<Product> getCachedProducts() {
         return new ArrayList<>(cachedProducts);
     }
-    
-    /**
-     * Callback interface for product list operations.
-     */
+
+    @Nullable
+    public ProductDetail getCachedDetail(String productId) {
+        return detailCache.get(productId);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Callback interfaces
+    // ─────────────────────────────────────────────────────────────────────────
+
     public interface ProductCallback {
         void onSuccess(List<Product> products, int total);
         void onError(String errorMessage);
     }
-    
-    /**
-     * Callback interface for single product operations.
-     */
+
     public interface SingleProductCallback {
-        void onSuccess(Product product);
+        void onSuccess(ProductDetail detail);
         void onError(String errorMessage);
     }
 }

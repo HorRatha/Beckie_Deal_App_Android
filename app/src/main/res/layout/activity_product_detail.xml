@@ -389,6 +389,24 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- Variant selector chips (RAM / Storage / Colour) -->
+                <HorizontalScrollView
+                    android:id="@+id/variantScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:scrollbars="none"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/variantChipsRow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="4dp" />
+
+                </HorizontalScrollView>
+
                 <!-- Spec tag pills -->
                 <LinearLayout
                     android:id="@+id/specTagsRow"

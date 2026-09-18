@@ -124,14 +124,23 @@ public class PaymentWebViewActivity extends AppCompatActivity {
     }
 
     @Override
+    @SuppressWarnings({"MissingSuperCall", "GestureBackNavigation"})
     public void onBackPressed() {
+        // We intentionally don't call super.onBackPressed() because we want to intercept
+        // the back button to ask the user to confirm cancellation of their payment.
+        // If the user clicks "Yes", we deliver the cancelled result and finish.
+        // If the user clicks "No", we dismiss the dialog and keep the payment active.
+        // Note: For Android 16+ with predictive back gesture, this may not be called,
+        // but we keep it for backward compatibility with older Android versions.
         new AlertDialog.Builder(this)
                 .setTitle("Cancel Payment")
                 .setMessage("Are you sure you want to cancel this payment?")
                 .setPositiveButton("Yes, cancel", (dialog, which) -> {
                     deliverResult(RESULT_PAYMENT_CANCELLED, "cancelled");
                 })
-                .setNegativeButton("No, continue", null)
+                .setNegativeButton("No, continue", (dialog, which) -> {
+                    dialog.dismiss();
+                })
                 .show();
     }
 

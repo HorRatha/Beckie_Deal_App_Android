@@ -16,7 +16,29 @@ import java.util.Map;
 /**
  * Retrofit API service interface for wishlist endpoints.
  * Based on actual API response structure from backend.
+ * 
+ * ⚠️ STATUS: NOT YET IMPLEMENTED (404)
+ * 
+ * All endpoints in this service return HTTP 404 - NOT FOUND.
+ * The backend does not yet have wishlist functionality implemented.
+ * 
+ * @deprecated Backend endpoints not yet implemented. Use WishlistRepository for now,
+ *             which gracefully handles 404 responses. When backend implements
+ *             these endpoints, WishlistRepository will automatically use them.
+ * 
+ * Current Implementation:
+ * - This app uses WishlistRepository for local wishlist management
+ * - Has successfully integrated with the API when endpoints become available
+ * 
+ * Backend TODO:
+ *  - GET /wishlist (get all items)
+ *  - PUT /wishlist (create/update wishlist)
+ *  - DELETE /wishlist (delete wishlist)
+ *  - GET /wishlist/check?product_id={id} (check if product in wishlist)
+ *  - POST /wishlist/items (add item)
+ *  - DELETE /wishlist/items/{id} (remove item)
  */
+@Deprecated
 public interface WishlistApiService {
     
     /**

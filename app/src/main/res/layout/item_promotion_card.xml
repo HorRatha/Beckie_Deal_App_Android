@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="280dp"
+    android:layout_height="160dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/surface">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Background gradient -->
+        <View
+            android:id="@+id/promotionGradient"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/banner_gradient_1" />
+
+        <!-- Banner image (if available) -->
+        <ImageView
+            android:id="@+id/promotionBannerImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <!-- Content overlay with spacer -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Top: Discount badge and name -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="start">
+
+                <!-- Discount badge (30% Off / $15 Off) -->
+                <TextView
+                    android:id="@+id/promotionDiscount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30% Off"
+                    android:textColor="@color/white_fixed"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:background="@drawable/badge_pill"
+                    android:backgroundTint="@android:color/holo_red_dark" />
+
+                <!-- Promotion name -->
+                <TextView
+                    android:id="@+id/promotionName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Summer Sale"
+                    android:textColor="@color/white_fixed"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <!-- Min order amount -->
+                <TextView
+                    android:id="@+id/promotionMinOrder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Min. $150"
+                    android:textColor="@color/white_fixed"
+                    android:textSize="12sp"
+                    android:alpha="0.7"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <!-- Spacer to push bottom content down -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Bottom: Code and expiry -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom">
+
+                <!-- Promo code (left) -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Code:"
+                        android:textColor="@color/white_fixed"
+                        android:textSize="10sp"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:id="@+id/promotionCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SUMMER30"
+                        android:textColor="@color/white_fixed"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="1dp"
+                        android:typeface="monospace" />
+                </LinearLayout>
+
+                <!-- Expiry date (right) -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="end">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Expires"
+                        android:textColor="@color/white_fixed"
+                        android:textSize="10sp"
+                        android:alpha="0.7" />
+
+                    <TextView
+                        android:id="@+id/promotionExpiry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Oct 13"
+                        android:textColor="@color/white_fixed"
+                        android:textSize="12sp"
+                        android:layout_marginTop="1dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Ripple effect on click -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground" />
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

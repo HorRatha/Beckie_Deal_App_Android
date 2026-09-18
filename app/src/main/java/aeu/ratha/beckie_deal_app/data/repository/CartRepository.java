@@ -17,6 +17,27 @@ import retrofit2.Response;
 /**
  * Repository for cart data operations.
  * Handles all cart-related API calls and business logic.
+ * 
+ * ⚠️ IMPORTANT: Backend Implementation Status
+ * 
+ * The CartApiService endpoints are NOT YET IMPLEMENTED (404) on the backend.
+ * This repository gracefully handles 404 errors and allows the app to continue functioning.
+ * 
+ * Architecture:
+ * - All methods enqueue API calls via CartApiService
+ * - 404 responses are caught and logged (not treated as fatal errors)
+ * - When backend implements the endpoints, callbacks will receive proper responses
+ * - No code changes needed in this repository once backend is ready
+ * 
+ * Expected Backend Implementation Timeline:
+ * [ ] POST /api/v1/cart/items - Add product to cart
+ * [ ] PATCH /api/v1/cart/items/{id} - Update quantity
+ * [ ] DELETE /api/v1/cart/items/{id} - Remove from cart  
+ * [ ] GET /api/v1/cart - Get cart contents
+ * [ ] PUT /api/v1/cart - Create/update cart metadata
+ * [ ] POST /api/v1/cart/checkout - Create order from cart
+ * 
+ * See CartApiService.java for endpoint contract details.
  */
 public class CartRepository {
     

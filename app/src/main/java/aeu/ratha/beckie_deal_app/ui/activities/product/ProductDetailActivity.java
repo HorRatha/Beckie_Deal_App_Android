@@ -1,10 +1,15 @@
 package aeu.ratha.beckie_deal_app.ui.activities.product;
 
 import aeu.ratha.beckie_deal_app.R;
-import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
+import aeu.ratha.beckie_deal_app.data.models.ProductDetail;
+import aeu.ratha.beckie_deal_app.data.models.ProductVariant;
 import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
-import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
+import aeu.ratha.beckie_deal_app.data.repository.ProductRepository;
+import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
 import aeu.ratha.beckie_deal_app.data.models.CartItemResponse;
+import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.components.ImageFullscreenActivity;
@@ -25,11 +30,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -38,19 +41,40 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Product detail screen.
+ *
+ * Data flow:
+ *  1. Intent extras provide basic info (id, name, price, image) for immediate display.
+ *  2. fetchProductDetail() calls GET /products/{uuid} to load full data:
+ *       - Real description / short_description / meta_description
+ *       - Actual gallery images from images[]
+ *       - Variants (RAM / storage / colour chips)
+ *       - Category and brand
+ *       - Stock, dimensions, SKU, barcode
+ */
 public class ProductDetailActivity extends BaseActivity {
 
     private static final String TAG = "ProductDetailActivity";
-    
+
+    // ── State ─────────────────────────────────────────────────────────────────
     private boolean isFavorite = false;
     private ImageView detailFavoriteIcon;
+
+    /** Basic product info received from the calling activity via Intent. */
     private MainActivity.Product currentProduct;
+
+    /** Full detail loaded from API — null until the fetch completes. */
+    private ProductDetail productDetail;
+
+    /** Selected variant index (-1 = no variant / base product). */
+    private int selectedVariantIndex = -1;
+
+    private ProductRepository productRepository;
     private WishlistRepository wishlistRepository;
     private CartRepository cartRepository;
-    private aeu.ratha.beckie_deal_app.data.models.Product fullProduct; // Full product data from API
-    private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
 
-    // Gallery state
+    // ── Gallery ───────────────────────────────────────────────────────────────
     private int currentImageIndex = 0;
     private List<String> imageUrls = new ArrayList<>();
     private ImageView mainImage;
@@ -58,35 +82,39 @@ public class ProductDetailActivity extends BaseActivity {
     private MaterialCardView[] thumbCards = new MaterialCardView[4];
     private ImageView[] thumbImages = new ImageView[4];
 
+    // ── Quantity ──────────────────────────────────────────────────────────────
+    private int selectedQuantity = 1;
+
+    // ─────────────────────────────────────────────────────────────────────────
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
-        
-        productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
+
+        productRepository = ProductRepository.getInstance(this);
         wishlistRepository = new WishlistRepository(this);
-        cartRepository = new CartRepository(this);
-        
+        cartRepository     = new CartRepository(this);
+
         setupTopBar();
-        loadProductData();
+        displayIntentData();       // Show basic data immediately from Intent
+        fetchProductDetail();      // Then fetch full data from API
         setupActions();
         setupBottomNavigation();
         setupEntranceAnimation();
     }
 
-    /** Fades/slides the gallery, thumbnail row, info block and bottom action bar into place. */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BottomNavHelper.updateCartBadge(this);
+    }
+
     private void setupEntranceAnimation() {
         UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
         UiAnimations.fadeSlideUp(findViewById(R.id.galleryContainer), 60);
         UiAnimations.fadeSlideUp(findViewById(R.id.thumbnailRow), 110);
         UiAnimations.fadeSlideUp(findViewById(R.id.productInfoBlock), 150);
         UiAnimations.fadeSlideUp(findViewById(R.id.bottomActionLayout), 100);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateCartUI();
     }
 
     // ── Top bar ───────────────────────────────────────────────────────────────
@@ -106,258 +134,333 @@ public class ProductDetailActivity extends BaseActivity {
         UiAnimations.pressBounce(back, share, notificationContainer);
     }
 
-    private void updateCartUI() {
-        BottomNavHelper.updateCartBadge(this);
-    }
+    // ─────────────────────────────────────────────────────────────────────────
+    // Step 1 — show data from Intent immediately so the screen isn't blank
+    // ─────────────────────────────────────────────────────────────────────────
 
-    // ── Product data ──────────────────────────────────────────────────────────
+    private void displayIntentData() {
+        String productId = getIntent().getStringExtra("product_id");
+        String name      = getIntent().getStringExtra("product_name");
+        String price     = getIntent().getStringExtra("product_price");
+        String imageUrl  = getIntent().getStringExtra("product_image");
+        String rating    = getIntent().getStringExtra("product_rating");
+        String sku       = getIntent().getStringExtra("product_sku");
 
-    private void loadProductData() {
-        // Get product data from intent (ID should be UUID string)
-        String productIdString = getIntent().getStringExtra("product_id");
-        String name     = getIntent().getStringExtra("product_name");
-        String price    = getIntent().getStringExtra("product_price");
-        String imageUrl = getIntent().getStringExtra("product_image");
-        String rating   = getIntent().getStringExtra("product_rating");
-        String sku      = getIntent().getStringExtra("product_sku");
-        
-        Log.d(TAG, "Loading product - ID: " + productIdString + ", Name: " + name);
-        
-        if (name == null) name = "Product";
-        if (rating == null) rating = "4.9";
+        if (name == null)   name   = "Product";
+        if (rating == null) rating = "4.5";
 
         currentProduct = new MainActivity.Product(name, price, rating, false, imageUrl);
-        currentProduct.id = productIdString; // ✅ SET THE ID!
+        currentProduct.id  = productId;
         currentProduct.sku = sku;
-        isFavorite = false; // Will be checked via API below
 
-        // Check if product is in wishlist via API
-        if (currentProduct.id != null && !currentProduct.id.isEmpty()) {
-            wishlistRepository.checkProductInWishlist(currentProduct.id, new WishlistRepository.CheckCallback() {
-                @Override
-                public void onResult(boolean inWishlist) {
-                    runOnUiThread(() -> {
-                        isFavorite = inWishlist;
-                        currentProduct.isInWishlist = inWishlist;
-                        updateFavoriteUI();
-                    });
-                }
-                
-                @Override
-                public void onError(String error) {
-                    Log.e(TAG, "Failed to check wishlist status: " + error);
-                    // Keep default false value
-                }
-            });
-        }
-
-        // Display basic info immediately
-        setTextSafe(R.id.detailProductName, name);
+        // Set name and price immediately
+        setTextSafe(R.id.detailProductName,  name);
         setTextSafe(R.id.detailProductPrice, price != null ? price : "");
         setTextSafe(R.id.detailProductRating, rating);
-        setTextSafe(R.id.reviewCount, "(2.5k reviews)"); // Static for now
+        setTextSafe(R.id.reviewCount, "(loading...)");
 
-        // Set up basic gallery with available image
+        // Set up gallery with the thumbnail from Intent while full data loads
         List<String> imgs = new ArrayList<>();
         if (imageUrl != null && !imageUrl.isEmpty()) {
             imgs.add(imageUrl);
-            for (int i = 0; i < 3; i++) imgs.add(imageUrl);
+            imgs.add(imageUrl);
+            imgs.add(imageUrl);
+            imgs.add(imageUrl);
         } else {
-            String fallback = "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&h=500&fit=crop";
-            for (int i = 0; i < 4; i++) imgs.add(fallback);
+            String fb = "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&h=500&fit=crop";
+            for (int i = 0; i < 4; i++) imgs.add(fb);
         }
         setupGallery(imgs);
 
         detailFavoriteIcon = findViewById(R.id.detailWishlistIcon);
         updateFavoriteUI();
 
-        // Note: fullProduct fetching removed - we already have the product ID from Intent
-        // The cart functionality works with currentProduct.id which is now set
-        
-        // Optional: Load additional product details if needed
-        // For now, display with data from Intent
-        loadStaticProductData(sku, name);
+        // Check wishlist status
+        if (productId != null && !productId.isEmpty()) {
+            wishlistRepository.checkProductInWishlist(productId, new WishlistRepository.CheckCallback() {
+                @Override public void onResult(boolean inWishlist) {
+                    runOnUiThread(() -> {
+                        isFavorite = inWishlist;
+                        currentProduct.isInWishlist = inWishlist;
+                        updateFavoriteUI();
+                    });
+                }
+                @Override public void onError(String error) {
+                    Log.w(TAG, "Wishlist check failed: " + error);
+                }
+            });
+        }
     }
 
-    /**
-     * Populate UI with full product details from API.
-     */
-    private void populateProductDetails(aeu.ratha.beckie_deal_app.data.models.Product product) {
-        // Update name and price with API data
-        setTextSafe(R.id.detailProductName, product.getName());
-        setTextSafe(R.id.detailProductPrice, product.getFormattedPrice());
-        
-        // Update stock status with real data
+    // ─────────────────────────────────────────────────────────────────────────
+    // Step 2 — fetch full product detail from API
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private void fetchProductDetail() {
+        String productId = currentProduct != null ? currentProduct.id : null;
+        if (productId == null || productId.isEmpty()) {
+            Log.w(TAG, "No product ID — cannot fetch detail");
+            showStaticFallback();
+            return;
+        }
+
+        // Check if detail already cached
+        ProductDetail cached = productRepository.getCachedDetail(productId);
+        if (cached != null) {
+            populateFromDetail(cached);
+            return;
+        }
+
+        Log.d(TAG, "Fetching product detail for " + productId);
+        productRepository.fetchProductDetail(productId, new ProductRepository.SingleProductCallback() {
+            @Override
+            public void onSuccess(ProductDetail detail) {
+                runOnUiThread(() -> populateFromDetail(detail));
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Detail fetch failed: " + errorMessage);
+                runOnUiThread(() -> showStaticFallback());
+            }
+        });
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Populate UI from full ProductDetail
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private void populateFromDetail(ProductDetail detail) {
+        this.productDetail = detail;
+
+        // ── Name & price ──────────────────────────────────────────────────
+        setTextSafe(R.id.detailProductName, detail.getName());
+        setTextSafe(R.id.detailProductPrice, detail.getFormattedPrice());
+
+        // Rating: use real average_rating if > 0, else keep the intent value
+        float rating = detail.getAverageRatingAsFloat();
+        if (rating > 0) {
+            setTextSafe(R.id.detailProductRating, String.format("%.1f", rating));
+        }
+        setTextSafe(R.id.reviewCount,
+                "(" + detail.getSalesCount() + " sold · " + detail.getViewsCount() + " views)");
+
+        // ── Stock status ──────────────────────────────────────────────────
+        // The stockLabel lives inside a MaterialCardView that has its own green background.
+        // We update the parent card's background colour so the pill changes colour properly.
         TextView stockLabel = findViewById(R.id.stockLabel);
         if (stockLabel != null) {
-            if (product.isInStock()) {
-                stockLabel.setText("In Stock");
-                stockLabel.setTextColor(getColor(android.R.color.white));
-            } else {
-                stockLabel.setText("Out of Stock");
-                stockLabel.setTextColor(getColor(android.R.color.white));
-                stockLabel.setBackgroundColor(getColor(R.color.red_error));
+            stockLabel.setText(detail.isInStock() ? "In Stock" : "Out of Stock");
+            // Walk up to the parent MaterialCardView and change its background
+            android.view.View parent = (android.view.View) stockLabel.getParent(); // LinearLayout
+            if (parent != null) {
+                android.view.View grandParent = (android.view.View) parent.getParent(); // MaterialCardView
+                if (grandParent instanceof com.google.android.material.card.MaterialCardView) {
+                    ((com.google.android.material.card.MaterialCardView) grandParent)
+                            .setCardBackgroundColor(ContextCompat.getColor(this,
+                                    detail.isInStock() ? R.color.primary : R.color.red_error));
+                }
             }
         }
 
-        // Description - use API description
-        String description = product.getDescription();
-        if (description == null || description.trim().isEmpty()) {
-            description = product.getShortDescription();
+        // ── Gallery — real images from API ────────────────────────────────
+        List<String> galleryUrls = detail.getGalleryUrls();
+        if (!galleryUrls.isEmpty()) {
+            // FIXED: Only pad if we have fewer than 4 images
+            // If only 1 image, keep 1. If 2 images, keep 2. Don't duplicate!
+            if (galleryUrls.size() < 4) {
+                // Only pad if needed (less than 4)
+                while (galleryUrls.size() < 4) {
+                    galleryUrls.add(galleryUrls.get(0));  // Pad with first image only
+                }
+            }
+            setupGallery(galleryUrls);
         }
-        if (description == null || description.trim().isEmpty()) {
-            description = "High-quality product with excellent features and reliable performance.";
-        }
-        setTextSafe(R.id.detailProductDescription, description);
 
-        // Tags - build from product data
+        // ── Description ───────────────────────────────────────────────────
+        setTextSafe(R.id.detailProductDescription, detail.getBestDescription());
+
+        // ── Spec tags (pill chips) ────────────────────────────────────────
         List<String> tags = new ArrayList<>();
-        if (product.isFeatured()) tags.add("Featured");
-        if (product.hasDiscount()) tags.add(product.getDiscountPercentage() + "% Off");
-        if (product.getSku() != null && !product.getSku().isEmpty()) {
-            tags.add("SKU: " + product.getSku());
-        }
-        if (product.getBrand() != null) {
-            tags.add(product.getBrand().getName());
-        }
-        if (tags.isEmpty()) {
-            tags.add("Premium Quality");
-            tags.add("Fast Shipping");
-        }
+        if (detail.isFeatured())  tags.add("Featured");
+        if (detail.hasDiscount()) tags.add(detail.getDiscountPercentage() + "% Off");
+        if (detail.getSku() != null && !detail.getSku().isEmpty()) tags.add("SKU: " + detail.getSku());
+        if (detail.getBrand()    != null) tags.add(detail.getBrand().getName());
+        if (detail.getCategory() != null) tags.add(detail.getCategory().getName());
+        if (tags.isEmpty()) { tags.add("Premium Quality"); tags.add("Fast Shipping"); }
         setupSpecTags(tags);
 
-        // Spec cards - dynamic based on product data
+        // ── Spec cards (2×2 grid) ─────────────────────────────────────────
         List<SpecCard> specCards = new ArrayList<>();
-        
-        // Brand card
-        if (product.getBrand() != null) {
-            specCards.add(new SpecCard("BRAND", product.getBrand().getName(), R.drawable.widgets_24));
-        }
-        
-        // Category card
-        if (product.getCategory() != null) {
-            specCards.add(new SpecCard("CATEGORY", product.getCategory().getName(), R.drawable.devices_24));
-        }
-        
-        // Stock status card
-        if (product.isTrackInventory()) {
-            String stockText = product.getStockQuantity() + " units";
-            specCards.add(new SpecCard("STOCK", stockText, R.drawable.sports_esports_24));
-        }
-        
-        // Product type card
-        String typeText = product.isDigital() ? "Digital" : "Physical";
-        specCards.add(new SpecCard("TYPE", typeText, R.drawable.mobile_24));
-        
+        if (detail.getBrand()    != null)
+            specCards.add(new SpecCard("BRAND",    detail.getBrand().getName(),    R.drawable.widgets_24));
+        if (detail.getCategory() != null)
+            specCards.add(new SpecCard("CATEGORY", detail.getCategory().getName(), R.drawable.devices_24));
+        if (detail.isTrackInventory())
+            specCards.add(new SpecCard("STOCK",    detail.getStockQuantity() + " units", R.drawable.sports_esports_24));
+        specCards.add(new SpecCard("TYPE", detail.isDigital() ? "Digital" : "Physical", R.drawable.mobile_24));
         setupSpecCards(specCards);
 
-        // Spec rows - dynamic based on product data
+        // ── Spec rows (table) ─────────────────────────────────────────────
         Map<String, String> specRows = new LinkedHashMap<>();
-        
-        // Product identifiers
-        if (product.getSku() != null && !product.getSku().isEmpty()) {
-            specRows.put("SKU", product.getSku());
+        if (detail.getSku()     != null && !detail.getSku().isEmpty())     specRows.put("SKU",     detail.getSku());
+        if (detail.getBarcode() != null && !detail.getBarcode().isEmpty()) specRows.put("Barcode", detail.getBarcode());
+        if (detail.getBrand()   != null) specRows.put("Brand",    detail.getBrand().getName());
+        if (detail.getCategory()!= null) specRows.put("Category", detail.getCategory().getName());
+        if (detail.getWeight()  != null && !detail.getWeight().isEmpty())  specRows.put("Weight",  detail.getWeight() + " kg");
+        if (detail.getLength()  != null && !detail.getLength().isEmpty())  specRows.put("Length",  detail.getLength() + " cm");
+        if (detail.getWidth()   != null && !detail.getWidth().isEmpty())   specRows.put("Width",   detail.getWidth()  + " cm");
+        if (detail.getHeight()  != null && !detail.getHeight().isEmpty())  specRows.put("Height",  detail.getHeight() + " cm");
+        if (detail.isTrackInventory()) specRows.put("Stock Qty", String.valueOf(detail.getStockQuantity()));
+        specRows.put("Condition",    "Brand New");
+        specRows.put("Product Type", detail.isDigital() ? "Digital Product" : "Physical Product");
+        if (detail.hasDiscount()) {
+            specRows.put("Regular Price", "$" + detail.getPrice());
+            specRows.put("Sale Price",    "$" + detail.getSalePrice());
+            specRows.put("Discount",      detail.getDiscountPercentage() + "% Off");
         }
-        if (product.getBarcode() != null && !product.getBarcode().isEmpty()) {
-            specRows.put("Barcode", product.getBarcode());
-        }
-        
-        // Brand and Category
-        if (product.getBrand() != null) {
-            specRows.put("Brand", product.getBrand().getName());
-        }
-        if (product.getCategory() != null) {
-            specRows.put("Category", product.getCategory().getName());
-        }
-        
-        // Physical dimensions
-        if (product.getWeight() != null && !product.getWeight().isEmpty()) {
-            specRows.put("Weight", product.getWeight());
-        }
-        if (product.getLength() != null && !product.getLength().isEmpty()) {
-            specRows.put("Length", product.getLength());
-        }
-        if (product.getWidth() != null && !product.getWidth().isEmpty()) {
-            specRows.put("Width", product.getWidth());
-        }
-        if (product.getHeight() != null && !product.getHeight().isEmpty()) {
-            specRows.put("Height", product.getHeight());
-        }
-        
-        // Stock information
-        if (product.isTrackInventory()) {
-            specRows.put("Stock Quantity", String.valueOf(product.getStockQuantity()));
-            if (product.isLowStock()) {
-                specRows.put("Stock Status", "Low Stock - Order Soon!");
-            }
-        }
-        
-        // Product status
-        specRows.put("Condition", "Brand New");
-        specRows.put("Product Type", product.isDigital() ? "Digital Product" : "Physical Product");
-        
-        // Pricing
-        if (product.hasDiscount()) {
-            specRows.put("Regular Price", "$" + product.getPrice());
-            specRows.put("Sale Price", "$" + product.getSalePrice());
-            specRows.put("Discount", product.getDiscountPercentage() + "% Off");
-        }
-        
-        // Static policies (these should come from API in the future)
-        specRows.put("Warranty", "1 Year Manufacturer Warranty");
-        specRows.put("Shipping", product.isDigital() ? "Instant Delivery" : "Free shipping on orders over $50");
+        if (detail.getMetaTitle() != null && !detail.getMetaTitle().isEmpty())
+            specRows.put("Meta Title", detail.getMetaTitle());
+        specRows.put("Warranty",      "1 Year Manufacturer Warranty");
+        specRows.put("Shipping",      detail.isDigital() ? "Instant Delivery" : "Free shipping on orders over $50");
         specRows.put("Return Policy", "30-day money back guarantee");
-        
         setupSpecRows(specRows);
+
+        // ── Variants ──────────────────────────────────────────────────────
+        setupVariants(detail.getVariants());
+
+        Log.d(TAG, "✓ UI populated from API detail for: " + detail.getName());
     }
 
-    /**
-     * Fallback to static product data when API call fails or no product ID.
-     */
-    private void loadStaticProductData(String sku, String productName) {
-        // Description - build from available data
-        String description = "High-quality product with excellent features and reliable performance. ";
-        if (sku != null && !sku.isEmpty()) {
-            description += "SKU: " + sku + ". ";
-        }
-        description += "Backed by manufacturer warranty and dedicated customer support. Check specifications below for detailed information.";
+    // ─────────────────────────────────────────────────────────────────────────
+    // Fallback when API call fails
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private void showStaticFallback() {
+        String name = currentProduct != null ? currentProduct.name : "Product";
+        String sku  = currentProduct != null ? currentProduct.sku  : "";
+
+        setTextSafe(R.id.reviewCount, "(reviews unavailable)");
+
+        String description = "Quality product with excellent features and reliable performance.";
+        if (sku != null && !sku.isEmpty()) description += " SKU: " + sku + ".";
         setTextSafe(R.id.detailProductDescription, description);
 
-        // Tags
         List<String> tags = new ArrayList<>();
-        tags.add("Premium Quality");
-        tags.add("Fast Shipping");
+        tags.add("Premium Quality"); tags.add("Fast Shipping");
         if (sku != null && !sku.isEmpty()) tags.add("SKU: " + sku);
         tags.add("1 Year Warranty");
         setupSpecTags(tags);
 
-        // Spec cards
-        List<SpecCard> specCards = new ArrayList<>();
-        specCards.add(new SpecCard("QUALITY", "Premium", R.drawable.widgets_24));
-        specCards.add(new SpecCard("WARRANTY", "1 Year", R.drawable.devices_24));
-        specCards.add(new SpecCard("SHIPPING", "Fast", R.drawable.sports_esports_24));
-        specCards.add(new SpecCard("SUPPORT", "24/7", R.drawable.mobile_24));
-        setupSpecCards(specCards);
+        List<SpecCard> cards = new ArrayList<>();
+        cards.add(new SpecCard("QUALITY",  "Premium",  R.drawable.widgets_24));
+        cards.add(new SpecCard("WARRANTY", "1 Year",   R.drawable.devices_24));
+        cards.add(new SpecCard("SHIPPING", "Fast",     R.drawable.sports_esports_24));
+        cards.add(new SpecCard("SUPPORT",  "24/7",     R.drawable.mobile_24));
+        setupSpecCards(cards);
 
-        // Spec rows
-        Map<String, String> specRows = new LinkedHashMap<>();
-        if (sku != null && !sku.isEmpty()) {
-            specRows.put("SKU", sku);
+        Map<String, String> rows = new LinkedHashMap<>();
+        if (sku != null && !sku.isEmpty()) rows.put("SKU", sku);
+        rows.put("Condition",    "Brand New");
+        rows.put("Warranty",     "1 Year Manufacturer Warranty");
+        rows.put("Shipping",     "Free shipping on orders over $50");
+        rows.put("Return Policy","30-day money back guarantee");
+        setupSpecRows(rows);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Variants
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Renders a horizontal row of variant chip buttons (e.g. "16GB/1TB/Gray").
+     * Tapping a variant updates the displayed price.
+     */
+    private void setupVariants(List<ProductVariant> variants) {
+        LinearLayout variantRow = findViewById(R.id.variantChipsRow);
+        android.widget.HorizontalScrollView variantScroll = findViewById(R.id.variantScrollView);
+
+        if (variantRow == null || variants == null || variants.isEmpty()) {
+            if (variantScroll != null) variantScroll.setVisibility(View.GONE);
+            return;
         }
-        specRows.put("Condition", "Brand New");
-        specRows.put("Warranty", "1 Year Manufacturer Warranty");
-        specRows.put("Shipping", "Free shipping on orders over $50");
-        specRows.put("Return Policy", "30-day money back guarantee");
-        specRows.put("Customer Support", "24/7 assistance available");
-        setupSpecRows(specRows);
+
+        variantScroll.setVisibility(View.VISIBLE);
+        variantRow.removeAllViews();
+
+        // Sort: default first, then by sort_order
+        List<ProductVariant> sorted = new ArrayList<>(variants);
+        sorted.sort((a, b) -> {
+            if (a.isDefault() && !b.isDefault()) return -1;
+            if (!a.isDefault() && b.isDefault())  return  1;
+            return Integer.compare(a.getSortOrder(), b.getSortOrder());
+        });
+
+        for (int i = 0; i < sorted.size(); i++) {
+            final int idx = i;
+            final ProductVariant variant = sorted.get(i);
+
+            TextView chip = new TextView(this);
+            chip.setText(variant.getAttributeSummary());
+            ScreenUtils.applyTextSize(chip, R.dimen.text_size_caption);
+
+            int hPad = dpToPx(10), vPad = dpToPx(6);
+            chip.setPadding(hPad, vPad, hPad, vPad);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMarginEnd(dpToPx(8));
+            chip.setLayoutParams(lp);
+
+            boolean isSelected = (selectedVariantIndex == -1 && variant.isDefault())
+                    || selectedVariantIndex == i;
+            applyVariantChipStyle(chip, isSelected);
+
+            chip.setOnClickListener(v -> {
+                selectedVariantIndex = idx;
+                // Refresh all chip styles
+                for (int j = 0; j < variantRow.getChildCount(); j++) {
+                    View child = variantRow.getChildAt(j);
+                    if (child instanceof TextView) {
+                        applyVariantChipStyle((TextView) child, j == idx);
+                    }
+                }
+                // Update displayed price
+                setTextSafe(R.id.detailProductPrice,
+                        "$" + String.format("%.2f", variant.getPriceAsDouble()));
+                Log.d(TAG, "Variant selected: " + variant.getName());
+            });
+
+            variantRow.addView(chip);
+        }
+
+        // Select default variant's price on load
+        for (ProductVariant v : sorted) {
+            if (v.isDefault()) {
+                setTextSafe(R.id.detailProductPrice,
+                        "$" + String.format("%.2f", v.getPriceAsDouble()));
+                break;
+            }
+        }
     }
 
-    private void setTextSafe(int id, String text) {
-        TextView tv = findViewById(id);
-        if (tv != null && text != null) tv.setText(text);
+    private void applyVariantChipStyle(TextView chip, boolean selected) {
+        if (selected) {
+            chip.setTextColor(Color.WHITE);
+            chip.setBackground(ContextCompat.getDrawable(this, R.drawable.badge_rect));
+            chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(this, R.color.primary)));
+        } else {
+            chip.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
+            chip.setBackground(ContextCompat.getDrawable(this, R.drawable.badge_rect));
+            chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                    Color.parseColor("#F0F0F0")));
+        }
     }
 
-    // ── Gallery ───────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // Gallery
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupGallery(List<String> urls) {
         imageUrls = urls;
@@ -368,110 +471,124 @@ public class ProductDetailActivity extends BaseActivity {
         dots[2] = findViewById(R.id.dot3);
         dots[3] = findViewById(R.id.dot4);
 
-        thumbCards[0]  = findViewById(R.id.thumb1);
-        thumbCards[1]  = findViewById(R.id.thumb2);
-        thumbCards[2]  = findViewById(R.id.thumb3);
-        thumbCards[3]  = findViewById(R.id.thumb4);
-        thumbImages[0] = findViewById(R.id.thumbImg1);
-        thumbImages[1] = findViewById(R.id.thumbImg2);
-        thumbImages[2] = findViewById(R.id.thumbImg3);
-        thumbImages[3] = findViewById(R.id.thumbImg4);
+        thumbCards[0]  = findViewById(R.id.thumb1);  thumbImages[0] = findViewById(R.id.thumbImg1);
+        thumbCards[1]  = findViewById(R.id.thumb2);  thumbImages[1] = findViewById(R.id.thumbImg2);
+        thumbCards[2]  = findViewById(R.id.thumb3);  thumbImages[2] = findViewById(R.id.thumbImg3);
+        thumbCards[3]  = findViewById(R.id.thumb4);  thumbImages[3] = findViewById(R.id.thumbImg4);
 
-        // Load all thumbs
+        // FIXED: Only show thumbnails for actual images we have
         for (int i = 0; i < 4; i++) {
             final int idx = i;
-            String url = i < urls.size() ? urls.get(i) : urls.get(0);
-            if (thumbImages[i] != null) {
-                Glide.with(this).load(url).centerCrop()
-                     .placeholder(R.drawable.placeholder_image).into(thumbImages[i]);
-            }
-            if (thumbCards[i] != null) {
-                thumbCards[i].setOnClickListener(v -> selectImage(idx));
+            
+            if (i < urls.size()) {
+                // We have an image for this slot
+                String url = urls.get(i);
+                if (thumbImages[i] != null) {
+                    Glide.with(this).load(url).centerCrop()
+                         .placeholder(R.drawable.placeholder_image).into(thumbImages[i]);
+                }
+                if (thumbCards[i] != null) {
+                    thumbCards[i].setOnClickListener(v -> selectImage(idx));
+                    thumbCards[i].setVisibility(View.VISIBLE);  // Show thumbnail
+                }
+                if (dots[i] != null) {
+                    dots[i].setVisibility(View.VISIBLE);  // Show dot
+                }
+            } else {
+                // No image for this slot - hide it
+                if (thumbCards[i] != null) thumbCards[i].setVisibility(View.GONE);
+                if (dots[i] != null) dots[i].setVisibility(View.GONE);
             }
         }
 
-        // Prev / Next arrows
         View prevBtn = findViewById(R.id.galleryPrev);
         View nextBtn = findViewById(R.id.galleryNext);
-        if (prevBtn != null) prevBtn.setOnClickListener(v ->
-                selectImage((currentImageIndex - 1 + imageUrls.size()) % imageUrls.size()));
-        if (nextBtn != null) nextBtn.setOnClickListener(v ->
-                selectImage((currentImageIndex + 1) % imageUrls.size()));
+        
+        // Only show prev/next buttons if we have multiple images
+        if (urls.size() <= 1) {
+            if (prevBtn != null) prevBtn.setVisibility(View.GONE);
+            if (nextBtn != null) nextBtn.setVisibility(View.GONE);
+        } else {
+            if (prevBtn != null) {
+                prevBtn.setVisibility(View.VISIBLE);
+                prevBtn.setOnClickListener(v ->
+                        selectImage((currentImageIndex - 1 + imageUrls.size()) % imageUrls.size()));
+            }
+            if (nextBtn != null) {
+                nextBtn.setVisibility(View.VISIBLE);
+                nextBtn.setOnClickListener(v ->
+                        selectImage((currentImageIndex + 1) % imageUrls.size()));
+            }
+        }
+        
         UiAnimations.pressBounce(prevBtn, nextBtn);
         UiAnimations.pressBounce(thumbCards[0], thumbCards[1], thumbCards[2], thumbCards[3]);
 
-        // Tap main image or fullscreen button → open ImageFullscreenActivity
-        View fsBtn = findViewById(R.id.galleryFullscreen);
-        View.OnClickListener openFullscreen = v -> {
+        View.OnClickListener openFs = v -> {
             Intent intent = new Intent(this, ImageFullscreenActivity.class);
             intent.putStringArrayListExtra("image_urls", new ArrayList<>(imageUrls));
             intent.putExtra("start_index", currentImageIndex);
             startActivity(intent);
         };
-        if (mainImage != null) mainImage.setOnClickListener(openFullscreen);
-        if (fsBtn    != null) fsBtn.setOnClickListener(openFullscreen);
+        View fsBtn = findViewById(R.id.galleryFullscreen);
+        if (mainImage != null) mainImage.setOnClickListener(openFs);
+        if (fsBtn     != null) fsBtn.setOnClickListener(openFs);
 
         selectImage(0);
     }
 
     private void selectImage(int index) {
-        currentImageIndex = index;
-        String url = index < imageUrls.size() ? imageUrls.get(index) : imageUrls.get(0);
+        if (imageUrls.isEmpty()) return;
+        currentImageIndex = index % imageUrls.size();  // Ensure index is within bounds
+        String url = imageUrls.get(currentImageIndex);
 
         if (mainImage != null) {
             Glide.with(this).load(url)
-                 .placeholder(R.drawable.placeholder_image)
-                 .into(mainImage);
+                 .placeholder(R.drawable.placeholder_image).into(mainImage);
         }
 
-        // Update dots — active becomes a wide pill (20dp), inactive a small circle (6dp)
+        // FIXED: Only update dots/thumbnails for images that actually exist
         for (int i = 0; i < 4; i++) {
-            if (dots[i] == null) continue;
-            android.view.ViewGroup.LayoutParams lp = dots[i].getLayoutParams();
-            if (i == index) {
-                lp.width = dpToPx(20);
-                dots[i].setLayoutParams(lp);
-                dots[i].setBackgroundResource(R.drawable.dot_active);
+            if (i < imageUrls.size()) {
+                // Show dot/thumbnail only if we have this image
+                if (dots[i] != null) {
+                    dots[i].setVisibility(View.VISIBLE);
+                    android.view.ViewGroup.LayoutParams lp = dots[i].getLayoutParams();
+                    if (i == currentImageIndex) {
+                        lp.width = dpToPx(20);
+                        dots[i].setBackgroundResource(R.drawable.dot_active);
+                    } else {
+                        lp.width = dpToPx(6);
+                        dots[i].setBackgroundResource(R.drawable.dot_inactive);
+                    }
+                    dots[i].setLayoutParams(lp);
+                }
+                
+                if (thumbCards[i] != null) {
+                    thumbCards[i].setVisibility(View.VISIBLE);
+                    thumbCards[i].setStrokeWidth(i == currentImageIndex ? dpToPx(2) : dpToPx(1));
+                    thumbCards[i].setStrokeColor(i == currentImageIndex
+                            ? Color.parseColor("#F97316") : Color.parseColor("#EEEEEE"));
+                }
             } else {
-                lp.width = dpToPx(6);
-                dots[i].setLayoutParams(lp);
-                dots[i].setBackgroundResource(R.drawable.dot_inactive);
+                // Hide dot/thumbnail if we don't have this image
+                if (dots[i] != null) dots[i].setVisibility(View.GONE);
+                if (thumbCards[i] != null) thumbCards[i].setVisibility(View.GONE);
             }
         }
-
-        // Update thumb borders
-        for (int i = 0; i < 4; i++) {
-            if (thumbCards[i] == null) continue;
-            thumbCards[i].setStrokeWidth(i == index ? dpToPx(2) : dpToPx(1));
-            thumbCards[i].setStrokeColor(i == index
-                    ? Color.parseColor("#F97316")
-                    : Color.parseColor("#EEEEEE"));
-        }
     }
 
-    private int dpToPx(int dp) {
-        return Math.round(dp * getResources().getDisplayMetrics().density);
-    }
-
-    // ── Spec tags (pill chips) ────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // Spec tags (pill chips)
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupSpecTags(List<String> tags) {
         LinearLayout row = findViewById(R.id.specTagsRow);
         if (row == null) return;
         row.removeAllViews();
 
-        // Two rows wrapped manually
-        LinearLayout line1 = new LinearLayout(this);
-        line1.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lineParams.bottomMargin = dpToPx(6);
-        line1.setLayoutParams(lineParams);
-
-        LinearLayout line2 = new LinearLayout(this);
-        line2.setOrientation(LinearLayout.HORIZONTAL);
-        line2.setLayoutParams(lineParams);
-
+        LinearLayout line1 = newHorizontalRow(6);
+        LinearLayout line2 = newHorizontalRow(0);
         row.addView(line1);
         row.addView(line2);
 
@@ -483,34 +600,40 @@ public class ProductDetailActivity extends BaseActivity {
             chip.setBackground(ContextCompat.getDrawable(this, R.drawable.badge_rect));
             chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
                     Color.parseColor("#FFF0E6")));
-            int h = dpToPx(10); int v = dpToPx(5);
+            int h = dpToPx(10), v = dpToPx(5);
             chip.setPadding(h, v, h, v);
             LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             cp.setMarginEnd(dpToPx(8));
             chip.setLayoutParams(cp);
-
-            if (i < 2) line1.addView(chip);
-            else        line2.addView(chip);
+            (i < 2 ? line1 : line2).addView(chip);
         }
     }
 
-    // ── 2x2 Spec cards ────────────────────────────────────────────────────────
+    private LinearLayout newHorizontalRow(int bottomMarginDp) {
+        LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin = dpToPx(bottomMarginDp);
+        ll.setLayoutParams(lp);
+        return ll;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Spec cards (2×2 grid)
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupSpecCards(List<SpecCard> cards) {
         android.widget.GridLayout grid = findViewById(R.id.specCardsGrid);
         if (grid == null) return;
         grid.removeAllViews();
-
         for (int i = 0; i < Math.min(cards.size(), 4); i++) {
             SpecCard sc = cards.get(i);
-            View v = LayoutInflater.from(this)
-                    .inflate(R.layout.item_spec_card, grid, false);
+            View v = LayoutInflater.from(this).inflate(R.layout.item_spec_card, grid, false);
             TextView label = v.findViewById(R.id.specCardLabel);
             TextView value = v.findViewById(R.id.specCardValue);
             ImageView icon = v.findViewById(R.id.specCardIcon);
-
             if (label != null) label.setText(sc.label);
             if (value != null) value.setText(sc.value);
             if (icon  != null) icon.setImageResource(sc.iconRes);
@@ -518,7 +641,9 @@ public class ProductDetailActivity extends BaseActivity {
         }
     }
 
-    // ── Detail spec rows ─────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // Spec rows (table)
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupSpecRows(Map<String, String> rows) {
         LinearLayout container = findViewById(R.id.specRowsContainer);
@@ -531,30 +656,27 @@ public class ProductDetailActivity extends BaseActivity {
                 View divider = new View(this);
                 LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(1));
-                dp.setMarginStart(dpToPx(16));
-                dp.setMarginEnd(dpToPx(16));
+                dp.setMarginStart(dpToPx(16)); dp.setMarginEnd(dpToPx(16));
                 divider.setLayoutParams(dp);
                 divider.setBackgroundColor(Color.parseColor("#F0F0F0"));
                 container.addView(divider);
             }
-            View row = LayoutInflater.from(this)
-                    .inflate(R.layout.item_spec_row, container, false);
-            TextView key = row.findViewById(R.id.specKey);
-            TextView val = row.findViewById(R.id.specValue);
+            View r = LayoutInflater.from(this).inflate(R.layout.item_spec_row, container, false);
+            TextView key = r.findViewById(R.id.specKey);
+            TextView val = r.findViewById(R.id.specValue);
             if (key != null) key.setText(entry.getKey());
             if (val != null) val.setText(entry.getValue());
-            container.addView(row);
+            container.addView(r);
             first = false;
         }
     }
 
-    // ── Actions ───────────────────────────────────────────────────────────────
-
-    // Tracks quantity chosen on the detail screen (resets each time the screen opens)
-    private int selectedQuantity = 1;
+    // ─────────────────────────────────────────────────────────────────────────
+    // Actions (quantity stepper, Add to Cart, Buy Now, Wishlist)
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupActions() {
-        // ── Quantity stepper ──────────────────────────────────────────────────
+        // ── Quantity stepper ──────────────────────────────────────────────
         TextView quantityValue = findViewById(R.id.quantityValue);
         View decrement = findViewById(R.id.quantityDecrement);
         View increment = findViewById(R.id.quantityIncrement);
@@ -567,185 +689,121 @@ public class ProductDetailActivity extends BaseActivity {
                 if (quantityValue != null) quantityValue.setText(String.valueOf(selectedQuantity));
             }
         });
-
         if (increment != null) increment.setOnClickListener(v -> {
             selectedQuantity++;
             if (quantityValue != null) quantityValue.setText(String.valueOf(selectedQuantity));
         });
-
         UiAnimations.pressBounce(decrement, increment);
 
-        // ── Add to cart ───────────────────────────────────────────────────────
+        // ── Add to Cart ───────────────────────────────────────────────────
         View addToCart = findViewById(R.id.addToCartButton);
         if (addToCart != null) addToCart.setOnClickListener(v -> {
-            // Check authentication before adding to cart
-            if (!AuthHelper.requireAuthForCart(this)) {
-                return; // User not logged in, prompt shown
-            }
-            
-            // Use fullProduct (from API) instead of currentProduct (from Intent)
-            String productId = null;
-            if (fullProduct != null && fullProduct.getId() != null) {
-                productId = fullProduct.getId();
-            } else if (currentProduct != null && currentProduct.id != null) {
-                productId = currentProduct.id;
-            }
-            
-            // Validate product ID
-            if (productId == null || productId.isEmpty()) {
-                Log.e(TAG, "Cannot add to cart - product ID is null or empty");
-                Toast.makeText(this, "Product information is missing. Please try refreshing.", Toast.LENGTH_SHORT).show();
+            if (!AuthHelper.requireAuthForCart(this)) return;
+            String pid = resolveProductId();
+            if (pid == null) {
+                Toast.makeText(this, "Product info missing. Please try again.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            
-            Log.d(TAG, "Adding to cart - Product ID: " + productId + ", Quantity: " + selectedQuantity);
-            
-            // Add to cart via API
-            cartRepository.addToCart(productId, selectedQuantity, new CartRepository.CartItemCallback() {
-                @Override
-                public void onSuccess(CartItemResponse response) {
+            cartRepository.addToCart(pid, selectedQuantity, new CartRepository.CartItemCallback() {
+                @Override public void onSuccess(CartItemResponse response) {
                     runOnUiThread(() -> {
-                        updateCartUI();
-                        
-                        // Enhanced feedback with Snackbar + "View Cart" action
-                        String msg = selectedQuantity == 1
-                                ? "Added to cart!"
+                        BottomNavHelper.updateCartBadge(ProductDetailActivity.this);
+                        String msg = selectedQuantity == 1 ? "Added to cart!"
                                 : selectedQuantity + "× added to cart!";
-                        
-                        Snackbar snackbar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
-                                .setAction("View Cart", view -> {
-                                    Intent intent = new Intent(ProductDetailActivity.this, aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity.class);
-                                    startActivity(intent);
-                                })
-                                .setActionTextColor(getResources().getColor(R.color.primary, null));
-                        snackbar.show();
+                        Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+                                .setAction("View Cart", view -> startActivity(
+                                        new Intent(ProductDetailActivity.this, CartActivity.class)))
+                                .setActionTextColor(getResources().getColor(R.color.primary, null))
+                                .show();
                     });
                 }
-                
-                @Override
-                public void onError(String error) {
-                    runOnUiThread(() -> {
-                        Log.e(TAG, "Failed to add to cart: " + error);
-                        Toast.makeText(ProductDetailActivity.this, "Failed to add to cart", Toast.LENGTH_SHORT).show();
-                    });
+                @Override public void onError(String error) {
+                    runOnUiThread(() -> Toast.makeText(ProductDetailActivity.this,
+                            "Failed to add to cart", Toast.LENGTH_SHORT).show());
                 }
             });
         });
 
-        // ── Buy Now button ────────────────────────────────────────────────────
+        // ── Buy Now ───────────────────────────────────────────────────────
         View buyNow = findViewById(R.id.buyNowButton);
         if (buyNow != null) buyNow.setOnClickListener(v -> {
-            // Check authentication before purchase
-            if (!AuthHelper.requireAuthForPurchase(this)) {
-                return; // User not logged in, prompt shown
-            }
-            
-            // Use fullProduct (from API) instead of currentProduct (from Intent)
-            String productId = null;
-            if (fullProduct != null && fullProduct.getId() != null) {
-                productId = fullProduct.getId();
-            } else if (currentProduct != null && currentProduct.id != null) {
-                productId = currentProduct.id;
-            }
-            
-            // Validate product ID
-            if (productId == null || productId.isEmpty()) {
-                Log.e(TAG, "Cannot buy now - product ID is null or empty");
-                Toast.makeText(this, "Product information is missing. Please try refreshing.", Toast.LENGTH_SHORT).show();
+            if (!AuthHelper.requireAuthForPurchase(this)) return;
+            String pid = resolveProductId();
+            if (pid == null) {
+                Toast.makeText(this, "Product info missing. Please try again.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            
-            // Add to cart via API, then go to checkout
-            cartRepository.addToCart(productId, selectedQuantity, new CartRepository.CartItemCallback() {
-                @Override
-                public void onSuccess(CartItemResponse response) {
+            cartRepository.addToCart(pid, selectedQuantity, new CartRepository.CartItemCallback() {
+                @Override public void onSuccess(CartItemResponse response) {
                     runOnUiThread(() -> {
-                        // Go directly to checkout/payout, bypassing cart page
-                        Intent intent = new Intent(ProductDetailActivity.this, aeu.ratha.beckie_deal_app.ui.activities.cart.PayoutActivity.class);
-                        intent.putExtra("buy_now_mode", true);  // Optional: to differentiate from cart checkout
+                        Intent intent = new Intent(ProductDetailActivity.this, PayoutActivity.class);
+                        intent.putExtra("buy_now_mode", true);
                         startActivity(intent);
                     });
                 }
-                
-                @Override
-                public void onError(String error) {
-                    runOnUiThread(() -> {
-                        Log.e(TAG, "Failed to add to cart: " + error);
-                        Toast.makeText(ProductDetailActivity.this, "Failed to proceed to checkout", Toast.LENGTH_SHORT).show();
-                    });
+                @Override public void onError(String error) {
+                    runOnUiThread(() -> Toast.makeText(ProductDetailActivity.this,
+                            "Failed to proceed to checkout", Toast.LENGTH_SHORT).show());
                 }
             });
         });
 
-        // ── Wishlist button ───────────────────────────────────────────────────
+        // ── Wishlist ──────────────────────────────────────────────────────
         View favBtn = findViewById(R.id.wishlistButton);
         if (favBtn != null) favBtn.setOnClickListener(v -> {
-            // Check authentication before modifying wishlist
-            if (!AuthHelper.requireAuthForWishlist(this)) {
-                return; // User not logged in, prompt shown
-            }
-            
-            if (currentProduct.id == null || currentProduct.id.isEmpty()) {
+            if (!AuthHelper.requireAuthForWishlist(this)) return;
+            String pid = currentProduct != null ? currentProduct.id : null;
+            if (pid == null || pid.isEmpty()) {
                 Toast.makeText(this, "Product ID not available", Toast.LENGTH_SHORT).show();
                 return;
             }
-            
-            // Disable button to prevent double-clicks
             favBtn.setEnabled(false);
-            
             if (!isFavorite) {
-                // Add to wishlist via API
-                wishlistRepository.addToWishlist(currentProduct.id, 1, new WishlistRepository.WishlistItemCallback() {
-                    @Override
-                    public void onSuccess(WishlistItemResponse response) {
+                wishlistRepository.addToWishlist(pid, 1, new WishlistRepository.WishlistItemCallback() {
+                    @Override public void onSuccess(WishlistItemResponse response) {
                         runOnUiThread(() -> {
                             isFavorite = true;
                             currentProduct.isInWishlist = true;
-                            if (response.getData() != null) {
+                            if (response.getData() != null)
                                 currentProduct.wishlistItemId = response.getData().getId();
-                            }
                             updateFavoriteUI();
-                            Toast.makeText(ProductDetailActivity.this, "Added to Wishlist", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProductDetailActivity.this,
+                                    "Added to Wishlist", Toast.LENGTH_SHORT).show();
                             favBtn.setEnabled(true);
                         });
                     }
-                    
-                    @Override
-                    public void onError(String error) {
+                    @Override public void onError(String error) {
                         runOnUiThread(() -> {
-                            Log.e(TAG, "Failed to add to wishlist: " + error);
-                            Toast.makeText(ProductDetailActivity.this, "Failed to add to wishlist", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProductDetailActivity.this,
+                                    "Failed to add to wishlist", Toast.LENGTH_SHORT).show();
                             favBtn.setEnabled(true);
                         });
                     }
                 });
             } else {
-                // Remove from wishlist via API
                 if (currentProduct.wishlistItemId > 0) {
-                    wishlistRepository.removeFromWishlist(currentProduct.wishlistItemId, new WishlistRepository.SimpleCallback() {
-                        @Override
-                        public void onSuccess() {
+                    wishlistRepository.removeFromWishlist(currentProduct.wishlistItemId,
+                            new WishlistRepository.SimpleCallback() {
+                        @Override public void onSuccess() {
                             runOnUiThread(() -> {
                                 isFavorite = false;
                                 currentProduct.isInWishlist = false;
                                 currentProduct.wishlistItemId = 0;
                                 updateFavoriteUI();
-                                Toast.makeText(ProductDetailActivity.this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProductDetailActivity.this,
+                                        "Removed from Wishlist", Toast.LENGTH_SHORT).show();
                                 favBtn.setEnabled(true);
                             });
                         }
-                        
-                        @Override
-                        public void onError(String error) {
+                        @Override public void onError(String error) {
                             runOnUiThread(() -> {
-                                Log.e(TAG, "Failed to remove from wishlist: " + error);
-                                Toast.makeText(ProductDetailActivity.this, "Failed to remove from wishlist", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProductDetailActivity.this,
+                                        "Failed to remove from wishlist", Toast.LENGTH_SHORT).show();
                                 favBtn.setEnabled(true);
                             });
                         }
                     });
                 } else {
-                    // No wishlist item ID, just toggle locally
                     isFavorite = false;
                     currentProduct.isInWishlist = false;
                     updateFavoriteUI();
@@ -755,6 +813,14 @@ public class ProductDetailActivity extends BaseActivity {
         });
 
         UiAnimations.pressBounce(addToCart, buyNow, favBtn);
+    }
+
+    /** Returns the product UUID for cart/checkout operations. */
+    private String resolveProductId() {
+        if (productDetail != null && productDetail.getId() != null) return productDetail.getId();
+        if (currentProduct != null && currentProduct.id != null && !currentProduct.id.isEmpty())
+            return currentProduct.id;
+        return null;
     }
 
     private void updateFavoriteUI() {
@@ -771,200 +837,18 @@ public class ProductDetailActivity extends BaseActivity {
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.HOME);
     }
 
-    // ── Per-product data ──────────────────────────────────────────────────────
-    
-    /**
-     * @deprecated This method contains HARDCODED MOCK DATA and should NOT be used.
-     * Use fetchProductFromAPI() instead to get real data from the backend.
-     * This method is kept only for backward compatibility with old intent-based calls.
-     */
-    @Deprecated
-    private ProductInfo getProductInfo(String name, String fallbackImg) {
-        android.util.Log.w(TAG, "⚠️ WARNING: Using deprecated getProductInfo() with hardcoded data!");
-        String n = name != null ? name.toLowerCase() : "";
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
-        // Default 4 images (vary angles using different Unsplash IDs)
-        List<String> imgs = new ArrayList<>();
-
-        if (n.contains("macbook air")) {
-            imgs.add("https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=500&h=500&fit=crop");
-            return new ProductInfo(imgs,
-                "Supercharged by M2, the MacBook Air features a strikingly thin design and exceptional speed. Designed for portability, it provides a silent, fanless experience with up to 18 hours of battery life.",
-                tags("Apple M2 Chip", "13.6\" Liquid Retina", "8GB Unified Memory", "256GB SSD"),
-                specCards(
-                    card("CHIP",    "Apple M2",    R.drawable.devices_24),
-                    card("MEMORY",  "8GB Unified", R.drawable.widgets_24),
-                    card("STORAGE", "256GB SSD",   R.drawable.sports_esports_24),
-                    card("DISPLAY", "13.6\" Retina",R.drawable.devices_24)
-                ),
-                specRows("CPU","8-Core CPU","GPU","8-Core GPU","Camera","1080p FaceTime HD","Weight","2.7 Pounds","Battery","Up to 18 hrs"));
-
-        } else if (n.contains("macbook pro")) {
-            imgs.add("https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=500&h=500&fit=crop");
-            return new ProductInfo(imgs,
-                "The MacBook Pro with M3 Pro chip delivers breakthrough performance for demanding workflows. With a stunning Liquid Retina XDR display and all-day battery, it redefines the professional laptop.",
-                tags("M3 Pro Chip", "14.2\" XDR Display", "18GB Unified", "512GB SSD"),
-                specCards(
-                    card("CHIP",    "Apple M3 Pro", R.drawable.devices_24),
-                    card("MEMORY",  "18GB Unified", R.drawable.widgets_24),
-                    card("STORAGE", "512GB SSD",    R.drawable.sports_esports_24),
-                    card("DISPLAY", "14.2\" XDR",   R.drawable.devices_24)
-                ),
-                specRows("CPU","11-Core CPU","GPU","14-Core GPU","Camera","1080p FaceTime HD","Weight","3.5 Pounds","Battery","Up to 17 hrs"));
-
-        } else if (n.contains("iphone 15 pro max")) {
-            imgs.add("https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=500&h=500&fit=crop");
-            return new ProductInfo(imgs,
-                "iPhone 15 Pro Max. Forged in titanium with the A17 Pro chip, a customizable Action button, and the most powerful iPhone camera system ever.",
-                tags("A17 Pro Chip", "6.7\" Super Retina", "48MP Main Camera", "USB-C"),
-                specCards(
-                    card("CHIP",    "A17 Pro",    R.drawable.mobile_24),
-                    card("CAMERA",  "48 MP",      R.drawable.widgets_24),
-                    card("STORAGE", "256GB",      R.drawable.sports_esports_24),
-                    card("DISPLAY", "6.7\" OLED", R.drawable.mobile_24)
-                ),
-                specRows("Processor","A17 Pro","RAM","8GB","Battery","4,422 mAh","Camera","48+12+12 MP","Weight","221 g"));
-
-        } else if (n.contains("iphone")) {
-            imgs.add("https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1592286927505-1fed6c3d2c16?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500&h=500&fit=crop");
-            return new ProductInfo(imgs,
-                "iPhone 15 Pro. The first iPhone to feature an aerospace-grade titanium design. Featuring the A17 Pro chip with a 16-core Neural Engine.",
-                tags("A17 Pro Chip", "6.1\" Super Retina", "48MP Camera", "Titanium"),
-                specCards(
-                    card("CHIP",    "A17 Pro",    R.drawable.mobile_24),
-                    card("CAMERA",  "48 MP",      R.drawable.widgets_24),
-                    card("STORAGE", "128GB",      R.drawable.sports_esports_24),
-                    card("DISPLAY", "6.1\" OLED", R.drawable.mobile_24)
-                ),
-                specRows("Processor","A17 Pro","RAM","8GB","Battery","3,274 mAh","Camera","48+12+12 MP","Weight","187 g"));
-
-        } else if (n.contains("samsung s24 ultra")) {
-            imgs.add("https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=500&h=500&fit=crop");
-            return new ProductInfo(imgs,
-                "Galaxy S24 Ultra. The ultimate Galaxy AI smartphone with a built-in S Pen, 200MP camera, and Snapdragon 8 Gen 3 — crafted in titanium for maximum durability.",
-                tags("Snapdragon 8 Gen 3", "6.8\" QHD+ AMOLED", "200MP Camera", "S Pen"),
-                specCards(
-                    card("CHIP",    "SD 8 Gen 3", R.drawable.mobile_24),
-                    card("CAMERA",  "200 MP",     R.drawable.widgets_24),
-                    card("STORAGE", "256GB",      R.drawable.sports_esports_24),
-                    card("DISPLAY", "6.8\" QHD+", R.drawable.mobile_24)
-                ),
-                specRows("Processor","Snapdragon 8 Gen 3","RAM","12GB","Battery","5,000 mAh","Camera","200+12+10+10 MP","Weight","232 g"));
-
-        } else if (n.contains("rog strix") || n.contains("rog ally")) {
-            imgs.add("https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=500&h=500&fit=crop");
-            return new ProductInfo(imgs,
-                "ROG Strix G16 — built for domination. Powered by Intel Core i9 HX and NVIDIA RTX 4080, featuring a 16\" QHD 240Hz display for buttery-smooth gaming.",
-                tags("Core i9 HX", "RTX 4080", "16\" QHD 240Hz", "32GB DDR5"),
-                specCards(
-                    card("CPU",     "Core i9 HX",  R.drawable.devices_24),
-                    card("GPU",     "RTX 4080",     R.drawable.sports_esports_24),
-                    card("RAM",     "32GB DDR5",    R.drawable.widgets_24),
-                    card("DISPLAY", "16\" 240Hz",   R.drawable.devices_24)
-                ),
-                specRows("Processor","Intel Core i9-13980HX","Graphics","NVIDIA RTX 4080","RAM","32GB DDR5","Storage","1TB NVMe SSD","Display","16\" QHD 240Hz","Weight","2.3 kg"));
-
-        } else if (n.contains("galaxy watch") || n.contains("apple watch")) {
-            imgs.add("https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&h=500&fit=crop");
-            imgs.add("https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=500&h=500&fit=crop");
-            return new ProductInfo(imgs,
-                "Advanced health monitoring with ECG, blood oxygen sensor, and crash detection. Features an always-on Retina display with sapphire crystal glass.",
-                tags("Always-On Display", "ECG + SpO2", "Crash Detection", "WR50m"),
-                specCards(
-                    card("DISPLAY", "Always-On",  R.drawable.devices_wearables_24),
-                    card("HEALTH",  "ECG+SpO2",   R.drawable.widgets_24),
-                    card("BATTERY", "36 Hours",   R.drawable.devices_wearables_24),
-                    card("WATER",   "50m Resist", R.drawable.devices_wearables_24)
-                ),
-                specRows("Chip","S9 SiP","Display","Always-On Retina","Battery","Up to 36 hrs","Water Resist","WR50m","Sensors","ECG, SpO2, Temperature","Weight","51.5 g"));
-
-        } else {
-            // Generic fallback
-            if (fallbackImg != null) {
-                imgs.add(fallbackImg);
-                imgs.add("https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=500&fit=crop");
-                imgs.add("https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=500&h=500&fit=crop");
-                imgs.add("https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500&h=500&fit=crop");
-            } else {
-                for (int i = 0; i < 4; i++) imgs.add("https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=500&fit=crop");
-            }
-            return new ProductInfo(imgs,
-                "Premium quality product built with the latest technology. Designed for performance, durability, and an exceptional user experience.",
-                tags("Premium Build", "Latest Tech", "1-Year Warranty", "Brand New"),
-                specCards(
-                    card("CONDITION", "Brand New",  R.drawable.widgets_24),
-                    card("WARRANTY",  "12 Months",  R.drawable.widgets_24),
-                    card("DELIVERY",  "2-3 Days",   R.drawable.devices_24),
-                    card("RETURNS",   "30 Days",    R.drawable.sports_esports_24)
-                ),
-                specRows("Condition","Brand New","Warranty","12 Months","Delivery","2-3 Business Days","Returns","30-Day Policy"));
-        }
+    private void setTextSafe(int id, String text) {
+        TextView tv = findViewById(id);
+        if (tv != null && text != null) tv.setText(text);
     }
 
-    // ── Helper builders ───────────────────────────────────────────────────────
-
-    private List<String> tags(String... t) {
-        List<String> l = new ArrayList<>();
-        for (String s : t) l.add(s);
-        return l;
-    }
-
-    private List<SpecCard> specCards(SpecCard... cards) {
-        List<SpecCard> l = new ArrayList<>();
-        for (SpecCard c : cards) l.add(c);
-        return l;
-    }
-
-    private SpecCard card(String label, String value, int icon) {
-        return new SpecCard(label, value, icon);
-    }
-
-    private Map<String, String> specRows(String... pairs) {
-        Map<String, String> m = new LinkedHashMap<>();
-        for (int i = 0; i + 1 < pairs.length; i += 2) m.put(pairs[i], pairs[i + 1]);
-        return m;
+    private int dpToPx(int dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 
     // ── Data classes ──────────────────────────────────────────────────────────
-
-    static class ProductInfo {
-        List<String> images;
-        String description;
-        String reviewCount;
-        List<String> tags;
-        List<SpecCard> specCards;
-        Map<String, String> specRows;
-
-        ProductInfo(List<String> images, String description, List<String> tags,
-                    List<SpecCard> specCards, Map<String, String> specRows) {
-            this.images = images;
-            this.description = description;
-            this.reviewCount = "120";
-            this.tags = tags;
-            this.specCards = specCards;
-            this.specRows = specRows;
-        }
-    }
 
     static class SpecCard {
         String label, value;

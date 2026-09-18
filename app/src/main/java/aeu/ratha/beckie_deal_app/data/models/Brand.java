@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class Brand {
     
     @SerializedName("id")
-    private String id;  // UUID format from API
+    private int id;  // Integer from API (not UUID)
     
     @SerializedName("name")
     private String name;
@@ -49,14 +49,14 @@ public class Brand {
     }
     
     // Constructor with essential fields
-    public Brand(String id, String name, String slug) {
+    public Brand(int id, String name, String slug) {
         this.id = id;
         this.name = name;
         this.slug = slug;
     }
     
     // Getters
-    public String getId() {
+    public int getId() {
         return id;
     }
     
@@ -105,7 +105,7 @@ public class Brand {
     }
     
     // Setters
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
     

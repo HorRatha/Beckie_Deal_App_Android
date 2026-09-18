@@ -17,7 +17,25 @@ import retrofit2.http.Path;
 /**
  * Retrofit API interface for Cart endpoints.
  * Base URL: /api/v1
+ * 
+ * ⚠️ STATUS: NOT YET IMPLEMENTED (404)
+ * 
+ * All endpoints in this service return HTTP 404 - NOT FOUND.
+ * The backend does not yet have cart functionality implemented.
+ * 
+ * @deprecated Backend endpoints not yet implemented. Use CartRepository for now,
+ *             which gracefully handles 404 responses. When backend implements
+ *             these endpoints, CartRepository will automatically use them.
+ * 
+ * Backend TODO:
+ *  - POST /cart/items (add to cart)
+ *  - PATCH /cart/items/{id} (update quantity)
+ *  - DELETE /cart/items/{id} (remove from cart)
+ *  - GET /cart (get cart contents)
+ *  - PUT /cart (create/update cart)
+ *  - POST /cart/checkout (create order)
  */
+@Deprecated
 public interface CartApiService {
     
     /**

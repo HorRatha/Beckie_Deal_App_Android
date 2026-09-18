@@ -223,6 +223,13 @@ public class CategoryDetailActivity extends BaseActivity {
 
     /**
      * Fetch products from API based on category ID and optional brand ID.
+     * 
+     * Category Hierarchy Handling:
+     * - The system filters by exact category ID match (not including subcategories)
+     * - Products have a category relationship that includes parentId information
+     * - Client-side filtering in ProductRepository matches products to the requested categoryId
+     * - Individual product details are fetched to get category information
+     *   (since the list endpoint does not include category_id per product)
      */
     private void fetchProducts() {
         android.util.Log.d(TAG, "=== FETCHING PRODUCTS FROM API ===");
@@ -236,7 +243,7 @@ public class CategoryDetailActivity extends BaseActivity {
         
         // Determine which API call to make based on filters
         if (currentCategoryId > 0 && currentBrandId > 0) {
-            // Fetch by category AND brand
+            // Fetch by category AND brand (filters by exact category ID match)
             productRepository.fetchProductsByCategoryAndBrand(currentCategoryId, currentBrandId, 100, 0,
                 new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
                     @Override
