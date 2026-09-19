@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -94,20 +95,34 @@
         android:layout_marginTop="16dp"
         android:spacing="12dp">
 
-        <Button
+        <!-- Back Button - Solid Dark Gray (#2F3130) with white text -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/backBtn"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
+            android:background="@drawable/button_buy_now_state"
             android:text="Back"
-            android:layout_marginEnd="8dp" />
+            android:textAllCaps="false"
+            android:textColor="@color/white_fixed"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            app:backgroundTint="@null" />
 
-        <Button
+        <!-- Continue Button - Gradient Yellow to Orange -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/continueBtn"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="Continue to Payment" />
+            android:background="@drawable/button_add_to_cart_gradient"
+            android:text="Continue to Payment"
+            android:textAllCaps="false"
+            android:textColor="@color/dark_brown"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null" />
 
     </LinearLayout>
 

@@ -155,27 +155,33 @@
                     android:layout_marginTop="16dp"
                     android:visibility="gone">
                     
-                    <Button
+                    <!-- Login Button - Solid Dark Gray (#2F3130) with white text -->
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/emptyStateLoginButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:background="@drawable/button_primary"
+                        android:background="@drawable/button_buy_now_state"
                         android:text="Login"
                         android:textAllCaps="false"
                         android:textColor="@color/white_fixed"
                         android:paddingHorizontal="32dp"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
                         app:backgroundTint="@null"/>
                     
-                    <Button
+                    <!-- Register Button - Gradient Yellow to Orange -->
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/emptyStateRegisterButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/button_secondary"
+                        android:background="@drawable/button_add_to_cart_gradient"
                         android:text="Register"
                         android:textAllCaps="false"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/dark_brown"
                         android:paddingHorizontal="32dp"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
                         app:backgroundTint="@null"/>
                 </LinearLayout>
             </LinearLayout>

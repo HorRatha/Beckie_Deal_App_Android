@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Add to Cart Glass Morphism button with gradient -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background glass effect with gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="0"
+                android:startColor="#F0FFEC0F"
+                android:centerColor="#F0FDC011"
+                android:endColor="#F0F07615"
+                android:centerX="0.20"
+                android:type="linear" />
+            <corners android:radius="@dimen/button_pill_radius" />
+            <stroke
+                android:width="1.5dp"
+                android:color="#CCFFEC0F" />
+        </shape>
+    </item>
+</layer-list>
