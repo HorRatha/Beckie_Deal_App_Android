@@ -70,22 +70,15 @@ public class MainActivity extends BaseActivity {
     // Auto-scroll for horizontal sections
     private Handler autoScrollHandler;
     private HorizontalScrollView newCollectionScroll;
-    private HorizontalScrollView topSellingScroll;
     private boolean isNewCollectionTouched = false;
-    private boolean isTopSellingTouched = false;
     private int newCollectionScrollIndex = 0;
-    private int topSellingScrollIndex = 0;
     private static final long AUTO_SCROLL_PAUSE = 2500; // 2.5 seconds
     private static final int SCROLL_DURATION = 400; // smooth scroll duration in ms
 
     // Banner carousels
-    private ViewPager2 bannerViewPager;
     private ViewPager2 newArrivalsBannerPager;
-    private Handler bannerAutoScrollHandler;
-    private Runnable bannerAutoScrollRunnable;
     private Handler newArrivalsAutoScrollHandler;
     private Runnable newArrivalsAutoScrollRunnable;
-    private boolean isBannerTouched = false;
     private boolean isNewArrivalsTouched = false;
     private static final long BANNER_SCROLL_DELAY = 4500; // 4.5 seconds
 
@@ -103,12 +96,10 @@ public class MainActivity extends BaseActivity {
         setupTopBar();
         setupSearchBar();
         setupPromotionsCarousel(); // Setup arrow controls (data displayed when fetched)
-        setupHeroBanner();
         setupProducts();
         setupNewArrivalsBanner();
         setupNewCollectionSection();
         setupCouponSection();
-        setupTopSellingSection();
         setupBottomNavigation();
         setupAutoScroll();
         setupEntranceAnimation();
@@ -118,11 +109,9 @@ public class MainActivity extends BaseActivity {
         UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
         UiAnimations.fadeSlideUp(findViewById(R.id.searchBar), 60);
         UiAnimations.fadeSlideUp(findViewById(R.id.promotionBannerCard), 80);
-        UiAnimations.fadeSlideUp(findViewById(R.id.bannerCard), 100);
         UiAnimations.fadeSlideUp(findViewById(R.id.categoriesSectionHeader), 150);
         UiAnimations.fadeSlideUp(findViewById(R.id.newCollectionSectionHeader), 190);
         UiAnimations.fadeSlideUp(findViewById(R.id.newArrivalsBannerViewPager), 210);
-        UiAnimations.fadeSlideUp(findViewById(R.id.topSellingSectionHeader), 230);
         UiAnimations.fadeSlideUp(findViewById(R.id.featuredProductsHeader), 270);
     }
 
@@ -498,41 +487,9 @@ public class MainActivity extends BaseActivity {
         UiAnimations.pressBounce(searchBar);
     }
 
-    private void setupHeroBanner() {
-        // Hero banner data: 3 slides with Pinterest-style images
-        String[][] heroBannerTexts = {
-                {"🔥 HOT DEAL", "Summer Sale", "Up to 50% off on all items"},
-                {"⚡ LIMITED", "New Arrivals", "Latest tech gadgets are here"},
-                {"🎁 EXCLUSIVE", "Flash Deal", "Free shipping on orders $99+"}
-        };
-        int[] heroBannerBgs = {
-                R.drawable.banner_gradient_1,
-                R.drawable.banner_gradient_2,
-                R.drawable.banner_gradient_3
-        };
-        // Pinterest-style banner images
-        String[] heroBannerImages = {
-                "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=400&fit=crop&q=80",
-                "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=400&fit=crop&q=80",
-                "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=800&h=400&fit=crop&q=80"
-        };
 
-        bannerViewPager = findViewById(R.id.bannerViewPager);
-        setupBannerCarousel(
-                bannerViewPager,
-                findViewById(R.id.bannerArrowLeft),
-                findViewById(R.id.bannerArrowRight),
-                findViewById(R.id.bannerDotsContainer),
-                heroBannerTexts, heroBannerBgs, heroBannerImages,
-                true // isHeroBanner flag
-        );
-    }
 
     private void startBannerAutoScroll() {
-        if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
-            bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
-            bannerAutoScrollHandler.postDelayed(bannerAutoScrollRunnable, BANNER_SCROLL_DELAY);
-        }
         if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
             newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
             newArrivalsAutoScrollHandler.postDelayed(newArrivalsAutoScrollRunnable, BANNER_SCROLL_DELAY);
@@ -540,9 +497,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void stopBannerAutoScroll() {
-        if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
-            bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
-        }
         if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
             newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
         }
@@ -644,55 +598,41 @@ public class MainActivity extends BaseActivity {
         }
         UiAnimations.pressBounce(arrowLeft, arrowRight);
 
-        // Auto-scroll
+        // Auto-scroll for new arrivals (hero banner removed)
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 if (viewPager == null) return;
-                if (isHero && isBannerTouched) return;
-                if (!isHero && isNewArrivalsTouched) return;
+                if (isNewArrivalsTouched) return;
                 int next = (viewPager.getCurrentItem() + 1) % count;
                 viewPager.setCurrentItem(next, true);
                 handler.postDelayed(this, BANNER_SCROLL_DELAY);
             }
         };
 
-        if (isHero) {
-            bannerAutoScrollHandler = handler;
-            bannerAutoScrollRunnable = runnable;
-        } else {
-            newArrivalsAutoScrollHandler = handler;
-            newArrivalsAutoScrollRunnable = runnable;
-        }
+        newArrivalsAutoScrollHandler = handler;
+        newArrivalsAutoScrollRunnable = runnable;
 
         // Pause on user drag
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                    if (isHero) isBannerTouched = true;
-                    else isNewArrivalsTouched = true;
+                    isNewArrivalsTouched = true;
                 } else if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                    if (isHero) isBannerTouched = false;
-                    else isNewArrivalsTouched = false;
-                    resetCarouselAutoScroll(isHero);
+                    isNewArrivalsTouched = false;
+                    resetCarouselAutoScroll(false);
                 }
             }
         });
     }
 
     private void resetCarouselAutoScroll(boolean isHero) {
-        if (isHero) {
-            if (bannerAutoScrollHandler != null && bannerAutoScrollRunnable != null) {
-                bannerAutoScrollHandler.removeCallbacks(bannerAutoScrollRunnable);
-                bannerAutoScrollHandler.postDelayed(bannerAutoScrollRunnable, BANNER_SCROLL_DELAY);
-            }
-        } else {
-            if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
-                newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
-                newArrivalsAutoScrollHandler.postDelayed(newArrivalsAutoScrollRunnable, BANNER_SCROLL_DELAY);
-            }
+        // Only new arrivals banner exists now (hero banner removed)
+        if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
+            newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
+            newArrivalsAutoScrollHandler.postDelayed(newArrivalsAutoScrollRunnable, BANNER_SCROLL_DELAY);
         }
     }
 
@@ -907,43 +847,11 @@ public class MainActivity extends BaseActivity {
     }
 
     // ── Top Selling horizontal scroll ─────────────────────────────────────────
-
+    // DEPRECATED - Top selling section removed from home page
+    
+    @Deprecated
     private void setupTopSellingSection() {
-        TextView viewAll = findViewById(R.id.viewAllTopSelling);
-        if (viewAll != null) viewAll.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ProductListActivity.class);
-            intent.putExtra(ProductListActivity.EXTRA_MODE, ProductListActivity.MODE_TOP_SELLING);
-            startActivity(intent);
-        });
-        UiAnimations.pressBounce(viewAll);
-
-        LinearLayout container = findViewById(R.id.topSellingContainer);
-        if (container == null) return;
-        container.removeAllViews();
-
-        // Top Selling = highest rated products (rating >= 4.7) from API, show first 6
-        List<Product> topItems = new ArrayList<>();
-        for (Product p : products) {
-            try {
-                double rating = Double.parseDouble(p.rating);
-                if (rating >= 4.7) topItems.add(p);
-            } catch (NumberFormatException e) {
-                // Skip products with invalid rating
-            }
-        }
-        // Sort by rating descending
-        java.util.Collections.sort(topItems, (a, b) -> {
-            try {
-                return Double.compare(Double.parseDouble(b.rating), Double.parseDouble(a.rating));
-            } catch (NumberFormatException e) {
-                return 0;
-            }
-        });
-
-        int limit = Math.min(topItems.size(), 6);
-        for (int i = 0; i < limit; i++) {
-            addHorizontalProductCard(container, topItems.get(i));
-        }
+        // Removed - top selling section no longer displayed on home page
     }
 
     private void addHorizontalProductCard(LinearLayout container, Product product) {
@@ -1085,7 +993,6 @@ public class MainActivity extends BaseActivity {
         autoScrollHandler = new Handler(Looper.getMainLooper());
 
         newCollectionScroll = findViewById(R.id.newCollectionScroll);
-        topSellingScroll = findViewById(R.id.topSellingScroll);
 
         // Pause auto-scroll when user touches, resume when released
         if (newCollectionScroll != null) {
@@ -1106,38 +1013,18 @@ public class MainActivity extends BaseActivity {
             });
         }
 
-        if (topSellingScroll != null) {
-            topSellingScroll.setOnTouchListener((v, event) -> {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_MOVE:
-                        isTopSellingTouched = true;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        isTopSellingTouched = false;
-                        autoScrollHandler.postDelayed(topSellingRunnable, AUTO_SCROLL_PAUSE);
-                        break;
-                }
-                return false;
-            });
-        }
-
         startAutoScroll();
     }
 
     private void startAutoScroll() {
         if (autoScrollHandler == null) return;
         autoScrollHandler.removeCallbacks(newCollectionRunnable);
-        autoScrollHandler.removeCallbacks(topSellingRunnable);
         autoScrollHandler.postDelayed(newCollectionRunnable, AUTO_SCROLL_PAUSE);
-        autoScrollHandler.postDelayed(topSellingRunnable, AUTO_SCROLL_PAUSE);
     }
 
     private void stopAutoScroll() {
         if (autoScrollHandler == null) return;
         autoScrollHandler.removeCallbacks(newCollectionRunnable);
-        autoScrollHandler.removeCallbacks(topSellingRunnable);
     }
 
     private final Runnable newCollectionRunnable = new Runnable() {
@@ -1158,31 +1045,6 @@ public class MainActivity extends BaseActivity {
             } else {
                 View child = container.getChildAt(newCollectionScrollIndex);
                 newCollectionScroll.smoothScrollTo(child.getLeft(), 0);
-            }
-
-            // Schedule next scroll
-            autoScrollHandler.postDelayed(this, AUTO_SCROLL_PAUSE);
-        }
-    };
-
-    private final Runnable topSellingRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (isTopSellingTouched || topSellingScroll == null) return;
-
-            LinearLayout container = findViewById(R.id.topSellingContainer);
-            if (container == null || container.getChildCount() == 0) return;
-
-            int childCount = container.getChildCount();
-            topSellingScrollIndex++;
-
-            // If we've scrolled past the last item, smoothly scroll back to start
-            if (topSellingScrollIndex >= childCount) {
-                topSellingScrollIndex = 0;
-                topSellingScroll.smoothScrollTo(0, 0);
-            } else {
-                View child = container.getChildAt(topSellingScrollIndex);
-                topSellingScroll.smoothScrollTo(child.getLeft(), 0);
             }
 
             // Schedule next scroll
