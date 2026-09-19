@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Professional gradient fallback for banners without images -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:type="linear"
+        android:angle="45"
+        android:startColor="#FF6B35"
+        android:centerColor="#F7931E"
+        android:endColor="#FDB827" />
+</shape>

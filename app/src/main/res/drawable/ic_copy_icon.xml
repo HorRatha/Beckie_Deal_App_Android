@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copy Icon for promotional banner -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- First rectangle (source) -->
+    <path
+        android:fillColor="@color/white_fixed"
+        android:pathData="M5,2C3.896,2 3,2.896 3,4L3,16C3,17.104 3.896,18 5,18L15,18C16.104,18 17,17.104 17,16L17,4C17,2.896 16.104,2 15,2L5,2ZM5,4L15,4L15,16L5,16L5,4Z" />
+
+    <!-- Second rectangle (copy destination) -->
+    <path
+        android:fillColor="@color/white_fixed"
+        android:pathData="M19,6L19,8L21,8C22.104,8 23,8.896 23,10L23,20C23,21.104 22.104,22 21,22L11,22C9.896,22 9,21.104 9,20L9,18L7,18L7,20C7,22.209 8.791,24 11,24L21,24C23.209,24 25,22.209 25,20L25,10C25,7.791 23.209,6 21,6L19,6Z" />
+</vector>

@@ -140,32 +140,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <!-- Left arrow -->
-                <ImageView
-                    android:id="@+id/promotionBannerArrowLeft"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical|start"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/banner_arrow_bg"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_arrow_left"
-                    android:contentDescription="Previous"
-                    app:tint="#FFFFFF" />
-
-                <!-- Right arrow -->
-                <ImageView
-                    android:id="@+id/promotionBannerArrowRight"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/banner_arrow_bg"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="Next"
-                    app:tint="#FFFFFF" />
-
                 <!-- Dot indicators -->
                 <LinearLayout
                     android:id="@+id/promotionBannerDotsContainer"

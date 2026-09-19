@@ -80,6 +80,13 @@ public class MainActivity extends BaseActivity {
     private Handler newArrivalsAutoScrollHandler;
     private Runnable newArrivalsAutoScrollRunnable;
     private boolean isNewArrivalsTouched = false;
+    
+    // Promotion banner auto-scroll
+    private ViewPager2 promotionBannerPager;
+    private Handler promotionAutoScrollHandler;
+    private Runnable promotionAutoScrollRunnable;
+    private boolean isPromotionTouched = false;
+    
     private static final long BANNER_SCROLL_DELAY = 4500; // 4.5 seconds
 
     @Override
@@ -121,6 +128,7 @@ public class MainActivity extends BaseActivity {
         setupProducts();
         startAutoScroll();
         startBannerAutoScroll();
+        startPromotionAutoScroll();
         updateCartBadge();
     }
 
@@ -129,6 +137,7 @@ public class MainActivity extends BaseActivity {
         super.onPause();
         stopAutoScroll();
         stopBannerAutoScroll();
+        stopPromotionAutoScroll();
     }
 
     @Override
@@ -136,6 +145,7 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         stopAutoScroll();
         stopBannerAutoScroll();
+        stopPromotionAutoScroll();
     }
 
     private void initializeData() {
@@ -336,8 +346,6 @@ public class MainActivity extends BaseActivity {
      * Note: Adapter is created in displayPromotionsCarousel after data is fetched
      */
     private void setupPromotionsCarousel() {
-        ImageView arrowLeft = findViewById(R.id.promotionBannerArrowLeft);
-        ImageView arrowRight = findViewById(R.id.promotionBannerArrowRight);
         ViewPager2 promotionPager = findViewById(R.id.promotionBannerViewPager);
         
         if (promotionPager == null) {
@@ -345,25 +353,7 @@ public class MainActivity extends BaseActivity {
             return;
         }
         
-        // Setup navigation arrows
-        arrowLeft.setOnClickListener(v -> {
-            int currentItem = promotionPager.getCurrentItem();
-            if (currentItem > 0) {
-                promotionPager.setCurrentItem(currentItem - 1, true);
-            }
-        });
-        
-        arrowRight.setOnClickListener(v -> {
-            RecyclerView.Adapter adapter = promotionPager.getAdapter();
-            if (adapter != null) {
-                int currentItem = promotionPager.getCurrentItem();
-                if (currentItem < adapter.getItemCount() - 1) {
-                    promotionPager.setCurrentItem(currentItem + 1, true);
-                }
-            }
-        });
-        
-        Log.d(TAG, "✓ Promotion banner arrow controls setup");
+        Log.d(TAG, "✓ Promotion banner setup complete (auto-scroll enabled)");
     }
     
     /**
@@ -404,12 +394,12 @@ public class MainActivity extends BaseActivity {
      * Display promotions in the banner carousel (called when data is fetched).
      */
     private void displayPromotionsCarousel(java.util.List<aeu.ratha.beckie_deal_app.data.models.Promotion> promotions) {
-        ViewPager2 promotionPager = findViewById(R.id.promotionBannerViewPager);
+        promotionBannerPager = findViewById(R.id.promotionBannerViewPager);
         LinearLayout dotsContainer = findViewById(R.id.promotionBannerDotsContainer);
         
         Log.d(TAG, "displayPromotionsCarousel called with " + (promotions != null ? promotions.size() : "null") + " promotions");
         
-        if (promotionPager == null) {
+        if (promotionBannerPager == null) {
             Log.e(TAG, "❌ Promotion pager is NULL! Cannot find R.id.promotionBannerViewPager");
             return;
         }
@@ -417,7 +407,7 @@ public class MainActivity extends BaseActivity {
         if (promotions == null || promotions.isEmpty()) {
             Log.e(TAG, "❌ Promotions list is null or empty!");
             // Set red background so we know it's empty
-            promotionPager.setBackgroundColor(0xFFFF0000);
+            promotionBannerPager.setBackgroundColor(0xFFFF0000);
             return;
         }
         
@@ -429,20 +419,96 @@ public class MainActivity extends BaseActivity {
         // Create and set adapter
         try {
             PromotionBannerAdapter adapter = new PromotionBannerAdapter(this, promotions);
-            promotionPager.setAdapter(adapter);
-            promotionPager.setVisibility(View.VISIBLE);
-            promotionPager.setBackgroundColor(0x00000000); // Transparent
+            promotionBannerPager.setAdapter(adapter);
+            promotionBannerPager.setVisibility(View.VISIBLE);
+            promotionBannerPager.setBackgroundColor(0x00000000); // Transparent
             
             Log.d(TAG, "✓ Adapter set successfully, item count: " + adapter.getItemCount());
             
             // Setup dot indicators
             if (dotsContainer != null) {
-                setupPromotionDots(promotionPager, dotsContainer, adapter.getItemCount());
+                setupPromotionDots(promotionBannerPager, dotsContainer, adapter.getItemCount());
                 Log.d(TAG, "✓ Dots setup complete");
             }
+            
+            // Setup auto-scroll with pause on touch
+            setupPromotionAutoScroll(promotionBannerPager, adapter.getItemCount());
+            
         } catch (Exception e) {
             Log.e(TAG, "❌ Error setting adapter: " + e.getMessage(), e);
-            promotionPager.setBackgroundColor(0xFFFFFF00); // Yellow for error
+            promotionBannerPager.setBackgroundColor(0xFFFFFF00); // Yellow for error
+        }
+    }
+    
+    /**
+     * Setup auto-scroll for promotion banner carousel (4.5 seconds delay, same as other banners).
+     */
+    private void setupPromotionAutoScroll(ViewPager2 promotionPager, int count) {
+        if (promotionPager == null || count <= 1) return;
+        
+        // Auto-scroll for promotions (same delay as new arrivals banner)
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (promotionPager == null) return;
+                if (isPromotionTouched) return;
+                int next = (promotionPager.getCurrentItem() + 1) % count;
+                promotionPager.setCurrentItem(next, true);
+                handler.postDelayed(this, BANNER_SCROLL_DELAY);
+            }
+        };
+
+        promotionAutoScrollHandler = handler;
+        promotionAutoScrollRunnable = runnable;
+
+        // Start auto-scroll
+        handler.postDelayed(runnable, BANNER_SCROLL_DELAY);
+
+        // Pause on user drag
+        promotionPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                    isPromotionTouched = true;
+                    if (promotionAutoScrollHandler != null && promotionAutoScrollRunnable != null) {
+                        promotionAutoScrollHandler.removeCallbacks(promotionAutoScrollRunnable);
+                    }
+                } else if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                    isPromotionTouched = false;
+                    resetPromotionAutoScroll();
+                }
+            }
+        });
+        
+        Log.d(TAG, "✓ Promotion auto-scroll setup complete (delay: " + BANNER_SCROLL_DELAY + "ms)");
+    }
+    
+    /**
+     * Reset promotion banner auto-scroll after user stops interacting.
+     */
+    private void resetPromotionAutoScroll() {
+        if (promotionAutoScrollHandler != null && promotionAutoScrollRunnable != null) {
+            promotionAutoScrollHandler.removeCallbacks(promotionAutoScrollRunnable);
+            promotionAutoScrollHandler.postDelayed(promotionAutoScrollRunnable, BANNER_SCROLL_DELAY);
+        }
+    }
+    
+    /**
+     * Start promotion banner auto-scroll (called on resume).
+     */
+    private void startPromotionAutoScroll() {
+        if (!isPromotionTouched) {
+            resetPromotionAutoScroll();
+        }
+    }
+    
+    /**
+     * Stop promotion banner auto-scroll (called on pause).
+     */
+    private void stopPromotionAutoScroll() {
+        if (promotionAutoScrollHandler != null && promotionAutoScrollRunnable != null) {
+            promotionAutoScrollHandler.removeCallbacks(promotionAutoScrollRunnable);
         }
     }
 

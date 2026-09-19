@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,6 +78,8 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
         private final TextView descriptionText;
         private final TextView codeText;
         private final TextView countdownText;
+        private final ImageView copyCodeIcon;
+        private final LinearLayout copyCodePill;
         private Runnable countdownRunnable;
         private Handler countdownHandler = new Handler(Looper.getMainLooper());
         
@@ -89,6 +92,10 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
             descriptionText = itemView.findViewById(R.id.promotionDescription);
             codeText = itemView.findViewById(R.id.promotionCode);
             countdownText = itemView.findViewById(R.id.promotionCountdown);
+            copyCodeIcon = itemView.findViewById(R.id.promotionCopyCodeIcon);
+            
+            // Find the copy code pill container (parent of icon)
+            copyCodePill = (LinearLayout) copyCodeIcon.getParent();
         }
         
         /**
@@ -108,13 +115,17 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
             
             codeText.setText(promotion.getCode());                 // "SUMMER30"
             
-            // Load banner image
+            // Load banner image with fallback to gradient background
             if (promotion.getBannerImage() != null && !promotion.getBannerImage().isEmpty()) {
                 Glide.with(context)
                         .load(promotion.getBannerImage())
                         .centerCrop()
                         .into(bannerImage);
                 Log.d(TAG, "✓ Loaded banner image: " + promotion.getBannerImage());
+            } else {
+                // No image available - gradient fallback will show
+                bannerImage.setImageDrawable(null);
+                Log.d(TAG, "⚠ No banner image - using gradient fallback for: " + promotion.getCode());
             }
             
             // Set initial countdown
@@ -123,8 +134,8 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
             // Start countdown timer (updates every second)
             startCountdownTimer(promotion);
             
-            // Click handler - copy code to clipboard
-            itemView.setOnClickListener(v -> {
+            // Click handler for copy code pill - copy code to clipboard
+            copyCodePill.setOnClickListener(v -> {
                 ClipboardManager clipboard = 
                     (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("Promo Code", promotion.getCode());
