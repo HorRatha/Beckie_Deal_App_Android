@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Primary Colors -->
-    <color name="primary">#FB923C</color>
-    <color name="primary_container">#7C2D12</color>
+    <color name="primary">#FDC011</color>
+    <color name="primary_container">#7C5E1C</color>
     <color name="on_primary">#FFFFFF</color>
     <color name="on_primary_container">#FFEDD5</color>
 
@@ -37,16 +37,16 @@
 
     <!-- Bottom Nav Custom Style (Dark Mode) -->
     <color name="nav_bg">#1A2332</color>
-    <color name="nav_active_pill">#2A1A0A</color>
-    <color name="nav_active_item">#FB923C</color>
+    <color name="nav_active_pill">#3D3213</color>
+    <color name="nav_active_item">#FDC011</color>
     <color name="nav_inactive_item">#64748B</color>
 
     <!-- Bottom Nav Modern Clean Style (Dark Mode) -->
     <color name="nav_surface">#1A2332</color>
-    <!-- Active pill: warm subtle orange glow -->
-    <color name="nav_indicator_fill">#331E0B</color>
+    <!-- Active pill: warm subtle yellow glow -->
+    <color name="nav_indicator_fill">#3D3213</color>
     <!-- Icon colors -->
-    <color name="nav_glass_active">#FB923C</color>
+    <color name="nav_glass_active">#FDC011</color>
     <color name="nav_glass_inactive">#64748B</color>
 
     <!-- Fixed Colors (Remain the same) -->
@@ -63,7 +63,7 @@
     <color name="dark_brown">#3E2723</color>
 
     <!-- Order Status Colors (Dark Mode) -->
-    <color name="status_processing">#FB923C</color>
+    <color name="status_processing">#FDC011</color>
     <color name="status_shipped">#60A5FA</color>
     <color name="status_delivered">#34D399</color>
     <color name="status_cancelled">#F87171</color>

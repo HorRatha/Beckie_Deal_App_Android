@@ -32,6 +32,10 @@ import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.graphics.Color;
 
+import android.widget.ImageView;
+import android.content.res.Configuration;
+import java.util.ArrayList;
+
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
@@ -246,6 +250,37 @@ public class CategoriesActivity extends BaseActivity {
     }
 
     /**
+     * Get brand logo drawable ID by brand slug.
+     */
+    private Integer getBrandLogo(String slug) {
+        if (slug == null) return null;
+        String name = slug.toLowerCase();
+        // Use new logos first
+        if (name.equals("apple")) return R.drawable.apple;
+        if (name.equals("dell")) return R.drawable.dell;
+        if (name.equals("hp")) return R.drawable.hp;
+        if (name.equals("lenovo")) return R.drawable.lenovo;
+        if (name.equals("msi")) return R.drawable.msi;
+        if (name.equals("nvidia")) return R.drawable.nvidia;
+        if (name.equals("rog")) return R.drawable.republicofgamers;
+        // Fallback to old logos if available
+        if (name.equals("razer")) return R.drawable.ic_brand_razer;
+        if (name.equals("asus")) return R.drawable.ic_brand_asus;
+        if (name.equals("acer")) return R.drawable.ic_brand_acer;
+        if (name.equals("microsoft")) return R.drawable.ic_brand_microsoft;
+        if (name.equals("samsung")) return R.drawable.ic_brand_samsung;
+        return null;
+    }
+
+    /**
+     * Check if dark mode is enabled.
+     */
+    private boolean isDarkModeEnabled() {
+        int nightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        return nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    /**
      * Handle API error - show empty state or error message.
      */
     private void initFallbackBrands() {
@@ -261,13 +296,126 @@ public class CategoriesActivity extends BaseActivity {
 
     private void setupLaptopBrands() {
         brandsGrid = findViewById(R.id.laptopBrandsGrid);
-        // Responsive column count
-        if (brandsGrid != null) brandsGrid.setColumnCount(ScreenUtils.brandsGridColumns(this));
+        // Set column count to 3 for 3 cards per row
+        if (brandsGrid != null) brandsGrid.setColumnCount(3);
 
         TextView brandsSubtitle = findViewById(R.id.brandsAvailableSubtitle);
-        if (brandsSubtitle != null) brandsSubtitle.setText(brandsList.size() + " brands available");
+        
+        // Create 6 static brands with logos (2 rows x 3 columns)
+        List<BrandDisplay> staticBrands = new ArrayList<>();
+        
+        // Create static Brand objects
+        Brand apple = new Brand(1, "Apple", "apple");
+        apple.setActive(true);
+        staticBrands.add(new BrandDisplay(apple, 0, false));
+        
+        Brand dell = new Brand(2, "Dell", "dell");
+        dell.setActive(true);
+        staticBrands.add(new BrandDisplay(dell, 0, false));
+        
+        Brand hp = new Brand(3, "HP", "hp");
+        hp.setActive(true);
+        staticBrands.add(new BrandDisplay(hp, 0, false));
+        
+        Brand lenovo = new Brand(4, "Lenovo", "lenovo");
+        lenovo.setActive(true);
+        staticBrands.add(new BrandDisplay(lenovo, 0, false));
+        
+        Brand msi = new Brand(5, "MSI", "msi");
+        msi.setActive(true);
+        staticBrands.add(new BrandDisplay(msi, 0, false));
+        
+        Brand rog = new Brand(6, "ROG", "rog");
+        rog.setActive(true);
+        staticBrands.add(new BrandDisplay(rog, 0, false));
+        
+        // Update subtitle
+        if (brandsSubtitle != null) {
+            brandsSubtitle.setText(staticBrands.size() + " brands available");
+        }
 
-        renderBrands();
+        // Render the static brands
+        renderFilteredBrands(staticBrands);
+    }
+
+    /**
+     * Render filtered brands list (for Laptop Brands section).
+     */
+    private void renderFilteredBrands(List<BrandDisplay> filteredBrands) {
+        if (brandsGrid == null) return;
+        brandsGrid.removeAllViews();
+
+        for (int i = 0; i < filteredBrands.size(); i++) {
+            BrandDisplay brandDisplay = filteredBrands.get(i);
+            Brand brand = brandDisplay.brand;
+            
+            View view = LayoutInflater.from(this)
+                    .inflate(R.layout.item_brand_square, brandsGrid, false);
+
+            com.google.android.material.card.MaterialCardView card = view.findViewById(R.id.brandCard);
+            ImageView brandIcon = view.findViewById(R.id.brandIcon);
+            TextView nameText = view.findViewById(R.id.brandName);
+            View checkBadge = view.findViewById(R.id.selectedCheckBadge);
+
+            nameText.setText(brand.getName());
+
+            // Display brand logo with dark mode support
+            Integer logoResId = getBrandLogo(brand.getSlug());
+            if (logoResId != null) {
+                if (isDarkModeEnabled()) {
+                    if (brand.getSlug().toLowerCase().equals("apple")) {
+                        brandIcon.setImageResource(R.drawable.apple_white);
+                    } else {
+                        brandIcon.setImageResource(logoResId);
+                        brandIcon.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
+                    }
+                } else {
+                    brandIcon.setImageResource(logoResId);
+                }
+                brandIcon.setVisibility(View.VISIBLE);
+            } else {
+                brandIcon.setVisibility(View.GONE);
+            }
+
+            if (brandDisplay.isSelected) {
+                int primaryColor = ContextCompat.getColor(this, R.color.primary);
+                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.brand_selected_bg));
+                card.setStrokeWidth(0);
+                card.setCardElevation(4f);
+                nameText.setTextColor(primaryColor);
+                if (checkBadge != null) checkBadge.setVisibility(View.VISIBLE);
+            } else {
+                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
+                card.setStrokeWidth(0);
+                card.setCardElevation(1f);
+                nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
+                if (checkBadge != null) checkBadge.setVisibility(View.GONE);
+            }
+
+            final int index = i;
+            final List<BrandDisplay> finalFilteredBrands = filteredBrands;
+            View.OnClickListener onBrandClick = v -> {
+                for (int j = 0; j < finalFilteredBrands.size(); j++)
+                    finalFilteredBrands.get(j).isSelected = (j == index);
+                renderFilteredBrands(finalFilteredBrands);
+                
+                // Open CategoryDetailActivity pre-filtered to this brand
+                String category = brandToCategory(brand.getName());
+                int total = brand.getProductsCount();
+                
+                Intent intent = new Intent(this, CategoryDetailActivity.class);
+                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,     category);
+                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE,   heroImageFor(category));
+                intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT,   total + " Items");
+                intent.putExtra(CategoryDetailActivity.EXTRA_BRAND_FILTER, brand.getName());
+                intent.putExtra("BRAND_ID", brand.getId());
+                intent.putExtra("BRAND_SLUG", brand.getSlug());
+                startActivity(intent);
+            };
+            card.setOnClickListener(onBrandClick);
+
+            brandsGrid.addView(view);
+        }
     }
 
     /** Rotating tint pairs (background, foreground) applied to brand icon containers
@@ -296,52 +444,30 @@ public class CategoriesActivity extends BaseActivity {
             View view = LayoutInflater.from(this)
                     .inflate(R.layout.item_brand_square, brandsGrid, false);
 
-            MaterialCardView card          = view.findViewById(R.id.brandCard);
-            MaterialCardView iconContainer = view.findViewById(R.id.iconContainer);
-            ImageView brandIcon            = view.findViewById(R.id.brandIcon);
-            TextView  iconText             = view.findViewById(R.id.brandIconText);
-            TextView  nameText             = view.findViewById(R.id.brandName);
-            TextView  countText            = view.findViewById(R.id.brandProductCount);
-            View      checkBadge           = view.findViewById(R.id.selectedCheckBadge);
+            com.google.android.material.card.MaterialCardView card = view.findViewById(R.id.brandCard);
+            ImageView brandIcon = view.findViewById(R.id.brandIcon);
+            TextView nameText = view.findViewById(R.id.brandName);
+            View checkBadge = view.findViewById(R.id.selectedCheckBadge);
 
             nameText.setText(brand.getName());
 
-            // Show product count from API
-            if (countText != null) {
-                int productCount = brand.getProductsCount();
-                if (productCount > 0) {
-                    countText.setText(productCount + " items");
-                    countText.setVisibility(View.VISIBLE);
+            // Display brand logo if available
+            Integer logoResId = getBrandLogo(brand.getSlug());
+            if (logoResId != null) {
+                // Check if dark mode and apple logo, use white version
+                if (brand.getSlug().toLowerCase().equals("apple") && isDarkModeEnabled()) {
+                    brandIcon.setImageResource(R.drawable.apple_white);
+                } else if (logoResId.equals(R.drawable.apple) && isDarkModeEnabled()) {
+                    brandIcon.setImageResource(R.drawable.apple_white);
                 } else {
-                    // No products available for this brand
-                    countText.setText("0 items");
-                    countText.setVisibility(View.VISIBLE);
+                    brandIcon.setImageResource(logoResId);
                 }
-            }
-
-            if (brandDisplay.imageResId != 0) {
                 brandIcon.setVisibility(View.VISIBLE);
-                iconText.setVisibility(View.GONE);
-                brandIcon.setImageResource(brandDisplay.imageResId);
-            } else if (brand.getLogo() != null && !brand.getLogo().isEmpty()) {
-                // Load logo from URL with Glide
-                brandIcon.setVisibility(View.VISIBLE);
-                iconText.setVisibility(View.GONE);
-                Glide.with(this)
-                    .load(brand.getLogo())
-                    .placeholder(R.drawable.placeholder_image)
-                    .into(brandIcon);
             } else {
-                // Show initial letter
                 brandIcon.setVisibility(View.GONE);
-                iconText.setVisibility(View.VISIBLE);
-                String initial = brand.getName().substring(0, 
-                    Math.min(brand.getName().length(), 1)).toUpperCase();
-                iconText.setText(initial);
             }
 
             int[] tint = BRAND_TINTS[i % BRAND_TINTS.length];
-            int tintBg = ContextCompat.getColor(this, tint[0]);
             int tintFg = ContextCompat.getColor(this, tint[1]);
 
             if (brandDisplay.isSelected) {
@@ -349,23 +475,15 @@ public class CategoriesActivity extends BaseActivity {
                 card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.brand_selected_bg));
                 card.setStrokeWidth(dpToPx(2));
                 card.setStrokeColor(primaryColor);
-                card.setCardElevation(8f);
+                card.setCardElevation(4f);
                 nameText.setTextColor(primaryColor);
-                if (countText != null) countText.setTextColor(primaryColor);
-                if (iconContainer != null) iconContainer.setCardBackgroundColor(primaryColor);
-                brandIcon.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
-                iconText.setTextColor(ContextCompat.getColor(this, R.color.white_fixed));
                 if (checkBadge != null) checkBadge.setVisibility(View.VISIBLE);
             } else {
                 card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
-                card.setStrokeWidth(dpToPx(1));
-                card.setStrokeColor(ContextCompat.getColor(this, R.color.border_color));
-                card.setCardElevation(3f);
+                card.setStrokeWidth(dpToPx(2));
+                card.setStrokeColor(tintFg);
+                card.setCardElevation(1f);
                 nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
-                if (countText != null) countText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
-                if (iconContainer != null) iconContainer.setCardBackgroundColor(tintBg);
-                brandIcon.clearColorFilter();
-                iconText.setTextColor(tintFg);
                 if (checkBadge != null) checkBadge.setVisibility(View.GONE);
             }
 
