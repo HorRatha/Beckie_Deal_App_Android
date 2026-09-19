@@ -107,6 +107,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:padding="40dp"
                 android:visibility="gone">
 
                 <ImageView
@@ -129,7 +130,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginHorizontal="24dp"
                     android:gravity="center"
                     android:text="Looks like you haven't added anything yet."
                     android:textAppearance="@style/TextAppearance.App.Body"
@@ -147,43 +148,12 @@
                     app:backgroundTint="@null"/>
                     
                 <!-- Login buttons for guest users -->
-                <LinearLayout
+                <include
                     android:id="@+id/loginButtonsContainer"
-                    android:layout_width="wrap_content"
+                    layout="@layout/layout_login_buttons"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone">
-                    
-                    <!-- Login Button - Solid Dark Gray (#2F3130) with white text -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/emptyStateLoginButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/button_buy_now_state"
-                        android:text="Login"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white_fixed"
-                        android:paddingHorizontal="32dp"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:backgroundTint="@null"/>
-                    
-                    <!-- Register Button - Gradient Yellow to Orange -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/emptyStateRegisterButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/button_add_to_cart_gradient"
-                        android:text="Register"
-                        android:textAllCaps="false"
-                        android:textColor="@color/dark_brown"
-                        android:paddingHorizontal="32dp"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:backgroundTint="@null"/>
-                </LinearLayout>
+                    android:visibility="gone" />
             </LinearLayout>
 
             <!-- Cart Items List -->

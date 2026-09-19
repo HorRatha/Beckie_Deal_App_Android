@@ -142,34 +142,37 @@
             android:orientation="horizontal"
             android:layout_marginTop="20dp">
 
+            <!-- Login Button - Gradient Glass Morphism -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/loginButton"
                 android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
+                android:background="@drawable/button_add_to_cart_glass"
                 android:text="Login"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.App.Button"
-                android:textColor="@color/white_fixed"
-                app:backgroundTint="@color/primary"
-                app:elevation="2dp"
+                android:textColor="@color/dark_brown"
+                app:backgroundTint="@null"
+                app:elevation="0dp"
                 app:strokeWidth="0dp" />
 
+            <!-- Register Button - Dark Gray Glass Morphism -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/registerButton"
                 android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
+                android:background="@drawable/button_buy_now_glass"
                 android:text="Register"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.App.Button"
-                android:textColor="@color/primary"
-                app:backgroundTint="@android:color/transparent"
-                app:strokeColor="@color/primary"
-                app:strokeWidth="2dp"
-                app:elevation="0dp" />
+                android:textColor="@color/white_fixed"
+                app:backgroundTint="@null"
+                app:elevation="0dp"
+                app:strokeWidth="0dp" />
 
         </LinearLayout>
 

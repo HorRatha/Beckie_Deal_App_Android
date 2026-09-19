@@ -710,11 +710,11 @@ public class ProductDetailActivity extends BaseActivity {
                         BottomNavHelper.updateCartBadge(ProductDetailActivity.this);
                         String msg = selectedQuantity == 1 ? "Added to cart!"
                                 : selectedQuantity + "× added to cart!";
-                        Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
-                                .setAction("View Cart", view -> startActivity(
+                        Snackbar snackbar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
+                                .setAction("View Cart ♥", view -> startActivity(
                                         new Intent(ProductDetailActivity.this, CartActivity.class)))
-                                .setActionTextColor(getResources().getColor(R.color.primary, null))
-                                .show();
+                                .setActionTextColor(getResources().getColor(R.color.primary, null));
+                        snackbar.show();
                     });
                 }
                 @Override public void onError(String error) {

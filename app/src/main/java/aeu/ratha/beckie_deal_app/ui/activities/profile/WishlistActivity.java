@@ -230,8 +230,8 @@ public class WishlistActivity extends BaseActivity {
         TextView message = findViewById(R.id.wishlistEmptyMessage);
         View exploreButton = findViewById(R.id.exploreButton);
         View loginButtonsContainer = findViewById(R.id.wishlistLoginButtonsContainer);
-        View loginBtn = findViewById(R.id.wishlistLoginButton);
-        View registerBtn = findViewById(R.id.wishlistRegisterButton);
+        View loginBtn = findViewById(R.id.loginButton);
+        View registerBtn = findViewById(R.id.registerButton);
         
         if (!isLoggedIn) {
             // Guest user - show login prompt

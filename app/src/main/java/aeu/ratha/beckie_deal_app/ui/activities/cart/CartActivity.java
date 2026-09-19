@@ -191,13 +191,13 @@ public class CartActivity extends BaseActivity {
         TextView message = findViewById(R.id.emptyStateMessage);
         View startShoppingBtn = findViewById(R.id.startShoppingButton);
         View loginButtonsContainer = findViewById(R.id.loginButtonsContainer);
-        View loginBtn = findViewById(R.id.emptyStateLoginButton);
-        View registerBtn = findViewById(R.id.emptyStateRegisterButton);
+        View loginBtn = findViewById(R.id.loginButton);
+        View registerBtn = findViewById(R.id.registerButton);
         
         if (!isLoggedIn) {
             // Guest user - show login prompt
             if (icon != null) icon.setImageResource(R.drawable.ic_lock);
-            if (title != null) title.setText("Login to View Cart");
+            if (title != null) title.setText("Login to Cart");
             if (message != null) message.setText("Sign in to see items you've added and continue shopping.");
             if (startShoppingBtn != null) startShoppingBtn.setVisibility(View.GONE);
             if (loginButtonsContainer != null) loginButtonsContainer.setVisibility(View.VISIBLE);

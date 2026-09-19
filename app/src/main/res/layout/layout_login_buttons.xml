@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/loginButtonsContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="0dp"
+    android:layout_marginEnd="0dp">
+
+    <!-- Login Button - Gradient Glass Morphism -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginButton"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="0.5"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:background="@drawable/button_add_to_cart_glass"
+        android:text="Login"
+        android:textAllCaps="false"
+        android:textColor="@color/dark_brown"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:backgroundTint="@null"/>
+
+    <!-- Register Button - Dark Gray Glass Morphism -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/registerButton"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="0.5"
+        android:layout_marginStart="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:background="@drawable/button_buy_now_glass"
+        android:text="Register"
+        android:textAllCaps="false"
+        android:textColor="@color/white_fixed"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:backgroundTint="@null"/>
+
+</LinearLayout>
