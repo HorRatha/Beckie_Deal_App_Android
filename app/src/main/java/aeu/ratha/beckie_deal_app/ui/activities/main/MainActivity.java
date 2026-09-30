@@ -21,6 +21,7 @@ import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -537,6 +538,23 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupTopBar() {
+        // Configure logo display based on light/dark mode
+        ImageView logoImage = findViewById(R.id.logoImage);
+        if (logoImage != null) {
+            int nightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+            boolean isLight = nightMode != android.content.res.Configuration.UI_MODE_NIGHT_YES;
+            
+            if (isLight) {
+                // In light mode: display the launcher icon with optimized scaling
+                logoImage.setImageResource(R.mipmap.ic_launcher);
+                logoImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            } else {
+                // In dark mode: display the launcher icon as-is
+                logoImage.setImageResource(R.mipmap.ic_launcher);
+                logoImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            }
+        }
+        
         // menuIcon click is handled by AppDrawerHelper
         View notificationContainer = findViewById(R.id.notificationContainer);
 

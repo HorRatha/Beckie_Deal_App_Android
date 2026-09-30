@@ -156,6 +156,23 @@ public class CategoriesActivity extends BaseActivity {
     }
 
     private void setupTopBar() {
+        // Configure logo display based on light/dark mode
+        ImageView logoImage = findViewById(R.id.logoImage);
+        if (logoImage != null) {
+            int nightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+            boolean isLight = nightMode != android.content.res.Configuration.UI_MODE_NIGHT_YES;
+            
+            if (isLight) {
+                // In light mode: display the launcher icon
+                logoImage.setImageResource(R.mipmap.ic_launcher);
+                logoImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            } else {
+                // In dark mode: display the launcher icon as-is
+                logoImage.setImageResource(R.mipmap.ic_launcher);
+                logoImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            }
+        }
+        
         // menuIcon click handled by AppDrawerHelper
         ImageView searchIcon = findViewById(R.id.searchIcon);
         View notificationContainer = findViewById(R.id.notificationContainer);
