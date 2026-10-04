@@ -10,6 +10,14 @@
         <item name="android:textColor">@color/text_primary</item>
     </style>
     
+    <!-- Auth Title - Large Bold for Login/Register screens - Amulya Bold 34sp -->
+    <style name="TextAppearance.App.AuthTitle" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">@font/amulya_bold</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
     <!-- Product Name (Detail Page) - Amulya Bold 24sp, tracking -0.02em -->
     <style name="TextAppearance.App.ProductName" parent="TextAppearance.Material3.HeadlineSmall">
         <item name="android:fontFamily">@font/amulya_bold</item>

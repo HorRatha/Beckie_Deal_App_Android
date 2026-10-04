@@ -32,14 +32,13 @@
                     android:id="@+id/backButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_gravity="start|top"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
+                    android:background="@drawable/login_logo_circle_bg"
+                    android:contentDescription="Back"
+                    android:elevation="4dp"
                     android:padding="8dp"
                     android:src="@drawable/ic_arrow_left"
-                    android:contentDescription="Back"
-                    android:background="@drawable/login_logo_circle_bg"
-                    android:elevation="4dp"
                     app:tint="@color/primary" />
 
                 <!-- Logo - Small and Wide Format -->
@@ -130,9 +129,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Welcome Back"
-                        android:textAppearance="@style/TextAppearance.App.ScreenTitle"
-                        android:textColor="@color/dark_brown"
-                        android:letterSpacing="0.02" />
+                        android:textAppearance="@style/TextAppearance.App.AuthTitle"
+                        android:textColor="@color/dark_brown" />
 
                     <!-- Subtitle with icon -->
                     <LinearLayout
@@ -163,10 +161,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Email"
-                        android:textAppearance="@style/TextAppearance.App.Label"
-                        android:textAllCaps="false"
-                        android:textColor="@color/dark_brown"
-                        android:letterSpacing="0.03" />
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/dark_brown" />
 
                     <EditText
                         android:id="@+id/emailInput"
@@ -189,10 +185,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
                         android:text="Password"
-                        android:textAppearance="@style/TextAppearance.App.Label"
-                        android:textAllCaps="false"
-                        android:textColor="@color/dark_brown"
-                        android:letterSpacing="0.03" />
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/dark_brown" />
 
                     <EditText
                         android:id="@+id/passwordInput"
@@ -303,9 +297,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Create Account"
-                        android:textAppearance="@style/TextAppearance.App.ScreenTitle"
-                        android:textColor="@color/dark_brown"
-                        android:letterSpacing="0.02" />
+                        android:textAppearance="@style/TextAppearance.App.AuthTitle"
+                        android:textColor="@color/dark_brown" />
 
                     <!-- Subtitle -->
                     <TextView
@@ -322,7 +315,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Full Name"
-                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
                         android:textColor="@color/dark_brown" />
 
                     <EditText
@@ -344,7 +337,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
                         android:text="Email"
-                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
                         android:textColor="@color/dark_brown" />
 
                     <EditText
@@ -366,7 +359,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
                         android:text="Password"
-                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
                         android:textColor="@color/dark_brown" />
 
                     <EditText

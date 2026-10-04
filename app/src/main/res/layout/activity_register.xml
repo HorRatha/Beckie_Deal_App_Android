@@ -55,9 +55,8 @@
                     android:id="@+id/backButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_gravity="start|top"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="40dp"
                     android:padding="8dp"
                     android:src="@drawable/ic_arrow_left"
                     android:contentDescription="Back"
@@ -128,8 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Create Account"
-                        android:textAppearance="@style/TextAppearance.App.ScreenTitle"
-                        android:letterSpacing="0.02" />
+                        android:textAppearance="@style/TextAppearance.App.AuthTitle" />
 
                     <!-- Subtitle with icon -->
                     <LinearLayout
@@ -160,10 +158,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="First Name"
-                        android:textAppearance="@style/TextAppearance.App.Label"
-                        android:textAllCaps="false"
-                        android:textColor="@color/text_secondary"
-                        android:letterSpacing="0.03" />
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/text_secondary" />
 
                     <EditText
                         android:id="@+id/firstNameInput"
@@ -186,10 +182,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Last Name"
-                        android:textAppearance="@style/TextAppearance.App.Label"
-                        android:textAllCaps="false"
-                        android:textColor="@color/text_secondary"
-                        android:letterSpacing="0.03" />
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/text_secondary" />
 
                     <EditText
                         android:id="@+id/lastNameInput"
@@ -212,10 +206,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Email"
-                        android:textAppearance="@style/TextAppearance.App.Label"
-                        android:textAllCaps="false"
-                        android:textColor="@color/text_secondary"
-                        android:letterSpacing="0.03" />
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/text_secondary" />
 
                     <EditText
                         android:id="@+id/emailInput"
@@ -238,10 +230,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Password"
-                        android:textAppearance="@style/TextAppearance.App.Label"
-                        android:textAllCaps="false"
-                        android:textColor="@color/text_secondary"
-                        android:letterSpacing="0.03" />
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/text_secondary" />
 
                     <EditText
                         android:id="@+id/passwordInput"
@@ -264,10 +254,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:text="Confirm Password"
-                        android:textAppearance="@style/TextAppearance.App.Label"
-                        android:textAllCaps="false"
-                        android:textColor="@color/text_secondary"
-                        android:letterSpacing="0.03" />
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/text_secondary" />
 
                     <EditText
                         android:id="@+id/confirmPasswordInput"
