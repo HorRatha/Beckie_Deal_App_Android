@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,16 +12,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_brown">
-
-    <!-- Gradient hero header â€” continues the status bar color into the page and
-         hosts the top bar + page title, replacing the flat white toolbar. -->
-    <View
-        android:id="@+id/heroGradient"
-        android:layout_width="match_parent"
-        android:layout_height="168dp"
-        android:background="@drawable/categories_hero_gradient"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:background="@color/background">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
@@ -46,7 +37,7 @@
                 android:focusable="true"
                 android:background="@drawable/circle_white_translucent"
                 android:src="@android:drawable/ic_menu_sort_by_size"
-                app:tint="@color/white_fixed" />
+                app:tint="@color/dark_brown" />
             <ImageView
                 android:id="@+id/logoImage"
                 android:layout_width="110dp"
@@ -66,7 +57,7 @@
                 android:focusable="true"
                 android:background="@drawable/circle_white_translucent"
                 android:src="@android:drawable/ic_menu_search"
-                app:tint="@color/white_fixed" />
+                app:tint="@color/dark_brown" />
             <RelativeLayout
                 android:id="@+id/notificationContainer"
                 android:layout_width="40dp"
@@ -81,7 +72,7 @@
                     android:layout_height="20dp"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_notifications"
-                    app:tint="@color/white_fixed" />
+                    app:tint="@color/dark_brown" />
 
                 <TextView
                     android:id="@+id/notificationBadge"
@@ -102,56 +93,66 @@
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- Page title + subtitle, sitting on the gradient -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="20dp"
-        android:paddingTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/topAppBar">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Categories"
-            android:textColor="@color/dark_brown"
-            android:textSize="@dimen/text_size_headline_large"
-            android:fontFamily="sans-serif-medium" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Explore our premium collection by hardware type"
-            android:textColor="@color/dark_brown"
-            android:textSize="@dimen/text_size_body" />
-
-    </LinearLayout>
-
-    <!-- Scrollable Content â€” rounded-top sheet overlapping the gradient header -->
+    <!-- Scrollable Content with wave inside -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:background="@drawable/content_sheet_top_rounded"
-        android:layout_marginTop="-22dp"
-        app:layout_constraintTop_toBottomOf="@id/heroGradient"
+        android:background="@color/background"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="22dp"
             android:paddingBottom="16dp">
+
+            <!-- Wave background header - NOW SCROLLS WITH CONTENT -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_top_wave" />
+
+            <!-- Page title + subtitle on the wave -->
 
             <!-- Laptops Brands Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="-60dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Categories"
+                    android:textColor="@color/dark_brown"
+                    android:textSize="@dimen/text_size_headline_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Explore our premium collection by hardware type"
+                    android:textColor="@color/dark_brown"
+                    android:textSize="@dimen/text_size_body" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp">
 
                 <!-- Section header row -->
                 <LinearLayout
@@ -246,6 +247,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
+                android:layout_marginStart="16dp"
                 android:text="All Categories"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_title_small"
@@ -256,6 +258,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="16dp"
                 android:columnCount="2" />
 
         </LinearLayout>

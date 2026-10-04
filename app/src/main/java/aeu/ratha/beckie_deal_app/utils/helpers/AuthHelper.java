@@ -11,7 +11,6 @@ import android.view.View;
 import aeu.ratha.beckie_deal_app.R;
 import aeu.ratha.beckie_deal_app.security.TokenManager;
 import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity;
 
 /**
  * Helper class for authentication validation and user prompts.
@@ -134,7 +133,8 @@ public class AuthHelper {
                     activity.startActivity(intent);
                 })
                 .setNegativeButton("Register", (dialog, which) -> {
-                    Intent intent = new Intent(activity, RegisterActivity.class);
+                    Intent intent = new Intent(activity, LoginActivity.class);
+                    intent.putExtra("openRegister", true); // Open register tab
                     activity.startActivity(intent);
                 })
                 .setNeutralButton("Cancel", null)
@@ -159,7 +159,8 @@ public class AuthHelper {
                     activity.startActivity(intent);
                 })
                 .setNegativeButton("Register", (dialog, which) -> {
-                    Intent intent = new Intent(activity, RegisterActivity.class);
+                    Intent intent = new Intent(activity, LoginActivity.class);
+                    intent.putExtra("openRegister", true); // Open register tab
                     activity.startActivity(intent);
                 })
                 .setNeutralButton("Later", null)

@@ -151,17 +151,13 @@ public class CategoryDetailActivity extends BaseActivity {
     // ── Hero banner ───────────────────────────────────────────────────────────
 
     private void setupHero(String heroImageUrl, String itemCount) {
-        ImageView heroImage = findViewById(R.id.categoryHeroImage);
         TextView heroTitle  = findViewById(R.id.heroTitle);
         TextView heroSub    = findViewById(R.id.heroSubtitle);
 
         if (heroTitle != null) heroTitle.setText(currentCategoryName);
         if (heroSub   != null) heroSub.setText(itemCount != null ? itemCount : "");
-
-        if (heroImage != null && heroImageUrl != null && !heroImageUrl.isEmpty()) {
-            Glide.with(this).load(heroImageUrl).centerCrop()
-                 .placeholder(R.drawable.placeholder_image).into(heroImage);
-        }
+        
+        // Wave background is now used instead of dynamic image
     }
 
     // ── Brand filter chips ────────────────────────────────────────────────────

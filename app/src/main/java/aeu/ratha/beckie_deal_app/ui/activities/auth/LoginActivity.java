@@ -41,6 +41,13 @@ public class LoginActivity extends BaseActivity {
     private Button registerToggle;
     private LinearLayout loginFormSection;
     private LinearLayout registerFormSection;
+    
+    // Register form fields
+    private EditText regNameInput;
+    private EditText regEmailInput;
+    private EditText regPasswordInput;
+    private Button registerButton;
+    
     private boolean isLoginMode = true;
     private AuthApiService authApiService;
     private TokenManager tokenManager;
@@ -64,6 +71,13 @@ public class LoginActivity extends BaseActivity {
         setupTopBar();
         setupForm();
         setupEntranceAnimation();
+        
+        // Check if should open register tab
+        Intent intent = getIntent();
+        if (intent != null && intent.getBooleanExtra("openRegister", false)) {
+            // Open register form after a short delay to let animations complete
+            findViewById(R.id.loginFormSection).postDelayed(() -> switchToRegisterForm(), 300);
+        }
     }
 
     /** Fades the header wave in, then staggers every form row up from below. */
@@ -93,7 +107,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void setupForm() {
-        // Initialize views
+        // Initialize login views
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
         loginButton = findViewById(R.id.loginButton);
@@ -105,8 +119,14 @@ public class LoginActivity extends BaseActivity {
         TextView forgotPassword = findViewById(R.id.forgotPassword);
         TextView loginLink = findViewById(R.id.loginLink);
         
+        // Initialize register views
+        regNameInput = findViewById(R.id.nameInput);
+        regEmailInput = findViewById(R.id.regEmailInput);
+        regPasswordInput = findViewById(R.id.regPasswordInput);
+        registerButton = findViewById(R.id.registerButton);
+        
         // Apply animations
-        UiAnimations.pressBounce(loginButton, registerLink, forgotPassword);
+        UiAnimations.pressBounce(loginButton, registerLink, forgotPassword, registerButton, loginLink);
 
         // Setup toggle button listeners
         if (signInToggle != null) {
@@ -120,6 +140,11 @@ public class LoginActivity extends BaseActivity {
         // Login button click listener
         if (loginButton != null) {
             loginButton.setOnClickListener(v -> attemptLogin());
+        }
+
+        // Register button click listener
+        if (registerButton != null) {
+            registerButton.setOnClickListener(v -> attemptRegister());
         }
 
         // Register link click listener
@@ -478,5 +503,161 @@ public class LoginActivity extends BaseActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+    
+    /**
+     * Attempt to register new user account.
+     * Validates input and makes API call.
+     */
+    private void attemptRegister() {
+        // Get input values
+        String name = regNameInput.getText().toString().trim();
+        String email = regEmailInput.getText().toString().trim();
+        String password = regPasswordInput.getText().toString().trim();
+        
+        // Validate input
+        if (name.isEmpty()) {
+            regNameInput.setError("Full name is required");
+            regNameInput.requestFocus();
+            return;
+        }
+        
+        if (email.isEmpty()) {
+            regEmailInput.setError("Email is required");
+            regEmailInput.requestFocus();
+            return;
+        }
+        
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            regEmailInput.setError("Please enter a valid email");
+            regEmailInput.requestFocus();
+            return;
+        }
+        
+        if (password.isEmpty()) {
+            regPasswordInput.setError("Password is required");
+            regPasswordInput.requestFocus();
+            return;
+        }
+        
+        if (password.length() < 8) {
+            regPasswordInput.setError("Password must be at least 8 characters");
+            regPasswordInput.requestFocus();
+            return;
+        }
+        
+        // Show loading state
+        setRegisterLoadingState(true);
+        
+        // Create register request - backend expects "name", "email", "password", "password_confirmation"
+        aeu.ratha.beckie_deal_app.data.models.RegisterRequest registerRequest = 
+            new aeu.ratha.beckie_deal_app.data.models.RegisterRequest(email, name, password, password);
+        
+        // Make API call
+        Call<aeu.ratha.beckie_deal_app.data.models.RegisterResponse> call = authApiService.register(registerRequest);
+        call.enqueue(new Callback<aeu.ratha.beckie_deal_app.data.models.RegisterResponse>() {
+            @Override
+            public void onResponse(Call<aeu.ratha.beckie_deal_app.data.models.RegisterResponse> call, 
+                                 Response<aeu.ratha.beckie_deal_app.data.models.RegisterResponse> response) {
+                setRegisterLoadingState(false);
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    handleRegisterSuccess(response.body());
+                } else {
+                    handleRegisterError(response.code(), response.message());
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<aeu.ratha.beckie_deal_app.data.models.RegisterResponse> call, Throwable t) {
+                setRegisterLoadingState(false);
+                handleRegisterNetworkError(t);
+            }
+        });
+    }
+    
+    /**
+     * Handle successful registration response.
+     */
+    private void handleRegisterSuccess(aeu.ratha.beckie_deal_app.data.models.RegisterResponse response) {
+        if (response.isSuccess() && response.getData() != null) {
+            aeu.ratha.beckie_deal_app.data.models.RegisterResponse.RegisterData data = response.getData();
+            
+            // Save authentication data
+            tokenManager.saveAuthData(
+                data.getAccessToken(),
+                data.getTokenType(),
+                data.getExpiresIn(),
+                data.getUser()
+            );
+            
+            Log.d(TAG, "Registration successful for user: " + data.getUser().getEmail());
+            
+            // Show success message
+            String userName = data.getUser().getFullName();
+            Toast.makeText(this, "Welcome, " + userName + "! Account created successfully.", Toast.LENGTH_SHORT).show();
+            
+            // Navigate to main activity
+            navigateToMainActivity();
+        } else {
+            Toast.makeText(this, response.getMessage() != null ? response.getMessage() : "Registration failed", Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    /**
+     * Handle registration error from API.
+     */
+    private void handleRegisterError(int statusCode, String message) {
+        Log.e(TAG, "Registration error: " + statusCode + " - " + message);
+        
+        String errorMessage;
+        switch (statusCode) {
+            case 422:
+                errorMessage = "Email already exists or invalid input. Please check and try again";
+                break;
+            case 500:
+                errorMessage = "Server error. Please try again later";
+                break;
+            default:
+                errorMessage = "Registration failed. Please try again";
+        }
+        
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+    }
+    
+    /**
+     * Handle network error during registration.
+     */
+    private void handleRegisterNetworkError(Throwable t) {
+        Log.e(TAG, "Network error during registration", t);
+        
+        String errorMessage = "Network error. Please check your internet connection";
+        if (t.getMessage() != null && t.getMessage().contains("timeout")) {
+            errorMessage = "Connection timeout. Please try again";
+        }
+        
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+    }
+    
+    /**
+     * Set loading state for register form (disable/enable button and inputs).
+     */
+    private void setRegisterLoadingState(boolean isLoading) {
+        if (registerButton != null) {
+            registerButton.setEnabled(!isLoading);
+            registerButton.setText(isLoading ? "Creating Account..." : "Sign Up");
+        }
+        
+        if (regNameInput != null) {
+            regNameInput.setEnabled(!isLoading);
+        }
+        
+        if (regEmailInput != null) {
+            regEmailInput.setEnabled(!isLoading);
+        }
+        
+        if (regPasswordInput != null) {
+            regPasswordInput.setEnabled(!isLoading);
+        }
     }
 }

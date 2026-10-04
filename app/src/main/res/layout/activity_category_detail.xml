@@ -13,7 +13,7 @@
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="@color/surface"
+        android:background="@android:color/transparent"
         app:contentInsetStart="0dp"
         app:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,7 +34,7 @@
                 android:padding="12dp"
                 android:src="@drawable/ic_arrow_left"
                 android:contentDescription="Back"
-                app:tint="@color/text_primary" />
+                app:tint="@color/dark_brown" />
 
             <!-- Category name title -->
             <TextView
@@ -86,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <LinearLayout
@@ -95,24 +95,25 @@
             android:orientation="vertical"
             android:paddingBottom="16dp">
 
-            <!-- Hero banner: category image + name overlay -->
+            <!-- Toolbar height spacer -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height" />
+
+            <!-- Hero banner with wave background -->
             <FrameLayout
                 android:id="@+id/categoryHeroCard"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/hero_banner_height_detail">
+                android:layout_height="wrap_content">
 
+                <!-- Wave background -->
                 <ImageView
-                    android:id="@+id/categoryHeroImage"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/placeholder_image" />
-
-                <!-- Dark gradient overlay -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/hero_gradient" />
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/bg_top_wave" />
 
                 <!-- Category name + count overlay -->
                 <LinearLayout
@@ -128,7 +129,7 @@
                         android:layout_height="wrap_content"
                         android:text="Laptops"
                         android:textAppearance="@style/TextAppearance.App.ScreenTitle"
-                        android:textColor="@android:color/white" />
+                        android:textColor="@color/dark_brown" />
 
                     <TextView
                         android:id="@+id/heroSubtitle"
@@ -136,7 +137,7 @@
                         android:layout_height="wrap_content"
                         android:text="124 Items"
                         android:textAppearance="@style/TextAppearance.App.Body"
-                        android:textColor="#CCFFFFFF" />
+                        android:textColor="@color/dark_brown" />
                 </LinearLayout>
             </FrameLayout>
 

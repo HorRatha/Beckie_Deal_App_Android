@@ -12,186 +12,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
-
-    <!-- ── Gradient hero header ────────────────────────────────────────── -->
-    <View
-        android:id="@+id/heroGradient"
-        android:layout_width="match_parent"
-        android:layout_height="172dp"
-        android:background="@drawable/categories_hero_gradient"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="@android:color/transparent"
-        android:elevation="0dp"
-        app:contentInsetStart="0dp"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingHorizontal="16dp">
-
-            <ImageView
-                android:id="@+id/menuIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="9dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/circle_white_translucent"
-                android:src="@android:drawable/ic_menu_sort_by_size"
-                app:tint="@color/white_fixed" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Profile"
-                android:textAppearance="@style/TextAppearance.App.SectionHeader"
-                android:textColor="@color/white_fixed" />
-
-            <RelativeLayout
-                android:id="@+id/notificationContainer"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/circle_white_translucent">
-
-                <ImageView
-                    android:id="@+id/notificationIcon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_notifications"
-                    app:tint="@color/white_fixed" />
-
-                <TextView
-                    android:id="@+id/notificationBadge"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@drawable/badge_pill"
-                    android:backgroundTint="@color/red_error"
-                    android:gravity="center"
-                    android:text="3"
-                    android:textAppearance="@style/TextAppearance.App.Label"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white_fixed"
-                    android:visibility="visible" />
-            </RelativeLayout>
-        </RelativeLayout>
-    </com.google.android.material.appbar.MaterialToolbar>
-
-    <!-- ══ FIXED IDENTITY HEADER ══════════════════════════════════════════ -->
-    <LinearLayout
-        android:id="@+id/profileHeaderCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:background="@drawable/content_sheet_top_rounded"
-        android:paddingHorizontal="@dimen/page_margin"
-        android:paddingBottom="20dp"
-        android:layout_marginTop="-28dp"
-        app:layout_constraintTop_toBottomOf="@id/heroGradient">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <!-- Reserved space for the avatar overlay -->
-            <Space
-                android:layout_width="1dp"
-                android:layout_height="72dp" />
-
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="Guest User"
-                android:textAppearance="@style/TextAppearance.App.ProductName" />
-
-            <TextView
-                android:id="@+id/userEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Sign in to sync your wishlist and orders"
-                android:textAppearance="@style/TextAppearance.App.Body"
-                android:textColor="@color/text_secondary" />
-
-        </LinearLayout>
-
-        <!-- ══ AUTH BUTTONS ══════════════════════════════════════════════ -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
-
-            <!-- Login Button - Gradient Glass Morphism -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/loginButton"
-                android:layout_width="0dp"
-                android:layout_height="52dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/button_add_to_cart_glass"
-                android:text="Login"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.App.Button"
-                android:textColor="@color/dark_brown"
-                app:backgroundTint="@null"
-                app:elevation="0dp"
-                app:strokeWidth="0dp" />
-
-            <!-- Register Button - Dark Gray Glass Morphism -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/registerButton"
-                android:layout_width="0dp"
-                android:layout_height="52dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/button_buy_now_glass"
-                android:text="Register"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.App.Button"
-                android:textColor="@color/white_fixed"
-                app:backgroundTint="@null"
-                app:elevation="0dp"
-                app:strokeWidth="0dp" />
-
-        </LinearLayout>
-
-        <!-- LOGOUT BUTTON (shown when logged in) -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/logoutButton"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="20dp"
-            android:text="Logout"
-            android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.App.Button"
-            android:textColor="@color/white_fixed"
-            android:visibility="gone"
-            app:backgroundTint="@color/red_error"
-            app:elevation="2dp"
-            app:strokeWidth="0dp" />
-
-    </LinearLayout>
+    android:background="@android:color/white">
 
     <!-- ── Scrollable body ─────────────────────────────────────────────── -->
     <androidx.core.widget.NestedScrollView
@@ -199,659 +20,865 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:background="@color/background"
-        app:layout_constraintTop_toBottomOf="@id/profileHeaderCard"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/page_margin"
-            android:paddingTop="8dp"
-            android:paddingBottom="24dp">
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <!-- ── Header Container (Wave + Toolbar + Avatar) ──────────────── -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <!-- ── Wave background header ────────────────────────────────────────── -->
+                <ImageView
+                    android:id="@+id/bgWave"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/bg_top_wave"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/heroGradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/topAppBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toolbar_height"
+                    android:background="@android:color/transparent"
+                    android:elevation="0dp"
+                    app:contentInsetStart="0dp"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:id="@+id/menuIcon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="9dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="@drawable/circle_white_translucent"
+                            android:src="@android:drawable/ic_menu_sort_by_size"
+                            app:tint="@color/white_fixed" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Profile"
+                            android:textAppearance="@style/TextAppearance.App.SectionHeader"
+                            android:textColor="@color/white_fixed" />
+
+                        <RelativeLayout
+                            android:id="@+id/notificationContainer"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/circle_white_translucent">
+
+                            <ImageView
+                                android:id="@+id/notificationIcon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/ic_notifications"
+                                app:tint="@color/white_fixed" />
+
+                            <TextView
+                                android:id="@+id/notificationBadge"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentTop="true"
+                                android:background="@drawable/badge_pill"
+                                android:backgroundTint="@color/red_error"
+                                android:gravity="center"
+                                android:text="3"
+                                android:textAppearance="@style/TextAppearance.App.Label"
+                                android:textAllCaps="false"
+                                android:textColor="@color/white_fixed"
+                                android:visibility="visible" />
+                        </RelativeLayout>
+                    </RelativeLayout>
+                </com.google.android.material.appbar.MaterialToolbar>
+
+                <!-- ══ FLOATING AVATAR ═══════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/avatarOverlay"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    app:cardCornerRadius="60dp"
+                    app:cardElevation="12dp"
+                    app:strokeWidth="4dp"
+                    app:strokeColor="@color/primary"
+                    app:cardBackgroundColor="@color/card_bg_secondary"
+                    app:layout_constraintTop_toBottomOf="@id/heroGradient"
+                    app:layout_constraintBottom_toBottomOf="@id/heroGradient"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:id="@+id/avatarIcon"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_person"
+                        app:tint="@color/text_secondary" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/editAvatarButton"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="12dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/surface"
+                    app:cardBackgroundColor="@color/primary"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_marginBottom="-4dp"
+                    app:layout_constraintBottom_toBottomOf="@id/avatarOverlay"
+                    app:layout_constraintEnd_toEndOf="@id/avatarOverlay">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_edit_profile" />
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- ══ SCROLLABLE IDENTITY HEADER ════════════════════════════ -->
+            <LinearLayout
+                android:id="@+id/profileHeaderCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:background="@android:color/transparent"
+                android:paddingHorizontal="@dimen/page_margin"
+                android:paddingBottom="20dp"
+                android:layout_marginTop="-28dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <!-- Reserved space for the avatar overlay -->
+                    <Space
+                        android:layout_width="1dp"
+                        android:layout_height="36dp" />
+
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="Guest User"
+                        android:textAppearance="@style/TextAppearance.App.ProductName" />
+
+                    <TextView
+                        android:id="@+id/userEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Sign in to sync your wishlist and orders"
+                        android:textAppearance="@style/TextAppearance.App.Body"
+                        android:textColor="@color/text_secondary" />
+
+                </LinearLayout>
+
+                <!-- ══ AUTH BUTTONS ══════════════════════════════════════ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp">
+
+                    <!-- Login Button - Gradient Glass Morphism -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/loginButton"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/button_add_to_cart_glass"
+                        android:text="Login"
+                        android:textAllCaps="false"
+                        android:textAppearance="@style/TextAppearance.App.Button"
+                        android:textColor="@color/dark_brown"
+                        app:backgroundTint="@null"
+                        app:elevation="0dp"
+                        app:strokeWidth="0dp" />
+
+                    <!-- Register Button - Dark Gray Glass Morphism -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/registerButton"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/button_buy_now_glass"
+                        android:text="Register"
+                        android:textAllCaps="false"
+                        android:textAppearance="@style/TextAppearance.App.Button"
+                        android:textColor="@color/white_fixed"
+                        app:backgroundTint="@null"
+                        app:elevation="0dp"
+                        app:strokeWidth="0dp" />
+
+                </LinearLayout>
+
+                <!-- LOGOUT BUTTON (shown when logged in) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/logoutButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Logout"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.App.Button"
+                    android:textColor="@color/white_fixed"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/red_error"
+                    app:elevation="2dp"
+                    app:strokeWidth="0dp" />
+
+            </LinearLayout>
 
             <!-- ══ ACCOUNT SECTION ════════════════════════════════════════ -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Account"
-                android:textAppearance="@style/TextAppearance.App.Label"
-                android:textAllCaps="true"
-                android:textColor="@color/text_secondary"
-                android:letterSpacing="0.08" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/border_color"
-                app:cardBackgroundColor="@color/surface">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- My Orders -->
-                    <LinearLayout
-                        android:id="@+id/ordersRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_orders"
-                                app:tint="@color/brand_tint_fg_1" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="14dp"
-                            android:text="My Orders"
-                            android:textAppearance="@style/TextAppearance.App.CardProductName"
-                            android:textColor="@color/text_primary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="6dp"
-                            android:text="3 active"
-                            android:textAppearance="@style/TextAppearance.App.Body"
-                            android:textColor="@color/text_secondary" />
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/text_secondary" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
-
-                    <!-- My Coupons -->
-                    <LinearLayout
-                        android:id="@+id/couponsRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_discount_tag"
-                                app:tint="@color/brand_tint_fg_6" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="14dp"
-                            android:text="My Coupons"
-                            android:textAppearance="@style/TextAppearance.App.CardProductName"
-                            android:textColor="@color/text_primary" />
-
-                        <TextView
-                            android:id="@+id/availableCouponsCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="6dp"
-                            android:text="4 available"
-                            android:textAppearance="@style/TextAppearance.App.CardPrice"
-                            android:textColor="@color/primary" />
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/text_secondary" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
-
-                    <!-- Notifications toggle -->
-                    <LinearLayout
-                        android:id="@+id/notificationsRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            app:cardCornerRadius="11dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_notifications"
-                                app:tint="@color/brand_tint_fg_3" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="14dp"
-                            android:text="Notifications"
-                            android:textAppearance="@style/TextAppearance.App.CardProductName"
-                            android:textColor="@color/text_primary" />
-
-                        <!-- Segmented Pill Toggle (ON / OFF) -->
-                        <LinearLayout
-                            android:id="@+id/notifToggleContainer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:background="@drawable/notification_toggle_bg"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="3dp">
-
-                            <FrameLayout
-                                android:id="@+id/notifOnOption"
-                                android:layout_width="40dp"
-                                android:layout_height="30dp"
-                                android:background="@drawable/notification_pill_active"
-                                android:clickable="true"
-                                android:focusable="true">
-                                <ImageView
-                                    android:id="@+id/notifOnIcon"
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_toggle_on"
-                                    app:tint="@color/white_fixed" />
-                            </FrameLayout>
-
-                            <FrameLayout
-                                android:id="@+id/notifOffOption"
-                                android:layout_width="40dp"
-                                android:layout_height="30dp"
-                                android:background="@drawable/notification_pill_inactive"
-                                android:clickable="true"
-                                android:focusable="true">
-                                <ImageView
-                                    android:id="@+id/notifOffIcon"
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_toggle_off"
-                                    app:tint="@color/text_secondary" />
-                            </FrameLayout>
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ══ PREFERENCES SECTION ════════════════════════════════════ -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="10dp"
-                android:text="Preferences"
-                android:textAppearance="@style/TextAppearance.App.Label"
-                android:textAllCaps="true"
-                android:textColor="@color/text_secondary"
-                android:letterSpacing="0.08" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/border_color"
-                app:cardBackgroundColor="@color/surface">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Language -->
-                    <LinearLayout
-                        android:id="@+id/languageRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            app:cardCornerRadius="11dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_language"
-                                app:tint="@color/brand_tint_fg_4" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="14dp"
-                            android:text="Language"
-                            android:textAppearance="@style/TextAppearance.App.CardProductName"
-                            android:textColor="@color/text_primary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="6dp"
-                            android:text="English"
-                            android:textAppearance="@style/TextAppearance.App.Body"
-                            android:textColor="@color/text_secondary" />
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/text_secondary" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
-
-                    <!-- Dark Mode toggle -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            app:cardCornerRadius="11dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_dark_mode"
-                                app:tint="@color/brand_tint_fg_5" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="14dp"
-                            android:text="Dark Mode"
-                            android:textAppearance="@style/TextAppearance.App.CardProductName"
-                            android:textColor="@color/text_primary" />
-
-                        <!-- Segmented Pill Toggle (Sun / Moon) -->
-                        <LinearLayout
-                            android:id="@+id/darkModeToggleContainer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:background="@drawable/dark_mode_toggle_bg"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="3dp">
-
-                            <FrameLayout
-                                android:id="@+id/lightModeOption"
-                                android:layout_width="40dp"
-                                android:layout_height="30dp"
-                                android:background="@drawable/dark_mode_pill_active"
-                                android:clickable="true"
-                                android:focusable="true">
-                                <ImageView
-                                    android:id="@+id/lightModeIcon"
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_sun"
-                                    app:tint="@color/white_fixed" />
-                            </FrameLayout>
-
-                            <FrameLayout
-                                android:id="@+id/darkModeOption"
-                                android:layout_width="40dp"
-                                android:layout_height="30dp"
-                                android:background="@drawable/dark_mode_pill_inactive"
-                                android:clickable="true"
-                                android:focusable="true">
-                                <ImageView
-                                    android:id="@+id/darkModeIcon"
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_moon"
-                                    app:tint="@color/text_secondary" />
-                            </FrameLayout>
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ══ LEGAL SECTION ══════════════════════════════════════════ -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="10dp"
-                android:text="Legal"
-                android:textAppearance="@style/TextAppearance.App.Label"
-                android:textAllCaps="true"
-                android:textColor="@color/text_secondary"
-                android:letterSpacing="0.08" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/border_color"
-                app:cardBackgroundColor="@color/surface">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- About Us -->
-                    <LinearLayout
-                        android:id="@+id/aboutUsRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            app:cardCornerRadius="11dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_info"
-                                app:tint="@color/brand_tint_fg_2" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="14dp"
-                            android:text="About Us"
-                            android:textAppearance="@style/TextAppearance.App.CardProductName"
-                            android:textColor="@color/text_primary" />
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/text_secondary" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
-
-                    <!-- Privacy Policy -->
-                    <LinearLayout
-                        android:id="@+id/privacyRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            app:cardCornerRadius="11dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_privacy"
-                                app:tint="@color/brand_tint_fg_6" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="14dp"
-                            android:text="Privacy Policy"
-                            android:textAppearance="@style/TextAppearance.App.CardProductName"
-                            android:textColor="@color/text_primary" />
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/text_secondary" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
-
-                    <!-- Terms of Service -->
-                    <LinearLayout
-                        android:id="@+id/termsRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            app:cardCornerRadius="11dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
-                            app:cardBackgroundColor="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_terms"
-                                app:tint="@color/brand_tint_fg_1" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="14dp"
-                            android:text="Terms of Service"
-                            android:textAppearance="@style/TextAppearance.App.CardProductName"
-                            android:textColor="@color/text_primary" />
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/text_secondary" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- LOGOUT BUTTON (shown only when logged in) -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/floatingLogoutButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:text="Logout"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.App.Button"
-                android:textColor="@color/white_fixed"
-                android:visibility="gone"
-                app:backgroundTint="@color/red_error"
-                app:cornerRadius="16dp"
-                app:elevation="2dp"
-                app:icon="@drawable/ic_logout"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp"
-                app:iconSize="22dp"
-                app:iconTint="@color/white_fixed"
-                app:strokeWidth="0dp" />
-
-            <!-- ══ VERSION FOOTER ══════════════════════════════════════════ -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@mipmap/ic_launcher"
-                    android:alpha="0.5" />
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/page_margin"
+                android:paddingTop="8dp"
+                android:paddingBottom="24dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Beckie Deal"
-                    android:textAppearance="@style/TextAppearance.App.CardProductName"
-                    android:textColor="@color/text_secondary" />
+                    android:layout_marginBottom="10dp"
+                    android:text="Account"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_secondary"
+                    android:letterSpacing="0.08" />
 
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/border_color"
+                    app:cardBackgroundColor="@color/surface">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- My Orders -->
+                        <LinearLayout
+                            android:id="@+id/ordersRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="0dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="@android:color/transparent">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_orders"
+                                    app:tint="@color/brand_tint_fg_1" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:text="My Orders"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:text="3 active"
+                                android:textAppearance="@style/TextAppearance.App.Body"
+                                android:textColor="@color/text_secondary" />
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/text_secondary" />
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
+
+                        <!-- My Coupons -->
+                        <LinearLayout
+                            android:id="@+id/couponsRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="0dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="@android:color/transparent">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_discount_tag"
+                                    app:tint="@color/brand_tint_fg_6" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:text="My Coupons"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
+
+                            <TextView
+                                android:id="@+id/availableCouponsCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:text="4 available"
+                                android:textAppearance="@style/TextAppearance.App.CardPrice"
+                                android:textColor="@color/primary" />
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/text_secondary" />
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
+
+                        <!-- Notifications toggle -->
+                        <LinearLayout
+                            android:id="@+id/notificationsRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardCornerRadius="11dp"
+                                app:cardElevation="0dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="@android:color/transparent">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_notifications"
+                                    app:tint="@color/brand_tint_fg_3" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:text="Notifications"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
+
+                            <!-- Segmented Pill Toggle (ON / OFF) -->
+                            <LinearLayout
+                                android:id="@+id/notifToggleContainer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:background="@drawable/notification_toggle_bg"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="3dp">
+
+                                <FrameLayout
+                                    android:id="@+id/notifOnOption"
+                                    android:layout_width="40dp"
+                                    android:layout_height="30dp"
+                                    android:background="@drawable/notification_pill_active"
+                                    android:clickable="true"
+                                    android:focusable="true">
+                                    <ImageView
+                                        android:id="@+id/notifOnIcon"
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_toggle_on"
+                                        app:tint="@color/white_fixed" />
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/notifOffOption"
+                                    android:layout_width="40dp"
+                                    android:layout_height="30dp"
+                                    android:background="@drawable/notification_pill_inactive"
+                                    android:clickable="true"
+                                    android:focusable="true">
+                                    <ImageView
+                                        android:id="@+id/notifOffIcon"
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_toggle_off"
+                                        app:tint="@color/text_secondary" />
+                                </FrameLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ══ PREFERENCES SECTION ════════════════════════════════════ -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Version 1.0.0"
-                    android:textAppearance="@style/TextAppearance.App.Body"
-                    android:textColor="@color/text_secondary" />
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Preferences"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_secondary"
+                    android:letterSpacing="0.08" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/border_color"
+                    app:cardBackgroundColor="@color/surface">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- Language -->
+                        <LinearLayout
+                            android:id="@+id/languageRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardCornerRadius="11dp"
+                                app:cardElevation="0dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="@android:color/transparent">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_language"
+                                    app:tint="@color/brand_tint_fg_4" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:text="Language"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:text="English"
+                                android:textAppearance="@style/TextAppearance.App.Body"
+                                android:textColor="@color/text_secondary" />
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/text_secondary" />
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
+
+                        <!-- Dark Mode toggle -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardCornerRadius="11dp"
+                                app:cardElevation="0dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="@android:color/transparent">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_dark_mode"
+                                    app:tint="@color/brand_tint_fg_5" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:text="Dark Mode"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
+
+                            <!-- Segmented Pill Toggle (Sun / Moon) -->
+                            <LinearLayout
+                                android:id="@+id/darkModeToggleContainer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:background="@drawable/dark_mode_toggle_bg"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="3dp">
+
+                                <FrameLayout
+                                    android:id="@+id/lightModeOption"
+                                    android:layout_width="40dp"
+                                    android:layout_height="30dp"
+                                    android:background="@drawable/dark_mode_pill_active"
+                                    android:clickable="true"
+                                    android:focusable="true">
+                                    <ImageView
+                                        android:id="@+id/lightModeIcon"
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_sun"
+                                        app:tint="@color/white_fixed" />
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/darkModeOption"
+                                    android:layout_width="40dp"
+                                    android:layout_height="30dp"
+                                    android:background="@drawable/dark_mode_pill_inactive"
+                                    android:clickable="true"
+                                    android:focusable="true">
+                                    <ImageView
+                                        android:id="@+id/darkModeIcon"
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_moon"
+                                        app:tint="@color/text_secondary" />
+                                </FrameLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ══ LEGAL SECTION ══════════════════════════════════════════ -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Legal"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_secondary"
+                    android:letterSpacing="0.08" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/border_color"
+                    app:cardBackgroundColor="@color/surface">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- About Us -->
+                        <LinearLayout
+                            android:id="@+id/aboutUsRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardCornerRadius="11dp"
+                                app:cardElevation="0dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="@android:color/transparent">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_info"
+                                    app:tint="@color/brand_tint_fg_2" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:text="About Us"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/text_secondary" />
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
+
+                        <!-- Privacy Policy -->
+                        <LinearLayout
+                            android:id="@+id/privacyRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardCornerRadius="11dp"
+                                app:cardElevation="0dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="@android:color/transparent">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_privacy"
+                                    app:tint="@color/brand_tint_fg_6" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:text="Privacy Policy"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/text_secondary" />
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
+
+                        <!-- Terms of Service -->
+                        <LinearLayout
+                            android:id="@+id/termsRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardCornerRadius="11dp"
+                                app:cardElevation="0dp"
+                                app:strokeWidth="0dp"
+                                app:cardBackgroundColor="@android:color/transparent">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_terms"
+                                    app:tint="@color/brand_tint_fg_1" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:text="Terms of Service"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/text_secondary" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- LOGOUT BUTTON (shown only when logged in) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/floatingLogoutButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Logout"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.App.Button"
+                    android:textColor="@color/white_fixed"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/red_error"
+                    app:cornerRadius="16dp"
+                    app:elevation="2dp"
+                    app:icon="@drawable/ic_logout"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:iconSize="22dp"
+                    app:iconTint="@color/white_fixed"
+                    app:strokeWidth="0dp" />
+
+                <!-- ══ VERSION FOOTER ══════════════════════════════════════════ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@mipmap/ic_launcher"
+                        android:alpha="0.5" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Beckie Deal"
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Version 1.0.0"
+                        android:textAppearance="@style/TextAppearance.App.Body"
+                        android:textColor="@color/text_secondary" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <!-- ══ FLOATING AVATAR ═══════════════════════════════════════════════ -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/avatarOverlay"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        app:cardCornerRadius="60dp"
-        app:cardElevation="12dp"
-        app:strokeWidth="4dp"
-        app:strokeColor="@color/primary"
-        app:cardBackgroundColor="@color/card_bg_secondary"
-        android:layout_marginTop="-60dp"
-        app:layout_constraintTop_toBottomOf="@id/heroGradient"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/avatarIcon"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_person"
-            app:tint="@color/text_secondary" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/editAvatarButton"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="12dp"
-        app:strokeWidth="2dp"
-        app:strokeColor="@color/surface"
-        app:cardBackgroundColor="@color/primary"
-        android:layout_marginEnd="-4dp"
-        android:layout_marginBottom="-4dp"
-        app:layout_constraintBottom_toBottomOf="@id/avatarOverlay"
-        app:layout_constraintEnd_toEndOf="@id/avatarOverlay">
-
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_edit_profile" />
-    </com.google.android.material.card.MaterialCardView>
 
     <!-- ── Floating bottom nav ─────────────────────────────────────────── -->
     <include layout="@layout/layout_bottom_nav" />

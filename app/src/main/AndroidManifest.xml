@@ -31,9 +31,6 @@
         <activity
             android:name=".ui.activities.auth.LoginActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.activities.auth.RegisterActivity"
-            android:exported="false" />
 
         <!-- Product Activities -->
         <activity

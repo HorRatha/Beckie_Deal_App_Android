@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="360dp"
+    android:height="240dp"
+    android:viewportWidth="360"
+    android:viewportHeight="240">
+
+    <!-- Main wave: bright gold to soft gold -->
+    <path android:pathData="M0,0 H360 V170 C280,232 220,120 140,160 C72,194 32,240 0,216 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="0"
+                android:startY="0"
+                android:endX="360"
+                android:endY="240">
+                <item android:offset="0" android:color="#FDC011" />
+                <item android:offset="1" android:color="#F5C842" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Soft white highlight wave for depth -->
+    <path
+        android:fillColor="#2EFFFFFF"
+        android:pathData="M0,0 H360 V120 C288,184 208,80 136,112 C64,144 32,184 0,160 Z" />
+</vector>

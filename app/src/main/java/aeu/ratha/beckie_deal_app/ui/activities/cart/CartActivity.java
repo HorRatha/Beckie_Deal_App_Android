@@ -211,7 +211,9 @@ public class CartActivity extends BaseActivity {
             
             if (registerBtn != null) {
                 registerBtn.setOnClickListener(v -> {
-                    startActivity(new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.auth.RegisterActivity.class));
+                    Intent intent = new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity.class);
+                    intent.putExtra("openRegister", true); // Open register tab
+                    startActivity(intent);
                 });
                 UiAnimations.pressBounce(registerBtn);
             }
