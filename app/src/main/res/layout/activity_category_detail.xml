@@ -86,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <LinearLayout
@@ -94,11 +94,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="16dp">
-
-            <!-- Toolbar height spacer -->
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height" />
 
             <!-- Hero banner with wave background -->
             <FrameLayout
@@ -115,13 +110,15 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/bg_top_wave" />
 
-                <!-- Category name + count overlay -->
+                <!-- Category name + count overlay on wave -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
+                    android:layout_gravity="center_vertical"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:paddingHorizontal="20dp"
+                    android:paddingTop="80dp"
+                    android:paddingBottom="40dp">
 
                     <TextView
                         android:id="@+id/heroTitle"
@@ -129,15 +126,16 @@
                         android:layout_height="wrap_content"
                         android:text="Laptops"
                         android:textAppearance="@style/TextAppearance.App.ScreenTitle"
-                        android:textColor="@color/dark_brown" />
+                        android:textColor="@color/text_primary" />
 
                     <TextView
                         android:id="@+id/heroSubtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:text="124 Items"
                         android:textAppearance="@style/TextAppearance.App.Body"
-                        android:textColor="@color/dark_brown" />
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
             </FrameLayout>
 

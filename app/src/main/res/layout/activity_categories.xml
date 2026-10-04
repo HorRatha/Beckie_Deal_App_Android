@@ -99,7 +99,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:background="@color/background"
         app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
@@ -109,7 +108,7 @@
             android:orientation="vertical"
             android:paddingBottom="16dp">
 
-            <!-- Wave background header - NOW SCROLLS WITH CONTENT -->
+            <!-- Wave Background (behind content) -->
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,23 +118,22 @@
                 android:src="@drawable/bg_top_wave" />
 
             <!-- Page title + subtitle on the wave -->
-
-            <!-- Laptops Brands Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-60dp"
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp"
                 android:paddingTop="16dp"
-                android:paddingBottom="20dp">
+                android:paddingBottom="8dp"
+                android:layout_marginTop="-220dp"
+                android:layout_marginBottom="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:text="Categories"
-                    android:textColor="@color/dark_brown"
+                    android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_size_headline_large" />
 
                 <TextView
@@ -143,9 +141,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Explore our premium collection by hardware type"
-                    android:textColor="@color/dark_brown"
+                    android:textColor="@color/text_secondary"
                     android:textSize="@dimen/text_size_body" />
 
+            </LinearLayout>
+
+            <!-- Laptops Brands Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="20dp">
             </LinearLayout>
 
             <LinearLayout
