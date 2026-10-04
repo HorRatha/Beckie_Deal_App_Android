@@ -1,6 +1,7 @@
 package aeu.ratha.beckie_deal_app.ui.activities.auth;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,10 +10,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 
 import aeu.ratha.beckie_deal_app.R;
@@ -34,6 +37,11 @@ public class LoginActivity extends BaseActivity {
     private EditText emailInput;
     private EditText passwordInput;
     private Button loginButton;
+    private Button signInToggle;
+    private Button registerToggle;
+    private LinearLayout loginFormSection;
+    private LinearLayout registerFormSection;
+    private boolean isLoginMode = true;
     private AuthApiService authApiService;
     private TokenManager tokenManager;
 
@@ -89,11 +97,25 @@ public class LoginActivity extends BaseActivity {
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
         loginButton = findViewById(R.id.loginButton);
+        signInToggle = findViewById(R.id.signInToggle);
+        registerToggle = findViewById(R.id.registerToggle);
+        loginFormSection = findViewById(R.id.loginFormSection);
+        registerFormSection = findViewById(R.id.registerFormSection);
         TextView registerLink = findViewById(R.id.registerLink);
         TextView forgotPassword = findViewById(R.id.forgotPassword);
+        TextView loginLink = findViewById(R.id.loginLink);
         
         // Apply animations
         UiAnimations.pressBounce(loginButton, registerLink, forgotPassword);
+
+        // Setup toggle button listeners
+        if (signInToggle != null) {
+            signInToggle.setOnClickListener(v -> switchToLoginForm());
+        }
+
+        if (registerToggle != null) {
+            registerToggle.setOnClickListener(v -> switchToRegisterForm());
+        }
 
         // Login button click listener
         if (loginButton != null) {
@@ -102,15 +124,143 @@ public class LoginActivity extends BaseActivity {
 
         // Register link click listener
         if (registerLink != null) {
-            registerLink.setOnClickListener(v -> {
-                startActivity(new Intent(this, RegisterActivity.class));
-            });
+            registerLink.setOnClickListener(v -> switchToRegisterForm());
         }
 
         // Forgot password click listener
         if (forgotPassword != null) {
             forgotPassword.setOnClickListener(v -> 
                 Toast.makeText(this, "Redirecting to password reset...", Toast.LENGTH_SHORT).show());
+        }
+
+        // Login link click listener (from register form)
+        if (loginLink != null) {
+            loginLink.setOnClickListener(v -> switchToLoginForm());
+        }
+
+        // Set initial button states (Sign In activated by default)
+        if (signInToggle != null) {
+            signInToggle.setActivated(true);
+            applyToggleButtonColors(signInToggle, true);
+            signInToggle.refreshDrawableState();
+            Log.d(TAG, "Initial: Sign In button ACTIVATED (chocolate black)");
+        }
+        if (registerToggle != null) {
+            registerToggle.setActivated(false);
+            applyToggleButtonColors(registerToggle, false);
+            registerToggle.refreshDrawableState();
+            Log.d(TAG, "Initial: Register button NOT ACTIVATED (white)");
+        }
+    }
+    
+    /**
+     * Apply text color and background tint to toggle buttons programmatically.
+     * @param button The button to apply colors to
+     * @param isActive Whether the button is in active state
+     */
+    private void applyToggleButtonColors(Button button, boolean isActive) {
+        if (button == null) return;
+        
+        try {
+            // CRITICAL: Disable Material3 background tinting to allow custom drawables
+            button.setBackgroundTintList(null);
+            
+            // Set text colors directly
+            if (isActive) {
+                button.setTextColor(0xFFFFFFFF); // White for active (chocolate black background)
+                Log.d(TAG, button.getText() + " - Set to ACTIVE: WHITE text on chocolate black bg");
+            } else {
+                button.setTextColor(0xFF3E2723); // Chocolate black for inactive (white background)
+                Log.d(TAG, button.getText() + " - Set to INACTIVE: CHOCOLATE BLACK text on white bg");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error applying toggle button colors", e);
+            // Fallback on error
+            button.setBackgroundTintList(null); // Still disable tinting
+            if (isActive) {
+                button.setTextColor(0xFFFFFFFF); // White for active
+            } else {
+                button.setTextColor(0xFF3E2723); // Chocolate black for inactive
+            }
+        }
+    }
+    
+    
+    /**
+     * Switch to Login form with smooth animation.
+     */
+    private void switchToLoginForm() {
+        if (isLoginMode) return; // Already in login mode
+        
+        isLoginMode = true;
+        
+        // Toggle button states - Sign In activated (chocolate black), Register not activated
+        if (signInToggle != null) {
+            signInToggle.setActivated(true);
+            applyToggleButtonColors(signInToggle, true);
+            signInToggle.refreshDrawableState(); // Force refresh
+            Log.d(TAG, "Sign In button ACTIVATED (chocolate black #3E2723)");
+            Toast.makeText(this, "Sign In Activated", Toast.LENGTH_SHORT).show();
+        }
+        if (registerToggle != null) {
+            registerToggle.setActivated(false);
+            applyToggleButtonColors(registerToggle, false);
+            registerToggle.refreshDrawableState(); // Force refresh
+            Log.d(TAG, "Register button NOT ACTIVATED (white)");
+        }
+
+        // Animate form transition
+        if (registerFormSection != null && loginFormSection != null) {
+            // Slide out register form to the right
+            registerFormSection.startAnimation(android.view.animation.AnimationUtils.loadAnimation(
+                this, R.anim.slide_out_right));
+            
+            // After register slides out, slide in login from left
+            registerFormSection.postDelayed(() -> {
+                registerFormSection.setVisibility(View.GONE);
+                loginFormSection.setVisibility(View.VISIBLE);
+                loginFormSection.startAnimation(android.view.animation.AnimationUtils.loadAnimation(
+                    this, R.anim.slide_in_left));
+            }, 150);
+        }
+    }
+
+    /**
+     * Switch to Register form with smooth animation.
+     */
+    private void switchToRegisterForm() {
+        if (!isLoginMode) return; // Already in register mode
+        
+        isLoginMode = false;
+        
+        // Toggle button states - Register activated (chocolate black), Sign In not activated
+        if (signInToggle != null) {
+            signInToggle.setActivated(false);
+            applyToggleButtonColors(signInToggle, false);
+            signInToggle.refreshDrawableState(); // Force refresh
+            Log.d(TAG, "Sign In button NOT ACTIVATED (white)");
+        }
+        if (registerToggle != null) {
+            registerToggle.setActivated(true);
+            applyToggleButtonColors(registerToggle, true);
+            registerToggle.refreshDrawableState(); // Force refresh
+            Log.d(TAG, "Register button ACTIVATED (chocolate black #3E2723)");
+            Toast.makeText(this, "Register Activated", Toast.LENGTH_SHORT).show();
+        }
+
+        // Animate form transition
+        if (loginFormSection != null && registerFormSection != null) {
+            // Slide out login form to the left
+            loginFormSection.startAnimation(android.view.animation.AnimationUtils.loadAnimation(
+                this, R.anim.slide_out_left));
+            
+            // After login slides out, slide in register from right
+            loginFormSection.postDelayed(() -> {
+                loginFormSection.setVisibility(View.GONE);
+                registerFormSection.setVisibility(View.VISIBLE);
+                registerFormSection.startAnimation(android.view.animation.AnimationUtils.loadAnimation(
+                    this, R.anim.slide_in_right));
+            }, 150);
         }
     }
     

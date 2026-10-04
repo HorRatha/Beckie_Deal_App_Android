@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Active: White text on chocolate black background -->
+    <item android:state_activated="true" android:color="#FFFFFF" />
+    <item android:state_selected="true" android:color="#FFFFFF" />
+    <item android:state_pressed="true" android:color="#FFFFFF" />
+    <!-- Inactive: Dark text on white background -->
+    <item android:color="#3E2723" />
+</selector>

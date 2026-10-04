@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Pressed state - chocolate black -->
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#3E2723" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+    <!-- Selected state - chocolate black -->
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="#3E2723" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+    <!-- Default state -->
+    <item>
+        <shape>
+            <solid android:color="#1A1A1A" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+</selector>
