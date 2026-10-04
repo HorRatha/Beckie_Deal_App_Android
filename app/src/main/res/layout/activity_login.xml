@@ -252,7 +252,7 @@
                         app:backgroundTint="@null"
                         android:text="Login"
                         android:textAllCaps="false"
-                        android:textColor="@color/white_fixed"
+                        android:textColor="@color/dark_brown"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"
@@ -392,9 +392,10 @@
                         app:backgroundTint="@null"
                         android:text="Sign Up"
                         android:textAllCaps="false"
-                        android:textColor="@color/white_fixed"
+                        android:textColor="@color/dark_brown"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        android:letterSpacing="0.05"
                         android:elevation="4dp"
                         android:stateListAnimator="@null" />
 
