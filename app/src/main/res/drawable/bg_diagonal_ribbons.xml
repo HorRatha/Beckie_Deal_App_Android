@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="360dp"
+    android:height="310dp"
+    android:viewportWidth="360"
+    android:viewportHeight="310">
+
+    <!-- Soft peach ribbon (left) -->
+    <path
+        android:fillColor="#99FED7AA"
+        android:pathData="M0,0 H88 C112,64 72,128 104,198 C128,256 56,307 0,288 Z" />
+
+    <!-- Main ribbon: yellow to orange -->
+    <path
+        android:fillAlpha="0.92"
+        android:pathData="M120,0 H360 V224 C280,192 200,256 160,176 C128,115 152,45 120,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="120"
+                android:startY="0"
+                android:endX="360"
+                android:endY="224">
+                <item android:offset="0" android:color="#FDC011" />
+                <item android:offset="1" android:color="#F97316" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- White highlight ribbon for depth -->
+    <path
+        android:fillColor="#38FFFFFF"
+        android:pathData="M208,0 H360 V154 C304,141 248,179 216,115 C192,70 224,32 208,0 Z" />
+</vector>

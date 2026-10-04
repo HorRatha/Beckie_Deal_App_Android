@@ -14,6 +14,18 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <!-- Diagonal Ribbons Background (behind content) -->
+    <ImageView
+        android:id="@+id/bgRibbons"
+        android:layout_width="match_parent"
+        android:layout_height="310dp"
+        android:importantForAccessibility="no"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_diagonal_ribbons"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!--  Top bar  -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
