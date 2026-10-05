@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Beckie Deal — Product Card (2-column grid)
+    Beckie Deal — Product Card (2-column grid) — Fact Grid style
     Flat, no border, no shadow, no rounded corners. Full-bleed image.
-    Height is wrap_content so the card expands to fit all visible fields.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,7 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- ── Product image — full-width, fixed tall ────────────────────── -->
+        <!-- ── Product image ──────────────────────────────────────────────── -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="155dp"
@@ -33,7 +32,6 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_image" />
 
-            <!-- Wishlist — semi-transparent pill, top-right -->
             <ImageView
                 android:id="@+id/favoriteIcon"
                 android:layout_width="28dp"
@@ -45,7 +43,6 @@
                 android:src="@drawable/ic_favorite_border"
                 app:tint="@color/text_secondary" />
 
-            <!-- Quick Add to Cart button — bottom-right -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/quickAddToCartButton"
                 android:layout_width="32dp"
@@ -65,13 +62,13 @@
 
         </FrameLayout>
 
-        <!-- ── Hairline divider ───────────────────────────────────────────── -->
+        <!-- ── Brand bar (replaces the hairline divider) ──────────────────── -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/border_color" />
+            android:layout_height="3dp"
+            android:background="@drawable/brand_bar_gradient" />
 
-        <!-- ── Info section — wraps all visible content ──────────────────── -->
+        <!-- ── Info section ───────────────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,7 +87,7 @@
                 android:maxLines="2"
                 android:ellipsize="end" />
 
-            <!-- Variant line (memory / storage / colour) -->
+            <!-- Variant / weight line -->
             <TextView
                 android:id="@+id/productVariant"
                 android:layout_width="match_parent"
@@ -104,32 +101,84 @@
                 android:ellipsize="end"
                 android:visibility="gone" />
 
-            <!-- Stock status -->
-            <TextView
-                android:id="@+id/stockStatus"
-                android:layout_width="wrap_content"
+            <!-- ── Fact grid: Stock | Warranty ────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Available In Stock"
-                android:textAppearance="@style/TextAppearance.App.Label"
-                android:textColor="#1565C0" />
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_fact_grid"
+                android:orientation="horizontal">
 
-            <!-- Warranty -->
-            <TextView
-                android:id="@+id/warrantyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:text="1 Year Warranty"
-                android:textAppearance="@style/TextAppearance.App.Label"
-                android:textColor="#2E7D32" />
+                <!-- Stock cell -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Stock"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
+                        android:id="@+id/stockStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Available"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textColor="#1565C0"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                </LinearLayout>
+
+                <!-- Vertical divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/border_color" />
+
+                <!-- Warranty cell -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="4dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Warranty"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
+                        android:id="@+id/warrantyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1 Year"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textColor="#2E7D32"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <!-- SKU -->
             <TextView
                 android:id="@+id/skuText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="5dp"
                 android:text=""
                 android:textAppearance="@style/TextAppearance.App.Label"
                 android:textColor="#00897B"
@@ -143,6 +192,7 @@
                 android:layout_marginTop="5dp"
                 android:text="$0"
                 android:textAppearance="@style/TextAppearance.App.CardPrice"
+                android:textSize="17sp"
                 android:textColor="@color/red_error" />
 
             <!-- Specs bullets -->

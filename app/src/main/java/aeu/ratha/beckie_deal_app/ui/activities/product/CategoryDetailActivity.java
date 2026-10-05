@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
@@ -23,11 +24,13 @@ import aeu.ratha.beckie_deal_app.R;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductCardBinder;
+import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
 import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
+import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
 import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
@@ -48,13 +51,15 @@ public class CategoryDetailActivity extends BaseActivity {
     private int currentBrandId = -1;         // Brand ID from API (when filtered)
     private String currentCategorySlug = ""; // Category slug from API
     private String currentBrandSlug = "";    // Brand slug from API
-    private GridLayout productsGrid;
+    private RecyclerView productsGrid;
     private TextView resultsLabel;
     private LinearLayout brandFilterContainer;
     private ImageView viewModeIcon;
     
     private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
     private WishlistRepository wishlistRepository;
+    private CartRepository cartRepository;
+    private ProductGridAdapter productAdapter;
     private List<MainActivity.Product> allProducts = new ArrayList<>(); // All products from API
     private List<MainActivity.Product> filteredProducts = new ArrayList<>(); // Filtered/sorted products
 
@@ -71,6 +76,7 @@ public class CategoryDetailActivity extends BaseActivity {
         // Initialize repository
         productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
         wishlistRepository = new WishlistRepository(this);
+        cartRepository = new CartRepository(this);
 
         // Get intent extras
         currentCategoryName = getIntent().getStringExtra(EXTRA_CATEGORY);
@@ -436,125 +442,24 @@ public class CategoryDetailActivity extends BaseActivity {
 
     private void renderProducts(List<MainActivity.Product> products) {
         if (productsGrid == null) return;
-        productsGrid.removeAllViews();
 
         boolean isListView = ViewModePreferences.isListView(this);
-        // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet (1 in list mode)
-        int columns = isListView ? 1 : ScreenUtils.productGridColumns(this);
-        productsGrid.setColumnCount(columns);
-        int cardLayout = isListView ? R.layout.product_card_list : R.layout.product_card;
 
-        if (products.isEmpty()) {
-            TextView empty = new TextView(this);
-            empty.setText("No products found.");
-            empty.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
-            empty.setPadding(32, 64, 32, 64);
-            productsGrid.addView(empty);
-            return;
-        }
-
-        for (int i = 0; i < products.size(); i++) {
-            final MainActivity.Product product = products.get(i);
-            View view = LayoutInflater.from(this)
-                    .inflate(cardLayout, productsGrid, false);
-
-            // Bind all fields via shared binder
-            ProductCardBinder.bind(this, view, product);
-
-            // Open product detail on card tap
-            view.setOnClickListener(v -> {
-                Intent intent = new Intent(this, ProductDetailActivity.class);
-                intent.putExtra("product_id", product.id);
-                intent.putExtra("product_name", product.name);
-                intent.putExtra("product_price", product.price);
-                intent.putExtra("product_rating", product.rating);
-                intent.putExtra("product_image", product.imageUrl);
-                intent.putExtra("product_sku", product.sku);
-                startActivity(intent);
-            });
-
-            // Toggle favorite on heart tap
-            ImageView favIcon = view.findViewById(R.id.favoriteIcon);
-            if (favIcon != null) {
-                favIcon.setOnClickListener(v -> {
-                    if (!aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.requireAuthForWishlist(this)) {
-                        return;
-                    }
-                    
-                    if (product.id == null || product.id.isEmpty()) {
-                        Toast.makeText(this, "Product ID not available", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    
-                    favIcon.setEnabled(false);
-                    
-                    if (!product.isInWishlist) {
-                        wishlistRepository.addToWishlist(product.id, 1, new WishlistRepository.WishlistItemCallback() {
-                            @Override
-                            public void onSuccess(WishlistItemResponse response) {
-                                runOnUiThread(() -> {
-                                    product.isInWishlist = true;
-                                    if (response.getData() != null) {
-                                        product.wishlistItemId = response.getData().getId();
-                                    }
-                                    ProductCardBinder.refreshFavIcon(CategoryDetailActivity.this, favIcon, true);
-                                    Toast.makeText(CategoryDetailActivity.this, "Added to Wishlist", Toast.LENGTH_SHORT).show();
-                                    favIcon.setEnabled(true);
-                                });
-                            }
-                            
-                            @Override
-                            public void onError(String error) {
-                                runOnUiThread(() -> {
-                                    Toast.makeText(CategoryDetailActivity.this, "Failed to add", Toast.LENGTH_SHORT).show();
-                                    favIcon.setEnabled(true);
-                                });
-                            }
-                        });
-                    } else {
-                        if (product.wishlistItemId > 0) {
-                            wishlistRepository.removeFromWishlist(product.wishlistItemId, new WishlistRepository.SimpleCallback() {
-                                @Override
-                                public void onSuccess() {
-                                    runOnUiThread(() -> {
-                                        product.isInWishlist = false;
-                                        product.wishlistItemId = 0;
-                                        ProductCardBinder.refreshFavIcon(CategoryDetailActivity.this, favIcon, false);
-                                        Toast.makeText(CategoryDetailActivity.this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
-                                        favIcon.setEnabled(true);
-                                    });
-                                }
-                                
-                                @Override
-                                public void onError(String error) {
-                                    runOnUiThread(() -> {
-                                        Toast.makeText(CategoryDetailActivity.this, "Failed to remove", Toast.LENGTH_SHORT).show();
-                                        favIcon.setEnabled(true);
-                                    });
-                                }
-                            });
-                        } else {
-                            product.isInWishlist = false;
-                            ProductCardBinder.refreshFavIcon(this, favIcon, false);
-                            favIcon.setEnabled(true);
-                        }
-                    }
-                });
-            }
-
-            // Set layout params so each card takes exactly half the grid width (2 per row)
-            // Calculate fixed width based on screen width divided by 2
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            int screenWidth = getResources().getDisplayMetrics().widthPixels;
-            int gap = (int) (2 * getResources().getDisplayMetrics().density);
-            int cardWidth = (screenWidth / 2) - (gap * 2);
-            params.width = cardWidth;
-            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1);
-            params.setMargins(gap, gap, gap, gap);
-            view.setLayoutParams(params);
-
-            productsGrid.addView(view);
+        if (productAdapter == null) {
+            // First time setup: create adapter with GridLayoutManager
+            GridLayoutManager layoutManager = new GridLayoutManager(this, isListView ? 1 : 2);
+            productsGrid.setLayoutManager(layoutManager);
+            productAdapter = new ProductGridAdapter(this, products, wishlistRepository, cartRepository);
+            productAdapter.setListMode(isListView);
+            productsGrid.setAdapter(productAdapter);
+        } else {
+            // Already has adapter: update span count and refresh data
+            GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
+            if (layoutManager != null) layoutManager.setSpanCount(isListView ? 1 : 2);
+            productAdapter.setListMode(isListView);
+            // Update the adapter's product list
+            productAdapter.updateProducts(products);
+            productAdapter.notifyDataSetChanged();
         }
     }
 

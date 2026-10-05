@@ -213,13 +213,14 @@
             </LinearLayout>
 
             <!-- Products grid -->
-            <GridLayout
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/detailProductsGrid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:background="@color/border_color"
-                android:columnCount="2" />
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

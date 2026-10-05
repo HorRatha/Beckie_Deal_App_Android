@@ -64,6 +64,15 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         return listMode;
     }
 
+    /**
+     * Update the entire product list (called when filters/sorts change).
+     * This replaces all products with new filtered data.
+     */
+    public void updateProducts(List<MainActivity.Product> newProducts) {
+        this.products.clear();
+        this.products.addAll(newProducts);
+    }
+
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
