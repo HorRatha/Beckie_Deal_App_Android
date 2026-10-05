@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Beckie Deal — Product Card (1-column list row)
-    Simple flat design matching grid style but in horizontal layout.
+    Beckie Deal — Product Card (1-column list row) — Price Column style
+    Flat, no border, no shadow, no rounded corners.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,10 +19,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- ── Product image — square thumbnail ─────────────────── -->
+        <!-- ── Product image ──────────────────────────────────────────────── -->
         <FrameLayout
-            android:layout_width="140dp"
-            android:layout_height="140dp"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:minHeight="120dp"
             android:background="@color/card_bg_secondary">
 
             <ImageView
@@ -32,7 +33,6 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_image" />
 
-            <!-- Wishlist — semi-transparent pill, top-right -->
             <ImageView
                 android:id="@+id/favoriteIcon"
                 android:layout_width="28dp"
@@ -44,7 +44,6 @@
                 android:src="@drawable/ic_favorite_border"
                 app:tint="@color/text_secondary" />
 
-            <!-- Quick Add to Cart button — bottom-right -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/quickAddToCartButton"
                 android:layout_width="32dp"
@@ -64,11 +63,11 @@
 
         </FrameLayout>
 
-        <!-- ── Divider ───────────────────────────────────────── -->
+        <!-- ── Brand bar (vertical) ───────────────────────────────────────── -->
         <View
-            android:layout_width="1dp"
+            android:layout_width="3dp"
             android:layout_height="match_parent"
-            android:background="@color/border_color" />
+            android:background="@drawable/brand_bar_gradient_vertical" />
 
         <!-- ── Info section — grows to fill remaining width ──────────────── -->
         <LinearLayout
@@ -77,10 +76,9 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingHorizontal="12dp"
+            android:paddingHorizontal="10dp"
             android:paddingVertical="10dp">
 
-            <!-- Product title -->
             <TextView
                 android:id="@+id/productName"
                 android:layout_width="match_parent"
@@ -90,7 +88,6 @@
                 android:maxLines="2"
                 android:ellipsize="end" />
 
-            <!-- Variant line (memory / storage / colour) -->
             <TextView
                 android:id="@+id/productVariant"
                 android:layout_width="match_parent"
@@ -104,48 +101,16 @@
                 android:ellipsize="end"
                 android:visibility="gone" />
 
-            <!-- Stock status -->
-            <TextView
-                android:id="@+id/stockStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Available In Stock"
-                android:textAppearance="@style/TextAppearance.App.Label"
-                android:textColor="#1565C0" />
-
-            <!-- Warranty -->
-            <TextView
-                android:id="@+id/warrantyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:text="1 Year Warranty"
-                android:textAppearance="@style/TextAppearance.App.Label"
-                android:textColor="#2E7D32" />
-
-            <!-- SKU -->
             <TextView
                 android:id="@+id/skuText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="4dp"
                 android:text=""
                 android:textAppearance="@style/TextAppearance.App.Label"
                 android:textColor="#00897B"
                 android:visibility="gone" />
 
-            <!-- Price -->
-            <TextView
-                android:id="@+id/productPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="$0"
-                android:textAppearance="@style/TextAppearance.App.CardPrice"
-                android:textColor="@color/red_error" />
-
-            <!-- Specs bullets -->
             <TextView
                 android:id="@+id/productSpecs"
                 android:layout_width="match_parent"
@@ -157,7 +122,6 @@
                 android:ellipsize="end"
                 android:visibility="gone" />
 
-            <!-- Free items -->
             <TextView
                 android:id="@+id/freeItemsText"
                 android:layout_width="wrap_content"
@@ -169,6 +133,63 @@
                 android:textColor="@color/red_error"
                 android:textStyle="italic"
                 android:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- ── Divider ────────────────────────────────────────────────────── -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/border_color" />
+
+        <!-- ── Price column — price on top, status at the bottom ─────────── -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="86dp"
+            android:maxWidth="104dp"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/productPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textAppearance="@style/TextAppearance.App.CardPrice"
+                android:textSize="16sp"
+                android:textColor="@color/red_error" />
+
+            <!-- Pushes the status lines to the bottom -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/stockStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="In stock"
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textColor="#1565C0"
+                android:drawableStart="@drawable/dot_small"
+                android:drawableTint="#1565C0"
+                android:drawablePadding="5dp"
+                android:maxLines="2" />
+
+            <TextView
+                android:id="@+id/warrantyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="1 yr"
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textColor="#2E7D32"
+                android:drawableStart="@drawable/dot_small"
+                android:drawableTint="#2E7D32"
+                android:drawablePadding="5dp"
+                android:maxLines="2" />
 
         </LinearLayout>
 
