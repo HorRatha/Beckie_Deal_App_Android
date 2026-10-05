@@ -52,7 +52,7 @@
                 <View
                     android:id="@+id/heroGradient"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
+                    android:layout_height="200dp"
                     android:background="@android:color/transparent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -130,15 +130,17 @@
                     android:id="@+id/avatarOverlay"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
+                    android:elevation="20dp"
                     app:cardCornerRadius="60dp"
-                    app:cardElevation="12dp"
+                    app:cardElevation="20dp"
                     app:strokeWidth="4dp"
-                    app:strokeColor="@color/primary"
+                    app:strokeColor="@color/dark_brown"
                     app:cardBackgroundColor="@color/card_bg_secondary"
                     app:layout_constraintTop_toBottomOf="@id/heroGradient"
                     app:layout_constraintBottom_toBottomOf="@id/heroGradient"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintVertical_bias="0.15">
 
                     <ImageView
                         android:id="@+id/avatarIcon"
@@ -153,10 +155,11 @@
                     android:id="@+id/editAvatarButton"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    android:elevation="22dp"
                     android:clickable="true"
                     android:focusable="true"
                     app:cardCornerRadius="18dp"
-                    app:cardElevation="12dp"
+                    app:cardElevation="22dp"
                     app:strokeWidth="2dp"
                     app:strokeColor="@color/surface"
                     app:cardBackgroundColor="@color/primary"
@@ -185,7 +188,8 @@
                 android:background="@android:color/transparent"
                 android:paddingHorizontal="@dimen/page_margin"
                 android:paddingBottom="20dp"
-                android:layout_marginTop="-28dp">
+                android:paddingTop="-8dp"
+                android:layout_marginTop="-16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -193,16 +197,12 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <!-- Reserved space for the avatar overlay -->
-                    <Space
-                        android:layout_width="1dp"
-                        android:layout_height="36dp" />
+                    <!-- Reserved space is now handled via paddingTop -->
 
                     <TextView
                         android:id="@+id/userName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
                         android:text="Guest User"
                         android:textAppearance="@style/TextAppearance.App.ProductName" />
 
