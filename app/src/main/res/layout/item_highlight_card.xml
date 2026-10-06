@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="96dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:background="@drawable/bg_fact_grid"
+    android:orientation="vertical"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="8dp">
+
+    <TextView
+        android:id="@+id/highlightValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="12GB"
+        android:textAppearance="@style/TextAppearance.App.CardPrice"
+        android:textColor="@color/dark_brown"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/highlightLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="Memory"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.App.Label"
+        android:textColor="@color/text_secondary" />
+</LinearLayout>

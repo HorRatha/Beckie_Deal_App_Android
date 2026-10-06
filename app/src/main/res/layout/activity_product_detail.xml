@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".ProductDetailActivity">
 
-    <!-- ── TOP BAR ──────────────────────────────────────────────────────────────── -->
+    <!-- ── TOP BAR (unchanged) ─────────────────────────────────────────────── -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:padding="12dp"
                 android:src="@drawable/ic_arrow_left"
                 android:contentDescription="Back"
-                app:tint="@color/text_primary" />
+                app:tint="@color/dark_brown" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
                     android:background="@drawable/form_field_background"
                     android:padding="12dp"
                     android:src="@android:drawable/ic_menu_share"
-                    app:tint="@color/text_primary" />
+                    app:tint="@color/dark_brown" />
 
                 <RelativeLayout
                     android:id="@+id/notificationContainer"
@@ -83,11 +83,12 @@
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- ── SCROLLABLE CONTENT ────────────────────────────────────────────────────── -->
+    <!-- ── SCROLLABLE CONTENT ──────────────────────────────────────────────── -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintBottom_toTopOf="@id/bottomActionLayout">
 
@@ -95,74 +96,148 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="24dp">
+            android:paddingBottom="160dp">
 
-            <!-- ── IMAGE GALLERY ───────────────────────────────────────────────────── -->
+            <!-- ── GALLERY: thumbnail rail on the LEFT, main image on the right ── -->
             <FrameLayout
                 android:id="@+id/galleryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/hero_banner_height_product"
                 android:background="@color/surface">
 
-                <!-- Main image – fills the frame edge-to-edge, fit-center keeps aspect ratio -->
+                <!-- Main image (left padding leaves room for the rail) -->
                 <ImageView
                     android:id="@+id/detailProductImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="24dp"
+                    android:paddingStart="78dp"
+                    android:paddingEnd="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="44dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/placeholder_image" />
 
-                <!-- Subtle bottom gradient so image blends into white content area -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="72dp"
                     android:layout_gravity="bottom"
                     android:background="@drawable/hero_bottom_fade" />
 
-                <!-- LEFT arrow -->
-                <ImageView
-                    android:id="@+id/galleryPrev"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                <!-- Vertical thumbnail rail (same IDs as before) -->
+                <LinearLayout
+                    android:id="@+id/thumbnailRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
                     android:layout_marginStart="10dp"
-                    android:background="@drawable/nav_arrow_bg"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_arrow_left"
-                    android:contentDescription="Previous image" />
+                    android:orientation="vertical">
 
-                <!-- RIGHT arrow -->
-                <ImageView
-                    android:id="@+id/galleryNext"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/nav_arrow_bg"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="Next image" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/thumb1"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="6dp"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/primary"
+                        app:cardBackgroundColor="@color/card_bg_secondary">
+                        <ImageView android:id="@+id/thumbImg1"
+                            android:layout_width="match_parent" android:layout_height="match_parent"
+                            android:scaleType="centerCrop" android:padding="4dp" />
+                    </com.google.android.material.card.MaterialCardView>
 
-                <!-- Fullscreen expand button (top-right) -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/thumb2"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="6dp"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/border_color"
+                        app:cardBackgroundColor="@color/card_bg_secondary">
+                        <ImageView android:id="@+id/thumbImg2"
+                            android:layout_width="match_parent" android:layout_height="match_parent"
+                            android:scaleType="centerCrop" android:padding="4dp" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/thumb3"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="6dp"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/border_color"
+                        app:cardBackgroundColor="@color/card_bg_secondary">
+                        <ImageView android:id="@+id/thumbImg3"
+                            android:layout_width="match_parent" android:layout_height="match_parent"
+                            android:scaleType="centerCrop" android:padding="4dp" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/thumb4"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/border_color"
+                        app:cardBackgroundColor="@color/card_bg_secondary">
+                        <ImageView android:id="@+id/thumbImg4"
+                            android:layout_width="match_parent" android:layout_height="match_parent"
+                            android:scaleType="centerCrop" android:padding="4dp" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <!-- Fullscreen (top-right) -->
                 <ImageView
                     android:id="@+id/galleryFullscreen"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="top|end"
                     android:layout_margin="10dp"
                     android:background="@drawable/nav_arrow_bg"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:src="@drawable/ic_fullscreen"
                     android:contentDescription="View fullscreen" />
 
-                <!-- Dot indicator (4 dots) -->
+                <!-- Prev / Next arrows moved to bottom-right (rail owns the left) -->
+                <ImageView
+                    android:id="@+id/galleryPrev"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="52dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/nav_arrow_bg"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_left"
+                    android:contentDescription="Previous image" />
+
+                <ImageView
+                    android:id="@+id/galleryNext"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/nav_arrow_bg"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="Next image" />
+
+                <!-- Dot indicator (centered on the image area, not the rail) -->
                 <LinearLayout
                     android:id="@+id/dotIndicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="14dp"
+                    android:layout_marginStart="62dp"
+                    android:layout_marginBottom="18dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -184,91 +259,21 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <!-- ── THUMBNAIL ROW (4 images) ──────────────────────────────────────────── -->
-            <LinearLayout
-                android:id="@+id/thumbnailRow"
+            <!-- Brand bar -->
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="6dp">
+                android:layout_height="3dp"
+                android:background="@drawable/brand_bar_gradient" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/thumb1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/primary"
-                    app:cardBackgroundColor="@color/card_bg_secondary">
-                    <ImageView android:id="@+id/thumbImg1"
-                        android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:scaleType="centerCrop" android:padding="6dp" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/thumb2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/border_color"
-                    app:cardBackgroundColor="@color/card_bg_secondary">
-                    <ImageView android:id="@+id/thumbImg2"
-                        android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:scaleType="centerCrop" android:padding="6dp" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/thumb3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/border_color"
-                    app:cardBackgroundColor="@color/card_bg_secondary">
-                    <ImageView android:id="@+id/thumbImg3"
-                        android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:scaleType="centerCrop" android:padding="6dp" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/thumb4"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/border_color"
-                    app:cardBackgroundColor="@color/card_bg_secondary">
-                    <ImageView android:id="@+id/thumbImg4"
-                        android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:scaleType="centerCrop" android:padding="6dp" />
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
-
-            <!-- ── PRODUCT INFO ───────────────────────────────────────────────────────── -->
+            <!-- ── PRODUCT INFO ───────────────────────────────────────────────── -->
             <LinearLayout
                 android:id="@+id/productInfoBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp"
-                android:paddingTop="20dp">
+                android:paddingTop="16dp">
 
-                <!-- Product Name -->
                 <TextView
                     android:id="@+id/detailProductName"
                     android:layout_width="match_parent"
@@ -277,7 +282,7 @@
                     android:textAppearance="@style/TextAppearance.App.ProductName"
                     android:lineSpacingMultiplier="1.2" />
 
-                <!-- Star + reviews row -->
+                <!-- Star + reviews -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -309,86 +314,75 @@
                         android:textColor="@color/text_secondary" />
                 </LinearLayout>
 
-                <!-- Price Card -->
-                <com.google.android.material.card.MaterialCardView
+                <!-- Price row: price left, stock chip right -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/detailProductPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="$0.00"
+                        android:textColor="@color/primary"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="4dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp"
+                        app:cardBackgroundColor="#22C55E">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp">
+
+                            <View
+                                android:layout_width="6dp"
+                                android:layout_height="6dp"
+                                android:background="@drawable/dot_active"
+                                android:backgroundTint="@color/white_fixed" />
+
+                            <TextView
+                                android:id="@+id/stockLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="In Stock"
+                                android:textAppearance="@style/TextAppearance.App.Label"
+                                android:textColor="@color/white_fixed" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- ★ Highlight cards (filled in code, hidden when empty) -->
+                <HorizontalScrollView
+                    android:id="@+id/highlightScrollView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="0dp"
-                    app:cardBackgroundColor="@color/background">
+                    android:scrollbars="none"
+                    android:visibility="gone">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:id="@+id/highlightRow"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="16dp">
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Price"
-                                android:textAppearance="@style/TextAppearance.App.Label"
-                                android:textAllCaps="false"
-                                android:textColor="@color/text_secondary" />
-
-                            <TextView
-                                android:id="@+id/detailProductPrice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="$0.00"
-                                android:textColor="@color/primary"
-                                android:textSize="28sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="4dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
-                            app:cardBackgroundColor="#22C55E">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:paddingHorizontal="12dp"
-                                android:paddingVertical="6dp">
-
-                                <View
-                                    android:layout_width="6dp"
-                                    android:layout_height="6dp"
-                                    android:background="@drawable/dot_active"
-                                    android:backgroundTint="@color/white_fixed" />
-
-                                <TextView
-                                    android:id="@+id/stockLabel"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
-                                    android:text="In Stock"
-                                    android:textAppearance="@style/TextAppearance.App.Label"
-                                    android:textColor="@color/white_fixed" />
-                            </LinearLayout>
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Variant selector chips (RAM / Storage / Colour) -->
+                <!-- Variant chips (unchanged) -->
                 <HorizontalScrollView
                     android:id="@+id/variantScrollView"
                     android:layout_width="match_parent"
@@ -403,86 +397,161 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:paddingVertical="4dp" />
-
                 </HorizontalScrollView>
 
-                <!-- Spec tag pills -->
+                <!-- Spec tag pills (unchanged, filled in code) -->
                 <LinearLayout
                     android:id="@+id/specTagsRow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical" />
+
+                <!-- ══ ACCORDION 1: Description (open by default) ══ -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:orientation="vertical">
-                    <!-- Tags added programmatically -->
-                </LinearLayout>
+                    android:background="@color/border_color" />
 
-                <!-- Description -->
-                <TextView
-                    android:id="@+id/detailProductDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text=""
-                    android:textAppearance="@style/TextAppearance.App.Body"
-                    android:textColor="@color/text_secondary"
-                    android:lineSpacingMultiplier="1.5" />
-
-                <!-- ── TECHNICAL SPECIFICATIONS SECTION ────────────────────────── -->
                 <LinearLayout
+                    android:id="@+id/accDescHeader"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_height="52dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginBottom="4dp">
+                    android:orientation="horizontal">
 
                     <View
                         android:layout_width="4dp"
-                        android:layout_height="24dp"
-                        android:background="#F97316" />
+                        android:layout_height="20dp"
+                        android:background="@color/brand_orange" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:text="Technical Specifications"
+                        android:layout_weight="1"
+                        android:text="Description"
                         android:textAppearance="@style/TextAppearance.App.SectionHeader" />
+
+                    <TextView
+                        android:id="@+id/accDescIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="−"
+                        android:textColor="@color/brand_orange"
+                        android:textSize="22sp" />
                 </LinearLayout>
 
-                <!-- 2x2 spec cards grid -->
-                <GridLayout
-                    android:id="@+id/specCardsGrid"
+                <LinearLayout
+                    android:id="@+id/accDescBody"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:columnCount="2"
-                    android:useDefaultMargins="false" />
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp">
 
-                <!-- ── DETAIL SPEC ROWS ──────────────────────────────────────────── -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/border_color"
-                    app:cardBackgroundColor="@color/surface">
-
-                    <LinearLayout
-                        android:id="@+id/specRowsContainer"
+                    <TextView
+                        android:id="@+id/detailProductDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingVertical="6dp" />
+                        android:text=""
+                        android:textAppearance="@style/TextAppearance.App.Body"
+                        android:textColor="@color/text_secondary"
+                        android:lineSpacingMultiplier="1.5" />
+                </LinearLayout>
 
-                </com.google.android.material.card.MaterialCardView>
+                <!-- ══ ACCORDION 2: Technical Specifications (closed by default) ══ -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_color" />
+
+                <LinearLayout
+                    android:id="@+id/accSpecHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="20dp"
+                        android:background="@color/brand_orange" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:text="Technical Specifications"
+                        android:textAppearance="@style/TextAppearance.App.SectionHeader" />
+
+                    <TextView
+                        android:id="@+id/accSpecIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+"
+                        android:textColor="@color/brand_orange"
+                        android:textSize="22sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/accSpecBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="16dp"
+                    android:visibility="gone">
+
+                    <!-- 2x2 spec cards grid -->
+                    <GridLayout
+                        android:id="@+id/specCardsGrid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="2"
+                        android:rowCount="2"
+                        android:useDefaultMargins="true"
+                        android:layout_marginBottom="16dp"
+                        android:paddingHorizontal="4dp"
+                        android:paddingVertical="4dp" />
+
+                    <!-- Detail spec rows table -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/border_color"
+                        app:cardBackgroundColor="@color/surface">
+
+                        <LinearLayout
+                            android:id="@+id/specRowsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingVertical="12dp" />
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_color" />
 
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ── BOTTOM ACTION BAR ──────────────────────────────────────────────────────── -->
+    <!-- ── BOTTOM ACTION BAR (unchanged) ───────────────────────────────────── -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomActionLayout"
         android:layout_width="match_parent"
@@ -501,51 +570,55 @@
             android:paddingTop="10dp"
             android:paddingBottom="12dp">
 
-            <!-- Quantity stepper - compact inline design -->
             <LinearLayout
+                android:id="@+id/quantityStepper"
                 android:layout_width="wrap_content"
-                android:layout_height="44dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:background="@drawable/form_field_background"
-                android:paddingHorizontal="4dp">
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="6dp"
+                android:clickable="true"
+                android:focusable="true">
 
-                <!-- Decrement button -->
                 <ImageView
                     android:id="@+id/quantityDecrement"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:padding="4dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="12dp"
                     android:src="@drawable/ic_minus_24"
                     android:scaleType="fitCenter"
                     app:tint="@color/text_secondary"
-                    android:contentDescription="Decrease quantity" />
+                    android:contentDescription="Decrease quantity"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
 
-                <!-- Quantity value -->
                 <TextView
                     android:id="@+id/quantityValue"
-                    android:layout_width="28dp"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="1"
-                    android:textAppearance="@style/TextAppearance.App.CardPrice" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary" />
 
-                <!-- Increment button -->
                 <ImageView
                     android:id="@+id/quantityIncrement"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:padding="4dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="12dp"
                     android:src="@drawable/ic_plus_24"
                     android:scaleType="fitCenter"
                     app:tint="@color/text_secondary"
-                    android:contentDescription="Increase quantity" />
-
+                    android:contentDescription="Increase quantity"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
             </LinearLayout>
 
-            <!-- Wishlist button -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="44dp"
@@ -568,10 +641,8 @@
                         android:layout_gravity="center"
                         android:src="@drawable/ic_favorite_border" />
                 </com.google.android.material.card.MaterialCardView>
-
             </LinearLayout>
 
-            <!-- Add to Cart Button - Glass Morphism -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/addToCartButton"
                 android:layout_width="0dp"
@@ -593,7 +664,6 @@
                 app:iconPadding="2dp"
                 app:iconSize="16dp" />
 
-            <!-- Buy Now Button - Glass Morphism -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buyNowButton"
                 android:layout_width="0dp"
@@ -611,11 +681,10 @@
                 app:iconTint="@color/white_fixed"
                 app:iconGravity="textStart"
                 app:iconPadding="2dp" />
-
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- ── FLOATING BOTTOM NAV ─────────────────────────────────────────────────────── -->
+    <!-- ── FLOATING BOTTOM NAV (unchanged) ─────────────────────────────────── -->
     <include layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

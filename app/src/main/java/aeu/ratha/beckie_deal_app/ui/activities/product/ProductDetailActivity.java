@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -292,13 +293,19 @@ public class ProductDetailActivity extends BaseActivity {
 
         // ── Spec cards (2×2 grid) ─────────────────────────────────────────
         List<SpecCard> specCards = new ArrayList<>();
-        if (detail.getBrand()    != null)
-            specCards.add(new SpecCard("BRAND",    detail.getBrand().getName(),    R.drawable.widgets_24));
-        if (detail.getCategory() != null)
-            specCards.add(new SpecCard("CATEGORY", detail.getCategory().getName(), R.drawable.devices_24));
-        if (detail.isTrackInventory())
-            specCards.add(new SpecCard("STOCK",    detail.getStockQuantity() + " units", R.drawable.sports_esports_24));
-        specCards.add(new SpecCard("TYPE", detail.isDigital() ? "Digital" : "Physical", R.drawable.mobile_24));
+        // Always show 4 cards in 2x2 grid
+        specCards.add(new SpecCard("BRAND", 
+                detail.getBrand() != null ? detail.getBrand().getName() : "Unknown", 
+                R.drawable.widgets_24));
+        specCards.add(new SpecCard("CATEGORY", 
+                detail.getCategory() != null ? detail.getCategory().getName() : "Uncategorized", 
+                R.drawable.devices_24));
+        specCards.add(new SpecCard("STOCK", 
+                detail.isTrackInventory() ? detail.getStockQuantity() + " units" : "N/A", 
+                R.drawable.sports_esports_24));
+        specCards.add(new SpecCard("TYPE", 
+                detail.isDigital() ? "Digital" : "Physical", 
+                R.drawable.mobile_24));
         setupSpecCards(specCards);
 
         // ── Spec rows (table) ─────────────────────────────────────────────
@@ -626,11 +633,27 @@ public class ProductDetailActivity extends BaseActivity {
 
     private void setupSpecCards(List<SpecCard> cards) {
         android.widget.GridLayout grid = findViewById(R.id.specCardsGrid);
-        if (grid == null) return;
+        if (grid == null) {
+            Log.e(TAG, "specCardsGrid not found!");
+            return;
+        }
         grid.removeAllViews();
+        
+        Log.d(TAG, "Setting up " + cards.size() + " spec cards");
+        
         for (int i = 0; i < Math.min(cards.size(), 4); i++) {
             SpecCard sc = cards.get(i);
             View v = LayoutInflater.from(this).inflate(R.layout.item_spec_card, grid, false);
+            
+            // Create GridLayout.LayoutParams
+            android.widget.GridLayout.LayoutParams glp = new android.widget.GridLayout.LayoutParams();
+            glp.rowSpec = android.widget.GridLayout.spec(i / 2, 1f);
+            glp.columnSpec = android.widget.GridLayout.spec(i % 2, 1f);
+            glp.width = 0;
+            glp.height = android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+            glp.setMargins(6, 6, 6, 6);
+            v.setLayoutParams(glp);
+            
             TextView label = v.findViewById(R.id.specCardLabel);
             TextView value = v.findViewById(R.id.specCardValue);
             ImageView icon = v.findViewById(R.id.specCardIcon);
@@ -638,7 +661,11 @@ public class ProductDetailActivity extends BaseActivity {
             if (value != null) value.setText(sc.value);
             if (icon  != null) icon.setImageResource(sc.iconRes);
             grid.addView(v);
+            
+            Log.d(TAG, "Added spec card " + (i+1) + ": " + sc.label + " - " + sc.value);
         }
+        
+        Log.d(TAG, "Total spec cards added: " + grid.getChildCount());
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -676,6 +703,9 @@ public class ProductDetailActivity extends BaseActivity {
     // ─────────────────────────────────────────────────────────────────────────
 
     private void setupActions() {
+        // ── Collapsible sections ──────────────────────────────────────────────
+        setupCollapsibleSections();
+
         // ── Quantity stepper ──────────────────────────────────────────────
         TextView quantityValue = findViewById(R.id.quantityValue);
         View decrement = findViewById(R.id.quantityDecrement);
@@ -835,6 +865,167 @@ public class ProductDetailActivity extends BaseActivity {
 
     private void setupBottomNavigation() {
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.HOME);
+    }
+
+    // ── Collapsible Sections ───────────────────────────────────────────────────
+
+    private void setupCollapsibleSections() {
+        // Description section
+        View descHeader = findViewById(R.id.accDescHeader);
+        View descBody = findViewById(R.id.accDescBody);
+        View descIcon = findViewById(R.id.accDescIcon);
+
+        if (descHeader != null && descBody != null && descIcon != null) {
+            descHeader.setOnClickListener(v -> {
+                boolean isVisible = descBody.getVisibility() == View.VISIBLE;
+                toggleCollapsibleSection(descBody, descIcon, isVisible);
+                Log.d(TAG, "Description section toggled: " + (!isVisible ? "expanded" : "collapsed"));
+            });
+            // Start expanded
+            descBody.setVisibility(View.VISIBLE);
+            if (descIcon instanceof TextView) {
+                ((TextView) descIcon).setText("−");
+            }
+        }
+
+        // Technical Specifications section
+        View specHeader = findViewById(R.id.accSpecHeader);
+        View specBody = findViewById(R.id.accSpecBody);
+        View specIcon = findViewById(R.id.accSpecIcon);
+
+        if (specHeader != null && specBody != null && specIcon != null) {
+            specHeader.setOnClickListener(v -> {
+                boolean isVisible = specBody.getVisibility() == View.VISIBLE;
+                toggleCollapsibleSection(specBody, specIcon, isVisible);
+                Log.d(TAG, "Specs section toggled: " + (!isVisible ? "expanded" : "collapsed"));
+            });
+            // Start expanded
+            specBody.setVisibility(View.VISIBLE);
+            if (specIcon instanceof TextView) {
+                ((TextView) specIcon).setText("−");
+            }
+        }
+    }
+
+    /**
+     * Toggles section visibility with smooth expand/collapse animation
+     * @param contentView The content view to animate
+     * @param iconView The icon to rotate
+     * @param isCurrentlyVisible Whether the section is currently visible
+     */
+    private void toggleCollapsibleSection(View contentView, View iconView, boolean isCurrentlyVisible) {
+        if (isCurrentlyVisible) {
+            // Collapse with animation
+            collapseSection(contentView, iconView);
+        } else {
+            // Expand with animation
+            expandSection(contentView, iconView);
+        }
+    }
+
+    private void expandSection(View contentView, View iconView) {
+        contentView.measure(
+                View.MeasureSpec.makeMeasureSpec(contentView.getWidth(), View.MeasureSpec.AT_MOST),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+        int targetHeight = contentView.getMeasuredHeight();
+        
+        // Set initial state
+        contentView.setVisibility(View.VISIBLE);
+        ViewGroup.LayoutParams lp = contentView.getLayoutParams();
+        lp.height = 0;
+        contentView.setLayoutParams(lp);
+
+        // Animate height from 0 to target
+        android.animation.ValueAnimator animator = android.animation.ValueAnimator.ofInt(0, targetHeight);
+        animator.setDuration(350);
+        animator.setInterpolator(new android.view.animation.DecelerateInterpolator());
+        animator.addUpdateListener(animation -> {
+            int animatedValue = (int) animation.getAnimatedValue();
+            ViewGroup.LayoutParams params = contentView.getLayoutParams();
+            params.height = animatedValue;
+            contentView.setLayoutParams(params);
+        });
+        animator.addListener(new android.animation.Animator.AnimatorListener() {
+            @Override public void onAnimationStart(android.animation.Animator animation) {}
+            @Override public void onAnimationEnd(android.animation.Animator animation) {
+                ViewGroup.LayoutParams params = contentView.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                contentView.setLayoutParams(params);
+            }
+            @Override public void onAnimationCancel(android.animation.Animator animation) {}
+            @Override public void onAnimationRepeat(android.animation.Animator animation) {}
+        });
+
+        // Rotate/fade icon
+        animateIcon(iconView, false);
+        animator.start();
+    }
+
+    private void collapseSection(View contentView, View iconView) {
+        int initialHeight = contentView.getMeasuredHeight();
+
+        // Animate height from current to 0
+        android.animation.ValueAnimator animator = android.animation.ValueAnimator.ofInt(initialHeight, 0);
+        animator.setDuration(350);
+        animator.setInterpolator(new android.view.animation.AccelerateInterpolator());
+        animator.addUpdateListener(animation -> {
+            int animatedValue = (int) animation.getAnimatedValue();
+            ViewGroup.LayoutParams params = contentView.getLayoutParams();
+            params.height = animatedValue;
+            contentView.setLayoutParams(params);
+        });
+        animator.addListener(new android.animation.Animator.AnimatorListener() {
+            @Override public void onAnimationStart(android.animation.Animator animation) {}
+            @Override public void onAnimationEnd(android.animation.Animator animation) {
+                contentView.setVisibility(View.GONE);
+            }
+            @Override public void onAnimationCancel(android.animation.Animator animation) {}
+            @Override public void onAnimationRepeat(android.animation.Animator animation) {}
+        });
+
+        // Rotate/fade icon
+        animateIcon(iconView, true);
+        animator.start();
+    }
+
+    private void animateIcon(View iconView, boolean isCollapsing) {
+        if (!(iconView instanceof ImageView) && !(iconView instanceof TextView)) {
+            return;
+        }
+
+        if (iconView instanceof TextView) {
+            // For text icon, use alpha fade and text change
+            TextView textIcon = (TextView) iconView;
+            String newText = isCollapsing ? "+" : "−";
+            
+            android.animation.ObjectAnimator alphaOut = android.animation.ObjectAnimator.ofFloat(
+                    iconView, "alpha", 1f, 0.3f);
+            alphaOut.setDuration(150);
+            alphaOut.addListener(new android.animation.Animator.AnimatorListener() {
+                @Override public void onAnimationStart(android.animation.Animator animation) {}
+                @Override public void onAnimationEnd(android.animation.Animator animation) {
+                    textIcon.setText(newText);
+                    android.animation.ObjectAnimator alphaIn = android.animation.ObjectAnimator.ofFloat(
+                            iconView, "alpha", 0.3f, 1f);
+                    alphaIn.setDuration(150);
+                    alphaIn.start();
+                }
+                @Override public void onAnimationCancel(android.animation.Animator animation) {}
+                @Override public void onAnimationRepeat(android.animation.Animator animation) {}
+            });
+            alphaOut.start();
+        } else {
+            // For image icon, use rotation
+            float fromRotation = isCollapsing ? 180f : 0f;
+            float toRotation = isCollapsing ? 0f : 180f;
+            
+            android.animation.ObjectAnimator rotationAnimator = android.animation.ObjectAnimator.ofFloat(
+                    iconView, "rotation", fromRotation, toRotation);
+            rotationAnimator.setDuration(350);
+            rotationAnimator.setInterpolator(new android.view.animation.DecelerateInterpolator());
+            rotationAnimator.start();
+        }
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
