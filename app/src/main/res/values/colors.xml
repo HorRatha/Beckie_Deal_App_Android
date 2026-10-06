@@ -84,4 +84,11 @@
     
     <!-- Top Bar Colors -->
     <color name="topbar_yellow_transparent">#D9FDC011</color>
+
+    <!-- Category/Brand Chip Colors -->
+    <color name="chip_text_color">#FDC011</color>
+    <color name="chip_selected_bg">#3E2723</color>
+    <color name="chip_selected_text">#FDC011</color>
+    <color name="chip_unselected_bg">#FFFFFF</color>
+    <color name="chip_unselected_text">#64748B</color>
 </resources>

@@ -134,27 +134,270 @@ public class ProductRepository {
      */
     public void fetchProductsByCategory(int categoryId, int limit, int offset,
                                         @NonNull ProductCallback callback) {
-        Log.d(TAG, "Fetching products for category id=" + categoryId + " (client-side filter)");
-        fetchAllProductsWithDetails(limit, offset, new ProductCallback() {
+        Log.d(TAG, "=== FETCHING PRODUCTS FOR CATEGORY ID: " + categoryId + " ===");
+        
+        // First, try to fetch all products and use their embedded category info
+        fetchProducts(limit, offset, false, new ProductCallback() {
             @Override
             public void onSuccess(List<Product> products, int total) {
-                List<Product> filtered = new ArrayList<>();
-                for (Product p : products) {
-                    ProductDetail detail = detailCache.get(p.getId());
-                    if (detail != null && detail.getCategory() != null
-                            && detail.getCategory().getId() == categoryId) {
-                        filtered.add(p);
-                    }
+                Log.d(TAG, "Initial fetch: " + products.size() + " products");
+                
+                // Filter using embedded category info if available
+                List<Product> filtered = filterByEmbeddedCategory(products, categoryId);
+                
+                if (!filtered.isEmpty()) {
+                    // We got results from embedded category info — use them
+                    Log.d(TAG, "✓ Using embedded category info: " + filtered.size() + " products matched");
+                    callback.onSuccess(filtered, filtered.size());
+                } else {
+                    // No results from embedded info — fall back to fetching individual details
+                    Log.d(TAG, "✗ No results from embedded info, falling back to detail fetch");
+                    fetchAllProductsWithDetails(limit, offset, new ProductCallback() {
+                        @Override
+                        public void onSuccess(List<Product> detailProducts, int detailTotal) {
+                            List<Product> detailFiltered = new ArrayList<>();
+                            Log.d(TAG, "Detail fetch complete: " + detailProducts.size() + " products");
+                            
+                            int matched = 0;
+                            int detailMissing = 0;
+                            int categoryNull = 0;
+                            int categoryMismatch = 0;
+                            
+                            for (Product p : detailProducts) {
+                                ProductDetail detail = detailCache.get(p.getId());
+                                
+                                if (detail == null) {
+                                    Log.w(TAG, "  ✗ Product " + p.getId() + " (" + p.getName() + "): detail not cached");
+                                    detailMissing++;
+                                    continue;
+                                }
+                                
+                                if (detail.getCategory() == null) {
+                                    Log.w(TAG, "  ✗ Product " + p.getId() + " (" + p.getName() + "): category is NULL");
+                                    categoryNull++;
+                                    continue;
+                                }
+                                
+                                int productCategoryId = detail.getCategory().getId();
+                                int parentCategoryId = detail.getCategory().getParentId();
+                                
+                                // Check for EXACT category match
+                                if (productCategoryId == categoryId) {
+                                    Log.d(TAG, "  ✓ Product " + p.getId() + " (" + p.getName() + "): category ID " + productCategoryId + " MATCHES (exact)");
+                                    detailFiltered.add(p);
+                                    matched++;
+                                }
+                                // Check for PARENT category match (include products from child categories)
+                                else if (parentCategoryId == categoryId && parentCategoryId > 0) {
+                                    Log.d(TAG, "  ✓ Product " + p.getId() + " (" + p.getName() + "): category ID " + productCategoryId + " is child of parent " + parentCategoryId + " (MATCHES)");
+                                    detailFiltered.add(p);
+                                    matched++;
+                                }
+                                else {
+                                    Log.d(TAG, "  ✗ Product " + p.getId() + " (" + p.getName() + "): category ID " + productCategoryId + " (parent=" + parentCategoryId + ") != " + categoryId);
+                                    categoryMismatch++;
+                                }
+                            }
+                            
+                            Log.d(TAG, "=== DETAIL FILTER RESULTS ===");
+                            Log.d(TAG, "Matched: " + matched);
+                            Log.d(TAG, "Detail missing: " + detailMissing);
+                            Log.d(TAG, "Category NULL: " + categoryNull);
+                            Log.d(TAG, "Category mismatch: " + categoryMismatch);
+                            Log.d(TAG, "Final result: " + detailFiltered.size() + " products");
+                            
+                            callback.onSuccess(detailFiltered, detailFiltered.size());
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            callback.onError(errorMessage);
+                        }
+                    });
                 }
-                Log.d(TAG, "Category filter id=" + categoryId + " → " + filtered.size() + " products");
-                callback.onSuccess(filtered, filtered.size());
             }
 
             @Override
             public void onError(String errorMessage) {
+                // If initial fetch fails, report error
+                Log.e(TAG, "Failed to fetch products: " + errorMessage);
                 callback.onError(errorMessage);
             }
         });
+    }
+    
+    /**
+     * Try to filter products using their embedded category information.
+     * This is the fast path if products already include category data.
+     * 
+     * WORKAROUND: If products don't have category objects, use keyword matching
+     * on product names to infer category. This is a temporary solution until
+     * the backend API includes category info in the product list response.
+     * 
+     * IMPORTANT: If a parent category is requested (e.g., "Accessories" with id=5),
+     * this will also include products from child categories (e.g., "Mouse" id=20, "Cables" id=49)
+     * that have parent_id == 5.
+     * 
+     * This ensures parent categories show all products, not just products directly assigned.
+     */
+    private List<Product> filterByEmbeddedCategory(List<Product> products, int categoryId) {
+        List<Product> filtered = new ArrayList<>();
+        int noEmbedded = 0;
+        int exactMatches = 0;
+        int parentMatches = 0;
+        int keywordMatches = 0;
+        
+        for (Product p : products) {
+            if (p.getCategory() == null) {
+                noEmbedded++;
+                // WORKAROUND: If no embedded category, try keyword matching on product name
+                if (matchesCategoryByKeyword(p.getName(), categoryId)) {
+                    Log.d(TAG, "  ✓ Keyword: Product " + p.getId() + " (" + p.getName() + ") matches category id=" + categoryId);
+                    filtered.add(p);
+                    keywordMatches++;
+                }
+                continue;
+            }
+            
+            int productCategoryId = p.getCategory().getId();
+            int parentCategoryId = p.getCategory().getParentId();
+            
+            // Check for EXACT category match
+            if (productCategoryId == categoryId) {
+                Log.d(TAG, "  ✓ Embedded: Product " + p.getId() + " (" + p.getName() + ") exact category match (id=" + productCategoryId + ")");
+                filtered.add(p);
+                exactMatches++;
+            }
+            // Check for PARENT category match (include products from child categories)
+            // This handles cases like "Accessories" (id=5) showing products from "Mouse" (id=20, parent=5)
+            else if (parentCategoryId == categoryId && parentCategoryId > 0) {
+                Log.d(TAG, "  ✓ Embedded: Product " + p.getId() + " (" + p.getName() + ") parent category match (product category=" + productCategoryId + ", parent=" + parentCategoryId + ")");
+                filtered.add(p);
+                parentMatches++;
+            }
+        }
+        
+        Log.d(TAG, "Embedded category check: " + filtered.size() + " total matched (" + exactMatches + " exact, " + parentMatches + " parent, " + keywordMatches + " keyword), " + noEmbedded + " missing category");
+        return filtered;
+    }
+    
+    /**
+     * WORKAROUND: Match product name against category keywords.
+     * Since backend doesn't include category in product list, we infer it from product name.
+     * This is temporary until backend API is updated.
+     */
+    private boolean matchesCategoryByKeyword(String productName, int categoryId) {
+        if (productName == null) return false;
+        
+        String lowerName = productName.toLowerCase();
+        
+        switch (categoryId) {
+            // Storage category (ID=2)
+            case 2:
+                return lowerName.contains("ssd") || lowerName.contains("storage") || 
+                       lowerName.contains("nvme") || lowerName.contains("hard drive") ||
+                       lowerName.contains("samsung 990") || lowerName.contains("drive");
+            
+            // Monitor category (ID=4)
+            case 4:
+                return lowerName.contains("monitor") || lowerName.contains("display");
+            
+            // Accessories category (ID=5)
+            case 5:
+                return lowerName.contains("mouse") || lowerName.contains("keyboard") ||
+                       lowerName.contains("cable") || lowerName.contains("adapter") ||
+                       lowerName.contains("backpack") || lowerName.contains("bag") ||
+                       lowerName.contains("power bank") || lowerName.contains("charger") ||
+                       lowerName.contains("headphone") || lowerName.contains("router");
+            
+            // Networking category (ID=6)
+            case 6:
+                return lowerName.contains("router") || lowerName.contains("network");
+            
+            // Electronics category (ID=22)
+            case 22:
+                return lowerName.contains("gpu") || lowerName.contains("graphics") ||
+                       lowerName.contains("card") || lowerName.contains("rtx");
+            
+            // Smartphones category (ID=24)
+            case 24:
+                return lowerName.contains("phone") || lowerName.contains("smartphone");
+            
+            // Tablets category (ID=25)
+            case 25:
+                return lowerName.contains("tablet") || lowerName.contains("ipad");
+            
+            // Apple MacBook Air (ID=71)
+            case 71:
+                return lowerName.contains("macbook air") || lowerName.contains("macbook");
+            
+            // Apple MacBook Pro (ID=72)
+            case 72:
+                return lowerName.contains("macbook pro");
+            
+            // Microsoft Mouse (ID=73)
+            case 73:
+                return lowerName.contains("microsoft mouse");
+            
+            // ASUS VIVOBOOK (ID=74)
+            case 74:
+                return lowerName.contains("asus") || lowerName.contains("vivobook");
+            
+            // Surface Pro (ID=75)
+            case 75:
+                return lowerName.contains("surface pro");
+            
+            // Laptop (generic for various laptop IDs)
+            case 76: // Dell Alienware Gaming
+                return lowerName.contains("alienware") || lowerName.contains("dell");
+            
+            // Gaming Monitor (ID=17)
+            case 17:
+                return lowerName.contains("gaming monitor");
+            
+            // Office Monitor (ID=18)
+            case 18:
+                return lowerName.contains("office monitor") || (lowerName.contains("monitor") && !lowerName.contains("gaming"));
+            
+            // NVMe SSD (ID=13)
+            case 13:
+                return lowerName.contains("nvme") || lowerName.contains("990 pro");
+            
+            // Hard Drives (ID=14)
+            case 14:
+                return lowerName.contains("hard drive");
+            
+            // Internal SSDs (ID=40)
+            case 40:
+                return lowerName.contains("internal ssd") || lowerName.contains("ssd");
+            
+            // External Storage (ID=41)
+            case 41:
+                return lowerName.contains("external");
+            
+            // Mouse subcategory (ID=20)
+            case 20:
+                return lowerName.contains("mouse") && !lowerName.contains("microsoft");
+            
+            // Cables & Adapters (ID=49)
+            case 49:
+                return lowerName.contains("cable") || lowerName.contains("adapter");
+            
+            // Laptop Bags (ID=50)
+            case 50:
+                return lowerName.contains("case") || lowerName.contains("bag") || lowerName.contains("sleeve");
+            
+            // Power Banks (ID=51)
+            case 51:
+                return lowerName.contains("power bank") || lowerName.contains("charger");
+            
+            // Router (ID=21)
+            case 21:
+                return lowerName.contains("router");
+            
+            default:
+                return false;
+        }
     }
 
     /**

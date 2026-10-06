@@ -73,4 +73,11 @@
     <color name="black">#F1F5F9</color>
     <color name="secondary">#C2703B</color>
     <color name="on_secondary">#FFFFFF</color>
+
+    <!-- Category/Brand Chip Colors (Dark Mode) -->
+    <color name="chip_text_color">#3E2723</color>
+    <color name="chip_selected_bg">#FDC011</color>
+    <color name="chip_selected_text">#3E2723</color>
+    <color name="chip_unselected_bg">#1A2332</color>
+    <color name="chip_unselected_text">#64748B</color>
 </resources>

@@ -210,14 +210,14 @@ public class CategoryDetailActivity extends BaseActivity {
     private void applyChipStyle(MaterialCardView card, TextView text, boolean selected) {
         card.setSelected(selected);
         card.setCardBackgroundColor(ContextCompat.getColor(
-                this, selected ? R.color.primary : R.color.surface));
+                this, selected ? R.color.chip_selected_bg : R.color.chip_unselected_bg));
         card.setStrokeWidth(selected
                 ? 0
                 : getResources().getDimensionPixelSize(R.dimen.chip_stroke_width));
         card.setStrokeColor(ContextCompat.getColor(this, R.color.border_color));
         if (text != null) {
             text.setTextColor(ContextCompat.getColor(
-                    this, selected ? R.color.on_primary : R.color.text_secondary));
+                    this, selected ? R.color.chip_selected_text : R.color.chip_unselected_text));
         }
     }
 
@@ -235,6 +235,9 @@ public class CategoryDetailActivity extends BaseActivity {
      */
     private void fetchProducts() {
         android.util.Log.d(TAG, "=== FETCHING PRODUCTS FROM API ===");
+        android.util.Log.d(TAG, "🔍 DEBUGGING: Category Name: " + currentCategoryName);
+        android.util.Log.d(TAG, "🔍 DEBUGGING: Category ID: " + currentCategoryId);
+        android.util.Log.d(TAG, "🔍 DEBUGGING: Category Slug: " + currentCategorySlug);
         android.util.Log.d(TAG, "Category: " + currentCategoryName + " (ID: " + currentCategoryId + ")");
         android.util.Log.d(TAG, "Brand filter: " + currentBrandFilter + " (ID: " + currentBrandId + ")");
         
@@ -310,11 +313,21 @@ public class CategoryDetailActivity extends BaseActivity {
     private void handleProductsFetched(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
         android.util.Log.d(TAG, "✓ API SUCCESS: Received " + apiProducts.size() + " products (total: " + total + ")");
         
+        // Debug: Log individual products
+        for (int i = 0; i < Math.min(3, apiProducts.size()); i++) {
+            aeu.ratha.beckie_deal_app.data.models.Product p = apiProducts.get(i);
+            android.util.Log.d(TAG, "  Product[" + i + "]: id=" + p.getId() + ", name=" + p.getName() + ", categoryId=" + p.getCategoryId());
+        }
+        
         // Convert API products to UI products
         allProducts.clear();
         allProducts.addAll(aeu.ratha.beckie_deal_app.utils.helpers.ProductMapper.toUiProducts(apiProducts));
         
         android.util.Log.d(TAG, "=== CONVERTED TO " + allProducts.size() + " UI PRODUCTS ===");
+        for (int i = 0; i < Math.min(3, allProducts.size()); i++) {
+            MainActivity.Product p = allProducts.get(i);
+            android.util.Log.d(TAG, "  UIProduct[" + i + "]: id=" + p.id + ", name=" + p.name + ", price=" + p.price);
+        }
         
         // Apply filters and render on UI thread
         runOnUiThread(() -> {
@@ -343,6 +356,9 @@ public class CategoryDetailActivity extends BaseActivity {
      * This replaces the old loadProducts() method.
      */
     private void applyFiltersAndRender() {
+        android.util.Log.d(TAG, "=== APPLYING FILTERS AND RENDERING ===");
+        android.util.Log.d(TAG, "Starting with " + allProducts.size() + " total products");
+        
         List<MainActivity.Product> filtered = new ArrayList<>(allProducts);
         
         // Apply brand filter (if not fetched by brand already)

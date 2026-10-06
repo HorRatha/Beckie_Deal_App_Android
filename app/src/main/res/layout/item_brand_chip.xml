@@ -6,9 +6,8 @@
     android:layout_marginEnd="8dp"
     app:cardCornerRadius="@dimen/chip_pill_radius"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="@color/surface"
-    app:strokeWidth="@dimen/chip_stroke_width"
-    app:strokeColor="@color/border_color"
+    app:cardBackgroundColor="?attr/colorPrimary"
+    app:strokeWidth="0dp"
     android:clickable="true"
     android:focusable="true">
 
@@ -19,6 +18,7 @@
         android:gravity="center"
         android:paddingHorizontal="16dp"
         android:text="Brand"
-        android:textAppearance="@style/TextAppearance.App.CardPrice" />
+        android:textAppearance="@style/TextAppearance.App.CardPrice"
+        android:textColor="@color/chip_text_color" />
 
 </com.google.android.material.card.MaterialCardView>
