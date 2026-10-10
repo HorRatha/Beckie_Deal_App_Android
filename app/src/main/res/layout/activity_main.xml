@@ -137,6 +137,31 @@
                     android:textSize="@dimen/text_size_body" />
             </FrameLayout>
 
+            <!-- SLIDES CAROUSEL BANNER (NEW) - Homepage promotional slides -->
+            <FrameLayout
+                android:id="@+id/slidesBannerCard"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:visibility="visible">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/slidesBannerViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <!-- Dot indicators -->
+                <LinearLayout
+                    android:id="@+id/slidesBannerDotsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal" />
+
+            </FrameLayout>
+
             <!-- PROMOTIONS BANNER CAROUSEL - Replaces old coupon section -->
             <FrameLayout
                 android:id="@+id/promotionBannerCard"

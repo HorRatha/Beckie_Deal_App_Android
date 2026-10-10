@@ -75,4 +75,11 @@
     <string name="english">English</string>
     <string name="back">Back</string>
     <string name="notifications">Notifications</string>
+
+    <!-- ── Slide Banner ── -->
+    <string name="slide_image_description">Promotional slide image</string>
+    <string name="slide_default_title">Special Offer</string>
+    <string name="slide_default_subtitle">Check out our latest promotions</string>
+    <string name="slide_default_button">Learn More</string>
+    <string name="slide_cta_button">View promotion</string>
 </resources>

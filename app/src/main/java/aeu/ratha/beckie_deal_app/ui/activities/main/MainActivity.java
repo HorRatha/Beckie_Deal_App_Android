@@ -13,6 +13,9 @@ import aeu.ratha.beckie_deal_app.ui.activities.product.SearchActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.adapters.ProductGridAdapter;
 import aeu.ratha.beckie_deal_app.ui.adapters.PromotionBannerAdapter;
+import aeu.ratha.beckie_deal_app.ui.adapters.SlideBannerAdapter;
+import aeu.ratha.beckie_deal_app.data.models.Slide;
+import aeu.ratha.beckie_deal_app.data.repository.SlideRepository;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
@@ -67,7 +70,8 @@ public class MainActivity extends BaseActivity {
     private WishlistRepository wishlistRepository;
     private CartRepository cartRepository;
     private aeu.ratha.beckie_deal_app.data.repository.PromotionRepository promotionRepository;
-
+    private SlideRepository slideRepository;
+    private SlideBannerAdapter slideBannerAdapter;
     // Auto-scroll for horizontal sections
     private Handler autoScrollHandler;
     private HorizontalScrollView newCollectionScroll;
@@ -86,6 +90,10 @@ public class MainActivity extends BaseActivity {
     private ViewPager2 promotionBannerPager;
     private Handler promotionAutoScrollHandler;
     private Runnable promotionAutoScrollRunnable;
+    
+    // Slides banner auto-scroll
+    private Handler slideAutoScrollHandler;
+    private Runnable slideAutoScrollRunnable;
     private boolean isPromotionTouched = false;
     
     private static final long BANNER_SCROLL_DELAY = 4500; // 4.5 seconds
@@ -99,6 +107,7 @@ public class MainActivity extends BaseActivity {
         initRepository();
         fetchCategories(); // Fetch from API
         fetchProducts(); // Fetch from API
+        fetchSlides(); // Fetch carousel slides from API
         fetchPromotions(); // Fetch from API - promotions displayed automatically when ready
         drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
@@ -147,6 +156,13 @@ public class MainActivity extends BaseActivity {
         stopAutoScroll();
         stopBannerAutoScroll();
         stopPromotionAutoScroll();
+        
+        // Stop slide auto-scroll
+        if (slideAutoScrollHandler != null && slideAutoScrollRunnable != null) {
+            slideAutoScrollHandler.removeCallbacks(slideAutoScrollRunnable);
+            slideAutoScrollHandler = null;
+            slideAutoScrollRunnable = null;
+        }
     }
 
     private void initializeData() {
@@ -167,6 +183,7 @@ public class MainActivity extends BaseActivity {
         wishlistRepository = new WishlistRepository(this);
         cartRepository = new CartRepository(this);
         promotionRepository = new aeu.ratha.beckie_deal_app.data.repository.PromotionRepository(this);
+        slideRepository = new SlideRepository(this);
     }
     
     /**
@@ -377,6 +394,141 @@ public class MainActivity extends BaseActivity {
         runOnUiThread(() -> {
             Toast.makeText(this, "Failed to load categories. Please check your connection.", 
                 Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    /**
+     * Fetch slides/carousel promotions from backend API.
+     * Endpoint: GET /api/v1/slides
+     */
+    private void fetchSlides() {
+        Log.d(TAG, "=== FETCHING SLIDES FROM API ===");
+        
+        slideRepository.getSlides(new SlideRepository.SlideCallback() {
+            @Override
+            public void onSuccess(java.util.List<Slide> slides) {
+                Log.d(TAG, "✓ Loaded " + slides.size() + " slides from API");
+                runOnUiThread(() -> {
+                    displaySlidesCarousel(slides);
+                });
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "✗ Failed to fetch slides: " + errorMessage);
+                runOnUiThread(() -> {
+                    ViewPager2 slidePager = findViewById(R.id.promotionBannerViewPager);
+                    if (slidePager != null) {
+                        slidePager.setVisibility(View.GONE);
+                        Log.e(TAG, "Hiding slides banner due to error");
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Display slides/carousel promotions on homepage.
+     */
+    private void displaySlidesCarousel(java.util.List<Slide> slides) {
+        ViewPager2 slidesPager = findViewById(R.id.slidesBannerViewPager);
+        LinearLayout dotsContainer = findViewById(R.id.slidesBannerDotsContainer);
+        
+        Log.d(TAG, "displaySlidesCarousel called with " + (slides != null ? slides.size() : "null") + " slides");
+        
+        if (slidesPager == null) {
+            Log.e(TAG, "❌ Slides pager is NULL! Cannot find R.id.slidesBannerViewPager");
+            return;
+        }
+        
+        if (slides == null || slides.isEmpty()) {
+            Log.e(TAG, "❌ Slides list is null or empty!");
+            slidesPager.setVisibility(View.GONE);
+            return;
+        }
+        
+        try {
+            slideBannerAdapter = new SlideBannerAdapter(this, slides);
+            slidesPager.setAdapter(slideBannerAdapter);
+            slidesPager.setVisibility(View.VISIBLE);
+            
+            Log.d(TAG, "✓ Slides adapter set successfully, item count: " + slideBannerAdapter.getItemCount());
+            
+            if (dotsContainer != null) {
+                setupSlideDots(slidesPager, dotsContainer, slideBannerAdapter.getItemCount());
+            }
+            
+            setupSlideAutoScroll(slidesPager, slideBannerAdapter.getItemCount());
+            
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Error setting slides adapter: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Setup dot indicators for slides carousel.
+     */
+    private void setupSlideDots(ViewPager2 viewPager, LinearLayout dotsContainer, int count) {
+        dotsContainer.removeAllViews();
+        
+        for (int i = 0; i < count; i++) {
+            View dot = new View(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(12, 12);
+            params.setMargins(6, 0, 6, 0);
+            dot.setLayoutParams(params);
+            dot.setBackgroundResource(R.drawable.dot_indicator);
+            
+            int index = i;
+            dot.setOnClickListener(v -> viewPager.setCurrentItem(index));
+            dotsContainer.addView(dot);
+        }
+        
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < dotsContainer.getChildCount(); i++) {
+                    View dot = dotsContainer.getChildAt(i);
+                    dot.setAlpha(i == position ? 1.0f : 0.4f);
+                }
+            }
+        });
+    }
+    
+    /**
+     * Setup auto-scroll for slides carousel.
+     */
+    private void setupSlideAutoScroll(ViewPager2 viewPager, int itemCount) {
+        // Stop any existing auto-scroll
+        if (slideAutoScrollHandler != null && slideAutoScrollRunnable != null) {
+            slideAutoScrollHandler.removeCallbacks(slideAutoScrollRunnable);
+        }
+        
+        slideAutoScrollHandler = new Handler(Looper.getMainLooper());
+        slideAutoScrollRunnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (viewPager != null && viewPager.getAdapter() != null) {
+                        int currentItem = viewPager.getCurrentItem();
+                        viewPager.setCurrentItem((currentItem + 1) % itemCount, true);
+                        slideAutoScrollHandler.postDelayed(this, 5000);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Error in slide auto-scroll: " + e.getMessage());
+                }
+            }
+        };
+        
+        slideAutoScrollHandler.postDelayed(slideAutoScrollRunnable, 5000);
+        
+        viewPager.setOnTouchListener((v, event) -> {
+            if (slideAutoScrollHandler != null && slideAutoScrollRunnable != null) {
+                slideAutoScrollHandler.removeCallbacks(slideAutoScrollRunnable);
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    slideAutoScrollHandler.postDelayed(slideAutoScrollRunnable, 5000);
+                }
+            }
+            return false;
         });
     }
 

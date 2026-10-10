@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="0dp"
+    android:layout_marginEnd="0dp"
+    android:layout_marginBottom="0dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/slideBannerImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/slide_image_description" />
+
+    <!-- Gradient Overlay (for animations and styling) -->
+    <View
+        android:id="@+id/slideGradientOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.7" />
+
+    <!-- Content Container with Text and Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:padding="16dp"
+        android:background="@drawable/gradient_slide_overlay">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/slideTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="@string/slide_default_title"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/slideSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:alpha="0.9"
+            android:text="@string/slide_default_subtitle"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_marginBottom="12dp" />
+
+        <!-- CTA Button -->
+        <Button
+            android:id="@+id/slideCtaButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/slide_default_button"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:background="@drawable/slide_button_background"
+            android:contentDescription="@string/slide_cta_button" />
+
+    </LinearLayout>
+
+</FrameLayout>
