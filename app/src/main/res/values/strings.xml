@@ -67,4 +67,12 @@
     <string name="checkout_coupon_applying">Applying\u2026</string>
     <string name="checkout_coupon_remove_desc">Remove coupon</string>
     <string name="checkout_payment_secure_label">Secure</string>
+
+    <!-- ── Terms of Service ── -->
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="last_updated_october_2026">Last updated: October 2026</string>
+    <string name="khmer">ខ្មែរ</string>
+    <string name="english">English</string>
+    <string name="back">Back</string>
+    <string name="notifications">Notifications</string>
 </resources>

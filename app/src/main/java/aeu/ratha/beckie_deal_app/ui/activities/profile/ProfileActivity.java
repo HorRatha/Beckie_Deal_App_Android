@@ -14,6 +14,7 @@ import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.TermsActivity;
 
 import android.content.Intent;
 
@@ -309,6 +310,7 @@ public class ProfileActivity extends BaseActivity {
         LinearLayout ordersRow        = findViewById(R.id.ordersRow);
         LinearLayout couponsRow       = findViewById(R.id.couponsRow);
         LinearLayout aboutUsRow       = findViewById(R.id.aboutUsRow);
+        LinearLayout termsRow         = findViewById(R.id.termsRow);
 
         if (ordersRow != null) ordersRow.setOnClickListener(v ->
                 startActivity(new Intent(this, MyOrdersActivity.class)));
@@ -316,8 +318,10 @@ public class ProfileActivity extends BaseActivity {
                 startActivity(new Intent(this, CouponsActivity.class)));
         if (aboutUsRow != null) aboutUsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, AboutActivity.class)));
+        if (termsRow != null) termsRow.setOnClickListener(v ->
+                startActivity(new Intent(this, TermsActivity.class)));
 
-        UiAnimations.pressBounce(ordersRow, couponsRow, aboutUsRow);
+        UiAnimations.pressBounce(ordersRow, couponsRow, aboutUsRow, termsRow);
     }
 
     private void setupBottomNavigation() {
