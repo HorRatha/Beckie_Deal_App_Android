@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Beckie Deal — Product Card (2-column grid) — Fact Grid style
-    Flat, no border, no shadow, no rounded corners. Full-bleed image.
+    Beckie Deal — Product Card (2-column grid) — Flat design
+    No border, no shadow, no rounded corners. Full-bleed image.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,7 +22,7 @@
         <!-- ── Product image ──────────────────────────────────────────────── -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="155dp"
+            android:layout_height="160dp"
             android:background="@color/card_bg_secondary">
 
             <ImageView
@@ -65,7 +65,7 @@
         <!-- ── Brand bar (replaces the hairline divider) ──────────────────── -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="2dp"
             android:background="@drawable/brand_bar_gradient" />
 
         <!-- ── Info section ───────────────────────────────────────────────── -->
@@ -73,9 +73,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="10dp">
+            android:paddingHorizontal="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="8dp">
 
             <!-- Product title -->
             <TextView
@@ -105,7 +105,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:background="@drawable/bg_fact_grid"
                 android:orientation="horizontal">
 
@@ -115,8 +115,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="4dp">
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="6dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -149,8 +149,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="4dp">
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="6dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -189,11 +189,12 @@
                 android:id="@+id/productPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:text="$0"
                 android:textAppearance="@style/TextAppearance.App.CardPrice"
-                android:textSize="17sp"
-                android:textColor="@color/red_error" />
+                android:textSize="18sp"
+                android:textColor="@color/red_error"
+                android:textStyle="bold" />
 
             <!-- Specs bullets -->
             <TextView
