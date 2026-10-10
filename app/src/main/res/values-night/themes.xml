@@ -9,6 +9,7 @@
 
         <!-- UI colors -->
         <item name="android:windowBackground">@color/background</item>
+        <item name="android:statusBarColor">@color/surface</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/on_surface</item>
         
