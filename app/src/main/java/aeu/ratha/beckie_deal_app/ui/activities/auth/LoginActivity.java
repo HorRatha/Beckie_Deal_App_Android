@@ -549,9 +549,15 @@ public class LoginActivity extends BaseActivity {
         // Show loading state
         setRegisterLoadingState(true);
         
-        // Create register request - backend expects "name", "email", "password", "password_confirmation"
+        // Split name into first and last name
+        String[] nameParts = name.trim().split(" ", 2);
+        String firstName = nameParts[0];
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+        
+        // Create register request with all required fields
+        // Backend requires: first_name, last_name, name, email, password, password_confirmation
         aeu.ratha.beckie_deal_app.data.models.RegisterRequest registerRequest = 
-            new aeu.ratha.beckie_deal_app.data.models.RegisterRequest(email, name, password, password);
+            new aeu.ratha.beckie_deal_app.data.models.RegisterRequest(email, firstName, lastName, name, password, password);
         
         // Make API call
         Call<aeu.ratha.beckie_deal_app.data.models.RegisterResponse> call = authApiService.register(registerRequest);
@@ -583,22 +589,50 @@ public class LoginActivity extends BaseActivity {
         if (response.isSuccess() && response.getData() != null) {
             aeu.ratha.beckie_deal_app.data.models.RegisterResponse.RegisterData data = response.getData();
             
-            // Save authentication data
-            tokenManager.saveAuthData(
-                data.getAccessToken(),
-                data.getTokenType(),
-                data.getExpiresIn(),
-                data.getUser()
-            );
+            if (data.getUser() == null) {
+                Log.e(TAG, "Registration response has no user data");
+                Toast.makeText(this, "Registration successful but user data missing", Toast.LENGTH_LONG).show();
+                return;
+            }
             
-            Log.d(TAG, "Registration successful for user: " + data.getUser().getEmail());
+            String userEmail = data.getUser().getEmail();
             
-            // Show success message
-            String userName = data.getUser().getFullName();
-            Toast.makeText(this, "Welcome, " + userName + "! Account created successfully.", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Registration successful for user: " + userEmail);
+            Log.d(TAG, "Email verification required: " + data.isEmailVerificationRequired());
             
-            // Navigate to main activity
-            navigateToMainActivity();
+            // DO NOT save the token yet if email verification is required
+            if (data.isEmailVerificationRequired()) {
+                Log.d(TAG, "Skipping token save - email verification required");
+                Log.d(TAG, "Attempting to navigate to OTP verification...");
+                
+                // Show message about OTP verification
+                Toast.makeText(this, "Registration successful! Check your email for verification code.", Toast.LENGTH_LONG).show();
+                
+                try {
+                    // Navigate to OTP verification screen WITHOUT saving token
+                    Intent intent = new Intent(LoginActivity.this, VerifyEmailOtpActivity.class);
+                    intent.putExtra("email", userEmail);
+                    Log.d(TAG, "Starting VerifyEmailOtpActivity with email: " + userEmail);
+                    startActivity(intent);
+                    finish();
+                    Log.d(TAG, "Successfully started OTP verification activity");
+                } catch (Exception e) {
+                    Log.e(TAG, "Error starting OTP verification activity", e);
+                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            } else {
+                // Email verification NOT required - save token and proceed
+                Log.d(TAG, "Email verification not required - saving token");
+                tokenManager.saveAuthData(
+                    data.getAccessToken(),
+                    data.getTokenType(),
+                    data.getExpiresIn(),
+                    data.getUser()
+                );
+                
+                Toast.makeText(this, "Registration successful!", Toast.LENGTH_LONG).show();
+                showWelcomeMessageAndNavigate(data.getUser().getFullName());
+            }
         } else {
             Toast.makeText(this, response.getMessage() != null ? response.getMessage() : "Registration failed", Toast.LENGTH_LONG).show();
         }

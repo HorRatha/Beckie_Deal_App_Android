@@ -91,4 +91,10 @@
     <color name="chip_selected_text">#FDC011</color>
     <color name="chip_unselected_bg">#FFFFFF</color>
     <color name="chip_unselected_text">#64748B</color>
+    
+    <!-- Toggle Button Colors -->
+    <color name="button_toggle_inactive">#F1F5F9</color>
+    
+    <!-- Error/Alert Colors -->
+    <color name="error_red">#EF4444</color>
 </resources>

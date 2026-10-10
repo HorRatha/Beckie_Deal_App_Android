@@ -60,7 +60,6 @@ public class ProductDetailActivity extends BaseActivity {
 
     // ── State ─────────────────────────────────────────────────────────────────
     private boolean isFavorite = false;
-    private ImageView detailFavoriteIcon;
 
     /** Basic product info received from the calling activity via Intent. */
     private MainActivity.Product currentProduct;
@@ -172,25 +171,6 @@ public class ProductDetailActivity extends BaseActivity {
             for (int i = 0; i < 4; i++) imgs.add(fb);
         }
         setupGallery(imgs);
-
-        detailFavoriteIcon = findViewById(R.id.detailWishlistIcon);
-        updateFavoriteUI();
-
-        // Check wishlist status
-        if (productId != null && !productId.isEmpty()) {
-            wishlistRepository.checkProductInWishlist(productId, new WishlistRepository.CheckCallback() {
-                @Override public void onResult(boolean inWishlist) {
-                    runOnUiThread(() -> {
-                        isFavorite = inWishlist;
-                        currentProduct.isInWishlist = inWishlist;
-                        updateFavoriteUI();
-                    });
-                }
-                @Override public void onError(String error) {
-                    Log.w(TAG, "Wishlist check failed: " + error);
-                }
-            });
-        }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -778,71 +758,7 @@ public class ProductDetailActivity extends BaseActivity {
             });
         });
 
-        // ── Wishlist ──────────────────────────────────────────────────────
-        View favBtn = findViewById(R.id.wishlistButton);
-        if (favBtn != null) favBtn.setOnClickListener(v -> {
-            if (!AuthHelper.requireAuthForWishlist(this)) return;
-            String pid = currentProduct != null ? currentProduct.id : null;
-            if (pid == null || pid.isEmpty()) {
-                Toast.makeText(this, "Product ID not available", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            favBtn.setEnabled(false);
-            if (!isFavorite) {
-                wishlistRepository.addToWishlist(pid, 1, new WishlistRepository.WishlistItemCallback() {
-                    @Override public void onSuccess(WishlistItemResponse response) {
-                        runOnUiThread(() -> {
-                            isFavorite = true;
-                            currentProduct.isInWishlist = true;
-                            if (response.getData() != null)
-                                currentProduct.wishlistItemId = response.getData().getId();
-                            updateFavoriteUI();
-                            Toast.makeText(ProductDetailActivity.this,
-                                    "Added to Wishlist", Toast.LENGTH_SHORT).show();
-                            favBtn.setEnabled(true);
-                        });
-                    }
-                    @Override public void onError(String error) {
-                        runOnUiThread(() -> {
-                            Toast.makeText(ProductDetailActivity.this,
-                                    "Failed to add to wishlist", Toast.LENGTH_SHORT).show();
-                            favBtn.setEnabled(true);
-                        });
-                    }
-                });
-            } else {
-                if (currentProduct.wishlistItemId > 0) {
-                    wishlistRepository.removeFromWishlist(currentProduct.wishlistItemId,
-                            new WishlistRepository.SimpleCallback() {
-                        @Override public void onSuccess() {
-                            runOnUiThread(() -> {
-                                isFavorite = false;
-                                currentProduct.isInWishlist = false;
-                                currentProduct.wishlistItemId = 0;
-                                updateFavoriteUI();
-                                Toast.makeText(ProductDetailActivity.this,
-                                        "Removed from Wishlist", Toast.LENGTH_SHORT).show();
-                                favBtn.setEnabled(true);
-                            });
-                        }
-                        @Override public void onError(String error) {
-                            runOnUiThread(() -> {
-                                Toast.makeText(ProductDetailActivity.this,
-                                        "Failed to remove from wishlist", Toast.LENGTH_SHORT).show();
-                                favBtn.setEnabled(true);
-                            });
-                        }
-                    });
-                } else {
-                    isFavorite = false;
-                    currentProduct.isInWishlist = false;
-                    updateFavoriteUI();
-                    favBtn.setEnabled(true);
-                }
-            }
-        });
-
-        UiAnimations.pressBounce(addToCart, buyNow, favBtn);
+        UiAnimations.pressBounce(addToCart, buyNow);
     }
 
     /** Returns the product UUID for cart/checkout operations. */
@@ -851,14 +767,6 @@ public class ProductDetailActivity extends BaseActivity {
         if (currentProduct != null && currentProduct.id != null && !currentProduct.id.isEmpty())
             return currentProduct.id;
         return null;
-    }
-
-    private void updateFavoriteUI() {
-        if (detailFavoriteIcon == null) return;
-        detailFavoriteIcon.setImageResource(
-                isFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
-        detailFavoriteIcon.setColorFilter(ContextCompat.getColor(this,
-                isFavorite ? R.color.primary : R.color.text_primary));
     }
 
     // ── Bottom nav ────────────────────────────────────────────────────────────

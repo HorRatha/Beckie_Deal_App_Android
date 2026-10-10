@@ -80,4 +80,10 @@
     <color name="chip_selected_text">#3E2723</color>
     <color name="chip_unselected_bg">#1A2332</color>
     <color name="chip_unselected_text">#64748B</color>
+    
+    <!-- Toggle Button Colors (Dark Mode) -->
+    <color name="button_toggle_inactive">#2D3B4E</color>
+    
+    <!-- Error/Alert Colors (Dark Mode) -->
+    <color name="error_red">#F87171</color>
 </resources>

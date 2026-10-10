@@ -120,6 +120,8 @@ import aeu.ratha.beckie_deal_app.ui.activities.product.AllBrandsActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.widget.Toast;
+import android.util.DisplayMetrics;
+import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
@@ -137,7 +139,8 @@ public class CategoriesActivity extends BaseActivity {
     private List<BrandDisplay> brandsList = new ArrayList<>();
     private List<CategoryItem> categoriesList = new ArrayList<>();
     private GridLayout brandsGrid;
-    private GridLayout allCategoriesGrid;
+    private LinearLayout categoriesColumnLeft;
+    private LinearLayout categoriesColumnRight;
     private BrandRepository brandRepository;
     private CategoryRepository categoryRepository;
 
@@ -174,18 +177,18 @@ public class CategoriesActivity extends BaseActivity {
         }
         
         // menuIcon click handled by AppDrawerHelper
-        ImageView searchIcon = findViewById(R.id.searchIcon);
+        View searchBar = findViewById(R.id.searchBar);
         View notificationContainer = findViewById(R.id.notificationContainer);
         View viewAllBrands = findViewById(R.id.viewAllBrands);
 
-        if (searchIcon != null) searchIcon.setOnClickListener(v ->
+        if (searchBar != null) searchBar.setOnClickListener(v ->
                 startActivity(new Intent(this, SearchActivity.class)));
         if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
         if (viewAllBrands != null) viewAllBrands.setOnClickListener(v ->
                 startActivity(new Intent(this, AllBrandsActivity.class)));
 
-        UiAnimations.pressBounce(searchIcon, notificationContainer, viewAllBrands);
+        UiAnimations.pressBounce(searchBar, notificationContainer, viewAllBrands);
     }
 
     /** Fades/slides the hero header and section headers into place — brand/category
@@ -653,33 +656,48 @@ public class CategoriesActivity extends BaseActivity {
     }
     
     /**
-     * Render all categories in UI grid from API data.
+     * Render all categories in staggered two-column layout from API data.
      * This method is called after fetchAllCategories() completes successfully.
      */
     private void setupAllCategories() {
-        allCategoriesGrid = findViewById(R.id.allCategoriesGrid);
-        if (allCategoriesGrid == null) return;
-        // Responsive column count
-        allCategoriesGrid.setColumnCount(ScreenUtils.categoryGridColumns(this));
-
-        allCategoriesGrid.removeAllViews();
+        categoriesColumnLeft = findViewById(R.id.categoriesColumnLeft);
+        categoriesColumnRight = findViewById(R.id.categoriesColumnRight);
         
-        // Render each category from API
+        if (categoriesColumnLeft == null || categoriesColumnRight == null) return;
+        
+        categoriesColumnLeft.removeAllViews();
+        categoriesColumnRight.removeAllViews();
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        float density = displayMetrics.density;
+        int margin = (int) (3 * density);
+
+        // Render each category with staggered heights
         for (int i = 0; i < categoriesList.size(); i++) {
             CategoryItem item = categoriesList.get(i);
+            LinearLayout column = (i % 2 == 0) ? categoriesColumnLeft : categoriesColumnRight;
+
+            // Alternate between tall (112dp) and short (78dp) heights
+            boolean isTall = (((i / 2) + (i % 2)) % 2) == 0;
+            int heightPx = (int) ((isTall ? 112 : 78) * density);
+
             View view = LayoutInflater.from(this)
-                    .inflate(R.layout.item_category_grid, allCategoriesGrid, false);
+                    .inflate(R.layout.item_category_staggered, column, false);
+            
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, heightPx);
+            params.setMargins(margin, margin, margin, margin);
+            view.setLayoutParams(params);
 
-            ImageView bgImage         = view.findViewById(R.id.categoryBgImage);
-            TextView  title           = view.findViewById(R.id.categoryTitle);
-            TextView  count           = view.findViewById(R.id.categoryItemsCount);
-            ImageView icon            = view.findViewById(R.id.categorySmallIcon);
-            View      hotBadge        = view.findViewById(R.id.hotBadge);
+            TextView nameText = view.findViewById(R.id.categoryName);
+            TextView countText = view.findViewById(R.id.categoryCount);
+            ImageView bgImage = view.findViewById(R.id.categoryImage);
+            ImageView iconImage = view.findViewById(R.id.categoryIcon);
 
-            title.setText(item.name);
-            count.setText(item.count);
-            icon.setImageResource(item.iconRes);
-            if (item.isHot) hotBadge.setVisibility(View.VISIBLE);
+            nameText.setText(item.name);
+            countText.setText(item.count + " items");
+            iconImage.setImageResource(item.iconRes);
 
             Glide.with(this)
                     .load(item.imageUrl)
@@ -689,14 +707,15 @@ public class CategoriesActivity extends BaseActivity {
 
             view.setOnClickListener(v -> {
                 Intent intent = new Intent(this, CategoryDetailActivity.class);
-                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,   item.name);
+                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY, item.name);
                 intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, item.imageUrl);
                 intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT, item.count);
                 intent.putExtra("CATEGORY_ID", item.categoryId);
                 intent.putExtra("CATEGORY_SLUG", item.categorySlug);
                 startActivity(intent);
             });
-            allCategoriesGrid.addView(view);
+
+            column.addView(view);
         }
     }
 

@@ -31,6 +31,9 @@
         <activity
             android:name=".ui.activities.auth.LoginActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.activities.auth.VerifyEmailOtpActivity"
+            android:exported="false" />
 
         <!-- Product Activities -->
         <activity

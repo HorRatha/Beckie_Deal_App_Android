@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="Value"
-            android:textAppearance="@style/TextAppearance.App.CardPrice"
+            android:textAppearance="@style/TextAppearance.App.CardPrice"                                                                                                        
             android:gravity="center"
             android:maxLines="2"
             android:ellipsize="end"

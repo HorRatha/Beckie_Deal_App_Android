@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_radial_gradient_bg"
+    android:fitsSystemWindows="true"
+    tools:context=".VerifyEmailOtpActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header Section with Logo -->
+            <FrameLayout
+                android:id="@+id/verifyHeaderWave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+
+                <!-- Back button -->
+                <ImageView
+                    android:id="@+id/backButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/login_logo_circle_bg"
+                    android:contentDescription="Back"
+                    android:elevation="4dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_left"
+                    app:tint="@color/primary" />
+
+                <!-- Logo - Small and Wide Format -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/logo_light"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="Beckie Deal Logo" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- Verification Form Card Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:paddingBottom="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:elevation="8dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="24dp"
+                    android:background="@drawable/login_input_background_white">
+
+                    <!-- Verification Title -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Verify Your Email"
+                        android:textAppearance="@style/TextAppearance.App.AuthTitle"
+                        android:textColor="@color/dark_brown" />
+
+                    <!-- Subtitle with icon -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="4dp"
+                            android:background="@drawable/login_logo_circle_bg"
+                            android:backgroundTint="@color/primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="Enter the 6-digit code sent to your email"
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/dark_brown" />
+                    </LinearLayout>
+
+                    <!-- Email Display Section -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp"
+                        android:background="@color/button_toggle_inactive"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_email"
+                            android:contentDescription="Email"
+                            app:tint="@color/primary" />
+
+                        <TextView
+                            android:id="@+id/emailDisplayText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:text="user@example.com"
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/dark_brown" />
+
+                    </LinearLayout>
+
+                    <!-- OTP Input Label -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:text="Verification Code"
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/dark_brown" />
+
+                    <!-- OTP Input Fields Container -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:spacing="8dp">
+
+                        <!-- OTP Digit 1 -->
+                        <EditText
+                            android:id="@+id/otpDigit1"
+                            android:layout_width="45dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/login_input_background_white"
+                            android:text=""
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/dark_brown"
+                            android:textColorHint="@color/text_muted"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="1" />
+
+                        <!-- OTP Digit 2 -->
+                        <EditText
+                            android:id="@+id/otpDigit2"
+                            android:layout_width="45dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/login_input_background_white"
+                            android:text=""
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/dark_brown"
+                            android:textColorHint="@color/text_muted"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="1" />
+
+                        <!-- OTP Digit 3 -->
+                        <EditText
+                            android:id="@+id/otpDigit3"
+                            android:layout_width="45dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/login_input_background_white"
+                            android:text=""
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/dark_brown"
+                            android:textColorHint="@color/text_muted"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="1" />
+
+                        <!-- OTP Digit 4 -->
+                        <EditText
+                            android:id="@+id/otpDigit4"
+                            android:layout_width="45dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/login_input_background_white"
+                            android:text=""
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/dark_brown"
+                            android:textColorHint="@color/text_muted"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="1" />
+
+                        <!-- OTP Digit 5 -->
+                        <EditText
+                            android:id="@+id/otpDigit5"
+                            android:layout_width="45dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/login_input_background_white"
+                            android:text=""
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/dark_brown"
+                            android:textColorHint="@color/text_muted"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="1" />
+
+                        <!-- OTP Digit 6 -->
+                        <EditText
+                            android:id="@+id/otpDigit6"
+                            android:layout_width="45dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/login_input_background_white"
+                            android:text=""
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/dark_brown"
+                            android:textColorHint="@color/text_muted"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="1" />
+
+                    </LinearLayout>
+
+                    <!-- Error Message -->
+                    <TextView
+                        android:id="@+id/errorMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text=""
+                        android:textColor="@color/error_red"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+
+                    <!-- Verify Button -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/verifyButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/login_button_rounded_bg"
+                        app:backgroundTint="@null"
+                        android:text="Verify"
+                        android:textAllCaps="false"
+                        android:textColor="@color/dark_brown"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05"
+                        android:elevation="4dp"
+                        android:stateListAnimator="@null" />
+
+                    <!-- Resend OTP Section -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Didn't receive the code? "
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/resendOtpLink"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Resend"
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/dark_brown"
+                            android:paddingHorizontal="4dp" />
+
+                    </LinearLayout>
+
+                    <!-- Resend Timer -->
+                    <TextView
+                        android:id="@+id/resendTimer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Resend in 60s"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.App.Body"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Loading Progress Bar -->
+    <ProgressBar
+        android:id="@+id/verifyProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

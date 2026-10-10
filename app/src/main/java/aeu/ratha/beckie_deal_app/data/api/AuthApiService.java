@@ -52,6 +52,26 @@ public interface AuthApiService {
     @retrofit2.http.GET("auth/user")
     Call<aeu.ratha.beckie_deal_app.data.models.UserProfileResponse> getUserProfile();
     
+    /**
+     * Verify email OTP after registration.
+     * POST /api/v1/auth/verify-email-otp
+     * 
+     * @param request VerifyEmailOtpRequest containing email and 6-digit OTP
+     * @return Call object with VerifyEmailOtpResponse containing token and user data
+     */
+    @POST("auth/verify-email-otp")
+    Call<aeu.ratha.beckie_deal_app.data.models.VerifyEmailOtpResponse> verifyEmailOtp(@Body aeu.ratha.beckie_deal_app.data.models.VerifyEmailOtpRequest request);
+    
+    /**
+     * Resend email OTP for verification.
+     * POST /api/v1/auth/resend-email-otp
+     * 
+     * @param email The email to resend OTP to
+     * @return Call object with generic response
+     */
+    @POST("auth/resend-email-otp")
+    Call<aeu.ratha.beckie_deal_app.data.models.LoginResponse> resendEmailOtp(@retrofit2.http.Body aeu.ratha.beckie_deal_app.data.models.LoginRequest email);
+    
     // Future auth endpoints can be added here:
     // @POST("auth/refresh")
     // Call<LoginResponse> refreshToken(@Body RefreshTokenRequest request);

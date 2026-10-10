@@ -6,6 +6,12 @@ public class RegisterRequest {
     @SerializedName("email")
     private String email;
     
+    @SerializedName("first_name")
+    private String firstName;
+    
+    @SerializedName("last_name")
+    private String lastName;
+    
     @SerializedName("name")
     private String name;
     
@@ -18,16 +24,36 @@ public class RegisterRequest {
     @SerializedName("phone")
     private String phone;
 
-    public RegisterRequest(String email, String name, String password, String passwordConfirmation) {
+    public RegisterRequest(String email, String firstName, String lastName, String name, String password, String passwordConfirmation) {
         this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.name = name;
         this.password = password;
         this.passwordConfirmation = passwordConfirmation;
     }
 
+    public RegisterRequest(String email, String firstName, String lastName, String name, String password, String passwordConfirmation, String phone) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.name = name;
+        this.password = password;
+        this.passwordConfirmation = passwordConfirmation;
+        this.phone = phone;
+    }
+
     // Getters
     public String getEmail() {
         return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public String getName() {
@@ -49,6 +75,14 @@ public class RegisterRequest {
     // Setters
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public void setName(String name) {

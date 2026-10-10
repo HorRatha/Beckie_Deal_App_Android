@@ -28,6 +28,12 @@ public class RegisterResponse {
         
         @SerializedName("expires_at")
         private String expiresAt;
+        
+        @SerializedName("email_verification_required")
+        private boolean emailVerificationRequired;
+        
+        @SerializedName("email")
+        private String email;
 
         @SerializedName("user")
         private User user;
@@ -57,6 +63,14 @@ public class RegisterResponse {
         public User getUser() {
             return user;
         }
+        
+        public boolean isEmailVerificationRequired() {
+            return emailVerificationRequired;
+        }
+        
+        public String getEmail() {
+            return email;
+        }
 
         // Setters
         public void setAccessToken(String accessToken) {
@@ -77,6 +91,14 @@ public class RegisterResponse {
 
         public void setUser(User user) {
             this.user = user;
+        }
+        
+        public void setEmailVerificationRequired(boolean emailVerificationRequired) {
+            this.emailVerificationRequired = emailVerificationRequired;
+        }
+        
+        public void setEmail(String email) {
+            this.email = email;
         }
     }
 
