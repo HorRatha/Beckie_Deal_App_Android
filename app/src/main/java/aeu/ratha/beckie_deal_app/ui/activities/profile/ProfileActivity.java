@@ -308,13 +308,16 @@ public class ProfileActivity extends BaseActivity {
     private void setupSettingsRows() {
         LinearLayout ordersRow        = findViewById(R.id.ordersRow);
         LinearLayout couponsRow       = findViewById(R.id.couponsRow);
+        LinearLayout aboutUsRow       = findViewById(R.id.aboutUsRow);
 
         if (ordersRow != null) ordersRow.setOnClickListener(v ->
                 startActivity(new Intent(this, MyOrdersActivity.class)));
         if (couponsRow != null) couponsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, CouponsActivity.class)));
+        if (aboutUsRow != null) aboutUsRow.setOnClickListener(v ->
+                startActivity(new Intent(this, AboutActivity.class)));
 
-        UiAnimations.pressBounce(ordersRow, couponsRow);
+        UiAnimations.pressBounce(ordersRow, couponsRow, aboutUsRow);
     }
 
     private void setupBottomNavigation() {

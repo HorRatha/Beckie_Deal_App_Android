@@ -189,8 +189,8 @@ public class MainActivity extends BaseActivity {
                 
                 Log.d(TAG, "=== CONVERTED TO " + products.size() + " UI PRODUCTS ===");
                 
-                // Wishlist state will be loaded on-demand when needed
-                // No need to sync here - ProductGridAdapter handles it
+                // Sync wishlist state with actual user's wishlist (if logged in)
+                syncWishlistState();
                 
                 // Update UI on main thread
                 runOnUiThread(() -> {
@@ -213,6 +213,75 @@ public class MainActivity extends BaseActivity {
                     setupTopSellingSection();
                     setupProducts();
                 });
+            }
+        });
+    }
+    
+    /**
+     * Sync wishlist state for all loaded products.
+     * Fetches the user's wishlist and marks which products are in it.
+     * If user is not logged in, all products remain not-in-wishlist.
+     */
+    private void syncWishlistState() {
+        // Check if user is logged in
+        if (!aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this)) {
+            // User not logged in - all products are not in wishlist
+            for (MainActivity.Product product : products) {
+                product.isInWishlist = false;
+                product.wishlistItemId = 0;
+            }
+            Log.d(TAG, "User not logged in - all products marked as not in wishlist");
+            return;
+        }
+        
+        // User is logged in - fetch their wishlist
+        wishlistRepository.getWishlist(new WishlistRepository.WishlistCallback() {
+            @Override
+            public void onSuccess(aeu.ratha.beckie_deal_app.data.models.WishlistResponse response) {
+                if (response != null && response.getData() != null) {
+                    aeu.ratha.beckie_deal_app.data.models.Wishlist wishlist = response.getData();
+                    
+                    // Create a map of product IDs in the wishlist for quick lookup
+                    java.util.Map<String, Integer> wishlistMap = new java.util.HashMap<>();
+                    if (wishlist.getItems() != null) {
+                        for (aeu.ratha.beckie_deal_app.data.models.WishlistItem item : wishlist.getItems()) {
+                            if (item.getProduct() != null && item.getProduct().getId() != null) {
+                                wishlistMap.put(item.getProduct().getId(), item.getId());
+                            }
+                        }
+                    }
+                    
+                    // Update each product's wishlist state
+                    for (MainActivity.Product product : products) {
+                        if (wishlistMap.containsKey(product.id)) {
+                            product.isInWishlist = true;
+                            product.wishlistItemId = wishlistMap.get(product.id);
+                            Log.d(TAG, "Product in wishlist: " + product.name + " (ID: " + product.id + ")");
+                        } else {
+                            product.isInWishlist = false;
+                            product.wishlistItemId = 0;
+                        }
+                    }
+                    
+                    Log.d(TAG, "✓ Wishlist state synced for " + products.size() + " products");
+                    
+                    // Refresh the product grid adapter to show updated wishlist state
+                    runOnUiThread(() -> {
+                        if (productAdapter != null) {
+                            productAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+            
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, "Failed to sync wishlist state: " + error);
+                // On error, default all to not in wishlist
+                for (MainActivity.Product product : products) {
+                    product.isInWishlist = false;
+                    product.wishlistItemId = 0;
+                }
             }
         });
     }

@@ -74,6 +74,7 @@ import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
@@ -127,6 +128,7 @@ public class AboutActivity extends BaseActivity {
         AppDrawerHelper.attach(this, R.id.drawerLayout, 0);
         setupTopBar();
         setupAboutUsImage();
+        setupAccordions();
         setupSubmitButton();
         setupMapCard();
         setupBottomNavigation();
@@ -147,6 +149,53 @@ public class AboutActivity extends BaseActivity {
     }
 
     /**
+     * Setup accordion toggle functionality for Warranty Terms and Contact Us sections.
+     */
+    private void setupAccordions() {
+        // Warranty Terms Accordion
+        LinearLayout accWarrantyHeader = findViewById(R.id.accWarrantyHeader);
+        LinearLayout accWarrantyBody = findViewById(R.id.accWarrantyBody);
+        TextView accWarrantyIcon = findViewById(R.id.accWarrantyIcon);
+
+        if (accWarrantyHeader != null && accWarrantyBody != null && accWarrantyIcon != null) {
+            accWarrantyHeader.setOnClickListener(v -> {
+                boolean isVisible = accWarrantyBody.getVisibility() == View.VISIBLE;
+                toggleAccordion(accWarrantyBody, accWarrantyIcon, !isVisible);
+            });
+        }
+
+        // Contact Us Accordion
+        LinearLayout accContactHeader = findViewById(R.id.accContactHeader);
+        LinearLayout accContactBody = findViewById(R.id.accContactBody);
+        TextView accContactIcon = findViewById(R.id.accContactIcon);
+
+        if (accContactHeader != null && accContactBody != null && accContactIcon != null) {
+            accContactHeader.setOnClickListener(v -> {
+                boolean isVisible = accContactBody.getVisibility() == View.VISIBLE;
+                toggleAccordion(accContactBody, accContactIcon, !isVisible);
+            });
+        }
+
+        UiAnimations.pressBounce(accWarrantyHeader, accContactHeader);
+    }
+
+    /**
+     * Toggle accordion body visibility with animation and icon rotation.
+     */
+    private void toggleAccordion(LinearLayout body, TextView icon, boolean show) {
+        if (show) {
+            body.setVisibility(View.VISIBLE);
+            icon.animate().rotation(45).setDuration(300).start();
+            UiAnimations.fadeSlideDown(body, 0);
+        } else {
+            icon.animate().rotation(0).setDuration(300).start();
+            body.animate().alpha(0f).setDuration(200).withEndAction(() -> 
+                body.setVisibility(View.GONE)
+            ).start();
+        }
+    }
+
+    /**
      * Load and display the About Us image from the remote URL.
      */
     private void setupAboutUsImage() {
@@ -161,6 +210,34 @@ public class AboutActivity extends BaseActivity {
                     .centerCrop()
                     .into(aboutUsImage);
         }
+        
+        // Apply gradient to hero text
+        applyGradientToTextView(findViewById(R.id.heroTitle));
+        applyGradientToTextView(findViewById(R.id.heroSubtitle));
+    }
+    
+    /**
+     * Apply gradient color to a TextView using a shader.
+     */
+    private void applyGradientToTextView(TextView textView) {
+        if (textView == null) return;
+        
+        textView.post(() -> {
+            int width = textView.getWidth();
+            int height = textView.getHeight();
+            
+            if (width > 0 && height > 0) {
+                android.graphics.Shader textShader = new android.graphics.LinearGradient(
+                    0, 0, width, height,
+                    androidx.core.content.ContextCompat.getColor(this, R.color.yellow_star),
+                    androidx.core.content.ContextCompat.getColor(this, R.color.brand_orange),
+                    android.graphics.Shader.TileMode.CLAMP
+                );
+                textView.getPaint().setShader(textShader);
+                textView.setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.yellow_star));
+                textView.invalidate();
+            }
+        });
     }
 
     /** Staggers every section of the About page's scroll body up into place on load. */

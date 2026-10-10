@@ -143,6 +143,9 @@ public class SearchActivity extends BaseActivity {
                 public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
                     allProducts.clear();
                     allProducts.addAll(aeu.ratha.beckie_deal_app.utils.helpers.ProductMapper.toUiProducts(apiProducts));
+                    
+                    // Sync wishlist state
+                    syncWishlistState();
                 }
                 
                 @Override
@@ -153,6 +156,70 @@ public class SearchActivity extends BaseActivity {
                     });
                 }
             });
+    }
+    
+    /**
+     * Sync wishlist state for all loaded products.
+     * Fetches the user's wishlist and marks which products are in it.
+     * If user is not logged in, all products remain not-in-wishlist.
+     */
+    private void syncWishlistState() {
+        // Check if user is logged in
+        if (!aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this)) {
+            // User not logged in - all products are not in wishlist
+            for (MainActivity.Product product : allProducts) {
+                product.isInWishlist = false;
+                product.wishlistItemId = 0;
+            }
+            return;
+        }
+        
+        // User is logged in - fetch their wishlist
+        wishlistRepository.getWishlist(new aeu.ratha.beckie_deal_app.data.repository.WishlistRepository.WishlistCallback() {
+            @Override
+            public void onSuccess(aeu.ratha.beckie_deal_app.data.models.WishlistResponse response) {
+                if (response != null && response.getData() != null) {
+                    aeu.ratha.beckie_deal_app.data.models.Wishlist wishlist = response.getData();
+                    
+                    // Create a map of product IDs in the wishlist for quick lookup
+                    java.util.Map<String, Integer> wishlistMap = new java.util.HashMap<>();
+                    if (wishlist.getItems() != null) {
+                        for (aeu.ratha.beckie_deal_app.data.models.WishlistItem item : wishlist.getItems()) {
+                            if (item.getProduct() != null && item.getProduct().getId() != null) {
+                                wishlistMap.put(item.getProduct().getId(), item.getId());
+                            }
+                        }
+                    }
+                    
+                    // Update each product's wishlist state
+                    for (MainActivity.Product product : allProducts) {
+                        if (wishlistMap.containsKey(product.id)) {
+                            product.isInWishlist = true;
+                            product.wishlistItemId = wishlistMap.get(product.id);
+                        } else {
+                            product.isInWishlist = false;
+                            product.wishlistItemId = 0;
+                        }
+                    }
+                    
+                    // Refresh search results if any exist
+                    runOnUiThread(() -> {
+                        if (!lastQuery.isEmpty()) {
+                            performSearch(lastQuery);  // Re-render search results with updated wishlist state
+                        }
+                    });
+                }
+            }
+            
+            @Override
+            public void onError(String error) {
+                // On error, default all to not in wishlist
+                for (MainActivity.Product product : allProducts) {
+                    product.isInWishlist = false;
+                    product.wishlistItemId = 0;
+                }
+            }
+        });
     }
 
     // ── Search logic ──────────────────────────────────────────────────────────
