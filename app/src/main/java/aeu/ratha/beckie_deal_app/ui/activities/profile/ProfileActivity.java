@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import aeu.ratha.beckie_deal_app.security.TokenManager;
 import aeu.ratha.beckie_deal_app.data.models.User;
 import aeu.ratha.beckie_deal_app.data.repository.ProfileRepository;
@@ -379,14 +380,16 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void setupSettingsRows() {
-        LinearLayout editProfileRow   = findViewById(R.id.editProfileRow);
         LinearLayout ordersRow        = findViewById(R.id.ordersRow);
         LinearLayout couponsRow       = findViewById(R.id.couponsRow);
         LinearLayout aboutUsRow       = findViewById(R.id.aboutUsRow);
         LinearLayout privacyRow       = findViewById(R.id.privacyRow);
         LinearLayout termsRow         = findViewById(R.id.termsRow);
+        
+        // Edit Profile from stat cards
+        MaterialCardView editProfileBox = findViewById(R.id.editProfileBox);
 
-        if (editProfileRow != null) editProfileRow.setOnClickListener(v -> {
+        if (editProfileBox != null) editProfileBox.setOnClickListener(v -> {
             Toast.makeText(this, "Edit Profile - Coming Soon", Toast.LENGTH_SHORT).show();
             // TODO: Navigate to EditProfileActivity when implemented
             // startActivity(new Intent(this, EditProfileActivity.class));
@@ -402,7 +405,7 @@ public class ProfileActivity extends BaseActivity {
         if (termsRow != null) termsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, TermsActivity.class)));
 
-        UiAnimations.pressBounce(editProfileRow, ordersRow, couponsRow, aboutUsRow, privacyRow, termsRow);
+        UiAnimations.pressBounce(ordersRow, couponsRow, aboutUsRow, privacyRow, termsRow);
     }
 
     private void setupBottomNavigation() {

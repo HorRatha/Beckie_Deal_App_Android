@@ -54,7 +54,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:background="@android:color/transparent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteX="0dp" />
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/topAppBar"
@@ -130,6 +131,7 @@
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:elevation="20dp"
+                    android:layout_marginStart="24dp"
                     app:cardCornerRadius="60dp"
                     app:cardElevation="20dp"
                     app:strokeWidth="4dp"
@@ -138,7 +140,6 @@
                     app:layout_constraintTop_toBottomOf="@id/heroGradient"
                     app:layout_constraintBottom_toBottomOf="@id/heroGradient"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintVertical_bias="0.15">
 
                     <ImageView
@@ -174,45 +175,215 @@
                         android:src="@drawable/ic_edit_profile" />
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- User Name -->
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hor Ratha"
+                    android:textAppearance="@style/TextAppearance.App.ProductName"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintTop_toTopOf="@id/avatarOverlay"
+                    app:layout_constraintStart_toEndOf="@id/avatarOverlay"
+                    app:layout_constraintBottom_toBottomOf="@id/avatarOverlay"
+                    app:layout_constraintVertical_bias="0.3" />
+
+                <!-- User Email -->
+                <TextView
+                    android:id="@+id/userEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="horratha45@gmail.com"
+                    android:textAppearance="@style/TextAppearance.App.Body"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintTop_toBottomOf="@id/userName"
+                    app:layout_constraintStart_toEndOf="@id/avatarOverlay" />
+
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- ══ SCROLLABLE IDENTITY HEADER ════════════════════════════ -->
+
+            <!-- ══ ACCOUNT SECTION ════════════════════════════════════════ -->
+
             <LinearLayout
                 android:id="@+id/profileHeaderCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginTop="-16dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:background="@android:color/transparent"
+                android:orientation="vertical"
                 android:paddingHorizontal="@dimen/page_margin"
-                android:paddingBottom="20dp"
-                android:paddingTop="-8dp"
-                android:layout_marginTop="-16dp">
+                android:paddingTop="20dp"
+                android:paddingBottom="24dp">
 
+                <!-- ══ STATS BOXES (Left: Orders tall, Right: Coupons + Edit stacked) ══ -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="10dp"
+                    android:gravity="start"
+                    android:orientation="horizontal">
 
-                    <!-- Reserved space is now handled via paddingTop -->
+                    <!-- Left Box: My Orders (tall) -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/myOrdersBox"
+                        android:layout_width="0dp"
+                        android:layout_height="160dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/primary"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
 
-                    <TextView
-                        android:id="@+id/userName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Guest User"
-                        android:textAppearance="@style/TextAppearance.App.ProductName" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical"
+                            android:paddingVertical="20dp">
 
-                    <TextView
-                        android:id="@+id/userEmail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Sign in to sync your wishlist and orders"
-                        android:textAppearance="@style/TextAppearance.App.Body"
-                        android:textColor="@color/text_secondary" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3"
+                                android:textColor="@color/text_primary"
+                                android:textSize="40sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="My Orders"
+                                android:textAllCaps="false"
+                                android:textAppearance="@style/TextAppearance.App.Label"
+                                android:textColor="@color/text_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="active now"
+                                android:textAppearance="@style/TextAppearance.App.Body"
+                                android:textColor="@color/text_secondary" />
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Right side: 2 small boxes stacked -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="160dp"
+                        android:layout_weight="1"
+                        android:gravity="top"
+                        android:orientation="vertical">
+
+                        <!-- Top: My Coupons -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/myCouponsBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardBackgroundColor="@color/surface"
+                            app:cardCornerRadius="0dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="@color/border_color">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="12dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="4"
+                                    android:textColor="@color/primary"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="My Coupons"
+                                        android:textAllCaps="false"
+                                        android:textAppearance="@style/TextAppearance.App.Label"
+                                        android:textColor="@color/text_primary" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:text="available"
+                                        android:textAppearance="@style/TextAppearance.App.Body"
+                                        android:textColor="@color/text_secondary" />
+
+                                </LinearLayout>
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Bottom: Edit Profile - Button Style -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/editProfileBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardBackgroundColor="@color/primary"
+                            app:cardCornerRadius="0dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="12dp">
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_edit_profile"
+                                    app:tint="@color/white_fixed" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:text="Edit Profile"
+                                    android:textAllCaps="false"
+                                    android:textAppearance="@style/TextAppearance.App.Label"
+                                    android:textColor="@color/white_fixed" />
+
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -220,16 +391,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
                     <!-- Login Button - Gradient Glass Morphism -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/loginButton"
                         android:layout_width="0dp"
                         android:layout_height="52dp"
-                        android:layout_weight="1"
                         android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
                         android:background="@drawable/button_add_to_cart_glass"
                         android:text="Login"
                         android:textAllCaps="false"
@@ -245,8 +416,8 @@
                         android:id="@+id/registerButton"
                         android:layout_width="0dp"
                         android:layout_height="52dp"
-                        android:layout_weight="1"
                         android:layout_marginStart="8dp"
+                        android:layout_weight="1"
                         android:background="@drawable/button_buy_now_glass"
                         android:text="Register"
                         android:textAllCaps="false"
@@ -261,7 +432,6 @@
 
             </LinearLayout>
 
-            <!-- ══ ACCOUNT SECTION ════════════════════════════════════════ -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -293,52 +463,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-
-                        <!-- Edit Profile -->
-                        <LinearLayout
-                            android:id="@+id/editProfileRow"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingHorizontal="16dp"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:background="?attr/selectableItemBackground">
-
-                            <com.google.android.material.card.MaterialCardView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                app:cardCornerRadius="12dp"
-                                app:cardElevation="0dp"
-                                app:strokeWidth="0dp"
-                                app:cardBackgroundColor="@android:color/transparent">
-                                <ImageView
-                                    android:layout_width="22dp"
-                                    android:layout_height="22dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_edit_profile"
-                                    app:tint="@color/brand_tint_fg_3" />
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginStart="14dp"
-                                android:text="Edit Profile"
-                                android:textAppearance="@style/TextAppearance.App.CardProductName"
-                                android:textColor="@color/text_primary" />
-
-                            <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:src="@drawable/ic_chevron_right"
-                                app:tint="@color/text_secondary" />
-                        </LinearLayout>
-
-                        <View android:layout_width="match_parent" android:layout_height="1dp"
-                            android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
 
                         <!-- My Orders -->
                         <LinearLayout
