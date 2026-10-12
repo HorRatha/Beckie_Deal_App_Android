@@ -47,10 +47,10 @@ public interface AuthApiService {
      * Get current authenticated user profile.
      * GET /api/v1/auth/user
      * 
-     * @return Call object with UserProfileResponse containing user data
+     * @return Call object with User profile data
      */
     @retrofit2.http.GET("auth/user")
-    Call<aeu.ratha.beckie_deal_app.data.models.UserProfileResponse> getUserProfile();
+    Call<aeu.ratha.beckie_deal_app.data.models.User> getUserProfile();
     
     /**
      * Verify email OTP after registration.

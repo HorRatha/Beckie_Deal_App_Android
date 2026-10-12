@@ -7,53 +7,56 @@ import com.google.gson.annotations.SerializedName;
  * Matches the Laravel backend response format.
  */
 public class UserProfileResponse {
-    @SerializedName("status")
-    private String status;
+    @SerializedName("first_name")
+    private String firstName;
     
-    @SerializedName("message")
-    private String message;
+    @SerializedName("last_name")
+    private String lastName;
     
-    @SerializedName("data")
-    private User data;
+    @SerializedName("email")
+    private String email;
     
-    @SerializedName("errors")
-    private Object errors;
+    @SerializedName("phone")
+    private String phone;
 
     // Getters
-    public boolean isSuccess() {
-        return "success".equalsIgnoreCase(status);
-    }
-    
-    public String getStatus() {
-        return status;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getMessage() {
-        return message;
+    public String getLastName() {
+        return lastName;
     }
 
-    public User getData() {
-        return data;
+    public String getEmail() {
+        return email;
     }
-    
-    public Object getErrors() {
-        return errors;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getFullName() {
+        if (firstName != null && lastName != null) {
+            return firstName + " " + lastName;
+        }
+        return email != null ? email : "User";
     }
 
     // Setters
-    public void setStatus(String status) {
-        this.status = status;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public void setData(User data) {
-        this.data = data;
+    public void setEmail(String email) {
+        this.email = email;
     }
-    
-    public void setErrors(Object errors) {
-        this.errors = errors;
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

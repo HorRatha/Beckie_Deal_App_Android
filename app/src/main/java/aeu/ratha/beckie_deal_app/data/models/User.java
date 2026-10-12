@@ -3,9 +3,6 @@ package aeu.ratha.beckie_deal_app.data.models;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
-    @SerializedName("id")
-    private String id;
-    
     @SerializedName("email")
     private String email;
     
@@ -22,10 +19,6 @@ public class User {
     private String name;
 
     // Getters
-    public String getId() {
-        return id;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -41,7 +34,7 @@ public class User {
     public String getPhone() {
         return phone;
     }
-
+    
     public String getName() {
         return name;
     }
@@ -50,14 +43,13 @@ public class User {
         if (firstName != null && lastName != null) {
             return firstName + " " + lastName;
         }
-        return name != null ? name : email;
+        if (name != null) {
+            return name;
+        }
+        return email != null ? email : "User";
     }
 
     // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -73,7 +65,7 @@ public class User {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }

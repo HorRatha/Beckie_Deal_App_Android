@@ -47,7 +47,7 @@ public class TokenManager {
         if (user != null) {
             String userName = user.getFullName();
             securePrefs.saveUserInfo(
-                    user.getId(),
+                    user.getEmail(),
                     user.getEmail(),
                     userName
             );
