@@ -310,6 +310,7 @@ public class ProfileActivity extends BaseActivity {
         LinearLayout ordersRow        = findViewById(R.id.ordersRow);
         LinearLayout couponsRow       = findViewById(R.id.couponsRow);
         LinearLayout aboutUsRow       = findViewById(R.id.aboutUsRow);
+        LinearLayout privacyRow       = findViewById(R.id.privacyRow);
         LinearLayout termsRow         = findViewById(R.id.termsRow);
 
         if (ordersRow != null) ordersRow.setOnClickListener(v ->
@@ -318,10 +319,12 @@ public class ProfileActivity extends BaseActivity {
                 startActivity(new Intent(this, CouponsActivity.class)));
         if (aboutUsRow != null) aboutUsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, AboutActivity.class)));
+        if (privacyRow != null) privacyRow.setOnClickListener(v ->
+                startActivity(new Intent(this, PrivacyPolicyActivity.class)));
         if (termsRow != null) termsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, TermsActivity.class)));
 
-        UiAnimations.pressBounce(ordersRow, couponsRow, aboutUsRow, termsRow);
+        UiAnimations.pressBounce(ordersRow, couponsRow, aboutUsRow, privacyRow, termsRow);
     }
 
     private void setupBottomNavigation() {

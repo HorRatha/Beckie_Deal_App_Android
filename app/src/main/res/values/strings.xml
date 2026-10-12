@@ -70,6 +70,7 @@
 
     <!-- ── Terms of Service ── -->
     <string name="terms_of_service">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
     <string name="last_updated_october_2026">Last updated: October 2026</string>
     <string name="khmer">ខ្មែរ</string>
     <string name="english">English</string>

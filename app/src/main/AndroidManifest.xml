@@ -95,6 +95,9 @@
             android:name=".ui.activities.profile.TermsActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activities.profile.PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.profile.WishlistActivity"
             android:exported="false" />
         <activity
