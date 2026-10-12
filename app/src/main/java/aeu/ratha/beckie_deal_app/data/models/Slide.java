@@ -42,6 +42,9 @@ public class Slide {
     @SerializedName("gradient")
     private String gradient;  // Background gradient CSS
     
+    @SerializedName("tag")
+    private String tag;  // Optional tag like "NEW ARRIVAL" or "HOT DEAL"
+    
     @SerializedName("meta")
     private SlideMeta meta;  // Animation metadata
     
@@ -72,6 +75,7 @@ public class Slide {
     public int getDurationMs() { return durationMs; }
     public String getTransition() { return transition; }
     public String getGradient() { return gradient; }
+    public String getTag() { return tag; }
     public SlideMeta getMeta() { return meta; }
     public String getPosition() { return position; }
     public boolean isActive() { return isActive; }
@@ -91,6 +95,7 @@ public class Slide {
     public void setDurationMs(int durationMs) { this.durationMs = durationMs; }
     public void setTransition(String transition) { this.transition = transition; }
     public void setGradient(String gradient) { this.gradient = gradient; }
+    public void setTag(String tag) { this.tag = tag; }
     public void setPosition(String position) { this.position = position; }
     public void setIsActive(boolean isActive) { this.isActive = isActive; }
     public void setStartsAt(String startsAt) { this.startsAt = startsAt; }

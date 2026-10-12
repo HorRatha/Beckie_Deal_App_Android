@@ -73,13 +73,15 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
     public class PromotionBannerViewHolder extends RecyclerView.ViewHolder {
         
         private final ImageView bannerImage;
+        private final View scrim;
         private final TextView discountText;
         private final TextView nameText;
         private final TextView descriptionText;
+        private final TextView expiresLabel;
         private final TextView codeText;
         private final TextView countdownText;
         private final ImageView copyCodeIcon;
-        private final LinearLayout copyCodePill;
+        private final LinearLayout copyButton;
         private Runnable countdownRunnable;
         private Handler countdownHandler = new Handler(Looper.getMainLooper());
         
@@ -87,21 +89,41 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
             super(itemView);
             
             bannerImage = itemView.findViewById(R.id.promotionBannerImage);
+            scrim = itemView.findViewById(R.id.promotionImageScrim);
             discountText = itemView.findViewById(R.id.promotionDiscount);
             nameText = itemView.findViewById(R.id.promotionName);
             descriptionText = itemView.findViewById(R.id.promotionDescription);
+            expiresLabel = itemView.findViewById(R.id.promotionExpiresLabel);
             codeText = itemView.findViewById(R.id.promotionCode);
             countdownText = itemView.findViewById(R.id.promotionCountdown);
             copyCodeIcon = itemView.findViewById(R.id.promotionCopyCodeIcon);
-            
-            // Find the copy code pill container (parent of icon)
-            copyCodePill = (LinearLayout) copyCodeIcon.getParent();
+            copyButton = itemView.findViewById(R.id.promotionCopyButton);
         }
         
         /**
          * Bind promotion data to the banner view.
          */
         public void bind(Promotion promotion) {
+            // Check if banner has an image
+            boolean hasImage = promotion.getBannerImage() != null && !promotion.getBannerImage().isEmpty();
+            
+            // Show/hide image and scrim based on image availability
+            if (hasImage) {
+                bannerImage.setVisibility(View.VISIBLE);
+                scrim.setVisibility(View.VISIBLE);
+                
+                // Load banner image
+                Glide.with(context)
+                        .load(promotion.getBannerImage())
+                        .centerCrop()
+                        .into(bannerImage);
+                Log.d(TAG, "✓ Loaded banner image: " + promotion.getBannerImage());
+            } else {
+                bannerImage.setVisibility(View.GONE);
+                scrim.setVisibility(View.GONE);
+                Log.d(TAG, "⚠ No banner image for: " + promotion.getCode());
+            }
+            
             // Set text content
             discountText.setText(promotion.getDiscountDisplay());  // "30% OFF" or "$15 OFF"
             nameText.setText(promotion.getName());                 // "Summer Sale"
@@ -115,18 +137,8 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
             
             codeText.setText(promotion.getCode());                 // "SUMMER30"
             
-            // Load banner image with fallback to gradient background
-            if (promotion.getBannerImage() != null && !promotion.getBannerImage().isEmpty()) {
-                Glide.with(context)
-                        .load(promotion.getBannerImage())
-                        .centerCrop()
-                        .into(bannerImage);
-                Log.d(TAG, "✓ Loaded banner image: " + promotion.getBannerImage());
-            } else {
-                // No image available - gradient fallback will show
-                bannerImage.setImageDrawable(null);
-                Log.d(TAG, "⚠ No banner image - using gradient fallback for: " + promotion.getCode());
-            }
+            // Switch text colors based on image visibility
+            updateTextColors(hasImage);
             
             // Set initial countdown
             updateCountdown(promotion);
@@ -134,8 +146,8 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
             // Start countdown timer (updates every second)
             startCountdownTimer(promotion);
             
-            // Click handler for copy code pill - copy code to clipboard
-            copyCodePill.setOnClickListener(v -> {
+            // Click handler for copy button - copy code to clipboard
+            copyButton.setOnClickListener(v -> {
                 ClipboardManager clipboard = 
                     (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("Promo Code", promotion.getCode());
@@ -147,6 +159,28 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
                 
                 Log.d(TAG, "✓ Copied code: " + promotion.getCode());
             });
+        }
+        
+        /**
+         * Update text colors based on whether banner has an image.
+         * With image: white text. Without image: normal colors.
+         */
+        private void updateTextColors(boolean hasImage) {
+            if (hasImage) {
+                // White text on dark scrim
+                discountText.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.white_fixed));
+                nameText.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.white_fixed));
+                descriptionText.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.white_fixed));
+                expiresLabel.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.white_fixed));
+                countdownText.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.yellow_star));
+            } else {
+                // Normal colors on white background
+                discountText.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.brand_orange));
+                nameText.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.text_primary));
+                descriptionText.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.text_secondary));
+                expiresLabel.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.text_secondary));
+                countdownText.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.red_error));
+            }
         }
         
         /**

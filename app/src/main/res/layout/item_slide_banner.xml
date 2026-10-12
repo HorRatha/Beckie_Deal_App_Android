@@ -59,20 +59,53 @@
             android:maxLines="2"
             android:layout_marginBottom="12dp" />
 
-        <!-- CTA Button -->
+        <!-- CTA Button: flat yellow, brown text -->
         <Button
             android:id="@+id/slideCtaButton"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:text="@string/slide_default_button"
-            android:textColor="@android:color/white"
+            android:textColor="@color/dark_brown"
             android:textSize="13sp"
             android:textStyle="bold"
+            android:textAllCaps="false"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:background="@drawable/slide_button_background"
+            android:stateListAnimator="@null"
             android:contentDescription="@string/slide_cta_button" />
 
     </LinearLayout>
+
+    <!-- NEW: yellow tag, top-left (hidden when the slide has no tag) -->
+    <TextView
+        android:id="@+id/slideTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginTop="14dp"
+        android:background="@color/yellow_star"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="3dp"
+        android:text="NEW ARRIVAL"
+        android:textColor="@color/dark_brown"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <!-- NEW: slide counter, top-right (hidden when there is only one slide) -->
+    <TextView
+        android:id="@+id/slideCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="12dp"
+        android:background="@drawable/slide_counter_bg"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:text="1 / 4"
+        android:textColor="@android:color/white"
+        android:textSize="11sp"
+        android:visibility="gone" />
 
 </FrameLayout>

@@ -73,6 +73,8 @@ public class SlideBannerAdapter extends RecyclerView.Adapter<SlideBannerAdapter.
         private final TextView subtitleText;
         private final Button ctaButton;
         private final View gradientOverlay;
+        private final TextView slideTag;
+        private final TextView slideCounter;
         private int currentFrameIndex = 0;
         private Runnable carouselRunnable;
         private final android.os.Handler carouselHandler = new android.os.Handler(android.os.Looper.getMainLooper());
@@ -85,6 +87,8 @@ public class SlideBannerAdapter extends RecyclerView.Adapter<SlideBannerAdapter.
             subtitleText = itemView.findViewById(R.id.slideSubtitle);
             ctaButton = itemView.findViewById(R.id.slideCtaButton);
             gradientOverlay = itemView.findViewById(R.id.slideGradientOverlay);
+            slideTag = itemView.findViewById(R.id.slideTag);
+            slideCounter = itemView.findViewById(R.id.slideCounter);
         }
         
         /**
@@ -113,12 +117,36 @@ public class SlideBannerAdapter extends RecyclerView.Adapter<SlideBannerAdapter.
                     ctaButton.setOnClickListener(v -> handleCtaClick(slide));
                 }
                 
+                // Set tag (NEW - Option A)
+                if (slideTag != null) {
+                    if (slide.getTag() != null && !slide.getTag().isEmpty()) {
+                        slideTag.setText(slide.getTag().toUpperCase());
+                        slideTag.setVisibility(View.VISIBLE);
+                    } else {
+                        slideTag.setVisibility(View.GONE);
+                    }
+                }
+                
+                // Set counter (NEW - Option A)
+                // Only show counter if there are multiple slides
+                if (slideCounter != null) {
+                    if (slides.size() > 1) {
+                        int realPosition = getAdapterPosition();
+                        if (realPosition >= 0) {
+                            slideCounter.setText(String.format("%d / %d", realPosition + 1, slides.size()));
+                            slideCounter.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        slideCounter.setVisibility(View.GONE);
+                    }
+                }
+                
                 // Load primary image
                 String primaryImage = slide.getPrimaryImage();
                 if (bannerImage != null) {
                     if (primaryImage != null && !primaryImage.isEmpty()) {
                         try {
-                            Glide.with(context)
+                            Glide.with(bannerImage)
                                     .load(primaryImage)
                                     .centerCrop()
                                     .into(bannerImage);
@@ -270,29 +298,44 @@ public class SlideBannerAdapter extends RecyclerView.Adapter<SlideBannerAdapter.
             carouselRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    // Load current frame
-                    if (currentFrameIndex < carouselImages.size()) {
-                        String frameUrl = carouselImages.get(currentFrameIndex);
-                        
-                        // Apply transition effect (fade/cut)
-                        if ("fade".equalsIgnoreCase(slide.getTransition())) {
-                            bannerImage.setAlpha(0f);
-                            bannerImage.animate().alpha(1f).setDuration(500).start();
+                    try {
+                        // Check if view is still valid and not detached
+                        if (bannerImage == null || bannerImage.getContext() == null) {
+                            Log.d(TAG, "View is null or detached, stopping carousel");
+                            return;
                         }
                         
-                        Glide.with(context)
-                                .load(frameUrl)
-                                .centerCrop()
-                                .into(bannerImage);
+                        // Load current frame
+                        if (currentFrameIndex < carouselImages.size()) {
+                            String frameUrl = carouselImages.get(currentFrameIndex);
+                            
+                            // Apply transition effect (fade/cut)
+                            if ("fade".equalsIgnoreCase(slide.getTransition())) {
+                                bannerImage.setAlpha(0f);
+                                bannerImage.animate().alpha(1f).setDuration(500).start();
+                            }
+                            
+                            // Use the view's context instead of adapter's context to handle activity recreation
+                            Glide.with(bannerImage)
+                                    .load(frameUrl)
+                                    .centerCrop()
+                                    .into(bannerImage);
+                            
+                            Log.d(TAG, "Carousel frame " + (currentFrameIndex + 1) + "/" + carouselImages.size());
+                        }
                         
-                        Log.d(TAG, "Carousel frame " + (currentFrameIndex + 1) + "/" + carouselImages.size());
+                        // Move to next frame (loop)
+                        currentFrameIndex = (currentFrameIndex + 1) % carouselImages.size();
+                        
+                        // Schedule next frame
+                        carouselHandler.postDelayed(this, durationMs);
+                    } catch (IllegalArgumentException e) {
+                        Log.e(TAG, "Carousel error (likely activity destroyed): " + e.getMessage());
+                        stopCarousel();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Unexpected carousel error: " + e.getMessage(), e);
+                        stopCarousel();
                     }
-                    
-                    // Move to next frame (loop)
-                    currentFrameIndex = (currentFrameIndex + 1) % carouselImages.size();
-                    
-                    // Schedule next frame
-                    carouselHandler.postDelayed(this, durationMs);
                 }
             };
             

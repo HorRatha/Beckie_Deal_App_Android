@@ -6,178 +6,200 @@
     android:layout_height="match_parent"
     android:layout_marginHorizontal="0dp"
     android:layout_marginVertical="0dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/border_color"
+    app:cardBackgroundColor="@color/surface">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/promotion_gradient_fallback">
+        android:layout_height="match_parent">
 
-        <!-- Banner background image with glass morphism effect -->
-        <ImageView
-            android:id="@+id/promotionBannerImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:contentDescription="Promotion banner"
-            android:alpha="0.85" />
-
-        <!-- Frosted glass overlay for glass morphism effect -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/promotion_glass_morphism" />
-
-        <!-- Main Content Container -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical">
 
-            <!-- LEFT SIDE: Content (Discount, Name, Description) -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <!-- ══ TOP: photo (optional) + discount, name, description, expiry ══ -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginEnd="16dp">
+                android:background="@color/surface">
 
-                <!-- Discount Display - Professional Large Text -->
-                <TextView
-                    android:id="@+id/promotionDiscount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="30% OFF"
-                    android:textColor="@color/white_fixed"
-                    android:textSize="42sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.02"
-                    android:layout_marginBottom="6dp"
-                    android:shadowColor="@android:color/black"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="4" />
+                <!-- Photo: only visible when the promotion has an image -->
+                <ImageView
+                    android:id="@+id/promotionBannerImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Promotion banner"
+                    android:visibility="gone" />
 
-                <!-- Promotion name -->
-                <TextView
-                    android:id="@+id/promotionName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Summer Sale"
-                    android:textColor="@color/white_fixed"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:alpha="0.95"
-                    android:layout_marginBottom="4dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:shadowColor="@android:color/black"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
-                    android:shadowRadius="3" />
+                <!-- Dark fade so the white text stays readable (shown with the photo) -->
+                <View
+                    android:id="@+id/promotionImageScrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/promo_scrim_horizontal"
+                    android:visibility="gone" />
 
-                <!-- Description -->
-                <TextView
-                    android:id="@+id/promotionDescription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Min order $150"
-                    android:textColor="@color/white_fixed"
-                    android:textSize="12sp"
-                    android:alpha="0.80"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:shadowColor="@android:color/black"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
-                    android:shadowRadius="2" />
+                <!-- Left: discount, name, description -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="96dp"
+                    android:paddingVertical="10dp">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/promotionDiscount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="30% OFF"
+                        android:textColor="@color/brand_orange"
+                        android:textSize="34sp"
+                        android:textStyle="bold"
+                        android:maxLines="1" />
 
-            <!-- RIGHT SIDE: Copy Code & Expired Time (Vertical Stack) -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginEnd="8dp">
+                    <TextView
+                        android:id="@+id/promotionName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Summer Sale"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
 
-                <!-- Top Right: Expired Time Section (NO BACKGROUND, MORE RIGHT) -->
+                    <TextView
+                        android:id="@+id/promotionDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Min order $150"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                </LinearLayout>
+
+                <!-- Top-right: expiry -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="12dp"
                     android:gravity="end"
-                    android:paddingEnd="8dp"
-                    android:layout_marginBottom="12dp">
+                    android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/promotionExpiresLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="EXPIRES IN"
-                        android:textColor="@android:color/holo_red_light"
-                        android:textSize="7sp"
-                        android:textStyle="bold"
-                        android:alpha="0.85"
-                        android:letterSpacing="0.08" />
+                        android:text="Expires in"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp" />
 
                     <TextView
                         android:id="@+id/promotionCountdown"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
                         android:text="23d 14h"
-                        android:textColor="@android:color/holo_red_light"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="2dp"
-                        android:shadowColor="@android:color/black"
-                        android:shadowDx="1"
-                        android:shadowDy="1"
-                        android:shadowRadius="2" />
+                        android:textColor="@color/red_error"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
+            </FrameLayout>
 
-                <!-- Bottom Right: Copy Code Section (Pill-shaped) -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
+            <!-- ══ BOTTOM: code strip ══ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/brand_bar_gradient"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="10dp">
+
+                <TextView
+                    android:id="@+id/promotionCode"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/promo_code_pill_bg"
-                    android:padding="8dp"
-                    android:paddingHorizontal="12dp"
-                    android:gravity="center_vertical">
+                    android:layout_weight="1"
+                    android:text="SUMMER30"
+                    android:textColor="@color/dark_brown"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:typeface="monospace"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
-                    <!-- Copy Icon -->
+                <LinearLayout
+                    android:id="@+id/promotionCopyButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:background="@drawable/promo_copy_button_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp">
+
                     <ImageView
                         android:id="@+id/promotionCopyCodeIcon"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/ic_copy_icon"
                         android:contentDescription="Copy code"
                         android:scaleType="centerInside"
-                        app:tint="@color/white_fixed"
-                        android:layout_marginEnd="5dp" />
+                        android:src="@drawable/ic_copy_icon"
+                        app:tint="@color/white_fixed" />
 
-                    <!-- Copy Code Text -->
                     <TextView
-                        android:id="@+id/promotionCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SUMMER30"
+                        android:layout_marginStart="6dp"
+                        android:text="Copy code"
                         android:textColor="@color/white_fixed"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:typeface="monospace" />
-
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
 
-        <!-- Ripple effect -->
+        <!-- Tear line + ticket notches (sit on the line between top and strip) -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="51dp"
+            android:layout_marginHorizontal="14dp"
+            android:layerType="software"
+            android:background="@drawable/promo_dash_horizontal" />
+
+        <View
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="-7dp"
+            android:layout_marginBottom="45dp"
+            android:background="@drawable/promo_notch" />
+
+        <View
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="-7dp"
+            android:layout_marginBottom="45dp"
+            android:background="@drawable/promo_notch" />
+
+        <!-- Ripple effect (unchanged) -->
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
