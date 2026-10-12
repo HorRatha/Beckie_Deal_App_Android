@@ -48,7 +48,9 @@ public class WishlistActivity extends BaseActivity {
         wishlistRepository = new WishlistRepository(this);
         loadingIndicator = findViewById(R.id.wishlistLoadingIndicator);
 
-        AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        AppDrawerHelper drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        // Refresh drawer with latest user data from API to ensure sidebar shows correct user across all pages
+        drawerHelper.refreshDrawerWithLatestUserData(this);
         setupTopBar();
         setupBottomNavigation();
     }

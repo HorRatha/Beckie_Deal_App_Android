@@ -149,7 +149,9 @@ public class CategoriesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
 
-        AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        AppDrawerHelper drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        // Refresh drawer with latest user data from API to ensure sidebar shows correct user across all pages
+        drawerHelper.refreshDrawerWithLatestUserData(this);
         setupTopBar();
         initRepository();
         fetchFeaturedBrands(); // Fetch from API

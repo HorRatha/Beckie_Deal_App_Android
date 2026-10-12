@@ -107,6 +107,8 @@ public class MainActivity extends BaseActivity {
         fetchSlides(); // Fetch carousel slides from API
         fetchPromotions(); // Fetch from API - promotions displayed automatically when ready
         drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        // Refresh drawer with latest user data from API to ensure sidebar shows correct user across all pages
+        drawerHelper.refreshDrawerWithLatestUserData(this);
         setupTopBar();
         setupSearchBar();
         setupPromotionsCarousel(); // Setup arrow controls (data displayed when fetched)

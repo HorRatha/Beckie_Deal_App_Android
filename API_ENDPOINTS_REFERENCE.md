@@ -477,6 +477,47 @@ GET /api/v1/master/shipping-methods?limit={limit}&offset={offset}
 
 ---
 
+### 11. My Products (Orders) API ✅ NEWLY IMPLEMENTED
+**File:** `ProfileApiService.java`  
+**Model:** `MyProductsResponse.java`  
+**Repository:** `ProfileRepository.java`
+
+```
+GET /api/v1/my-products?per_page={perPage}&page={page}
+├─ Authentication: Required
+├─ Query Params: per_page=20, page=1
+├─ Response: {
+│   "status": "success",
+│   "message": "",
+│   "data": {
+│     "items": [
+│       {
+│         "id": 123,
+│         "name": "Samsung Galaxy S21",
+│         "price": 999.99,
+│         "category": {...},
+│         "brand": {...},
+│         "variants": [...],
+│         "images": [...]
+│       }
+│     ],
+│     "pagination": {
+│       "total": 0,
+│       "per_page": 20,
+│       "current_page": 1,
+│       "last_page": 1
+│     }
+│   }
+│ }
+├─ Features: User's purchased/ordered products with pagination
+├─ Status: ✅ WORKING (Newly Implemented)
+├─ Used in: ProfileActivity (User's Orders/Purchases section)
+├─ Caching: No (fetches fresh each time)
+└─ Error Handling: Graceful with proper logging
+```
+
+---
+
 ## 🔵 FUTURE ENDPOINTS (Not Yet Implemented)
 
 ### 11. Notifications API (Future)
@@ -592,9 +633,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 | Coupons | — | 1 | — | 1 |
 | Orders | — | 2 | — | 2 |
 | Shipping | 1 | — | — | 1 |
+| My Products (Orders) | 1 | — | — | 1 |
 | Notifications | — | — | 2 | 2 |
 | Reviews | — | — | 2 | 2 |
-| **TOTAL** | **18** | **17** | **4** | **39** |
+| **TOTAL** | **19** | **17** | **4** | **40** |
 
 ---
 

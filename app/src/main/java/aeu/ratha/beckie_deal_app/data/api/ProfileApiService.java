@@ -2,12 +2,14 @@ package aeu.ratha.beckie_deal_app.data.api;
 
 import aeu.ratha.beckie_deal_app.data.models.User;
 import aeu.ratha.beckie_deal_app.data.models.ProfileApiResponse;
+import aeu.ratha.beckie_deal_app.data.models.MyProductsResponse;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 /**
  * Retrofit API service interface for user profile endpoints.
@@ -42,4 +44,36 @@ public interface ProfileApiService {
     @Multipart
     @POST("profile/avatar")
     Call<User> uploadAvatar(@Part MultipartBody.Part imageFile);
+    
+    /**
+     * Get user's purchased/ordered products.
+     * GET /api/v1/my-products?per_page={perPage}&page={page}
+     * 
+     * Requires authentication token in Authorization header.
+     * Returns a paginated list of products the user has purchased/ordered.
+     * 
+     * Response structure:
+     * {
+     *   "status": "success",
+     *   "message": "",
+     *   "data": {
+     *     "items": [...],
+     *     "pagination": {
+     *       "total": 0,
+     *       "per_page": 20,
+     *       "current_page": 1,
+     *       "last_page": 1
+     *     }
+     *   }
+     * }
+     * 
+     * @param perPage Number of items per page (default: 20)
+     * @param page Current page number (default: 1)
+     * @return Call object with MyProductsResponse
+     */
+    @GET("my-products")
+    Call<MyProductsResponse> getMyProducts(
+        @Query("per_page") int perPage,
+        @Query("page") int page
+    );
 }

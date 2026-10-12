@@ -31,7 +31,9 @@ import com.google.android.material.button.MaterialButton;
 import aeu.ratha.beckie_deal_app.security.TokenManager;
 import aeu.ratha.beckie_deal_app.data.models.User;
 import aeu.ratha.beckie_deal_app.data.repository.ProfileRepository;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import okhttp3.MultipartBody;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public class ProfileActivity extends BaseActivity {
     
@@ -39,6 +41,7 @@ public class ProfileActivity extends BaseActivity {
     
     private TokenManager tokenManager;
     private ProfileRepository profileRepository;
+    private AppDrawerHelper drawerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class ProfileActivity extends BaseActivity {
         tokenManager = TokenManager.getInstance(this);
         profileRepository = ProfileRepository.getInstance(this);
 
-        AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         setupTopBar();
         fetchAndSetupUserProfile();
         setupAuthButtons();
@@ -193,6 +196,10 @@ public class ProfileActivity extends BaseActivity {
             public void onSuccess(User profile) {
                 android.util.Log.d("ProfileActivity", "Profile fetched dynamically: " + profile.getEmail());
                 displayUserProfile(profile);
+                
+                // Update drawer with fresh user info
+                // This ensures the sidebar shows the correct name
+                updateDrawerUserInfo(profile);
             }
 
             @Override
@@ -202,6 +209,32 @@ public class ProfileActivity extends BaseActivity {
                 fallbackToTokenManagerData();
             }
         });
+    }
+
+    /**
+     * Update the sidebar drawer with user information from profile.
+     * This method should be called whenever we have fresh user data from the API.
+     */
+    private void updateDrawerUserInfo(User user) {
+        if (user == null) {
+            android.util.Log.e("ProfileActivity", "updateDrawerUserInfo called with null user");
+            return;
+        }
+        
+        String displayName = user.getFullName();
+        String email = user.getEmail();
+        
+        android.util.Log.d("ProfileActivity", "=== Updating drawer via AppDrawerHelper ===");
+        android.util.Log.d("ProfileActivity", "Display Name: " + displayName);
+        android.util.Log.d("ProfileActivity", "Email: " + email);
+        
+        // Use AppDrawerHelper to update the drawer
+        if (drawerHelper != null) {
+            drawerHelper.updateDrawerUserInfo(displayName, email);
+            android.util.Log.d("ProfileActivity", "✅ Drawer updated via AppDrawerHelper");
+        } else {
+            android.util.Log.e("ProfileActivity", "❌ drawerHelper is null");
+        }
     }
 
     /**

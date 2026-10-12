@@ -182,12 +182,80 @@ public class AppDrawerHelper {
         return new AppDrawerHelper(activity, drawerLayoutId, menuIconId);
     }
 
-    /** 
+    /**
      * Refresh drawer content - call this after login/logout to update user info.
      * This can be called from any activity that has the drawer attached.
+     * 
+     * This method fetches fresh profile data from the API and updates the drawer
+     * to ensure consistent user display across all pages.
      */
     public void refreshDrawerContent() {
         setupDrawerContent();
+    }
+
+    /**
+     * Refresh drawer with fresh user data from ProfileRepository.
+     * Call this to fetch latest user info from API and update the drawer.
+     * This ensures all activities show the same user name.
+     */
+    public void refreshDrawerWithLatestUserData(android.content.Context context) {
+        android.util.Log.d("AppDrawerHelper", "Refreshing drawer with latest user data from API");
+        
+        aeu.ratha.beckie_deal_app.data.repository.ProfileRepository profileRepo =
+            aeu.ratha.beckie_deal_app.data.repository.ProfileRepository.getInstance(context);
+        
+        profileRepo.getProfile(false, new aeu.ratha.beckie_deal_app.data.repository.ProfileRepository.ProfileCallback() {
+            @Override
+            public void onSuccess(aeu.ratha.beckie_deal_app.data.models.User profile) {
+                String displayName = profile.getFullName();
+                String email = profile.getEmail();
+                
+                android.util.Log.d("AppDrawerHelper", "Got fresh profile - updating drawer");
+                android.util.Log.d("AppDrawerHelper", "  Name: " + displayName);
+                android.util.Log.d("AppDrawerHelper", "  Email: " + email);
+                
+                updateDrawerUserInfo(displayName, email);
+            }
+
+            @Override
+            public void onFailure(Exception error) {
+                android.util.Log.e("AppDrawerHelper", "Failed to refresh profile: " + error.getMessage());
+                // Fall back to TokenManager data
+                setupDrawerContent();
+            }
+        });
+    }
+
+    /**
+     * Update drawer user info directly with a name and email.
+     * Use this when you have fresh user data and want to display it immediately.
+     * 
+     * @param displayName User's full name to display
+     * @param email User's email to display
+     */
+    public void updateDrawerUserInfo(String displayName, String email) {
+        if (drawerLayout == null) {
+            android.util.Log.e("AppDrawerHelper", "updateDrawerUserInfo called but drawerLayout is null");
+            return;
+        }
+        
+        android.util.Log.d("AppDrawerHelper", "Direct drawer update - Name: " + displayName + ", Email: " + email);
+        
+        TextView welcomeBack = drawerLayout.findViewById(R.id.drawerWelcomeBack);
+        TextView userName = drawerLayout.findViewById(R.id.drawerUserName);
+        TextView userEmail = drawerLayout.findViewById(R.id.drawerUserEmail);
+        
+        if (welcomeBack != null) {
+            welcomeBack.setVisibility(View.VISIBLE);
+        }
+        if (userName != null) {
+            userName.setText(displayName != null && !displayName.isEmpty() ? displayName : "User");
+            android.util.Log.d("AppDrawerHelper", "✅ Updated drawer name to: " + displayName);
+        }
+        if (userEmail != null) {
+            userEmail.setText(email != null ? email : "");
+            android.util.Log.d("AppDrawerHelper", "✅ Updated drawer email to: " + email);
+        }
     }
 
     public void openDrawer() {

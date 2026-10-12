@@ -147,6 +147,62 @@ public class ProfileRepository {
     }
 
     /**
+     * Fetch user's purchased/ordered products with pagination.
+     * 
+     * GET /api/v1/my-products?per_page={perPage}&page={page}
+     * Requires authentication token in Authorization header.
+     * Returns: { status, message, data: { items: [...], pagination: {...} } }
+     * 
+     * @param perPage Number of items per page (default: 20)
+     * @param page Current page number (default: 1)
+     * @param callback Result callback
+     */
+    public void getMyProducts(int perPage, int page, 
+                             @NonNull MyProductsCallback callback) {
+        Log.d(TAG, "Fetching my-products from API - endpoint: /api/v1/my-products?per_page=" + perPage + "&page=" + page);
+        
+        apiService.getMyProducts(perPage, page).enqueue(new Callback<aeu.ratha.beckie_deal_app.data.models.MyProductsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<aeu.ratha.beckie_deal_app.data.models.MyProductsResponse> call,
+                                   @NonNull Response<aeu.ratha.beckie_deal_app.data.models.MyProductsResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    aeu.ratha.beckie_deal_app.data.models.MyProductsResponse apiResponse = response.body();
+                    
+                    if (apiResponse.isSuccess()) {
+                        Log.d(TAG, "My-products fetched successfully");
+                        if (apiResponse.getData() != null && apiResponse.getData().getItems() != null) {
+                            Log.d(TAG, "  Total items: " + apiResponse.getTotalCount());
+                            Log.d(TAG, "  Items in response: " + apiResponse.getData().getItems().size());
+                        }
+                        callback.onSuccess(apiResponse);
+                    } else {
+                        String errorMsg = "API Error: " + apiResponse.getStatus() + " - " + apiResponse.getMessage();
+                        Log.e(TAG, errorMsg);
+                        callback.onFailure(new Exception(errorMsg));
+                    }
+                } else {
+                    String errorMsg = "HTTP " + response.code() + ": " + response.message();
+                    Log.e(TAG, "API Error: " + errorMsg);
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                        Log.e(TAG, "Response error body: " + errorBody);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Could not read error body: " + e.getMessage());
+                    }
+                    callback.onFailure(new Exception(errorMsg));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<aeu.ratha.beckie_deal_app.data.models.MyProductsResponse> call, 
+                                  @NonNull Throwable t) {
+                Log.e(TAG, "Network error: " + t.getMessage(), t);
+                callback.onFailure(new Exception("Network error: " + t.getMessage(), t));
+            }
+        });
+    }
+
+    /**
      * Clear cached profile (useful on logout).
      */
     public void clearCache() {
@@ -199,6 +255,25 @@ public class ProfileRepository {
 
         /**
          * Called when avatar upload fails.
+         * 
+         * @param error Exception describing the error
+         */
+        void onFailure(Exception error);
+    }
+
+    /**
+     * Callback interface for my-products fetch operations.
+     */
+    public interface MyProductsCallback {
+        /**
+         * Called when my-products fetch succeeds.
+         * 
+         * @param response The MyProductsResponse containing items and pagination
+         */
+        void onSuccess(aeu.ratha.beckie_deal_app.data.models.MyProductsResponse response);
+
+        /**
+         * Called when my-products fetch fails.
          * 
          * @param error Exception describing the error
          */

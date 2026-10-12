@@ -125,7 +125,9 @@ public class AboutActivity extends BaseActivity {
         inputEmail   = findViewById(R.id.inputEmail);
         inputMessage = findViewById(R.id.inputMessage);
 
-        AppDrawerHelper.attach(this, R.id.drawerLayout, 0);
+        AppDrawerHelper drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, 0);
+        // Refresh drawer with latest user data from API to ensure sidebar shows correct user across all pages
+        drawerHelper.refreshDrawerWithLatestUserData(this);
         setupTopBar();
         setupAboutUsImage();
         setupAccordions();

@@ -45,7 +45,9 @@ public class CartActivity extends BaseActivity {
 
         cartRepository = new CartRepository(this);
 
-        AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        AppDrawerHelper drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        // Refresh drawer with latest user data from API to ensure sidebar shows correct user across all pages
+        drawerHelper.refreshDrawerWithLatestUserData(this);
         setupTopBar();
         setupBottomNavigation();
         setupCouponReminder();
