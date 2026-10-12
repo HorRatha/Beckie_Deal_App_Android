@@ -137,7 +137,7 @@
                     android:textSize="@dimen/text_size_body" />
             </FrameLayout>
 
-            <!-- SLIDES CAROUSEL BANNER (NEW) - Homepage promotional slides -->
+            <!-- SLIDES CAROUSEL BANNER (NEW) - Homepage promotional slides - ONLY AT TOP -->
             <FrameLayout
                 android:id="@+id/slidesBannerCard"
                 android:layout_width="match_parent"
@@ -154,31 +154,6 @@
                 <!-- Dot indicators -->
                 <LinearLayout
                     android:id="@+id/slidesBannerDotsContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="12dp"
-                    android:orientation="horizontal" />
-
-            </FrameLayout>
-
-            <!-- PROMOTIONS BANNER CAROUSEL - Replaces old coupon section -->
-            <FrameLayout
-                android:id="@+id/promotionBannerCard"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
-                android:visibility="visible">
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/promotionBannerViewPager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <!-- Dot indicators -->
-                <LinearLayout
-                    android:id="@+id/promotionBannerDotsContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
@@ -298,60 +273,27 @@
                     android:paddingBottom="2dp" />
             </HorizontalScrollView>
 
-
-            <!--  NEW ARRIVALS BANNER  Carousel (reusable)  -->
+            <!-- PROMOTIONS BANNER CAROUSEL - Moved under New Collection -->
             <FrameLayout
+                android:id="@+id/promotionBannerCard"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="200dp"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:visibility="visible">
 
-                <com.google.android.material.card.MaterialCardView
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/promotionBannerViewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/newArrivalsBannerViewPager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Left arrow -->
-                <ImageView
-                    android:id="@+id/newArrivalsArrowLeft"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical|start"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/banner_arrow_bg"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_arrow_left"
-                    android:contentDescription="Previous"
-                    app:tint="#FFFFFF" />
-
-                <!-- Right arrow -->
-                <ImageView
-                    android:id="@+id/newArrivalsArrowRight"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/banner_arrow_bg"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="Next"
-                    app:tint="#FFFFFF" />
+                    android:layout_height="match_parent" />
 
                 <!-- Dot indicators -->
                 <LinearLayout
-                    android:id="@+id/newArrivalsDotsContainer"
+                    android:id="@+id/promotionBannerDotsContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="12dp"
                     android:orientation="horizontal" />
 
             </FrameLayout>

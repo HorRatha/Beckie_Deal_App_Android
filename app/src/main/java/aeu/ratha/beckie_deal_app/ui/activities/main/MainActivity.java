@@ -81,10 +81,7 @@ public class MainActivity extends BaseActivity {
     private static final int SCROLL_DURATION = 400; // smooth scroll duration in ms
 
     // Banner carousels
-    private ViewPager2 newArrivalsBannerPager;
-    private Handler newArrivalsAutoScrollHandler;
-    private Runnable newArrivalsAutoScrollRunnable;
-    private boolean isNewArrivalsTouched = false;
+    // New Arrivals banner removed - now only using Slides and Promotions banners
     
     // Promotion banner auto-scroll
     private ViewPager2 promotionBannerPager;
@@ -114,7 +111,6 @@ public class MainActivity extends BaseActivity {
         setupSearchBar();
         setupPromotionsCarousel(); // Setup arrow controls (data displayed when fetched)
         setupProducts();
-        setupNewArrivalsBanner();
         setupNewCollectionSection();
         setupCouponSection();
         setupBottomNavigation();
@@ -125,10 +121,10 @@ public class MainActivity extends BaseActivity {
     private void setupEntranceAnimation() {
         UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
         UiAnimations.fadeSlideUp(findViewById(R.id.searchBar), 60);
-        UiAnimations.fadeSlideUp(findViewById(R.id.promotionBannerCard), 80);
+        UiAnimations.fadeSlideUp(findViewById(R.id.slidesBannerCard), 80);
         UiAnimations.fadeSlideUp(findViewById(R.id.categoriesSectionHeader), 150);
         UiAnimations.fadeSlideUp(findViewById(R.id.newCollectionSectionHeader), 190);
-        UiAnimations.fadeSlideUp(findViewById(R.id.newArrivalsBannerViewPager), 210);
+        UiAnimations.fadeSlideUp(findViewById(R.id.promotionBannerCard), 210);
         UiAnimations.fadeSlideUp(findViewById(R.id.featuredProductsHeader), 270);
     }
 
@@ -137,7 +133,6 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         setupProducts();
         startAutoScroll();
-        startBannerAutoScroll();
         startPromotionAutoScroll();
         updateCartBadge();
     }
@@ -146,7 +141,6 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         stopAutoScroll();
-        stopBannerAutoScroll();
         stopPromotionAutoScroll();
     }
 
@@ -154,7 +148,6 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         stopAutoScroll();
-        stopBannerAutoScroll();
         stopPromotionAutoScroll();
         
         // Stop slide auto-scroll
@@ -794,19 +787,6 @@ public class MainActivity extends BaseActivity {
 
 
 
-    private void startBannerAutoScroll() {
-        if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
-            newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
-            newArrivalsAutoScrollHandler.postDelayed(newArrivalsAutoScrollRunnable, BANNER_SCROLL_DELAY);
-        }
-    }
-
-    private void stopBannerAutoScroll() {
-        if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
-            newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
-        }
-    }
-
     /**
      * Reusable carousel setup — works for any banner section.
      * Pass imageUrls as null for gradient-only banners, or provide URLs for image-based banners.
@@ -891,54 +871,15 @@ public class MainActivity extends BaseActivity {
             arrowLeft.setOnClickListener(v -> {
                 int current = viewPager.getCurrentItem();
                 viewPager.setCurrentItem(current > 0 ? current - 1 : count - 1, true);
-                resetCarouselAutoScroll(isHero);
             });
         }
         if (arrowRight != null) {
             arrowRight.setOnClickListener(v -> {
                 int current = viewPager.getCurrentItem();
                 viewPager.setCurrentItem(current < count - 1 ? current + 1 : 0, true);
-                resetCarouselAutoScroll(isHero);
             });
         }
         UiAnimations.pressBounce(arrowLeft, arrowRight);
-
-        // Auto-scroll for new arrivals (hero banner removed)
-        Handler handler = new Handler(Looper.getMainLooper());
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (viewPager == null) return;
-                if (isNewArrivalsTouched) return;
-                int next = (viewPager.getCurrentItem() + 1) % count;
-                viewPager.setCurrentItem(next, true);
-                handler.postDelayed(this, BANNER_SCROLL_DELAY);
-            }
-        };
-
-        newArrivalsAutoScrollHandler = handler;
-        newArrivalsAutoScrollRunnable = runnable;
-
-        // Pause on user drag
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                    isNewArrivalsTouched = true;
-                } else if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                    isNewArrivalsTouched = false;
-                    resetCarouselAutoScroll(false);
-                }
-            }
-        });
-    }
-
-    private void resetCarouselAutoScroll(boolean isHero) {
-        // Only new arrivals banner exists now (hero banner removed)
-        if (newArrivalsAutoScrollHandler != null && newArrivalsAutoScrollRunnable != null) {
-            newArrivalsAutoScrollHandler.removeCallbacks(newArrivalsAutoScrollRunnable);
-            newArrivalsAutoScrollHandler.postDelayed(newArrivalsAutoScrollRunnable, BANNER_SCROLL_DELAY);
-        }
     }
 
     static class BannerViewHolder extends RecyclerView.ViewHolder {
@@ -1080,36 +1021,6 @@ public class MainActivity extends BaseActivity {
         if (viewModeIcon == null) return;
         boolean isListView = ViewModePreferences.isListView(this);
         viewModeIcon.setImageResource(isListView ? R.drawable.grid_view_24 : R.drawable.event_list_24);
-    }
-
-    private void setupNewArrivalsBanner() {
-        // New Arrivals banner carousel: 3 slides with Pinterest-style images
-        String[][] newArrivalTexts = {
-                {"✦ JUST LANDED", "New Arrivals", "Fresh tech drops, every week"},
-                {"🚀 TRENDING", "Top Picks", "Most popular this month"},
-                {"💎 PREMIUM", "Exclusive Deals", "Members-only discounts inside"}
-        };
-        int[] newArrivalBgs = {
-                R.drawable.banner_gradient_4,
-                R.drawable.banner_gradient_5,
-                R.drawable.banner_gradient_6
-        };
-        // Pinterest-style banner images for new arrivals
-        String[] newArrivalImages = {
-                "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=800&h=400&fit=crop&q=80",
-                "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&h=400&fit=crop&q=80",
-                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=400&fit=crop&q=80"
-        };
-
-        newArrivalsBannerPager = findViewById(R.id.newArrivalsBannerViewPager);
-        setupBannerCarousel(
-                newArrivalsBannerPager,
-                findViewById(R.id.newArrivalsArrowLeft),
-                findViewById(R.id.newArrivalsArrowRight),
-                findViewById(R.id.newArrivalsDotsContainer),
-                newArrivalTexts, newArrivalBgs, newArrivalImages,
-                false // not hero banner
-        );
     }
 
     // ── New Collection horizontal scroll ──────────────────────────────────────
