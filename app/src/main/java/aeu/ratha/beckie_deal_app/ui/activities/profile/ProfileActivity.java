@@ -401,9 +401,7 @@ public class ProfileActivity extends BaseActivity {
         if (myCouponsBox != null) myCouponsBox.setOnClickListener(v ->
                 startActivity(new Intent(this, CouponsActivity.class)));
         if (editProfileBox != null) editProfileBox.setOnClickListener(v -> {
-            Toast.makeText(this, "Edit Profile - Coming Soon", Toast.LENGTH_SHORT).show();
-            // TODO: Navigate to EditProfileActivity when implemented
-            // startActivity(new Intent(this, EditProfileActivity.class));
+            startActivity(new Intent(this, EditProfileActivity.class));
         });
         if (aboutUsRow != null) aboutUsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, AboutActivity.class)));

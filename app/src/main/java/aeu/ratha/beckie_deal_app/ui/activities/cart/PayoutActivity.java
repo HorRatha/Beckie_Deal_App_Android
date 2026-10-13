@@ -103,6 +103,10 @@ public class PayoutActivity extends BaseActivity {
     private TextView step1Label, step2Label, step3Label;
     private View connector1, connector2;
 
+    // Progress bar header + bottom total
+    private View progressSeg1, progressSeg2, progressSeg3;
+    private TextView stepCaption, bottomTotalText;
+
     // Bottom bar
     private MaterialButton stepBackButton;
     private MaterialButton stepNextButton;
@@ -195,21 +199,21 @@ public class PayoutActivity extends BaseActivity {
     private void bindViews() {
         stepViewFlipper = findViewById(R.id.stepViewFlipper);
 
-        // Stepper header
-        step1Circle = findViewById(R.id.step1Circle);
-        step2Circle = findViewById(R.id.step2Circle);
-        step3Circle = findViewById(R.id.step3Circle);
-        step1Number = findViewById(R.id.step1Number);
-        step2Number = findViewById(R.id.step2Number);
-        step3Number = findViewById(R.id.step3Number);
-        step1Check  = findViewById(R.id.step1Check);
-        step2Check  = findViewById(R.id.step2Check);
-        step3Check  = findViewById(R.id.step3Check);
-        step1Label  = findViewById(R.id.step1Label);
-        step2Label  = findViewById(R.id.step2Label);
-        step3Label  = findViewById(R.id.step3Label);
-        connector1  = findViewById(R.id.connector1);
-        connector2  = findViewById(R.id.connector2);
+        // Old stepper header (replaced by progress bar, but kept for safety checks)
+        step1Circle = null;  // No longer in new layout
+        step2Circle = null;
+        step3Circle = null;
+        step1Number = null;
+        step2Number = null;
+        step3Number = null;
+        step1Check  = null;
+        step2Check  = null;
+        step3Check  = null;
+        step1Label  = null;
+        step2Label  = null;
+        step3Label  = null;
+        connector1  = null;
+        connector2  = null;
 
         stepBackButton = findViewById(R.id.stepBackButton);
         stepNextButton = findViewById(R.id.stepNextButton);
@@ -252,6 +256,13 @@ public class PayoutActivity extends BaseActivity {
         reviewItemCount      = findViewById(R.id.reviewItemCount);
         reviewShippingMethodRow = findViewById(R.id.reviewShippingMethodRow);
         reviewCouponCode     = findViewById(R.id.reviewCouponCode);
+
+        // Progress bar header + bottom total
+        progressSeg1    = findViewById(R.id.progressSeg1);
+        progressSeg2    = findViewById(R.id.progressSeg2);
+        progressSeg3    = findViewById(R.id.progressSeg3);
+        stepCaption     = findViewById(R.id.stepCaption);
+        bottomTotalText = findViewById(R.id.bottomTotalText);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -321,6 +332,18 @@ public class PayoutActivity extends BaseActivity {
         updateStepCircle(1, step1Circle, step1Number, step1Check, step1Label, step);
         updateStepCircle(2, step2Circle, step2Number, step2Check, step2Label, step);
         updateStepCircle(3, step3Circle, step3Number, step3Check, step3Label, step);
+
+        // Progress bar + caption (replaces the old numbered circles)
+        View[] segs = {progressSeg1, progressSeg2, progressSeg3};
+        for (int i = 0; i < segs.length; i++) {
+            if (segs[i] == null) continue;
+            if (i < step) segs[i].setBackgroundResource(R.drawable.brand_bar_gradient);
+            else segs[i].setBackgroundColor(getColor(R.color.border_color));
+        }
+        if (stepCaption != null) {
+            String[] names = {"Shipping", "Payment", "Review"};
+            stepCaption.setText("Step " + step + " of 3 · " + names[step - 1]);
+        }
 
         // Connectors
         if (connector1 != null)
@@ -574,7 +597,7 @@ public class PayoutActivity extends BaseActivity {
         View btn = findViewById(R.id.locationAutofillButton);
         TextView btnText = findViewById(R.id.locationButtonText);
         if (btn != null) btn.setEnabled(true);
-        if (btnText != null) btnText.setText("Use GPS");
+        if (btnText != null) btnText.setText("Use my current location");
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -913,6 +936,9 @@ public class PayoutActivity extends BaseActivity {
 
         if (summaryTotalText != null)
             summaryTotalText.setText(String.format(Locale.US, "$%.2f", total));
+
+        if (bottomTotalText != null)
+            bottomTotalText.setText(String.format(Locale.US, "$%.2f", total));
     }
 
     private double calculateShippingFee(double total) {

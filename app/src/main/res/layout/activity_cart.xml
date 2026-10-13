@@ -241,14 +241,14 @@
                     android:layout_weight="1"
                     android:text="Total Amount"
                     android:textAppearance="@style/TextAppearance.App.Body"
-                    android:textColor="@color/white_fixed" />
+                    android:textColor="@color/dark_brown" />
                 <TextView
                     android:id="@+id/totalPriceText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$0.00"
                     android:textAppearance="@style/TextAppearance.App.SectionHeader"
-                    android:textColor="@color/white_fixed" />
+                    android:textColor="@color/dark_brown" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
