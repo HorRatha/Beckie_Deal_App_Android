@@ -22,6 +22,7 @@
     <color name="card_bg_secondary">#F1F5F9</color>
     <color name="product_card_bg">#FEFEFE</color>
     <color name="badge_bg">#FFF7ED</color>
+    <color name="light_beige_bg">#EAE1D3</color>
 
     <!-- Brand icon tint palette -->
     <color name="brand_tint_bg_1">#EEF2FF</color>

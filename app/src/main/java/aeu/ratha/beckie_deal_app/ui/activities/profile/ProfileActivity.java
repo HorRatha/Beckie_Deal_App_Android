@@ -380,24 +380,31 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void setupSettingsRows() {
-        LinearLayout ordersRow        = findViewById(R.id.ordersRow);
-        LinearLayout couponsRow       = findViewById(R.id.couponsRow);
+        MaterialCardView myOrdersBox      = findViewById(R.id.myOrdersBox);
+        MaterialCardView myCouponsBox     = findViewById(R.id.myCouponsBox);
+        MaterialCardView editProfileBox = findViewById(R.id.editProfileBox);
         LinearLayout aboutUsRow       = findViewById(R.id.aboutUsRow);
         LinearLayout privacyRow       = findViewById(R.id.privacyRow);
         LinearLayout termsRow         = findViewById(R.id.termsRow);
         
-        // Edit Profile from stat cards
-        MaterialCardView editProfileBox = findViewById(R.id.editProfileBox);
+        // Numbers now live on the tiles
+        TextView activeOrdersCount = findViewById(R.id.activeOrdersCount);
+        TextView couponsCount = findViewById(R.id.couponsCount);
+        
+        // Update counts (use your actual count logic)
+        if (activeOrdersCount != null) activeOrdersCount.setText("3"); // Replace with actual count
+        if (couponsCount != null) couponsCount.setText("4"); // Replace with actual count
 
+        // Whatever ordersRow and couponsRow used to do, now on the tiles
+        if (myOrdersBox != null) myOrdersBox.setOnClickListener(v ->
+                startActivity(new Intent(this, MyOrdersActivity.class)));
+        if (myCouponsBox != null) myCouponsBox.setOnClickListener(v ->
+                startActivity(new Intent(this, CouponsActivity.class)));
         if (editProfileBox != null) editProfileBox.setOnClickListener(v -> {
             Toast.makeText(this, "Edit Profile - Coming Soon", Toast.LENGTH_SHORT).show();
             // TODO: Navigate to EditProfileActivity when implemented
             // startActivity(new Intent(this, EditProfileActivity.class));
         });
-        if (ordersRow != null) ordersRow.setOnClickListener(v ->
-                startActivity(new Intent(this, MyOrdersActivity.class)));
-        if (couponsRow != null) couponsRow.setOnClickListener(v ->
-                startActivity(new Intent(this, CouponsActivity.class)));
         if (aboutUsRow != null) aboutUsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, AboutActivity.class)));
         if (privacyRow != null) privacyRow.setOnClickListener(v ->
@@ -405,7 +412,13 @@ public class ProfileActivity extends BaseActivity {
         if (termsRow != null) termsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, TermsActivity.class)));
 
-        UiAnimations.pressBounce(ordersRow, couponsRow, aboutUsRow, privacyRow, termsRow);
+        UiAnimations.pressBounce(myOrdersBox, myCouponsBox, editProfileBox, aboutUsRow, privacyRow, termsRow);
+        
+        // Show the tiles only when logged in
+        View loggedInTiles = findViewById(R.id.loggedInTiles);
+        if (loggedInTiles != null) {
+            loggedInTiles.setVisibility(tokenManager.isLoggedIn() ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void setupBottomNavigation() {

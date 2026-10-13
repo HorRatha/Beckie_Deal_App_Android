@@ -221,7 +221,7 @@
         android:layout_height="wrap_content"
         app:cardElevation="24dp"
         app:cardCornerRadius="0dp"
-        app:cardBackgroundColor="@color/surface"
+        app:cardBackgroundColor="@color/primary"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <LinearLayout
@@ -241,13 +241,14 @@
                     android:layout_weight="1"
                     android:text="Total Amount"
                     android:textAppearance="@style/TextAppearance.App.Body"
-                    android:textColor="@color/text_muted" />
+                    android:textColor="@color/white_fixed" />
                 <TextView
                     android:id="@+id/totalPriceText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$0.00"
-                    android:textAppearance="@style/TextAppearance.App.SectionHeader" />
+                    android:textAppearance="@style/TextAppearance.App.SectionHeader"
+                    android:textColor="@color/white_fixed" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -258,10 +259,10 @@
                 android:text="Proceed to Checkout"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.App.Button"
-                android:textColor="@color/dark_brown"
+                android:textColor="@color/white_fixed"
                 app:backgroundTint="@null"
                 app:icon="@drawable/shopping_cart_checkout_24"
-                app:iconTint="@color/dark_brown"
+                app:iconTint="@color/white_fixed"
                 app:iconGravity="textStart"
                 app:iconPadding="8dp" />
 

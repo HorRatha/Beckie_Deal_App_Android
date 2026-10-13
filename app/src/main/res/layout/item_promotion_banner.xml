@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/surface">
+                android:background="@color/dark_brown">
 
                 <!-- Photo: only visible when the promotion has an image -->
                 <ImageView
@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Summer Sale"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/white_fixed"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:maxLines="1"
@@ -83,7 +83,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="Min order $150"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="#A8A09F"
                         android:textSize="12sp"
                         android:maxLines="1"
                         android:ellipsize="end" />
@@ -103,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Expires in"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="@color/white_fixed"
                         android:textSize="11sp" />
 
                     <TextView
@@ -112,7 +112,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
                         android:text="23d 14h"
-                        android:textColor="@color/red_error"
+                        android:textColor="@color/white_fixed"
                         android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>

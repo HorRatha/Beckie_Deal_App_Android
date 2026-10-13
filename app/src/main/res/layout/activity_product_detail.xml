@@ -558,7 +558,7 @@
         android:layout_height="wrap_content"
         app:cardElevation="16dp"
         app:cardCornerRadius="0dp"
-        app:cardBackgroundColor="#FFFFFF"
+        app:cardBackgroundColor="@color/light_beige_bg"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
         <LinearLayout
