@@ -536,28 +536,32 @@ public class ProductRepository {
                     return;
                 }
 
-                // Fetch details in parallel; use a counter to know when all are done
-                final int[] remaining = {products.size()};
+                // Collect all product IDs that need detail fetching
+                List<String> productIdsToFetch = new ArrayList<>();
+                for (Product product : products) {
+                    if (!detailCache.containsKey(product.getId())) {
+                        productIdsToFetch.add(product.getId());
+                    }
+                }
+
+                // If all are cached, return immediately
+                if (productIdsToFetch.isEmpty()) {
+                    callback.onSuccess(products, total);
+                    return;
+                }
+
+                // Fetch all details in parallel without blocking on a counter
+                final int[] remaining = {productIdsToFetch.size()};
                 final boolean[] failed = {false};
 
-                for (Product product : products) {
-                    // Skip if already cached
-                    if (detailCache.containsKey(product.getId())) {
-                        synchronized (remaining) {
-                            remaining[0]--;
-                            if (remaining[0] == 0) {
-                                callback.onSuccess(products, total);
-                            }
-                        }
-                        continue;
-                    }
-
-                    fetchProductDetail(product.getId(), new SingleProductCallback() {
+                for (String productId : productIdsToFetch) {
+                    fetchProductDetail(productId, new SingleProductCallback() {
                         @Override
                         public void onSuccess(ProductDetail detail) {
                             synchronized (remaining) {
                                 remaining[0]--;
                                 if (remaining[0] == 0 && !failed[0]) {
+                                    Log.d(TAG, "All product details fetched, returning " + products.size() + " products");
                                     callback.onSuccess(products, total);
                                 }
                             }
@@ -565,9 +569,7 @@ public class ProductRepository {
 
                         @Override
                         public void onError(String errorMessage) {
-                            Log.w(TAG, "Could not fetch detail for product " +
-                                    product.getId() + ": " + errorMessage);
-                            // Don't fail the whole request — just skip this product's detail
+                            Log.w(TAG, "Could not fetch detail for product " + productId + ": " + errorMessage);
                             synchronized (remaining) {
                                 remaining[0]--;
                                 if (remaining[0] == 0 && !failed[0]) {

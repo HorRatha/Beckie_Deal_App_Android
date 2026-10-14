@@ -275,7 +275,20 @@ public class CategoryStackController {
 
             s.root.setLayoutParams(lp);
 
-            s.card.setOnClickListener(v -> toggle(s));
+            // Disable interaction for empty categories
+            if (c.itemCount > 0) {
+                s.card.setClickable(true);
+                s.card.setFocusable(true);
+                s.card.setOnClickListener(v -> toggle(s));
+            } else {
+                s.card.setClickable(false);
+                s.card.setFocusable(false);
+                s.card.setOnClickListener(null);
+            }
+
+            // Set Open category button colors based on category header color
+            s.viewAll.setCardBackgroundColor(ContextCompat.getColor(context, CARD_BG[p]));
+            s.viewAllText.setTextColor(textColor);
 
             s.viewAll.setOnClickListener(v -> {
 
@@ -313,13 +326,13 @@ public class CategoryStackController {
 
         boolean willExpand = !s.expanded;
 
-        TransitionManager.beginDelayedTransition(container, new AutoTransition().setDuration(220));
-
         if (willExpand && open != null && open != s) {
 
             setExpanded(open, false); // accordion: one open at a time
 
         }
+
+        TransitionManager.beginDelayedTransition(container, new AutoTransition().setDuration(220));
 
         setExpanded(s, willExpand);
 
@@ -455,8 +468,6 @@ public class CategoryStackController {
 
     private void render(Section s, List<ProductUi> list) {
 
-        TransitionManager.beginDelayedTransition(container, new AutoTransition().setDuration(200));
-
         s.loading.setVisibility(View.GONE);
 
         s.products.removeAllViews();
@@ -467,11 +478,17 @@ public class CategoryStackController {
 
         if (list.isEmpty()) {
 
-            s.empty.setText("No products here yet. Check back soon.");
+            // Show appropriate empty message based on context
+            if (s.data.itemCount == 0) {
+                s.empty.setText("Coming soon. Check back later.");
+            } else {
+                s.empty.setText("No products available.");
+            }
 
             s.empty.setVisibility(View.VISIBLE);
 
-            s.viewAll.setVisibility(View.GONE);
+            s.viewAll.setVisibility(View.VISIBLE);
+            s.viewAllText.setText("Browse category");
 
             return;
 
@@ -487,22 +504,33 @@ public class CategoryStackController {
 
             final ProductUi p = list.get(i);
 
-            View row = inflater.inflate(R.layout.item_category_product, s.products, false);
+            View row = inflater.inflate(R.layout.item_category_wallet_product, s.products, false);
 
             ((TextView) row.findViewById(R.id.productName)).setText(p.name);
 
-            TextView sub = row.findViewById(R.id.productSubtitle);
-
+            // Bind price from subtitle (formatted as "$X.XX")
+            TextView priceView = row.findViewById(R.id.productPrice);
             if (p.subtitle == null || p.subtitle.isEmpty()) {
-
-                sub.setVisibility(View.GONE);
-
+                priceView.setText("$0.00");
             } else {
+                priceView.setText(p.subtitle);
+            }
 
-                sub.setText(p.subtitle);
-
-                sub.setVisibility(View.VISIBLE);
-
+            // Dynamically show/hide status badges based on product data
+            TextView stockStatus = row.findViewById(R.id.stockStatus);
+            TextView warrantyText = row.findViewById(R.id.warrantyText);
+            
+            // Only show status badges if we have actual status data
+            // For now, hide them if no subtitle or if status is not available
+            if (stockStatus != null) {
+                stockStatus.setVisibility(
+                    (p.subtitle != null && !p.subtitle.isEmpty()) ? View.VISIBLE : View.GONE
+                );
+            }
+            if (warrantyText != null) {
+                warrantyText.setVisibility(
+                    (p.subtitle != null && !p.subtitle.isEmpty()) ? View.VISIBLE : View.GONE
+                );
             }
 
             bindProductImage((ImageView) row.findViewById(R.id.productImage), p.imageUrl);
@@ -549,10 +577,6 @@ public class CategoryStackController {
 
         if (imageLoader != null && url != null && !url.isEmpty()) {
 
-            ImageViewCompat.setImageTintList(img, null);
-
-            img.setPadding(0, 0, 0, 0);
-
             img.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             imageLoader.load(img, url);
@@ -560,10 +584,6 @@ public class CategoryStackController {
         } else {
 
             img.setImageResource(R.drawable.ic_category_default);
-
-            ImageViewCompat.setImageTintList(img,
-
-                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.text_secondary)));
 
             int pad = dp(12);
 

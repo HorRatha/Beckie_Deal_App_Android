@@ -151,21 +151,37 @@ public class AllBrandsActivity extends BaseActivity {
             ImageView brandIcon = view.findViewById(R.id.brandIcon);
             TextView iconText = view.findViewById(R.id.brandIconText);
             TextView nameText = view.findViewById(R.id.brandName);
+            TextView productCount = view.findViewById(R.id.brandProductCount);
 
-            // Since logos might be null, show brand name initial
-            if (brand.getLogo() != null && !brand.getLogo().isEmpty()) {
-                // TODO: Load logo using Glide when logo URLs are available
-                // For now, show initial
-                showBrandInitial(brandIcon, iconText, brand.getName());
-            } else {
-                showBrandInitial(brandIcon, iconText, brand.getName());
-            }
-            
+            // Display brand name
             nameText.setText(brand.getName());
 
-            // Add product count if available
-            if (brand.getProductsCount() > 0) {
-                nameText.setText(brand.getName() + " (" + brand.getProductsCount() + ")");
+            // Display product count
+            if (productCount != null && brand.getProductsCount() > 0) {
+                int count = brand.getProductsCount();
+                productCount.setText(count + " product" + (count != 1 ? "s" : ""));
+                productCount.setVisibility(View.VISIBLE);
+            } else if (productCount != null) {
+                productCount.setVisibility(View.GONE);
+            }
+
+            // Try to load logo, fallback to initial letter
+            if (brand.getLogo() != null && !brand.getLogo().isEmpty()) {
+                try {
+                    com.bumptech.glide.Glide.with(this)
+                            .load(brand.getLogo())
+                            .placeholder(R.drawable.placeholder_image)
+                            .error(R.drawable.placeholder_image)
+                            .fitCenter()
+                            .into(brandIcon);
+                    brandIcon.setVisibility(View.VISIBLE);
+                    iconText.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    Log.w(TAG, "Failed to load logo for " + brand.getName(), e);
+                    showBrandInitial(brandIcon, iconText, brand.getName());
+                }
+            } else {
+                showBrandInitial(brandIcon, iconText, brand.getName());
             }
 
             // Open CategoryDetailActivity filtered to this brand's products
@@ -227,12 +243,18 @@ public class AllBrandsActivity extends BaseActivity {
             ImageView brandIcon = view.findViewById(R.id.brandIcon);
             TextView iconText = view.findViewById(R.id.brandIconText);
             TextView nameText = view.findViewById(R.id.brandName);
+            TextView productCount = view.findViewById(R.id.brandProductCount);
 
             brandIcon.setVisibility(View.VISIBLE);
             iconText.setVisibility(View.GONE);
             brandIcon.setImageResource(brand.imageResId);
             brandIcon.clearColorFilter();
             nameText.setText(brand.name);
+            
+            // Hide product count for fallback brands
+            if (productCount != null) {
+                productCount.setVisibility(View.GONE);
+            }
 
             view.setOnClickListener(v -> {
                 android.content.Intent intent = new android.content.Intent(

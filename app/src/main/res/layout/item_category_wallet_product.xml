@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Beckie Deal — Category Wallet Product Item (Optimized)
+    Compact horizontal layout for dropdown/wallet display
+    Reduced nesting and removed expensive elevations for better performance
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="horizontal"
+    android:paddingHorizontal="6dp"
+    android:paddingVertical="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/wallet_product_bg"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <!-- ── Product image (no nested card, just rounded background) ─────── -->
+    <FrameLayout
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/wallet_product_image_bg">
+
+        <ImageView
+            android:id="@+id/productImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_image" />
+
+        <!-- Favorite icon -->
+        <ImageView
+            android:id="@+id/favoriteIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="3dp"
+            android:background="@drawable/favorite_background"
+            android:padding="3dp"
+            android:src="@drawable/ic_favorite_border"
+            app:tint="@color/text_secondary"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <!-- ── Info section ───────────────────────────────────────────────── -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="4dp">
+
+        <!-- Product name (2 lines max) -->
+        <TextView
+            android:id="@+id/productName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Product Name"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <!-- Price (red, bold) -->
+        <TextView
+            android:id="@+id/productPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="$0.00"
+            android:textColor="@color/red_error"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- ── Status badges (compact) ──────────────────────────────────── -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingEnd="4dp">
+
+        <!-- Stock status badge -->
+        <TextView
+            android:id="@+id/stockStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="In stock"
+            android:textColor="#1565C0"
+            android:textSize="8sp"
+            android:drawableStart="@drawable/dot_small"
+            android:drawableTint="#1565C0"
+            android:drawablePadding="1dp"
+            android:maxLines="1" />
+
+        <!-- Warranty badge -->
+        <TextView
+            android:id="@+id/warrantyText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="1 yr"
+            android:textColor="#2E7D32"
+            android:textSize="8sp"
+            android:drawableStart="@drawable/dot_small"
+            android:drawableTint="#2E7D32"
+            android:drawablePadding="1dp"
+            android:maxLines="1" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -118,7 +118,6 @@
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
             android:visibility="gone"
-            app:cardBackgroundColor="@color/brand_orange"
             app:cardCornerRadius="22dp"
             app:cardElevation="0dp"
             app:strokeWidth="0dp">
@@ -129,7 +128,6 @@
                 android:layout_height="match_parent"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:textColor="@color/white_fixed"
                 android:textSize="14sp" />
 
         </com.google.android.material.card.MaterialCardView>

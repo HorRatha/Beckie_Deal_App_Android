@@ -4,14 +4,14 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_columnWeight="1"
-    android:layout_margin="8dp">
+    android:layout_margin="10dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/brandCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="1dp"
+        android:layout_height="140dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
         app:strokeWidth="0dp"
         app:cardBackgroundColor="@color/surface"
         android:clickable="true"
@@ -21,21 +21,42 @@
         <LinearLayout
             android:id="@+id/brandLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="16dp">
+            android:padding="12dp">
 
-            <!-- Brand logo image -->
-            <ImageView
-                android:id="@+id/brandIcon"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+            <!-- Brand icon/logo with circular background -->
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginBottom="8dp"
-                android:scaleType="fitCenter"
-                android:contentDescription="Brand Logo"
-                android:visibility="gone" />
+                android:background="@drawable/category_icon_bg"
+                android:backgroundTint="@color/cat_yellow">
+
+                <!-- Brand logo image -->
+                <ImageView
+                    android:id="@+id/brandIcon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:contentDescription="Brand Logo" />
+
+                <!-- Brand initial text (fallback) -->
+                <TextView
+                    android:id="@+id/brandIconText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/dark_brown"
+                    android:fontFamily="sans-serif-medium"
+                    android:visibility="gone" />
+
+            </FrameLayout>
 
             <!-- Brand name -->
             <TextView
@@ -43,13 +64,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Brand Name"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-medium"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
+
+            <!-- Product count badge -->
+            <TextView
+                android:id="@+id/brandProductCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="0 products"
+                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:visibility="visible" />
 
         </LinearLayout>
 
@@ -58,32 +92,20 @@
     <!-- Selected checkmark badge, floats over the top-end corner of the card -->
     <ImageView
         android:id="@+id/selectedCheckBadge"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_gravity="top|end"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="6dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
         android:background="@drawable/about_icon_circle_bg"
         android:backgroundTint="@color/primary"
-        android:padding="3dp"
+        android:padding="4dp"
         android:src="@drawable/selected_check_badge"
         android:visibility="gone" />
 
-    <!-- Hidden views for compatibility -->
+    <!-- Icon container for compatibility -->
     <FrameLayout
         android:id="@+id/iconContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/brandIconText"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/brandProductCount"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone" />

@@ -548,6 +548,46 @@ public class CategoryDetailActivity extends BaseActivity {
             return;
         }
 
+        // Handle empty products - hide UI elements that don't make sense
+        boolean isEmpty = products.isEmpty();
+        
+        View heroCard = findViewById(R.id.categoryHeroCard);
+        View brandFilterView = findViewById(R.id.brandFilterContainer);
+        LinearLayout resultsRow = findViewById(R.id.resultsRow);
+
+        if (isEmpty) {
+            // Hide decorative elements when no products
+            if (heroCard != null) {
+                heroCard.setVisibility(View.GONE);
+            }
+            if (brandFilterView != null) {
+                brandFilterView.setVisibility(View.GONE);
+            }
+            
+            // Update results label to show empty state
+            if (resultsLabel != null) {
+                resultsLabel.setText("No products found");
+            }
+            
+            // Clear the grid
+            if (productAdapter != null) {
+                productAdapter.updateProducts(new ArrayList<>());
+                productAdapter.notifyDataSetChanged();
+            }
+            return;
+        }
+        
+        // Show UI elements when products are available
+        if (heroCard != null && heroCard.getVisibility() != View.VISIBLE) {
+            heroCard.setVisibility(View.VISIBLE);
+        }
+        if (brandFilterView != null && brandFilterView.getVisibility() != View.VISIBLE) {
+            brandFilterView.setVisibility(View.VISIBLE);
+        }
+        if (resultsRow != null && resultsRow.getVisibility() != View.VISIBLE) {
+            resultsRow.setVisibility(View.VISIBLE);
+        }
+
         boolean isListView = ViewModePreferences.isListView(this);
 
         if (productAdapter == null) {
