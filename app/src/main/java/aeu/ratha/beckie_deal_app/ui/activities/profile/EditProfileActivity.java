@@ -68,6 +68,22 @@ public class EditProfileActivity extends BaseActivity {
             saveButton.setOnClickListener(v -> saveProfile());
             UiAnimations.pressBounce(saveButton);
         }
+
+        // Change Password button
+        View changePasswordCard = findViewById(R.id.changePasswordCard);
+        if (changePasswordCard != null) {
+            changePasswordCard.setOnClickListener(v -> navigateToChangePassword());
+            UiAnimations.pressBounce(changePasswordCard);
+        }
+
+        // Delete Account button
+        View deleteAccountCard = findViewById(R.id.deleteAccountCard);
+        if (deleteAccountCard != null) {
+            deleteAccountCard.setOnClickListener(v -> {
+                Toast.makeText(this, "Delete account feature coming soon", Toast.LENGTH_SHORT).show();
+            });
+            UiAnimations.pressBounce(deleteAccountCard);
+        }
     }
 
     private void loadUserProfile() {
@@ -112,6 +128,11 @@ public class EditProfileActivity extends BaseActivity {
         // Placeholder for save functionality
         Toast.makeText(this, "Profile saved successfully", Toast.LENGTH_SHORT).show();
         // TODO: Implement actual profile update API call
+    }
+
+    private void navigateToChangePassword() {
+        Intent intent = new Intent(this, aeu.ratha.beckie_deal_app.ui.ProfileChangePasswordActivity.class);
+        startActivity(intent);
     }
 
     private void setupBottomNavigation() {

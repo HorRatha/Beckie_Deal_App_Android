@@ -3,8 +3,11 @@ package aeu.ratha.beckie_deal_app.data.api;
 import aeu.ratha.beckie_deal_app.data.models.User;
 import aeu.ratha.beckie_deal_app.data.models.ProfileApiResponse;
 import aeu.ratha.beckie_deal_app.data.models.MyProductsResponse;
+import aeu.ratha.beckie_deal_app.data.models.ChangePasswordRequest;
+import aeu.ratha.beckie_deal_app.data.models.ChangePasswordResponse;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -76,4 +79,27 @@ public interface ProfileApiService {
         @Query("per_page") int perPage,
         @Query("page") int page
     );
+    
+    /**
+     * Change user password.
+     * POST /api/v1/auth/change-password
+     * 
+     * Requires authentication token in Authorization header.
+     * Request body must contain:
+     * - current_password: The user's current password
+     * - new_password: The desired new password
+     * - new_password_confirmation: Confirmation of the new password (must match new_password)
+     * 
+     * Response structure:
+     * {
+     *   "status": "success",
+     *   "message": "Password changed successfully.",
+     *   "data": null
+     * }
+     * 
+     * @param request ChangePasswordRequest containing current and new passwords
+     * @return Call object with ChangePasswordResponse
+     */
+    @POST("auth/change-password")
+    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 }

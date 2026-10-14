@@ -109,6 +109,9 @@
         <activity
             android:name=".ui.activities.profile.NotificationsActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.ProfileChangePasswordActivity"
+            android:exported="false" />
 
         <!-- UI Components -->
         <activity

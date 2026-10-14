@@ -83,4 +83,25 @@
     <string name="slide_default_subtitle">Check out our latest promotions</string>
     <string name="slide_default_button">Learn More</string>
     <string name="slide_cta_button">View promotion</string>
+
+    <!-- ── Change Password ── -->
+    <string name="change_password">Change Password</string>
+    <string name="change_password_subtitle">Update your password to keep your account secure</string>
+    <string name="password_security_info">Your password is your first line of defense. Choose a strong password that you don\'t use anywhere else.</string>
+    <string name="current_password_label">Current Password</string>
+    <string name="current_password_hint">Enter your current password</string>
+    <string name="new_password_label">New Password</string>
+    <string name="new_password_hint">Enter your new password</string>
+    <string name="confirm_password_label">Confirm New Password</string>
+    <string name="confirm_password_hint">Re-enter your new password</string>
+    <string name="password_strength_weak">Weak password</string>
+    <string name="password_strength_fair">Fair password</string>
+    <string name="password_strength_good">Good password</string>
+    <string name="password_strength_strong">Strong password</string>
+    <string name="password_requirements_title">Password Requirements:</string>
+    <string name="password_requirement_1">At least 8 characters long</string>
+    <string name="password_requirement_2">Contains uppercase and lowercase letters</string>
+    <string name="password_requirement_3">Contains numbers and special characters</string>
+    <string name="btn_change_password">Change Password</string>
+    <string name="btn_cancel">Cancel</string>
 </resources>
