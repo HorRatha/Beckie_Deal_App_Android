@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Category Primary Colors -->
+    <!-- Each category has a distinctive color for quick visual recognition -->
+    
+    <!-- Laptops & Computers - Blue theme -->
+    <color name="category_color_laptops">#1E88E5</color>
+    <color name="category_accent_color_laptops">#1565C0</color>
+    
+    <!-- Mobile & Phones - Pink/Red theme -->
+    <color name="category_color_mobile">#E91E63</color>
+    <color name="category_accent_color_mobile">#C2185B</color>
+    
+    <!-- Gaming - Purple theme -->
+    <color name="category_color_gaming">#9C27B0</color>
+    <color name="category_accent_color_gaming">#7B1FA2</color>
+    
+    <!-- Wearables - Orange theme -->
+    <color name="category_color_wearables">#FF6F00</color>
+    <color name="category_accent_color_wearables">#E65100</color>
+    
+    <!-- Accessories - Yellow theme -->
+    <color name="category_color_accessories">#FBC02D</color>
+    <color name="category_accent_color_accessories">#F9A825</color>
+    
+    <!-- Storage - Green theme -->
+    <color name="category_color_storage">#43A047</color>
+    <color name="category_accent_color_storage">#388E3C</color>
+    
+    <!-- Displays - Cyan theme -->
+    <color name="category_color_displays">#00ACC1</color>
+    <color name="category_accent_color_displays">#0097A7</color>
+    
+    <!-- Networking - Teal theme -->
+    <color name="category_color_networking">#00897B</color>
+    <color name="category_accent_color_networking">#00695C</color>
+    
+    <!-- Audio - Deep Orange theme -->
+    <color name="category_color_audio">#D84315</color>
+    <color name="category_accent_color_audio">#BF360C</color>
+    
+    <!-- Default color for unknown categories -->
+    <color name="category_color_default">#607D8B</color>
+    <color name="category_accent_color_default">#455A64</color>
+    
+    <!-- Helpful color variants -->
+    <color name="text_secondary_light">#BDBDBD</color>
+</resources>

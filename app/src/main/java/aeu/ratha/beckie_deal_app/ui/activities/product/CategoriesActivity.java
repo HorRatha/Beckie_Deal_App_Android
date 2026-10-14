@@ -132,6 +132,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
 import java.util.List;
+import aeu.ratha.beckie_deal_app.utils.helpers.CategoryIconMapper;
 
 public class CategoriesActivity extends BaseActivity {
 
@@ -583,7 +584,7 @@ public class CategoriesActivity extends BaseActivity {
                 if (categories != null) {
                     for (Category category : categories) {
                         if (category.isActive()) {
-                            int iconRes = getCategoryIcon(category.getName());
+                            int iconRes = CategoryIconMapper.getIconForCategory(category);
                             String imageUrl = getCategoryImageUrl(category);
                             String countText = category.getProductsCount() > 0 
                                 ? category.getProductsCount() + " Items" 
