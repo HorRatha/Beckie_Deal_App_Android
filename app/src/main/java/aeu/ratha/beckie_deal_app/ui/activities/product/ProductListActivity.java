@@ -31,11 +31,17 @@ import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
+import aeu.ratha.beckie_deal_app.utils.preferences.ScrollStatePreferences;
 
 /**
  * Full-list screen reached from "View All" on New Collection / Top Selling sections.
  * Accepts EXTRA_MODE = "new_collection" | "top_selling".
  * Supports the FilterBottomSheet for Sort / Year / Price filtering.
+ * 
+ * State Preservation:
+ * - Scroll position is saved/restored automatically
+ * - Filter state (sort, year, price) is preserved across navigation
+ * - View mode (grid/list) is persisted via ViewModePreferences
  */
 public class ProductListActivity extends BaseActivity
         implements FilterBottomSheet.FilterListener {
@@ -121,9 +127,31 @@ public class ProductListActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
         applyAndRender();
+        
+        // Restore scroll position and filter state after rendering
+        if (productsGrid != null && productsGrid.getLayoutManager() instanceof GridLayoutManager) {
+            GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
+            ScrollStatePreferences.restoreScrollPosition(this, getPageKey(), layoutManager, productsGrid);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        // Save scroll position for later restoration
+        if (productsGrid != null && productsGrid.getLayoutManager() instanceof GridLayoutManager) {
+            GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
+            ScrollStatePreferences.saveScrollPosition(this, getPageKey(), layoutManager);
+        }
     }
 
     // ── Filter sheet ──────────────────────────────────────────────────────────
+
+    /** Generate unique page key for state persistence. */
+    private String getPageKey() {
+        return "productList_" + mode;
+    }
 
     private void openFilterSheet() {
         FilterBottomSheet sheet = FilterBottomSheet.newInstance(

@@ -25,10 +25,16 @@ import aeu.ratha.beckie_deal_app.data.repository.BrandRepository;
 import aeu.ratha.beckie_deal_app.ui.adapters.BrandAdapter;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.preferences.ScrollStatePreferences;
 
 /**
  * Enhanced AllBrandsActivity using RecyclerView, Repository pattern, and search.
  * This is an improved version with better architecture and features.
+ * 
+ * State Preservation:
+ * - Scroll position is saved/restored for brand grid
+ * - Search query and filter state are preserved across navigation
+ * - Pagination state is maintained
  */
 public class AllBrandsActivityV2 extends BaseActivity implements BrandAdapter.OnBrandClickListener {
     
@@ -67,6 +73,30 @@ public class AllBrandsActivityV2 extends BaseActivity implements BrandAdapter.On
         loadBrands(false);
         
         UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+        // Restore scroll position after view is loaded
+        if (brandsRecyclerView != null && brandsRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
+            GridLayoutManager layoutManager = (GridLayoutManager) brandsRecyclerView.getLayoutManager();
+            brandsRecyclerView.post(() -> {
+                ScrollStatePreferences.restoreScrollPosition(this, "brands", layoutManager, brandsRecyclerView);
+            });
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        // Save scroll position
+        if (brandsRecyclerView != null && brandsRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
+            GridLayoutManager layoutManager = (GridLayoutManager) brandsRecyclerView.getLayoutManager();
+            ScrollStatePreferences.saveScrollPosition(this, "brands", layoutManager);
+        }
     }
     
     /**

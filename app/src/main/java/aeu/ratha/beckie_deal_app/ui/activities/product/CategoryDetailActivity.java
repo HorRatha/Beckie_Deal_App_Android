@@ -35,6 +35,7 @@ import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
+import aeu.ratha.beckie_deal_app.utils.preferences.ScrollStatePreferences;
 
 public class CategoryDetailActivity extends BaseActivity {
 
@@ -135,6 +136,25 @@ public class CategoryDetailActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        
+        // Note: Scroll position restoration is now handled in renderProducts()
+        // after adapter is attached and data is ready (prevents clamping to 0)
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        // Save scroll position before leaving
+        if (productsGrid != null && productsGrid.getLayoutManager() instanceof GridLayoutManager) {
+            GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
+            ScrollStatePreferences.saveScrollPosition(this, getPageKey(), layoutManager);
+        }
+    }
+
+    /** Generate unique page key for state persistence. */
+    private String getPageKey() {
+        return "category_" + currentCategoryId + "_" + currentBrandId;
     }
 
     // ── Top bar ───────────────────────────────────────────────────────────────
@@ -614,6 +634,16 @@ public class CategoryDetailActivity extends BaseActivity {
             productAdapter.notifyDataSetChanged();
             android.util.Log.d(TAG, "Adapter updated with notifyDataSetChanged()");
         }
+        
+        // Restore scroll position AFTER adapter is set and data is ready
+        // This prevents Android from clamping scroll to 0 when views don't exist yet
+        productsGrid.post(() -> {
+            if (productsGrid != null && productsGrid.getLayoutManager() instanceof GridLayoutManager) {
+                GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
+                ScrollStatePreferences.restoreScrollPosition(this, getPageKey(), layoutManager, productsGrid);
+                android.util.Log.d(TAG, "✓ Scroll position restored");
+            }
+        });
         
         android.util.Log.d(TAG, "renderProducts() complete");
     }

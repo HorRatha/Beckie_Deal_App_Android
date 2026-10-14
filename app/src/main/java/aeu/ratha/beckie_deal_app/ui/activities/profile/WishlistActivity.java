@@ -33,6 +33,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
+import aeu.ratha.beckie_deal_app.utils.preferences.ScrollStatePreferences;
+
+/**
+ * Wishlist display screen showing user's saved products.
+ * 
+ * State Preservation:
+ * - Scroll position is saved/restored for wishlist grid
+ * - Wishlist items are cached in memory and refreshed on each visit
+ */
 public class WishlistActivity extends BaseActivity {
 
     private static final String TAG = "WishlistActivity";
@@ -59,6 +68,58 @@ public class WishlistActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         displayWishlist();
+        
+        // Restore scroll position after wishlist is displayed
+        // Target the NestedScrollView, NOT the GridLayout
+        androidx.core.widget.NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
+        if (scrollView == null) {
+            // Fallback: look for it by traversing parent hierarchy
+            View parent = findViewById(R.id.wishlistGrid);
+            while (parent != null) {
+                parent = (View) parent.getParent();
+                if (parent instanceof androidx.core.widget.NestedScrollView) {
+                    scrollView = (androidx.core.widget.NestedScrollView) parent;
+                    break;
+                }
+            }
+        }
+        
+        if (scrollView != null) {
+            final androidx.core.widget.NestedScrollView finalScrollView = scrollView;
+            String scrollYStr = ScrollStatePreferences.getFilterState(this, "wishlist", "scrollY", "0");
+            try {
+                int scrollY = Integer.parseInt(scrollYStr);
+                if (scrollY > 0) {
+                    finalScrollView.post(() -> finalScrollView.scrollTo(0, scrollY));
+                }
+            } catch (NumberFormatException e) {
+                // Use default scroll position
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        // Save scroll position - target NestedScrollView, not GridLayout
+        androidx.core.widget.NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
+        if (scrollView == null) {
+            // Fallback: look for it by traversing parent hierarchy
+            View parent = findViewById(R.id.wishlistGrid);
+            while (parent != null) {
+                parent = (View) parent.getParent();
+                if (parent instanceof androidx.core.widget.NestedScrollView) {
+                    scrollView = (androidx.core.widget.NestedScrollView) parent;
+                    break;
+                }
+            }
+        }
+        
+        if (scrollView != null) {
+            ScrollStatePreferences.saveFilterState(this, "wishlist", "scrollY", 
+                    String.valueOf(scrollView.getScrollY()));
+        }
     }
 
     private void setupTopBar() {

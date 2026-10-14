@@ -31,10 +31,16 @@ import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
+import aeu.ratha.beckie_deal_app.utils.preferences.ScrollStatePreferences;
 
 /**
  * Full-screen search activity.
  * Searches products from API by product name, brand, category, specs, or SKU.
+ * 
+ * State Preservation:
+ * - Scroll position is saved/restored for each search query
+ * - Search query is preserved across navigation
+ * - View mode (grid/list) is persisted via ViewModePreferences
  */
 public class SearchActivity extends BaseActivity {
 
@@ -131,6 +137,31 @@ public class SearchActivity extends BaseActivity {
         
         // Load all products for search
         loadProducts();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+        // Restore the saved search query from SharedPreferences
+        String savedQuery = ScrollStatePreferences.getFilterState(this, "search", "query", "");
+        if (!savedQuery.isEmpty() && searchEditText.getText().toString().isEmpty()) {
+            android.util.Log.d("SearchActivity", "onResume - Restoring search query: " + savedQuery);
+            searchEditText.setText(savedQuery);
+            // Setting text will trigger TextWatcher → performSearch → renderResults → scroll restore
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        // Save search query and scroll position
+        if (!lastQuery.isEmpty()) {
+            android.util.Log.d("SearchActivity", "onPause - Saving search query: " + lastQuery);
+            ScrollStatePreferences.saveFilterState(this, "search", "query", lastQuery);
+            saveSearchScrollPosition(lastQuery);
+        }
     }
 
     // ── Data loading ──────────────────────────────────────────────────────────
@@ -388,6 +419,49 @@ public class SearchActivity extends BaseActivity {
             view.setLayoutParams(params);
 
             resultsGrid.addView(view);
+        }
+        
+        // Restore scroll position AFTER all views are added and laid out
+        restoreSearchScrollPosition(query);
+    }
+    
+    /**
+     * Restore scroll position for search results after views are rendered.
+     * Uses ViewTreeObserver to ensure layout pass is complete.
+     */
+    private void restoreSearchScrollPosition(String query) {
+        if (resultsScrollView == null) return;
+        
+        String savedScrollY = ScrollStatePreferences.getFilterState(this, "search_" + query, "scrollY", "0");
+        android.util.Log.d("SearchActivity", "restoreScroll - Reading saved scrollY for query '" + query + "': " + savedScrollY);
+        
+        try {
+            int scrollY = Integer.parseInt(savedScrollY);
+            if (scrollY > 0) {
+                // Use ViewTreeObserver to wait for layout pass
+                resultsScrollView.getViewTreeObserver().addOnGlobalLayoutListener(
+                        new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        resultsScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        android.util.Log.d("SearchActivity", "restoreScroll - Setting scrollY to: " + scrollY);
+                        resultsScrollView.scrollTo(0, scrollY);
+                    }
+                });
+            }
+        } catch (NumberFormatException e) {
+            android.util.Log.e("SearchActivity", "restoreScroll - Error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Save scroll position when user navigates away.
+     */
+    private void saveSearchScrollPosition(String query) {
+        if (resultsScrollView != null && !query.isEmpty()) {
+            int scrollY = resultsScrollView.getScrollY();
+            android.util.Log.d("SearchActivity", "saveScroll - Saving scrollY for query '" + query + "': " + scrollY);
+            ScrollStatePreferences.saveFilterState(this, "search_" + query, "scrollY", String.valueOf(scrollY));
         }
     }
 

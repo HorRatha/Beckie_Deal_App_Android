@@ -45,6 +45,11 @@ public class ProductRepository {
 
     /** Detail cache keyed by product UUID. */
     private final Map<String, ProductDetail> detailCache = new HashMap<>();
+    
+    /** Cache timestamp tracking */
+    private static final long CACHE_VALIDITY_MS = 5 * 60 * 1000;  // 5 minutes
+    private long lastCacheTime = 0;
+    private long lastDetailsCacheTime = 0;
 
     private ProductRepository(Context context) {
         this.apiService = RetrofitClient.getClient(context).create(ProductApiService.class);
@@ -58,42 +63,94 @@ public class ProductRepository {
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // Cache Validity Checking
+    // ─────────────────────────────────────────────────────────────────────────
+    
+    /**
+     * Check if cached products are still fresh (less than 5 minutes old).
+     * @return true if cache is fresh and should be used
+     */
+    private boolean isCacheFresh() {
+        if (cachedProducts.isEmpty()) return false;
+        long timeSinceCache = System.currentTimeMillis() - lastCacheTime;
+        boolean fresh = timeSinceCache < CACHE_VALIDITY_MS;
+        Log.d(TAG, "Cache age: " + (timeSinceCache / 1000) + "s, Fresh: " + fresh);
+        return fresh;
+    }
+    
+    /**
+     * Check if detail cache is still fresh.
+     */
+    private boolean isDetailCacheFresh() {
+        if (detailCache.isEmpty()) return false;
+        long timeSinceCache = System.currentTimeMillis() - lastDetailsCacheTime;
+        return timeSinceCache < CACHE_VALIDITY_MS;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // List
     // ─────────────────────────────────────────────────────────────────────────
 
     /**
      * Fetch all products with pagination.
+     * Uses smart caching: returns cached data if fresh (less than 5 minutes old).
+     * On subsequent calls within 5 minutes, returns cached data instantly.
      *
      * @param limit      Max items to return
      * @param offset     Starting offset
-     * @param useCache   Return cached list if available
+     * @param useCache   Return cached list if available and fresh
      * @param callback   Result callback
      */
     public void fetchProducts(int limit, int offset, boolean useCache,
                               @NonNull ProductCallback callback) {
-        if (useCache && !cachedProducts.isEmpty()) {
-            Log.d(TAG, "Returning " + cachedProducts.size() + " cached products");
+        // Strategy: 
+        // - If offset == 0 and useCache && cache is fresh: return cached immediately
+        // - If offset == 0 and cache is stale: fetch from API
+        // - If offset > 0: always fetch from API (pagination)
+        
+        if (offset == 0 && useCache && isCacheFresh()) {
+            Log.d(TAG, "✓ Returning " + cachedProducts.size() + " cached products (fresh cache)");
             callback.onSuccess(new ArrayList<>(cachedProducts), cachedProducts.size());
             return;
         }
+        
+        if (offset == 0 && useCache && !cachedProducts.isEmpty()) {
+            Log.d(TAG, "⚠ Returning " + cachedProducts.size() + " cached products (may be stale)");
+            // Return stale cache while fetching fresh data in background
+            callback.onSuccess(new ArrayList<>(cachedProducts), cachedProducts.size());
+            // Still fetch fresh data (don't return early)
+        }
 
-        Log.d(TAG, "Fetching products list (limit=" + limit + ", offset=" + offset + ")");
+        Log.d(TAG, "Fetching products from API (limit=" + limit + ", offset=" + offset + ")");
         apiService.getProducts(limit, offset).enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(@NonNull Call<ProductResponse> call,
                                    @NonNull Response<ProductResponse> response) {
                 handleListResponse(response, offset, callback, "all products");
+                
+                // Update cache timestamp only for offset=0 (full list)
+                if (offset == 0 && response.isSuccessful()) {
+                    lastCacheTime = System.currentTimeMillis();
+                    Log.d(TAG, "✓ Cache updated at " + new java.util.Date());
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
-                handleFailure(t, callback);
+                Log.e(TAG, "API call failed, attempting to use cached data as fallback");
+                if (!cachedProducts.isEmpty()) {
+                    Log.d(TAG, "✓ Returning stale cached data as fallback (" + cachedProducts.size() + " items)");
+                    callback.onSuccess(new ArrayList<>(cachedProducts), cachedProducts.size());
+                } else {
+                    handleFailure(t, callback);
+                }
             }
         });
     }
 
     /**
      * Search products by keyword (name-based, server-side).
+     * Note: Search results are NOT cached to reflect real-time data.
      */
     public void searchProducts(String query, int limit, int offset,
                                @NonNull ProductCallback callback) {

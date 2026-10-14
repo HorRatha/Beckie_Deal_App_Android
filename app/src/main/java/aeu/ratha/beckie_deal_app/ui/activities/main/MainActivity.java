@@ -22,6 +22,7 @@ import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
+import aeu.ratha.beckie_deal_app.utils.preferences.ScrollStatePreferences;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -137,6 +138,9 @@ public class MainActivity extends BaseActivity {
         startAutoScroll();
         startPromotionAutoScroll();
         updateCartBadge();
+        
+        // Don't restore scroll here - products are still loading from API
+        // Scroll will be restored in setupProducts() after data is fetched
     }
 
     @Override
@@ -144,6 +148,46 @@ public class MainActivity extends BaseActivity {
         super.onPause();
         stopAutoScroll();
         stopPromotionAutoScroll();
+        
+        // Save scroll position for the entire page (NestedScrollView)
+        androidx.core.widget.NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
+        
+        if (scrollView != null) {
+            int currentScrollY = scrollView.getScrollY();
+            android.util.Log.d(TAG, "onPause - Saving homepage scrollY: " + currentScrollY);
+            ScrollStatePreferences.saveFilterState(this, "homepage", "scrollY", 
+                    String.valueOf(currentScrollY));
+        }
+    }
+    
+    /**
+     * Restore scroll position after products are rendered.
+     * Called at the end of setupProducts() after adapter is set.
+     */
+    private void restoreScrollPositionAfterRender() {
+        androidx.core.widget.NestedScrollView scrollView = findViewById(R.id.nestedScrollView);
+        if (scrollView == null) return;
+        
+        String savedScrollY = ScrollStatePreferences.getFilterState(this, "homepage", "scrollY", "0");
+        android.util.Log.d(TAG, "restoreScrollPosition - Reading saved scrollY: " + savedScrollY);
+        
+        try {
+            int scrollY = Integer.parseInt(savedScrollY);
+            if (scrollY > 0) {
+                // Use ViewTreeObserver to ensure layout is complete
+                scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        android.util.Log.d(TAG, "restoreScrollPosition - Setting scrollY to: " + scrollY);
+                        scrollView.scrollTo(0, scrollY);
+                        android.util.Log.d(TAG, "restoreScrollPosition - After scroll: " + scrollView.getScrollY());
+                    }
+                });
+            }
+        } catch (NumberFormatException e) {
+            android.util.Log.e(TAG, "restoreScrollPosition - Error: " + e.getMessage());
+        }
     }
 
     @Override
@@ -995,12 +1039,18 @@ public class MainActivity extends BaseActivity {
             productAdapter = new ProductGridAdapter(this, products, wishlistRepository, cartRepository);
             productAdapter.setListMode(isListView);
             productsGrid.setAdapter(productAdapter);
+            
+            // Restore scroll position AFTER adapter is set
+            productsGrid.post(() -> restoreScrollPositionAfterRender());
         } else {
             // onResume path: apply current view mode + refresh to pick up wishlist changes
             GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
             if (layoutManager != null) layoutManager.setSpanCount(isListView ? 1 : 2);
             productAdapter.setListMode(isListView);
             productAdapter.notifyDataSetChanged();
+            
+            // Restore scroll position AFTER data is refreshed
+            productsGrid.post(() -> restoreScrollPositionAfterRender());
         }
 
         setupViewModeToggle();
