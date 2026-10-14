@@ -23,8 +23,10 @@ public class CategoryRepository {
     private static final String TAG = "CategoryRepository";
     private static CategoryRepository instance;
     private final CategoryApiService apiService;
+    private final Context context;
     
     private CategoryRepository(Context context) {
+        this.context = context.getApplicationContext();
         this.apiService = RetrofitClient.getClient(context)
                 .create(CategoryApiService.class);
     }
@@ -42,16 +44,17 @@ public class CategoryRepository {
     /**
      * Fetch categories from the API.
      * 
-     * @param limit Maximum number of categories to fetch
-     * @param offset Number of categories to skip
+     * Note: The /api/v1/categories endpoint does not support pagination.
+     * It returns all categories at once with parent categories containing
+     * a "children" array for subcategories.
+     * 
      * @param forceRefresh Whether to force a fresh API call (not implemented yet)
      * @param callback Callback to handle success/error
      */
-    public void fetchCategories(int limit, int offset, boolean forceRefresh, 
-                                CategoryCallback callback) {
-        Log.d(TAG, "Fetching categories: limit=" + limit + ", offset=" + offset);
+    public void fetchCategories(boolean forceRefresh, CategoryCallback callback) {
+        Log.d(TAG, "Fetching categories from /api/v1/categories");
         
-        apiService.getCategories(limit, offset).enqueue(new Callback<CategoryResponse>() {
+        apiService.getCategories().enqueue(new Callback<CategoryResponse>() {
             @Override
             public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -59,14 +62,11 @@ public class CategoryRepository {
                     
                     if ("success".equals(categoryResponse.getStatus()) 
                             && categoryResponse.getData() != null) {
-                        List<Category> categories = categoryResponse.getData().getCategories();
-                        int total = categoryResponse.getData().getPagination() != null 
-                                ? categoryResponse.getData().getPagination().getTotal() 
-                                : (categories != null ? categories.size() : 0);
+                        java.util.List<Category> categories = categoryResponse.getData();
+                        int total = categories.size();
                         
-                        Log.d(TAG, "Successfully fetched " + 
-                            (categories != null ? categories.size() : 0) + 
-                            " categories out of " + total + " total");
+                        Log.d(TAG, "Successfully fetched " + total + " categories");
+                        logCategoryHierarchy(categories);
                         
                         if (callback != null) {
                             callback.onSuccess(categories, total);
@@ -101,10 +101,23 @@ public class CategoryRepository {
     }
     
     /**
+     * Backward compatible method that accepts limit/offset params
+     * but calls the endpoint without them (API doesn't support pagination).
+     * 
+     * @deprecated Use fetchCategories(boolean, CategoryCallback) instead
+     */
+    @Deprecated
+    public void fetchCategories(int limit, int offset, boolean forceRefresh, CategoryCallback callback) {
+        Log.w(TAG, "fetchCategories with limit/offset called but endpoint doesn't support pagination. " +
+                "Ignoring limit=" + limit + ", offset=" + offset);
+        fetchCategories(forceRefresh, callback);
+    }
+    
+    /**
      * Fetch only active categories.
      */
-    public void fetchActiveCategories(int limit, int offset, CategoryCallback callback) {
-        fetchCategories(limit, offset, false, new CategoryCallback() {
+    public void fetchActiveCategories(CategoryCallback callback) {
+        fetchCategories(false, new CategoryCallback() {
             @Override
             public void onSuccess(List<Category> categories, int total) {
                 // Filter for active categories only
@@ -114,14 +127,28 @@ public class CategoryRepository {
                 if (categories != null) {
                     for (Category category : categories) {
                         if (category.isActive()) {
+                            // Add parent category if active
                             activeCategories.add(category);
                             activeCount++;
+                            
+                            // Also filter children to be active only
+                            if (category.hasChildren()) {
+                                List<Category> activeChildren = new java.util.ArrayList<>();
+                                for (Category child : category.getChildren()) {
+                                    if (child.isActive()) {
+                                        activeChildren.add(child);
+                                    }
+                                }
+                                category.setChildren(activeChildren);
+                            }
                         }
                     }
                 }
                 
                 Log.d(TAG, "Filtered to " + activeCount + " active categories");
-                callback.onSuccess(activeCategories, activeCount);
+                
+                // Now fetch product counts for each category
+                fetchProductCountsForCategories(activeCategories, callback);
             }
             
             @Override
@@ -129,6 +156,85 @@ public class CategoryRepository {
                 callback.onError(errorMessage);
             }
         });
+    }
+    
+    /**
+     * Fetch product counts for all categories by querying products per category.
+     * This is a workaround because the API doesn't populate products_count.
+     */
+    private void fetchProductCountsForCategories(List<Category> categories, CategoryCallback callback) {
+        if (categories == null || categories.isEmpty()) {
+            Log.d(TAG, "No categories to fetch product counts for");
+            callback.onSuccess(categories, categories.size());
+            return;
+        }
+        
+        // Get ProductRepository instance to fetch products per category
+        ProductRepository productRepo = ProductRepository.getInstance(context);
+        
+        // Counter for tracking completed fetches
+        final int[] completedFetches = {0};
+        final int totalCategories = categories.size();
+        
+        Log.d(TAG, "Fetching product counts for " + totalCategories + " categories");
+        
+        for (Category category : categories) {
+            productRepo.fetchProductsByCategory(category.getId(), 500, 0, 
+                new ProductRepository.ProductCallback() {
+                    @Override
+                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> products, int count) {
+                        // Set the product count for this category
+                        category.setProductsCount(count);
+                        Log.d(TAG, "Category '" + category.getName() + "' has " + count + " products");
+                        
+                        // Increment counter
+                        completedFetches[0]++;
+                        
+                        // Check if all fetches are complete
+                        if (completedFetches[0] == totalCategories) {
+                            Log.d(TAG, "✓ All product counts fetched");
+                            callback.onSuccess(categories, categories.size());
+                        }
+                    }
+                    
+                    @Override
+                    public void onError(String errorMessage) {
+                        Log.e(TAG, "Error fetching products for category '" + category.getName() + "': " + errorMessage);
+                        // Set count to 0 on error
+                        category.setProductsCount(0);
+                        
+                        // Increment counter
+                        completedFetches[0]++;
+                        
+                        // Check if all fetches are complete
+                        if (completedFetches[0] == totalCategories) {
+                            Log.d(TAG, "✓ All product counts fetched (some with errors)");
+                            callback.onSuccess(categories, categories.size());
+                        }
+                    }
+                });
+        }
+    }
+    
+    /**
+     * Log category hierarchy for debugging.
+     */
+    private void logCategoryHierarchy(List<Category> categories) {
+        if (categories == null) {
+            Log.d(TAG, "Categories list is null");
+            return;
+        }
+        
+        for (Category category : categories) {
+            Log.d(TAG, "├─ [" + category.getId() + "] " + category.getName() + 
+                    " (parent_id: " + category.getParentId() + ")");
+            
+            if (category.hasChildren()) {
+                for (Category child : category.getChildren()) {
+                    Log.d(TAG, "│  └─ [" + child.getId() + "] " + child.getName());
+                }
+            }
+        }
     }
     
     /**

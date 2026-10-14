@@ -115,14 +115,15 @@ Response Data Structure (Product):
 **File:** `CategoryApiService.java`
 
 ```
-GET /api/v1/master/categories?limit={limit}&offset={offset}
-├─ Query Params: limit=50, offset=0
-├─ Response: { "status": "success", "data": [...], "pagination": {...} }
-├─ Features: Paginated category list with hierarchy
+GET /api/v1/categories
+├─ Query Params: NONE (no pagination support)
+├─ Response: { "status": "success", "data": [...] }
+├─ Features: Hierarchical category list with parent-child relationships
 ├─ Status: ✅ WORKING
 ├─ Used in: MainActivity, CategoriesActivity, ProductListActivity
 ├─ Caching: Aggressive (singleton pattern)
-└─ Cache Strategy: Clear on app version update
+├─ Cache Strategy: Clear on app version update
+└─ Data Structure: Parent categories contain "children" array
 
 Response Data Structure (Category):
 {
@@ -130,9 +131,27 @@ Response Data Structure (Category):
   "name": "Electronics",
   "slug": "electronics",
   "parent_id": null,
-  "image": "https://...",
-  "description": "Electronic devices and gadgets"
+  "description": "Electronic devices and gadgets",
+  "image": null,
+  "icon": null,
+  "is_active": true,
+  "is_featured": false,
+  "products_count": 0,
+  "children": [
+    {
+      "id": 17,
+      "parent_id": 5,
+      "name": "Gaming Monitors",
+      "slug": "gaming-monitors",
+      "is_active": true,
+      "is_featured": false
+    }
+  ]
 }
+
+DEPRECATED/BROKEN ENDPOINTS:
+├─ GET /api/v1/master/categories (use /api/v1/categories instead)
+└─ Pagination params (limit, offset) not supported by API
 ```
 
 ---
@@ -167,6 +186,13 @@ Response Data Structure (Brand):
   "description": "South Korean electronics company",
   "website": "https://www.samsung.com"
 }
+
+⚠️ KNOWN ISSUE:
+├─ GET /api/v1/brands/{id} (returns ALL brands instead of single brand)
+├─ Endpoint ignores {id} parameter
+├─ Status: 🔴 BROKEN (needs backend fix)
+├─ Workaround: Use caching to fetch all brands and filter locally
+└─ Issue Tracker: See "Brand Endpoint Issue" documentation
 ```
 
 ---

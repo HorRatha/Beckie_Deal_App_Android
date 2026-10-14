@@ -321,7 +321,11 @@ public class ProductRepository {
             
             // Smartphones category (ID=24)
             case 24:
-                return lowerName.contains("phone") || lowerName.contains("smartphone");
+                // Match "smartphone", "cell phone", "mobile" but NOT "headphone"
+                return (lowerName.contains("smartphone") || 
+                        lowerName.contains("mobile phone") ||
+                        lowerName.contains("cellular")) &&
+                       !lowerName.contains("headphone");
             
             // Tablets category (ID=25)
             case 25:

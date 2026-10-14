@@ -288,30 +288,14 @@
                         android:fontFamily="sans-serif-medium" />
                 </LinearLayout>
 
-                <!-- CHANGED: two staggered columns replace the old 2-column GridLayout -->
+                <!-- NEW: stacked wallet cards. Tap a card to expand its products underneath -->
                 <LinearLayout
-                    android:id="@+id/allCategoriesStagger"
+                    android:id="@+id/allCategoriesStack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginHorizontal="13dp"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/categoriesColumnLeft"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical" />
-
-                    <LinearLayout
-                        android:id="@+id/categoriesColumnRight"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical" />
-                </LinearLayout>
+                    android:layout_marginTop="14dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:orientation="vertical" />
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

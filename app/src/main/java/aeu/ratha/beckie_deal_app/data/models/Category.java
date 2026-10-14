@@ -41,6 +41,9 @@ public class Category {
     @SerializedName("products_count")
     private int productsCount;
     
+    @SerializedName("children")
+    private java.util.List<Category> children;
+    
     // Default constructor
     public Category() {
     }
@@ -102,6 +105,18 @@ public class Category {
         return productsCount;
     }
     
+    public java.util.List<Category> getChildren() {
+        return children;
+    }
+    
+    public boolean hasChildren() {
+        return children != null && !children.isEmpty();
+    }
+    
+    public int getChildrenCount() {
+        return children != null ? children.size() : 0;
+    }
+    
     // Setters
     public void setId(int id) {
         this.id = id;
@@ -147,6 +162,10 @@ public class Category {
         this.productsCount = productsCount;
     }
     
+    public void setChildren(java.util.List<Category> children) {
+        this.children = children;
+    }
+    
     @Override
     public String toString() {
         return "Category{" +
@@ -160,6 +179,7 @@ public class Category {
                 ", isFeatured=" + isFeatured +
                 ", sortOrder=" + sortOrder +
                 ", productsCount=" + productsCount +
+                ", childrenCount=" + getChildrenCount() +
                 '}';
     }
 }

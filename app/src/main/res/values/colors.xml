@@ -98,4 +98,7 @@
     
     <!-- Error/Alert Colors -->
     <color name="error_red">#EF4444</color>
+
+    <!-- Category Stack Card Colors -->
+    <color name="cat_yellow">#FDC011</color>
 </resources>

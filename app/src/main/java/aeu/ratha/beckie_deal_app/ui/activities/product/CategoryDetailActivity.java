@@ -426,6 +426,12 @@ public class CategoryDetailActivity extends BaseActivity {
         android.util.Log.d(TAG, "=== APPLYING FILTERS AND RENDERING ===");
         android.util.Log.d(TAG, "Starting with " + allProducts.size() + " total products");
         
+        // DEBUG: Log all products before filtering
+        for (int i = 0; i < allProducts.size(); i++) {
+            MainActivity.Product p = allProducts.get(i);
+            android.util.Log.d(TAG, "  AllProduct[" + i + "]: " + p.name + " - $" + p.price);
+        }
+        
         List<MainActivity.Product> filtered = new ArrayList<>(allProducts);
         
         // Apply brand filter (if not fetched by brand already)
@@ -488,6 +494,13 @@ public class CategoryDetailActivity extends BaseActivity {
         // Wishlist state managed by click handlers
         
         filteredProducts = filtered;
+        
+        // DEBUG: Log filtered products
+        android.util.Log.d(TAG, "=== AFTER FILTERING: " + filtered.size() + " products ===");
+        for (int i = 0; i < filtered.size(); i++) {
+            MainActivity.Product p = filtered.get(i);
+            android.util.Log.d(TAG, "  Filtered[" + i + "]: " + p.name + " - $" + p.price);
+        }
 
         // Build results label
         if (resultsLabel != null) {
@@ -499,8 +512,12 @@ public class CategoryDetailActivity extends BaseActivity {
             if (!currentYear.equals("All")) label.append(" · ").append(currentYear);
             if (currentMaxPrice < 3000) label.append(" · ≤$").append(currentMaxPrice);
             resultsLabel.setText(label.toString());
+            
+            android.util.Log.d(TAG, "Results Label: " + label.toString());
         }
 
+        // DEBUG: Before rendering
+        android.util.Log.d(TAG, "Calling renderProducts with " + filtered.size() + " products");
         renderProducts(filtered);
     }
 
@@ -524,26 +541,41 @@ public class CategoryDetailActivity extends BaseActivity {
     }
 
     private void renderProducts(List<MainActivity.Product> products) {
-        if (productsGrid == null) return;
+        android.util.Log.d(TAG, "renderProducts() called with " + products.size() + " products");
+        
+        if (productsGrid == null) {
+            android.util.Log.e(TAG, "ERROR: productsGrid is NULL!");
+            return;
+        }
 
         boolean isListView = ViewModePreferences.isListView(this);
 
         if (productAdapter == null) {
+            android.util.Log.d(TAG, "Creating new adapter for " + products.size() + " products");
             // First time setup: create adapter with GridLayoutManager
             GridLayoutManager layoutManager = new GridLayoutManager(this, isListView ? 1 : 2);
             productsGrid.setLayoutManager(layoutManager);
             productAdapter = new ProductGridAdapter(this, products, wishlistRepository, cartRepository);
             productAdapter.setListMode(isListView);
             productsGrid.setAdapter(productAdapter);
+            android.util.Log.d(TAG, "Adapter created and set to RecyclerView");
         } else {
+            android.util.Log.d(TAG, "Updating existing adapter with " + products.size() + " products");
             // Already has adapter: update span count and refresh data
             GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
-            if (layoutManager != null) layoutManager.setSpanCount(isListView ? 1 : 2);
+            if (layoutManager != null) {
+                layoutManager.setSpanCount(isListView ? 1 : 2);
+            } else {
+                android.util.Log.e(TAG, "ERROR: layoutManager is NULL!");
+            }
             productAdapter.setListMode(isListView);
             // Update the adapter's product list
             productAdapter.updateProducts(products);
             productAdapter.notifyDataSetChanged();
+            android.util.Log.d(TAG, "Adapter updated with notifyDataSetChanged()");
         }
+        
+        android.util.Log.d(TAG, "renderProducts() complete");
     }
 
     /** Swap the toggle button's icon to reflect the current mode (shows the icon for the OTHER mode to switch to). */

@@ -11,16 +11,15 @@ import retrofit2.http.Query;
 public interface CategoryApiService {
     
     /**
-     * Get all master categories with pagination.
-     * Full URL: {BASE_URL}/master/categories
+     * Get all categories with hierarchical structure.
+     * Full URL: {BASE_URL}/api/v1/categories
      * 
-     * @param limit Maximum number of categories to return
-     * @param offset Number of categories to skip
-     * @return Call object with CategoryResponse
+     * Note: This endpoint returns categories directly in data array
+     * with parent categories having a "children" array for subcategories.
+     * The endpoint does NOT support pagination.
+     * 
+     * @return Call object with CategoryResponse containing flat list of categories
      */
-    @GET("master/categories")
-    Call<CategoryResponse> getCategories(
-        @Query("limit") int limit,
-        @Query("offset") int offset
-    );
+    @GET("categories")
+    Call<CategoryResponse> getCategories();
 }

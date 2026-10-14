@@ -5,7 +5,14 @@ import java.util.List;
 
 /**
  * Response wrapper for category API calls.
- * Contains status, message, data list and pagination info.
+ * Handles both paginated and direct list responses from the API.
+ * 
+ * API Response Format:
+ * {
+ *   "status": "success",
+ *   "message": "",
+ *   "data": [ {Category}, {Category}, ... ]  ← Direct array of categories
+ * }
  */
 public class CategoryResponse {
     
@@ -16,7 +23,7 @@ public class CategoryResponse {
     private String message;
     
     @SerializedName("data")
-    private CategoryData data;
+    private List<Category> data;  // Changed from CategoryData to List<Category>
     
     public String getStatus() {
         return status;
@@ -34,16 +41,25 @@ public class CategoryResponse {
         this.message = message;
     }
     
-    public CategoryData getData() {
+    public List<Category> getData() {
         return data;
     }
     
-    public void setData(CategoryData data) {
+    public void setData(List<Category> data) {
         this.data = data;
     }
     
     /**
-     * Nested data class containing the list and pagination
+     * Safely get categories from the response.
+     * Handles both direct array and nested structure.
+     */
+    public List<Category> getCategories() {
+        return data;
+    }
+    
+    /**
+     * Nested data class - kept for potential backward compatibility
+     * if API structure changes in the future.
      */
     public static class CategoryData {
         @SerializedName("data")

@@ -14,6 +14,7 @@ import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.TermsActivity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -356,7 +357,30 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void setupDarkModeSwitch() {
-        // Dark mode UI not present in current layout
+        FrameLayout lightModeOption = findViewById(R.id.lightModeOption);
+        FrameLayout darkModeOption = findViewById(R.id.darkModeOption);
+        ImageView lightModeIcon = findViewById(R.id.lightModeIcon);
+        ImageView darkModeIcon = findViewById(R.id.darkModeIcon);
+        
+        if (lightModeOption == null || darkModeOption == null) {
+            return; // Elements not present in current layout
+        }
+        
+        // Set initial state based on current theme
+        boolean isDark = isCurrentlyDark();
+        updateDarkModeToggleUI(lightModeOption, darkModeOption, lightModeIcon, darkModeIcon, isDark);
+        
+        // Light mode click listener
+        lightModeOption.setOnClickListener(v -> {
+            applyDarkMode(false);
+            updateDarkModeToggleUI(lightModeOption, darkModeOption, lightModeIcon, darkModeIcon, false);
+        });
+        
+        // Dark mode click listener
+        darkModeOption.setOnClickListener(v -> {
+            applyDarkMode(true);
+            updateDarkModeToggleUI(lightModeOption, darkModeOption, lightModeIcon, darkModeIcon, true);
+        });
     }
 
     private boolean isCurrentlyDark() {
@@ -367,7 +391,19 @@ public class ProfileActivity extends BaseActivity {
 
     private void updateDarkModeToggleUI(FrameLayout lightOption, FrameLayout darkOption,
                                          ImageView lightIcon, ImageView darkIcon, boolean isDark) {
-        // Not used in current layout
+        if (isDark) {
+            // Dark mode is active
+            darkOption.setBackground(ContextCompat.getDrawable(this, R.drawable.dark_mode_pill_active));
+            lightOption.setBackground(ContextCompat.getDrawable(this, R.drawable.dark_mode_pill_inactive));
+            darkIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white_fixed)));
+            lightIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.text_secondary)));
+        } else {
+            // Light mode is active
+            lightOption.setBackground(ContextCompat.getDrawable(this, R.drawable.dark_mode_pill_active));
+            darkOption.setBackground(ContextCompat.getDrawable(this, R.drawable.dark_mode_pill_inactive));
+            lightIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white_fixed)));
+            darkIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.text_secondary)));
+        }
     }
 
     private void applyDarkMode(boolean isDark) {

@@ -5,6 +5,8 @@ import aeu.ratha.beckie_deal_app.data.models.Brand;
 import aeu.ratha.beckie_deal_app.data.models.Category;
 import aeu.ratha.beckie_deal_app.data.repository.BrandRepository;
 import aeu.ratha.beckie_deal_app.data.repository.CategoryRepository;
+import aeu.ratha.beckie_deal_app.data.repository.ProductRepository;
+import aeu.ratha.beckie_deal_app.data.models.Product;
 import aeu.ratha.beckie_deal_app.R;
 
 
@@ -143,6 +145,7 @@ public class CategoriesActivity extends BaseActivity {
     private LinearLayout categoriesColumnRight;
     private BrandRepository brandRepository;
     private CategoryRepository categoryRepository;
+    private ProductRepository productRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +209,7 @@ public class CategoriesActivity extends BaseActivity {
     private void initRepository() {
         brandRepository = BrandRepository.getInstance(this);
         categoryRepository = CategoryRepository.getInstance(this);
+        productRepository = ProductRepository.getInstance(this);
     }
     
     /**
@@ -569,7 +573,7 @@ public class CategoriesActivity extends BaseActivity {
     private void fetchAllCategories() {
         Log.d(TAG, "=== FETCHING ALL CATEGORIES FROM API ===");
         
-        categoryRepository.fetchActiveCategories(20, 0, new CategoryRepository.CategoryCallback() {
+        categoryRepository.fetchActiveCategories(new CategoryRepository.CategoryCallback() {
             @Override
             public void onSuccess(List<Category> categories, int total) {
                 Log.d(TAG, "✓ API SUCCESS: Received " + categories.size() + " categories");
@@ -588,7 +592,8 @@ public class CategoriesActivity extends BaseActivity {
                             Log.d(TAG, "  - " + category.getName() + 
                                 " (ID: " + category.getId() + 
                                 ", products: " + category.getProductsCount() + 
-                                ", featured: " + category.isFeatured() + ")");
+                                ", featured: " + category.isFeatured() + 
+                                ", children: " + category.getChildrenCount() + ")");
                             
                             categoriesList.add(new CategoryItem(
                                 category.getName(),
@@ -603,7 +608,14 @@ public class CategoriesActivity extends BaseActivity {
                     }
                 }
                 
-                Log.d(TAG, "=== RENDERING " + categoriesList.size() + " CATEGORIES ===");
+                // Sort categories by product count (descending) - most products first
+                categoriesList.sort((a, b) -> {
+                    int countA = extractCountFromString(a.count);
+                    int countB = extractCountFromString(b.count);
+                    return Integer.compare(countB, countA); // Descending order
+                });
+                
+                Log.d(TAG, "=== RENDERING " + categoriesList.size() + " CATEGORIES (sorted by count) ===");
                 setupAllCategories();
             }
             
@@ -615,10 +627,17 @@ public class CategoriesActivity extends BaseActivity {
         });
     }
     
-    /**
-     * Map category name from API to appropriate icon resource.
-     * This converts API category names to UI icons.
-     */
+    private int extractCountFromString(String countText) {
+        // Extract number from strings like "12 Items" or "0 Items"
+        if (countText == null || countText.isEmpty()) return 0;
+        String[] parts = countText.split(" ");
+        try {
+            return Integer.parseInt(parts[0]);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     private int getCategoryIcon(String categoryName) {
         String name = categoryName.toLowerCase();
         if (name.contains("laptop") || name.contains("computer")) return R.drawable.devices_24;
@@ -658,67 +677,121 @@ public class CategoriesActivity extends BaseActivity {
     }
     
     /**
-     * Render all categories in staggered two-column layout from API data.
+     * Render all categories using stacked wallet card layout from API data.
      * This method is called after fetchAllCategories() completes successfully.
      */
     private void setupAllCategories() {
-        categoriesColumnLeft = findViewById(R.id.categoriesColumnLeft);
-        categoriesColumnRight = findViewById(R.id.categoriesColumnRight);
+        LinearLayout container = findViewById(R.id.allCategoriesStack);
+        androidx.core.widget.NestedScrollView scrollView = findViewById(R.id.contentScroll);
         
-        if (categoriesColumnLeft == null || categoriesColumnRight == null) return;
-        
-        categoriesColumnLeft.removeAllViews();
-        categoriesColumnRight.removeAllViews();
+        if (container == null || scrollView == null) return;
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        float density = displayMetrics.density;
-        int margin = (int) (3 * density);
+        // Create the stack controller
+        CategoryStackController stack = new CategoryStackController(
+                this,
+                container,
+                scrollView,
+                // ProductLoader: load products for a category
+                (category, callback) -> {
+                    Log.d(TAG, "Loading products for category: " + category.name + " (ID: " + category.id + ")");
+                    
+                    // Convert category ID to integer
+                    try {
+                        int categoryId = Integer.parseInt(category.id);
+                        
+                        // Fetch products from API for this category
+                        productRepository.fetchProductsByCategory(
+                            categoryId,
+                            20,  // limit: fetch up to 20 products
+                            0,   // offset: start from 0
+                            new ProductRepository.ProductCallback() {
+                                @Override
+                                public void onSuccess(List<Product> products, int total) {
+                                    Log.d(TAG, "✓ Loaded " + products.size() + " products for: " + category.name);
+                                    
+                                    // Convert Product list to ProductUi list
+                                    List<CategoryStackController.ProductUi> uiProducts = new ArrayList<>();
+                                    for (Product p : products) {
+                                        // Format price (use sale price if available, otherwise regular price)
+                                        String price = p.hasDiscount() ? p.getFormattedPrice() : p.getPrice();
+                                        
+                                        uiProducts.add(new CategoryStackController.ProductUi(
+                                            p.getId(),                    // product ID
+                                            p.getName(),                  // product name
+                                            price,                        // price as subtitle
+                                            p.getThumbnail()              // thumbnail URL
+                                        ));
+                                        
+                                        Log.d(TAG, "  → " + p.getName() + " - " + price);
+                                    }
+                                    
+                                    // Call the callback with converted products
+                                    callback.onLoaded(uiProducts);
+                                }
+                                
+                                @Override
+                                public void onError(String errorMessage) {
+                                    Log.e(TAG, "✗ Error loading products for " + category.name + ": " + errorMessage);
+                                    callback.onError();
+                                }
+                            }
+                        );
+                    } catch (NumberFormatException e) {
+                        Log.e(TAG, "Invalid category ID: " + category.id);
+                        callback.onError();
+                    }
+                },
+                // Listener: handle category and product clicks
+                new CategoryStackController.Listener() {
+                    @Override
+                    public void onOpenCategory(CategoryStackController.CategoryUi category) {
+                        // User tapped "View all N items" button - open category detail
+                        Intent intent = new Intent(CategoriesActivity.this, CategoryDetailActivity.class);
+                        intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY, category.name);
+                        // Find the corresponding CategoryItem to get the full data
+                        for (CategoryItem item : categoriesList) {
+                            if (item.name.equals(category.name)) {
+                                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, item.imageUrl);
+                                intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT, item.count);
+                                intent.putExtra("CATEGORY_ID", item.categoryId);
+                                intent.putExtra("CATEGORY_SLUG", item.categorySlug);
+                                break;
+                            }
+                        }
+                        startActivity(intent);
+                    }
 
-        // Render each category with staggered heights
-        for (int i = 0; i < categoriesList.size(); i++) {
-            CategoryItem item = categoriesList.get(i);
-            LinearLayout column = (i % 2 == 0) ? categoriesColumnLeft : categoriesColumnRight;
+                    @Override
+                    public void onProductClick(CategoryStackController.CategoryUi category, 
+                                             CategoryStackController.ProductUi product) {
+                        // User tapped a product - open product detail
+                        Intent intent = new Intent(CategoriesActivity.this, ProductDetailActivity.class);
+                        intent.putExtra("PRODUCT_ID", product.id);
+                        startActivity(intent);
+                    }
+                }
+        );
 
-            // Alternate between tall (112dp) and short (78dp) heights
-            boolean isTall = (((i / 2) + (i % 2)) % 2) == 0;
-            int heightPx = (int) ((isTall ? 112 : 78) * density);
+        // Set image loader using Glide
+        stack.setImageLoader((iv, url) -> Glide.with(CategoriesActivity.this)
+                .load(url)
+                .centerCrop()
+                .placeholder(R.drawable.placeholder_image)
+                .into(iv));
 
-            View view = LayoutInflater.from(this)
-                    .inflate(R.layout.item_category_staggered, column, false);
-            
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, heightPx);
-            params.setMargins(margin, margin, margin, margin);
-            view.setLayoutParams(params);
-
-            TextView nameText = view.findViewById(R.id.categoryName);
-            TextView countText = view.findViewById(R.id.categoryCount);
-            ImageView bgImage = view.findViewById(R.id.categoryImage);
-            ImageView iconImage = view.findViewById(R.id.categoryIcon);
-
-            nameText.setText(item.name);
-            countText.setText(item.count + " items");
-            iconImage.setImageResource(item.iconRes);
-
-            Glide.with(this)
-                    .load(item.imageUrl)
-                    .centerCrop()
-                    .placeholder(R.drawable.placeholder_image)
-                    .into(bgImage);
-
-            view.setOnClickListener(v -> {
-                Intent intent = new Intent(this, CategoryDetailActivity.class);
-                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY, item.name);
-                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, item.imageUrl);
-                intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT, item.count);
-                intent.putExtra("CATEGORY_ID", item.categoryId);
-                intent.putExtra("CATEGORY_SLUG", item.categorySlug);
-                startActivity(intent);
-            });
-
-            column.addView(view);
+        // Convert CategoryItem list to CategoryUi for the stack controller
+        List<CategoryStackController.CategoryUi> stackCategories = new ArrayList<>();
+        for (CategoryItem item : categoriesList) {
+            stackCategories.add(new CategoryStackController.CategoryUi(
+                    String.valueOf(item.categoryId),
+                    item.name,
+                    extractCountFromString(item.count),
+                    item.iconRes
+            ));
         }
+
+        // Bind the categories to the stack
+        stack.bind(stackCategories);
     }
 
     private void setupBottomNavigation() {

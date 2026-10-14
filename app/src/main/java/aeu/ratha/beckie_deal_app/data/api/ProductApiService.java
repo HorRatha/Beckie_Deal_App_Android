@@ -12,21 +12,33 @@ import retrofit2.http.Query;
  *
  * Base URL: {API_BASE_URL}  (e.g. https://.../api/v1/)
  *
- * Notes on backend constraints (confirmed by live testing):
- *  - GET /products returns a flat list; category_id / brand_id fields are NOT included per item.
- *  - The ?category_id= and ?brand_id= query filters expect UUID format, but the
- *    master/categories and master/brands endpoints return integer IDs → those filters
- *    are unusable client-side.  Category/brand filtering is done client-side after fetching
- *    all products and loading their details individually.
- *  - GET /products/{id} returns the full product with category, brand, variants, images.
- *  - ?search= performs a name-based text search.
- *  - ?is_featured= is accepted but currently ignored by the backend (returns all products).
+ * IMPORTANT API LIMITATIONS (confirmed by live testing):
+ *  - GET /products endpoint currently returns ~12 items regardless of limit parameter
+ *  - Response does NOT include pagination metadata (total, page info)
+ *  - Products list does NOT include brand_id or category_id fields
+ *  - Cannot filter by category_id or brand_id on the server side
+ *  - Must fetch individual product details to get complete brand/category info
+ *
+ * BACKEND IMPROVEMENTS NEEDED:
+ *  1. Add brand_id and category_id to products list response
+ *  2. Include pagination object: {total, current_page, per_page, last_page}
+ *  3. Support higher limits (currently capped at ~12 items)
+ *  4. Populate products_count in categories endpoint
+ *
+ * WORKAROUNDS (client-side):
+ *  - Fetch individual product details to get brand/category info
+ *  - Locally count products per category/brand
+ *  - Cache product details for filtering
  */
 public interface ProductApiService {
 
     /**
      * Get all products with pagination.
      * GET /products?limit={limit}&offset={offset}
+     * 
+     * NOTE: API currently ignores limit parameter and returns ~12 items.
+     * Use higher numbers (200, 300) to attempt fetching more, though
+     * actual response may still be limited by backend.
      */
     @GET("products")
     Call<ProductResponse> getProducts(

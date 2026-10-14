@@ -186,20 +186,29 @@ public class MainActivity extends BaseActivity {
      * Endpoint: GET /api/v1/products?limit=100&offset=0
      */
     private void fetchProducts() {
-        Log.d(TAG, "=== FETCHING PRODUCTS FROM API ===");
+        Log.d(TAG, "=== FETCHING ALL PRODUCTS FROM API ===");
         
-        // Fetch all active products (limit 100 for now)
-        productRepository.fetchProducts(100, 0, false, 
+        // Fetch more products for homepage (increased from 100 to 300)
+        // API returns per_page=12 by default, so we need to request more
+        // NOTE: API doesn't return pagination info, so we fetch in batches
+        productRepository.fetchProducts(300, 0, false, 
             new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
             @Override
             public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
-                Log.d(TAG, "✓ API SUCCESS: Received " + apiProducts.size() + " products (total: " + total + ")");
+                Log.d(TAG, "✓ API SUCCESS: Received " + apiProducts.size() + " products (requested: 300, actual total: " + total + ")");
                 
                 // Convert API products to UI products
                 products.clear();
                 products.addAll(aeu.ratha.beckie_deal_app.utils.helpers.ProductMapper.toUiProducts(apiProducts));
                 
                 Log.d(TAG, "=== CONVERTED TO " + products.size() + " UI PRODUCTS ===");
+                
+                // If we got fewer products than requested, might need to fetch more
+                if (apiProducts.size() < total) {
+                    Log.d(TAG, "ℹ️ Note: API returned only " + apiProducts.size() + 
+                            " products. Requested 300 but got fewer. " +
+                            "Backend may need pagination improvements.");
+                }
                 
                 // Sync wishlist state with actual user's wishlist (if logged in)
                 syncWishlistState();
@@ -305,7 +314,7 @@ public class MainActivity extends BaseActivity {
     private void fetchCategories() {
         Log.d(TAG, "=== FETCHING CATEGORIES FROM API ===");
         
-        categoryRepository.fetchActiveCategories(20, 0, new CategoryRepository.CategoryCallback() {
+        categoryRepository.fetchActiveCategories(new CategoryRepository.CategoryCallback() {
             @Override
             public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Category> categories, int total) {
                 Log.d(TAG, "✓ API SUCCESS: Received " + categories.size() + " categories");
@@ -323,7 +332,8 @@ public class MainActivity extends BaseActivity {
                         boolean isHighlighted = category.isFeatured();
                         
                         Log.d(TAG, "  - " + category.getName() + " (ID: " + category.getId() + 
-                            ", slug: " + category.getSlug() + ", featured: " + isHighlighted + ")");
+                            ", slug: " + category.getSlug() + ", featured: " + isHighlighted + 
+                            ", children: " + category.getChildrenCount() + ")");
                         
                         categoryDisplayList.add(new CategoryDisplay(
                             category, 
