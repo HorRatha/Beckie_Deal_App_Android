@@ -28,6 +28,7 @@ import aeu.ratha.beckie_deal_app.ui.activities.profile.WishlistActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
 import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
+import aeu.ratha.beckie_deal_app.data.repository.ProfileRepository;
 import aeu.ratha.beckie_deal_app.data.models.WishlistResponse;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.ProfileActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
@@ -563,6 +564,10 @@ public class AppDrawerHelper {
                         .setPositiveButton("Logout", (dialog, which) -> {
                             // Clear token and user data
                             tokenManager.logout();
+                            
+                            // Clear cached user profile data
+                            ProfileRepository profileRepository = ProfileRepository.getInstance(activity);
+                            profileRepository.clearCache();
                             
                             // Redirect to MainActivity
                             Intent intent = new Intent(activity, MainActivity.class);

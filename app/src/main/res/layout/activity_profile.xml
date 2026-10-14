@@ -131,7 +131,7 @@
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:elevation="20dp"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="60dp"
                     app:cardCornerRadius="60dp"
                     app:cardElevation="20dp"
                     app:strokeWidth="4dp"
@@ -183,13 +183,13 @@
                     android:text="Hor Ratha"
                     android:textAppearance="@style/TextAppearance.App.ProductName"
                     android:textColor="@color/text_primary"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="12dp"
                     app:layout_constraintTop_toTopOf="@id/avatarOverlay"
                     app:layout_constraintStart_toEndOf="@id/avatarOverlay"
                     app:layout_constraintBottom_toBottomOf="@id/avatarOverlay"
                     app:layout_constraintVertical_bias="0.3" />
 
-                <!-- User Email -->
+                <!-- User Email / Subtitle -->
                 <TextView
                     android:id="@+id/userEmail"
                     android:layout_width="wrap_content"
@@ -197,7 +197,7 @@
                     android:text="horratha45@gmail.com"
                     android:textAppearance="@style/TextAppearance.App.Body"
                     android:textColor="@color/text_secondary"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="12dp"
                     android:layout_marginTop="2dp"
                     app:layout_constraintTop_toBottomOf="@id/userName"
                     app:layout_constraintStart_toEndOf="@id/avatarOverlay" />

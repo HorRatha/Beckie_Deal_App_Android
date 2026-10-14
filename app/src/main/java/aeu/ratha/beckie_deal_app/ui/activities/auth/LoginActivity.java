@@ -427,8 +427,17 @@ public class LoginActivity extends BaseActivity {
     /**
      * Show welcome message and navigate to main activity.
      */
-    private void showWelcomeMessageAndNavigate(String userName) {
-        Toast.makeText(this, "Welcome back, " + userName + "!", Toast.LENGTH_SHORT).show();
+    private void showWelcomeMessageAndNavigate(String fullName) {
+        // Extract last name from full name (format: "FirstName LastName")
+        String displayName = "User";
+        if (fullName != null && !fullName.isEmpty()) {
+            String[] names = fullName.trim().split("\\s+");
+            if (names.length > 0) {
+                // Get the last part of the name (last name)
+                displayName = names[names.length - 1];
+            }
+        }
+        Toast.makeText(this, "Welcome back, " + displayName + "!", Toast.LENGTH_SHORT).show();
         navigateToMainActivity();
     }
     

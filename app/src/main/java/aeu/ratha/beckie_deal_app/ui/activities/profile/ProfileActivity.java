@@ -179,14 +179,21 @@ public class ProfileActivity extends BaseActivity {
      * Falls back to TokenManager data if API call fails.
      */
     private void fetchAndSetupUserProfile() {
-        if (!tokenManager.isLoggedIn()) {
-            return; // User not logged in, skip profile fetch
-        }
-
-        // Show loading state
         TextView userNameText = findViewById(R.id.userName);
         TextView userEmailText = findViewById(R.id.userEmail);
         
+        if (!tokenManager.isLoggedIn()) {
+            // User not logged in - show Guest User message
+            if (userNameText != null) {
+                userNameText.setText("Guest User");
+            }
+            if (userEmailText != null) {
+                userEmailText.setText("Sign in to your account");
+            }
+            return;
+        }
+
+        // Show loading state
         if (userNameText != null) {
             userNameText.setText("Loading...");
         }
@@ -335,6 +342,9 @@ public class ProfileActivity extends BaseActivity {
     private void handleLogout() {
         // Clear all authentication data
         tokenManager.logout();
+        
+        // Clear cached user profile data (this is critical!)
+        profileRepository.clearCache();
         
         Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
         
