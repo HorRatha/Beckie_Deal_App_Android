@@ -548,6 +548,12 @@
                     android:layout_height="1dp"
                     android:background="@color/border_color" />
 
+                <!-- ══ CHAT SECTION ══ -->
+                <include
+                    layout="@layout/section_product_chat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
             </LinearLayout>
 
 

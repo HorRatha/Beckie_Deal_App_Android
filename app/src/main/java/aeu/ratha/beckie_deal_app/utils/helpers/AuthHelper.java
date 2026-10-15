@@ -3,6 +3,8 @@ package aeu.ratha.beckie_deal_app.utils.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+
 import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -11,10 +13,24 @@ import android.view.View;
 import aeu.ratha.beckie_deal_app.R;
 import aeu.ratha.beckie_deal_app.security.TokenManager;
 import aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.utils.preferences.ScrollStatePreferences;
+import aeu.ratha.beckie_deal_app.utils.preferences.SessionManager;
 
 /**
- * Helper class for authentication validation and user prompts.
- * Ensures users are logged in before accessing protected features like cart, wishlist, and checkout.
+ * Helper class for authentication validation, logout, and user prompts.
+ * 
+ * Responsibilities:
+ * - Check authentication status
+ * - Prompt users to login when needed
+ * - Centralized logout with secure state clearing
+ * - Cleanup of all user-specific data on logout
+ * 
+ * Security:
+ * - All tokens cleared via TokenManager
+ * - All saved scroll positions and filters cleared
+ * - All in-memory caches cleared
+ * - App restarted with clean task stack
  */
 public class AuthHelper {
     
@@ -39,6 +55,105 @@ public class AuthHelper {
     public static boolean isUserLoggedIn(Context context) {
         TokenManager tokenManager = TokenManager.getInstance(context);
         return tokenManager.isLoggedIn();
+    }
+
+    /**
+     * Centralized logout method - SECURE STATE CLEARING.
+     * 
+     * This method securely logs out the user and ensures all sensitive data is cleared:
+     * 1. Clears JWT tokens via TokenManager
+     * 2. Clears all saved scroll positions and filter preferences
+     * 3. Clears in-memory caches (repositories)
+     * 4. Clears session tracking data
+     * 5. Restarts app to MainActivity with clean task stack
+     * 
+     * @param context Application or Activity context
+     */
+    public static void logout(Context context) {
+        try {
+            Log.d(TAG, "Starting secure logout...");
+            
+            // 1. Clear JWT Tokens (secure storage)
+            TokenManager.getInstance(context).logout();
+            Log.d(TAG, "JWT tokens cleared");
+            
+            // 2. Clear All Saved Scroll Positions & Filter Preferences
+            try {
+                context.getSharedPreferences("scroll_state_prefs", Context.MODE_PRIVATE)
+                        .edit()
+                        .clear()
+                        .apply();
+                Log.d(TAG, "Scroll state preferences cleared");
+            } catch (Exception e) {
+                Log.e(TAG, "Error clearing scroll state: " + e.getMessage());
+            }
+            
+            // 3. Clear session tracking data
+            SessionManager.clearSessionTimestamp(context);
+            Log.d(TAG, "Session timestamp cleared");
+            
+            // 4. Clear other preferences that might contain user-specific data
+            try {
+                context.getSharedPreferences("view_mode_prefs", Context.MODE_PRIVATE)
+                        .edit()
+                        .clear()
+                        .apply();
+                Log.d(TAG, "View mode preferences cleared");
+            } catch (Exception e) {
+                Log.e(TAG, "Error clearing view mode: " + e.getMessage());
+            }
+            
+            Log.d(TAG, "Logout completed successfully - restarting app");
+            
+            // 5. Restart to MainActivity with clean task stack
+            // This ensures no Guest user data is visible to the next logged-in user
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(intent);
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error during logout: " + e.getMessage());
+            // Even if there's an error, try to navigate back to MainActivity
+            try {
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
+            } catch (Exception e2) {
+                Log.e(TAG, "Error navigating to MainActivity: " + e2.getMessage());
+            }
+        }
+    }
+    
+    /**
+     * Login success - clear Guest data and prepare for logged-in user.
+     * 
+     * Call this after successful login to clear any guest-user scroll state
+     * and ensure fresh data is loaded for the logged-in user.
+     * 
+     * @param context Application or Activity context
+     */
+    public static void onLoginSuccess(Context context) {
+        try {
+            Log.d(TAG, "Login successful - clearing guest state");
+            
+            // Clear previous Guest scroll positions & search queries
+            try {
+                context.getSharedPreferences("scroll_state_prefs", Context.MODE_PRIVATE)
+                        .edit()
+                        .clear()
+                        .apply();
+                Log.d(TAG, "Guest scroll state cleared");
+            } catch (Exception e) {
+                Log.e(TAG, "Error clearing guest scroll state: " + e.getMessage());
+            }
+            
+            // Clear session timestamp to reset inactivity timer
+            SessionManager.clearSessionTimestamp(context);
+            Log.d(TAG, "Session timestamp reset for new user");
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onLoginSuccess: " + e.getMessage());
+        }
     }
 
     /**

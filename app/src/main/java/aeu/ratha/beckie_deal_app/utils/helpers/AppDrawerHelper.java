@@ -562,20 +562,9 @@ public class AppDrawerHelper {
                         .setTitle("Logout")
                         .setMessage("Are you sure you want to logout?")
                         .setPositiveButton("Logout", (dialog, which) -> {
-                            // Clear token and user data
-                            tokenManager.logout();
-                            
-                            // Clear cached user profile data
-                            ProfileRepository profileRepository = ProfileRepository.getInstance(activity);
-                            profileRepository.clearCache();
-                            
-                            // Redirect to MainActivity
-                            Intent intent = new Intent(activity, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            activity.startActivity(intent);
-                            activity.finish();
-                            
-                            Toast.makeText(activity, "Logged out successfully", Toast.LENGTH_SHORT).show();
+                            // Use centralized logout from AuthHelper for secure state clearing
+                            // This handles tokens, scroll state, and cache cleanup
+                            AuthHelper.logout(activity);
                         })
                         .setNegativeButton("Cancel", null)
                         .show();

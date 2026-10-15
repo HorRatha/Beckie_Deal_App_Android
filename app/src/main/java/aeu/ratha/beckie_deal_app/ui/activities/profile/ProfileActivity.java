@@ -341,19 +341,13 @@ public class ProfileActivity extends BaseActivity {
     }
     
     private void handleLogout() {
-        // Clear all authentication data
-        tokenManager.logout();
-        
-        // Clear cached user profile data (this is critical!)
-        profileRepository.clearCache();
-        
-        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
-        
-        // Navigate to home screen (MainActivity) instead of login
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        // Use centralized logout from AuthHelper for secure state clearing
+        // This method handles:
+        // 1. Clearing JWT tokens
+        // 2. Clearing all saved scroll positions
+        // 3. Clearing session tracking data
+        // 4. Restarting app with clean task stack
+        aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.logout(this);
     }
 
     private void setupDarkModeSwitch() {

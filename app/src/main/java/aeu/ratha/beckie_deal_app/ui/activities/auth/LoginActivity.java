@@ -368,6 +368,9 @@ public class LoginActivity extends BaseActivity {
                 data.getUser()
             );
             
+            // Clear guest-user state and prepare for logged-in user
+            aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.onLoginSuccess(this);
+            
             // Log success
             if (data.getUser() != null) {
                 Log.d(TAG, "Login successful for user: " + data.getUser().getEmail());

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="16dp">
+
+    <!-- Header with icon and text -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <!-- Chat icon with badge -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="#FFF3CD">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_chat_bubble"
+                    app:tint="#FF9800" />
+
+                <!-- Green dot indicator -->
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/dot_active"
+                    android:backgroundTint="#22C55E" />
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Questions about this item?"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="● Online · replies in ~5 min"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Chat buttons row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:spacing="8dp">
+
+        <!-- Facebook Button with SVG icon -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/facebookButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/button_facebook"
+            android:text="Facebook"
+            android:textAllCaps="false"
+            android:textColor="@color/white_fixed"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null"
+            app:icon="@drawable/facebook"
+            app:iconTint="@color/white_fixed"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"
+            app:iconSize="16dp" />
+
+        <!-- Facebook Messenger Button with SVG icon -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/messengerButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="4dp"
+            android:background="@drawable/button_facebook_messenger"
+            android:text="Messenger"
+            android:textAllCaps="false"
+            android:textColor="@color/white_fixed"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null"
+            app:icon="@drawable/messenger"
+            app:iconTint="@color/white_fixed"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"
+            app:iconSize="16dp" />
+
+        <!-- Telegram Button with SVG icon -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/telegramButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/button_telegram"
+            android:text="Telegram"
+            android:textAllCaps="false"
+            android:textColor="@color/white_fixed"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null"
+            app:icon="@drawable/telegram"
+            app:iconTint="@color/white_fixed"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"
+            app:iconSize="16dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -18,6 +18,7 @@ import aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
+import aeu.ratha.beckie_deal_app.utils.ChatIntegration;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -765,6 +766,44 @@ public class ProductDetailActivity extends BaseActivity {
         });
 
         UiAnimations.pressBounce(addToCart, buyNow);
+
+        // ── Chat Buttons ──────────────────────────────────────────────────────
+        setupChatButtons();
+    }
+
+    /**
+     * Setup Facebook, Facebook Messenger, and Telegram chat button listeners
+     */
+    private void setupChatButtons() {
+        com.google.android.material.button.MaterialButton facebookButton = 
+            findViewById(R.id.facebookButton);
+        com.google.android.material.button.MaterialButton messengerButton = 
+            findViewById(R.id.messengerButton);
+        com.google.android.material.button.MaterialButton telegramButton = 
+            findViewById(R.id.telegramButton);
+
+        if (facebookButton != null) {
+            facebookButton.setOnClickListener(v -> {
+                ChatIntegration.openFacebook(ProductDetailActivity.this);
+            });
+        }
+
+        if (messengerButton != null) {
+            messengerButton.setOnClickListener(v -> {
+                String productName = currentProduct != null ? currentProduct.name : "this product";
+                ChatIntegration.openFacebookMessenger(ProductDetailActivity.this, productName);
+            });
+        }
+
+        if (telegramButton != null) {
+            telegramButton.setOnClickListener(v -> {
+                String productName = currentProduct != null ? currentProduct.name : "this product";
+                ChatIntegration.openTelegram(ProductDetailActivity.this, productName);
+            });
+        }
+
+        // Add press animation
+        UiAnimations.pressBounce(facebookButton, messengerButton, telegramButton);
     }
 
     /** Returns the product UUID for cart/checkout operations. */
