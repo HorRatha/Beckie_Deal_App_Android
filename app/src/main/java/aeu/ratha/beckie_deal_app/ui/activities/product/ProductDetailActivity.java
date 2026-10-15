@@ -106,6 +106,12 @@ public class ProductDetailActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        
+        // Setup scroll-to-top button
+        androidx.core.widget.NestedScrollView detailScrollView = findViewById(R.id.detailScrollView);
+        android.widget.FrameLayout scrollToTopButton = findViewById(R.id.scrollToTopButton);
+        aeu.ratha.beckie_deal_app.utils.ScrollToTopHelper.attachToNestedScrollView(detailScrollView, scrollToTopButton);
+        
         BottomNavHelper.updateCartBadge(this);
     }
 

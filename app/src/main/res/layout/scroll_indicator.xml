@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Scroll Indicator - Shows users there's more content to scroll
+    Displays at the bottom/edge of scrollable content with animated arrow
+    Fades out after user starts scrolling
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|bottom"
+    android:layout_marginBottom="16dp">
+
+    <!-- Background circle or pill -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/scrollIndicatorBg"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/white_fixed">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <!-- Animated down arrow icon -->
+            <ImageView
+                android:id="@+id/scrollArrowDown"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_down"
+                android:contentDescription="Scroll down"
+                app:tint="@color/brand_orange" />
+
+        </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>

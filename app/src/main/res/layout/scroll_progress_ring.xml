@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Scroll Progress Ring - Modern circular progress indicator
+    White circle with yellow progress ring that fills as user scrolls
+    Shows scroll progress as a percentage
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="56dp"
+    android:layout_height="56dp"
+    android:layout_gravity="center_horizontal|bottom">
+
+    <!-- Outer white background circle -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/white_fixed">
+
+        <!-- Inner circle container for progress ring -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <!-- Background circle (light gray ring) -->
+            <ProgressBar
+                android:id="@+id/scrollProgressRingBackground"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:indeterminate="false"
+                android:progress="100"
+                android:max="100"
+                android:progressDrawable="@drawable/progress_ring_background"
+                android:visibility="visible" />
+
+            <!-- Progress ring (yellow/orange) -->
+            <ProgressBar
+                android:id="@+id/scrollProgressRing"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:indeterminate="false"
+                android:progress="0"
+                android:max="100"
+                android:progressDrawable="@drawable/progress_ring_yellow"
+                android:visibility="visible" />
+
+            <!-- Center percentage text -->
+            <TextView
+                android:id="@+id/scrollProgressText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0%"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/brand_orange"
+                android:gravity="center" />
+
+        </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>

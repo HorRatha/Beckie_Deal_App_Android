@@ -135,6 +135,12 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         setupProducts();
+        
+        // Setup scroll-to-top button
+        androidx.core.widget.NestedScrollView nestedScrollView = findViewById(R.id.nestedScrollView);
+        android.widget.FrameLayout scrollToTopButton = findViewById(R.id.scrollToTopButton);
+        aeu.ratha.beckie_deal_app.utils.ScrollToTopHelper.attachToNestedScrollView(nestedScrollView, scrollToTopButton);
+        
         startAutoScroll();
         startPromotionAutoScroll();
         updateCartBadge();

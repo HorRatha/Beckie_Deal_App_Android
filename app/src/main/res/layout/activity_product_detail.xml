@@ -85,6 +85,7 @@
 
     <!-- ── SCROLLABLE CONTENT ──────────────────────────────────────────────── -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/detailScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -96,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="160dp">
+            android:paddingBottom="200dp">
 
             <!-- ── GALLERY: thumbnail rail on the LEFT, main image on the right ── -->
             <FrameLayout
@@ -548,6 +549,9 @@
                     android:background="@color/border_color" />
 
             </LinearLayout>
+
+
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -664,5 +668,66 @@
 
     <!-- ── FLOATING BOTTOM NAV (unchanged) ─────────────────────────────────── -->
     <include layout="@layout/layout_bottom_nav" />
+
+    <!-- Scroll to Top Button with Progress Ring (Combined design) -->
+    <FrameLayout
+        android:id="@+id/scrollToTopButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        android:alpha="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
+
+        <!-- Progress ring background (light gray) -->
+        <ProgressBar
+            android:id="@+id/buttonProgressRingBackground"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:indeterminate="false"
+            android:progress="100"
+            android:max="100"
+            android:progressDrawable="@drawable/button_progress_ring_background"
+            android:visibility="visible" />
+
+        <!-- Progress ring (orange) -->
+        <ProgressBar
+            android:id="@+id/buttonProgressRing"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:indeterminate="false"
+            android:progress="0"
+            android:max="100"
+            android:progressDrawable="@drawable/button_progress_ring_yellow"
+            android:visibility="visible" />
+
+        <!-- Orange rounded square button -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/brand_orange">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_up"
+                    android:contentDescription="Scroll back to top"
+                    app:tint="@color/white_fixed" />
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -102,6 +102,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
@@ -349,11 +350,68 @@
                 android:nestedScrollingEnabled="false"
                 android:overScrollMode="never" />
 
+
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <!--  Floating bottom nav  iOS glass style (shared include)  -->
     <include layout="@layout/layout_bottom_nav" />
+
+    <!-- Scroll to Top Button: white circle + scroll progress ring -->
+    <FrameLayout
+        android:id="@+id/scrollToTopButton"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="12dp"
+        android:alpha="0"
+        android:visibility="gone"
+        android:contentDescription="Scroll back to top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            app:cardBackgroundColor="@color/white_fixed"
+            app:cardCornerRadius="22dp"
+            app:cardElevation="3dp"
+            app:strokeWidth="0dp">
+
+            <!-- Light ring (track) -->
+            <ProgressBar
+                android:id="@android:id/background"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="100"
+                android:progressDrawable="@drawable/button_progress_ring_background" />
+
+            <!-- Progress ring (fills as you scroll) -->
+            <ProgressBar
+                android:id="@android:id/progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/button_progress_ring_yellow" />
+
+            <!-- Arrow -->
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_arrow_up"
+                app:tint="@color/dark_brown" />
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

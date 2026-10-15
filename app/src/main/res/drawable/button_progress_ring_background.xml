@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Light track ring for the scroll-to-top button -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape
+            android:innerRadius="18dp"
+            android:shape="ring"
+            android:thickness="2.5dp"
+            android:useLevel="false">
+            <solid android:color="#FFF1CC" />
+        </shape>
+    </item>
+</layer-list>

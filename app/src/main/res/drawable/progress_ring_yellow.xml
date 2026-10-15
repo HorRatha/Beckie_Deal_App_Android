@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Yellow progress ring for scroll indicator -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Progress ring (yellow/orange) -->
+    <item android:id="@android:id/progress">
+        <shape android:shape="ring"
+            android:innerRadiusRatio="2.5"
+            android:thicknessRatio="10"
+            android:useLevel="true">
+            <solid android:color="@color/brand_orange" />
+        </shape>
+    </item>
+</layer-list>
