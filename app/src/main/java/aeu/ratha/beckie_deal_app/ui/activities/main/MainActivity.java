@@ -232,10 +232,10 @@ public class MainActivity extends BaseActivity {
     private void fetchProducts() {
         Log.d(TAG, "=== FETCHING ALL PRODUCTS FROM API ===");
         
-        // Fetch more products for homepage (increased from 100 to 300)
-        // API returns per_page=12 by default, so we need to request more
-        // NOTE: API doesn't return pagination info, so we fetch in batches
-        productRepository.fetchProducts(300, 0, false, 
+        // Fetch more products for homepage
+        // NOTE: API has per_page limit (~100 max), so use reasonable value
+        // The pagination system will fetch all pages automatically
+        productRepository.fetchProducts(20, 0, false, 
             new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
             @Override
             public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {

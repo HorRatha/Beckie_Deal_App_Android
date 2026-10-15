@@ -12,6 +12,7 @@ import aeu.ratha.beckie_deal_app.data.models.ProductDetail;
 import aeu.ratha.beckie_deal_app.data.models.ProductResponse;
 import aeu.ratha.beckie_deal_app.data.models.SingleProductResponse;
 import aeu.ratha.beckie_deal_app.network.RetrofitClient;
+import aeu.ratha.beckie_deal_app.utils.PaginationHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,12 +93,21 @@ public class ProductRepository {
     // ─────────────────────────────────────────────────────────────────────────
 
     /**
-     * Fetch all products with pagination.
+     * Fetch all products with page-based pagination.
      * Uses smart caching: returns cached data if fresh (less than 5 minutes old).
      * On subsequent calls within 5 minutes, returns cached data instantly.
      *
-     * @param limit      Max items to return
-     * @param offset     Starting offset
+     * PAGINATION STRATEGY:
+     * - offset == 0: Fetch ALL pages automatically using a loop
+     *   * Converts limit/offset to page size for API calls
+     *   * Uses PaginationHelper to track pagination state
+     *   * Updates cache only on first page (offset==0)
+     * - offset > 0: Fetch specific page (for manual pagination)
+     *   * Converts offset to page number: page = (offset / limit) + 1
+     *   * Returns single page only
+     *
+     * @param limit      Max items per page
+     * @param offset     Starting offset (0 = fetch all pages, >0 = fetch specific page)
      * @param useCache   Return cached list if available and fresh
      * @param callback   Result callback
      */
@@ -105,8 +115,8 @@ public class ProductRepository {
                               @NonNull ProductCallback callback) {
         // Strategy: 
         // - If offset == 0 and useCache && cache is fresh: return cached immediately
-        // - If offset == 0 and cache is stale: fetch from API
-        // - If offset > 0: always fetch from API (pagination)
+        // - If offset == 0 and cache is stale: fetch from API (all pages)
+        // - If offset > 0: fetch specific page from API
         
         if (offset == 0 && useCache && isCacheFresh()) {
             Log.d(TAG, "✓ Returning " + cachedProducts.size() + " cached products (fresh cache)");
@@ -121,50 +131,250 @@ public class ProductRepository {
             // Still fetch fresh data (don't return early)
         }
 
-        Log.d(TAG, "Fetching products from API (limit=" + limit + ", offset=" + offset + ")");
-        apiService.getProducts(limit, offset).enqueue(new Callback<ProductResponse>() {
+        // Fetch all pages when offset==0, otherwise fetch specific page
+        if (offset == 0) {
+            Log.d(TAG, "Fetching ALL products from API (per_page=" + limit + ")");
+            fetchAllPagesInternal(limit, callback);
+        } else {
+            // Convert offset to page number (1-indexed)
+            int page = (offset / limit) + 1;
+            Log.d(TAG, "Fetching products from API (page=" + page + ", per_page=" + limit + ")");
+            apiService.getProducts("featured", page, limit).enqueue(new Callback<ProductResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<ProductResponse> call,
+                                       @NonNull Response<ProductResponse> response) {
+                    handleListResponse(response, offset, callback, "products (page " + page + ")");
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
+                    handleFailure(t, callback);
+                }
+            });
+        }
+    }
+
+    /**
+     * Search products by keyword (name-based, server-side).
+     * 
+     * PAGINATION STRATEGY:
+     * - offset == 0: Fetch ALL pages automatically using a loop
+     *   * Uses PaginationHelper to track pagination state
+     *   * Does NOT cache search results (search results should reflect real-time data)
+     * - offset > 0: Fetch specific page
+     *   * Converts offset to page number: page = (offset / limit) + 1
+     *   * Returns single page only
+     *
+     * Note: Search results are NOT cached to reflect real-time data.
+     *
+     * @param query    Search keyword
+     * @param limit    Items per page
+     * @param offset   Starting offset (0 = fetch all, >0 = specific page)
+     * @param callback Result callback
+     */
+    public void searchProducts(String query, int limit, int offset,
+                               @NonNull ProductCallback callback) {
+        Log.d(TAG, "Searching products: '" + query + "'");
+        
+        // Fetch all pages when offset==0, otherwise fetch specific page
+        if (offset == 0) {
+            Log.d(TAG, "Fetching ALL search results from API (per_page=" + limit + ")");
+            searchAllPagesInternal(query, limit, callback);
+        } else {
+            // Convert offset to page number (1-indexed)
+            int page = (offset / limit) + 1;
+            Log.d(TAG, "Fetching search page (page=" + page + ", per_page=" + limit + ")");
+            apiService.searchProducts(query, page, limit).enqueue(new Callback<ProductResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<ProductResponse> call,
+                                       @NonNull Response<ProductResponse> response) {
+                    handleListResponse(response, -1, callback, "search: " + query + " (page " + page + ")");
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
+                    handleFailure(t, callback);
+                }
+            });
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Internal pagination helpers (page-based API pagination)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Start fetching all pages for products.
+     * Initializes PaginationHelper and recursively fetches all pages.
+     *
+     * @param perPage  Items per page
+     * @param callback Result callback with all accumulated products
+     */
+    private void fetchAllPagesInternal(int perPage, @NonNull ProductCallback callback) {
+        PaginationHelper<Product> helper = new PaginationHelper<>(perPage);
+        List<Product> allProducts = new ArrayList<>();
+        fetchNextPage(helper, allProducts, perPage, callback);
+    }
+
+    /**
+     * Recursively fetch the next page of products using PaginationHelper.
+     * Continues fetching until PaginationHelper determines there are no more pages.
+     *
+     * @param helper       PaginationHelper tracking pagination state
+     * @param accumulatedProducts List accumulating all products from all pages
+     * @param perPage      Items per page
+     * @param callback     Result callback
+     */
+    private void fetchNextPage(PaginationHelper<Product> helper, List<Product> accumulatedProducts,
+                               int perPage, @NonNull ProductCallback callback) {
+        int nextPage = helper.getNextPage();
+        Log.d(TAG, "Fetching page " + nextPage + " (per_page=" + perPage + ")");
+        
+        apiService.getProducts("featured", nextPage, perPage).enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(@NonNull Call<ProductResponse> call,
                                    @NonNull Response<ProductResponse> response) {
-                handleListResponse(response, offset, callback, "all products");
-                
-                // Update cache timestamp only for offset=0 (full list)
-                if (offset == 0 && response.isSuccessful()) {
-                    lastCacheTime = System.currentTimeMillis();
-                    Log.d(TAG, "✓ Cache updated at " + new java.util.Date());
+                if (response.isSuccessful() && response.body() != null) {
+                    ProductResponse pr = response.body();
+                    if (pr.isSuccess() && pr.getData() != null) {
+                        List<Product> pageData = pr.getData();
+                        
+                        // Add page data and check if more pages exist
+                        boolean hasMorePages = helper.addPageData(pageData, accumulatedProducts);
+                        
+                        if (hasMorePages) {
+                            // Recursively fetch next page
+                            Log.d(TAG, "More pages available, fetching next...");
+                            fetchNextPage(helper, accumulatedProducts, perPage, callback);
+                        } else {
+                            // All pages fetched
+                            int total = accumulatedProducts.size();
+                            Log.d(TAG, "✓ All pages fetched: " + total + " total products");
+                            
+                            // Update cache with all products
+                            cachedProducts.clear();
+                            cachedProducts.addAll(accumulatedProducts);
+                            lastCacheTime = System.currentTimeMillis();
+                            Log.d(TAG, "✓ Cache updated with " + total + " products at " + new java.util.Date());
+                            
+                            callback.onSuccess(accumulatedProducts, total);
+                        }
+                    } else {
+                        callback.onError("API non-success: " + pr.getStatus());
+                    }
+                } else {
+                    String error = "HTTP " + response.code() + ": " + response.message();
+                    Log.e(TAG, error);
+                    
+                    // If we have accumulated some results, return them instead of failing
+                    if (!accumulatedProducts.isEmpty()) {
+                        Log.d(TAG, "⚠ Returning " + accumulatedProducts.size() + " accumulated products before error");
+                        callback.onSuccess(accumulatedProducts, accumulatedProducts.size());
+                    } else {
+                        callback.onError(error);
+                    }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
-                Log.e(TAG, "API call failed, attempting to use cached data as fallback");
-                if (!cachedProducts.isEmpty()) {
-                    Log.d(TAG, "✓ Returning stale cached data as fallback (" + cachedProducts.size() + " items)");
-                    callback.onSuccess(new ArrayList<>(cachedProducts), cachedProducts.size());
+                String error = "Network error: " + t.getMessage();
+                Log.e(TAG, error, t);
+                
+                // If we have accumulated some results, return them instead of failing
+                if (!accumulatedProducts.isEmpty()) {
+                    Log.d(TAG, "⚠ Returning " + accumulatedProducts.size() + " accumulated products before error");
+                    callback.onSuccess(accumulatedProducts, accumulatedProducts.size());
                 } else {
-                    handleFailure(t, callback);
+                    callback.onError(error);
                 }
             }
         });
     }
 
     /**
-     * Search products by keyword (name-based, server-side).
+     * Start fetching all pages for search results.
+     * Initializes PaginationHelper and recursively fetches all pages.
      * Note: Search results are NOT cached to reflect real-time data.
+     *
+     * @param query    Search keyword
+     * @param perPage  Items per page
+     * @param callback Result callback with all accumulated search results
      */
-    public void searchProducts(String query, int limit, int offset,
-                               @NonNull ProductCallback callback) {
-        Log.d(TAG, "Searching products: '" + query + "'");
-        apiService.searchProducts(query, limit, offset).enqueue(new Callback<ProductResponse>() {
+    private void searchAllPagesInternal(String query, int perPage, @NonNull ProductCallback callback) {
+        PaginationHelper<Product> helper = new PaginationHelper<>(perPage);
+        List<Product> allResults = new ArrayList<>();
+        searchNextPage(helper, query, allResults, perPage, callback);
+    }
+
+    /**
+     * Recursively fetch the next page of search results using PaginationHelper.
+     * Continues fetching until PaginationHelper determines there are no more pages.
+     * Note: Search results are NOT cached.
+     *
+     * @param helper       PaginationHelper tracking pagination state
+     * @param query        Search keyword
+     * @param accumulatedResults List accumulating all search results from all pages
+     * @param perPage      Items per page
+     * @param callback     Result callback
+     */
+    private void searchNextPage(PaginationHelper<Product> helper, String query, List<Product> accumulatedResults,
+                                int perPage, @NonNull ProductCallback callback) {
+        int nextPage = helper.getNextPage();
+        Log.d(TAG, "Fetching search page " + nextPage + " for '" + query + "' (per_page=" + perPage + ")");
+        
+        apiService.searchProducts(query, nextPage, perPage).enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(@NonNull Call<ProductResponse> call,
                                    @NonNull Response<ProductResponse> response) {
-                handleListResponse(response, -1, callback, "search: " + query);
+                if (response.isSuccessful() && response.body() != null) {
+                    ProductResponse pr = response.body();
+                    if (pr.isSuccess() && pr.getData() != null) {
+                        List<Product> pageData = pr.getData();
+                        
+                        // Add page data and check if more pages exist
+                        boolean hasMorePages = helper.addPageData(pageData, accumulatedResults);
+                        
+                        if (hasMorePages) {
+                            // Recursively fetch next page
+                            Log.d(TAG, "More search pages available, fetching next...");
+                            searchNextPage(helper, query, accumulatedResults, perPage, callback);
+                        } else {
+                            // All pages fetched
+                            int total = accumulatedResults.size();
+                            Log.d(TAG, "✓ All search pages fetched: " + total + " total results for '" + query + "'");
+                            
+                            callback.onSuccess(accumulatedResults, total);
+                        }
+                    } else {
+                        callback.onError("API non-success: " + pr.getStatus());
+                    }
+                } else {
+                    String error = "HTTP " + response.code() + ": " + response.message();
+                    Log.e(TAG, error);
+                    
+                    // If we have accumulated some results, return them instead of failing
+                    if (!accumulatedResults.isEmpty()) {
+                        Log.d(TAG, "⚠ Returning " + accumulatedResults.size() + " accumulated search results before error");
+                        callback.onSuccess(accumulatedResults, accumulatedResults.size());
+                    } else {
+                        callback.onError(error);
+                    }
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
-                handleFailure(t, callback);
+                String error = "Network error: " + t.getMessage();
+                Log.e(TAG, error, t);
+                
+                // If we have accumulated some results, return them instead of failing
+                if (!accumulatedResults.isEmpty()) {
+                    Log.d(TAG, "⚠ Returning " + accumulatedResults.size() + " accumulated search results before error");
+                    callback.onSuccess(accumulatedResults, accumulatedResults.size());
+                } else {
+                    callback.onError(error);
+                }
             }
         });
     }

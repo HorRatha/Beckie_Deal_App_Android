@@ -154,8 +154,10 @@ public class LoginActivity extends BaseActivity {
 
         // Forgot password click listener
         if (forgotPassword != null) {
-            forgotPassword.setOnClickListener(v -> 
-                Toast.makeText(this, "Redirecting to password reset...", Toast.LENGTH_SHORT).show());
+            forgotPassword.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
+            });
         }
 
         // Login link click listener (from register form)

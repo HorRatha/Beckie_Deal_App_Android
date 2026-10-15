@@ -179,7 +179,7 @@ public class CategoryRepository {
         Log.d(TAG, "Fetching product counts for " + totalCategories + " categories");
         
         for (Category category : categories) {
-            productRepo.fetchProductsByCategory(category.getId(), 500, 0, 
+            productRepo.fetchProductsByCategory(category.getId(), 20, 0, 
                 new ProductRepository.ProductCallback() {
                     @Override
                     public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> products, int count) {

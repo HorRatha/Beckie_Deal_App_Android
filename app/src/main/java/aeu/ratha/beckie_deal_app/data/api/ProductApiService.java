@@ -12,49 +12,62 @@ import retrofit2.http.Query;
  *
  * Base URL: {API_BASE_URL}  (e.g. https://.../api/v1/)
  *
- * IMPORTANT API LIMITATIONS (confirmed by live testing):
- *  - GET /products endpoint currently returns ~12 items regardless of limit parameter
- *  - Response does NOT include pagination metadata (total, page info)
+ * PAGINATION DETAILS:
+ *  - API uses page-based pagination with query params: ?page={page}&per_page={perPage}
+ *  - Default per_page is 20 items
+ *  - Response does NOT include pagination metadata (total, current_page, last_page)
+ *  - Must check response length to determine if more pages exist
  *  - Products list does NOT include brand_id or category_id fields
  *  - Cannot filter by category_id or brand_id on the server side
  *  - Must fetch individual product details to get complete brand/category info
  *
+ * FETCHING ALL PRODUCTS:
+ *  - For fetching all products, start at page=1 and keep incrementing until:
+ *    a) Response has fewer items than per_page (indicates last page), OR
+ *    b) Response is empty
+ *  - Recommended per_page: 20-100 for balance between request count and response size
+ *
  * BACKEND IMPROVEMENTS NEEDED:
  *  1. Add brand_id and category_id to products list response
- *  2. Include pagination object: {total, current_page, per_page, last_page}
- *  3. Support higher limits (currently capped at ~12 items)
- *  4. Populate products_count in categories endpoint
+ *  2. Include pagination metadata: {total, current_page, per_page, last_page}
+ *  3. Populate products_count in categories endpoint
  *
  * WORKAROUNDS (client-side):
  *  - Fetch individual product details to get brand/category info
  *  - Locally count products per category/brand
  *  - Cache product details for filtering
+ *  - Implement pagination loop in repository to fetch all pages
  */
 public interface ProductApiService {
 
     /**
-     * Get all products with pagination.
-     * GET /products?limit={limit}&offset={offset}
+     * Get all products with page-based pagination.
+     * GET /products?sort_by={sortBy}&page={page}&per_page={perPage}
      * 
-     * NOTE: API currently ignores limit parameter and returns ~12 items.
-     * Use higher numbers (200, 300) to attempt fetching more, though
-     * actual response may still be limited by backend.
+     * @param sortBy   Sorting option (e.g. "featured", "newest", "popular")
+     * @param page     Page number (1-indexed)
+     * @param perPage  Items per page (default 20)
      */
     @GET("products")
     Call<ProductResponse> getProducts(
-        @Query("limit")  int limit,
-        @Query("offset") int offset
+        @Query("sort_by")  String sortBy,
+        @Query("page")     int page,
+        @Query("per_page") int perPage
     );
 
     /**
-     * Search products by name keyword.
-     * GET /products?search={query}&limit={limit}&offset={offset}
+     * Search products by name keyword with pagination.
+     * GET /products?search={query}&page={page}&per_page={perPage}
+     * 
+     * @param query   Search keyword
+     * @param page    Page number (1-indexed)
+     * @param perPage Items per page (default 20)
      */
     @GET("products")
     Call<ProductResponse> searchProducts(
-        @Query("search") String query,
-        @Query("limit")  int limit,
-        @Query("offset") int offset
+        @Query("search")   String query,
+        @Query("page")     int page,
+        @Query("per_page") int perPage
     );
 
     /**
