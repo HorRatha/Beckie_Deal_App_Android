@@ -817,10 +817,11 @@
                     android:textAllCaps="false"
                     android:textAppearance="@style/TextAppearance.App.Button"
                     android:textColor="@color/white_fixed"
+                    android:textStyle="bold"
                     android:visibility="gone"
                     app:backgroundTint="@color/red_error"
-                    app:cornerRadius="16dp"
-                    app:elevation="2dp"
+                    app:cornerRadius="@dimen/button_pill_radius"
+                    app:elevation="4dp"
                     app:strokeWidth="0dp" />
 
                 <!-- ══ VERSION FOOTER ══════════════════════════════════════════ -->
