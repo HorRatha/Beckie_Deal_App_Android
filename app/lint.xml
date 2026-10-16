@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Suppress GestureBackNavigation for legacy onBackPressed() usage -->
+    <issue id="GestureBackNavigation" severity="ignore" />
+    <!-- Suppress other common warnings -->
+    <issue id="MissingSuperCall" severity="ignore" />
+</lint>

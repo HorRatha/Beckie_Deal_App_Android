@@ -729,7 +729,7 @@
                             android:textColor="@color/dark_brown"
                             android:textStyle="bold"
                             app:backgroundTint="@color/yellow_star"
-                            app:cornerRadius="0dp"
+                            app:cornerRadius="@dimen/button_pill_radius"
                             app:elevation="0dp" />
                     </LinearLayout>
 
@@ -1209,7 +1209,7 @@
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
                     android:visibility="gone"
-                    app:cornerRadius="0dp"
+                    app:cornerRadius="@dimen/button_pill_radius"
                     app:strokeColor="@color/border_color" />
 
                 <LinearLayout
@@ -1247,7 +1247,7 @@
                     android:textColor="@color/dark_brown"
                     android:textStyle="bold"
                     app:backgroundTint="@null"
-                    app:cornerRadius="0dp"
+                    app:cornerRadius="@dimen/button_pill_radius"
                     app:elevation="0dp"
                     app:icon="@drawable/ic_arrow_right"
                     app:iconGravity="textEnd"

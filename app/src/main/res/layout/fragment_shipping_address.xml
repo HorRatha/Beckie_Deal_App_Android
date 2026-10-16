@@ -19,40 +19,104 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="Full Name"
+            android:textSize="12sp"
+            android:textColor="@color/text_muted"
+            android:layout_marginBottom="4dp" />
 
-            <EditText
-                android:id="@+id/fullNameInput"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Full Name"
-                android:inputType="text"
-                android:layout_marginBottom="12dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp" />
+        <EditText
+            android:id="@+id/fullNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Full Name"
+            android:inputType="text"
+            android:layout_marginBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:background="@drawable/form_field_background"
+            android:textColorHint="@color/text_muted" />
+    </LinearLayout>
 
-            <EditText
-                android:id="@+id/emailInput"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:layout_marginBottom="12dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/addressInput"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="12sp"
+            android:textColor="@color/text_muted"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/emailInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:background="@drawable/form_field_background"
+            android:textColorHint="@color/text_muted" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Street Address"
+            android:textSize="12sp"
+            android:textColor="@color/text_muted"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/addressInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Street Address"
+            android:inputType="text"
+            android:layout_marginBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:background="@drawable/form_field_background"
+            android:textColorHint="@color/text_muted" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="6dp">
+
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Address"
-                android:inputType="text"
-                android:layout_marginBottom="12dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp" />
+                android:layout_height="wrap_content"
+                android:text="City"
+                android:textSize="12sp"
+                android:textColor="@color/text_muted"
+                android:layout_marginBottom="4dp" />
 
             <EditText
                 android:id="@+id/cityInput"
@@ -60,9 +124,60 @@
                 android:layout_height="48dp"
                 android:hint="City"
                 android:inputType="text"
-                android:layout_marginBottom="12dp"
                 android:paddingLeft="12dp"
-                android:paddingRight="12dp" />
+                android:paddingRight="12dp"
+                android:background="@drawable/form_field_background"
+                android:textColorHint="@color/text_muted" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="6dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Postal Code"
+                android:textSize="12sp"
+                android:textColor="@color/text_muted"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/zipInput"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Postal Code"
+                android:inputType="number"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:background="@drawable/form_field_background"
+                android:textColorHint="@color/text_muted" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="6dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="State / Province (optional)"
+                android:textSize="12sp"
+                android:textColor="@color/text_muted"
+                android:layout_marginBottom="4dp" />
 
             <EditText
                 android:id="@+id/stateInput"
@@ -70,21 +185,38 @@
                 android:layout_height="48dp"
                 android:hint="State/Province"
                 android:inputType="text"
-                android:layout_marginBottom="12dp"
                 android:paddingLeft="12dp"
-                android:paddingRight="12dp" />
+                android:paddingRight="12dp"
+                android:background="@drawable/form_field_background"
+                android:textColorHint="@color/text_muted" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="6dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Country"
+                android:textSize="12sp"
+                android:textColor="@color/text_muted"
+                android:layout_marginBottom="4dp" />
 
             <EditText
-                android:id="@+id/zipInput"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="ZIP/Postal Code"
-                android:inputType="number"
-                android:layout_marginBottom="12dp"
+                android:hint="Country"
+                android:inputType="text"
                 android:paddingLeft="12dp"
-                android:paddingRight="12dp" />
-
+                android:paddingRight="12dp"
+                android:background="@drawable/form_field_background"
+                android:textColorHint="@color/text_muted" />
         </LinearLayout>
+    </LinearLayout>
 
     </ScrollView>
 
@@ -95,34 +227,36 @@
         android:layout_marginTop="16dp"
         android:spacing="12dp">
 
-        <!-- Back Button - Solid Dark Gray (#2F3130) with white text -->
+        <!-- Back Button - Solid Dark Gray (#2F3130) with white text and rounded corners -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/backBtn"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:background="@drawable/button_buy_now_state"
+            android:background="@drawable/button_checkout_back_sharp"
             android:text="Back"
             android:textAllCaps="false"
             android:textColor="@color/white_fixed"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginEnd="8dp"
-            app:backgroundTint="@null" />
+            app:backgroundTint="@null"
+            app:cornerRadius="@dimen/button_pill_radius" />
 
-        <!-- Continue Button - Gradient Yellow to Orange -->
+        <!-- Continue Button - Gradient Yellow to Orange with rounded corners -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/continueBtn"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:background="@drawable/button_add_to_cart_gradient"
+            android:background="@drawable/button_checkout_continue_sharp"
             android:text="Continue to Payment"
             android:textAllCaps="false"
             android:textColor="@color/dark_brown"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:backgroundTint="@null" />
+            app:backgroundTint="@null"
+            app:cornerRadius="@dimen/button_pill_radius" />
 
     </LinearLayout>
 

@@ -5,4 +5,5 @@
         android:angle="0"
         android:startColor="@color/yellow_star"
         android:endColor="@color/brand_orange" />
+    <corners android:radius="@dimen/button_pill_radius" />
 </shape>

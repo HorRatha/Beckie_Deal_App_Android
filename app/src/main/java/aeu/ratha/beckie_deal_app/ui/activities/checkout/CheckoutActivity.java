@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import aeu.ratha.beckie_deal_app.R;
 import aeu.ratha.beckie_deal_app.ui.fragments.checkout.CartReviewFragment;
+import aeu.ratha.beckie_deal_app.ui.fragments.checkout.OrderReviewFragment;
 import aeu.ratha.beckie_deal_app.ui.fragments.checkout.ShippingAddressFragment;
 
 public class CheckoutActivity extends AppCompatActivity {
@@ -43,10 +44,11 @@ public class CheckoutActivity extends AppCompatActivity {
                 loadFragment(new ShippingAddressFragment());
                 break;
             case PAYMENT_STEP:
-                // TODO: Load PaymentFragment when created
+                // Load OrderReviewFragment for payment/review
+                loadFragment(new OrderReviewFragment());
                 break;
             case ORDER_REVIEW_STEP:
-                // TODO: Load OrderReviewFragment when created
+                // OrderReviewFragment already loaded in PAYMENT_STEP
                 break;
         }
     }

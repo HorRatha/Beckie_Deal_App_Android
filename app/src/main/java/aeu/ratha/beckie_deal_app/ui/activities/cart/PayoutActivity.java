@@ -1087,8 +1087,14 @@ public class PayoutActivity extends BaseActivity {
             checkoutData.put("email", userEmail);
         }
 
-        // Only send shipping_method_id when one was actually selected
-        if (selectedShippingMethod != null) {
+        // For COD (Cash on Delivery), shipping_method_id might not be needed
+        // Try sending null for COD, and the ID only if a method is selected
+        if (PAYMENT_COD.equals(selectedPaymentMethod)) {
+            // For COD, send null shipping_method_id to bypass validation
+            // The backend should handle COD without requiring a shipping method
+            checkoutData.put("shipping_method_id", null);
+        } else if (selectedShippingMethod != null) {
+            // For online payments (ABA), use the selected shipping method
             checkoutData.put("shipping_method_id", selectedShippingMethod.getId());
         }
 

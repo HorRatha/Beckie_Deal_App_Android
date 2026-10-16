@@ -3,10 +3,10 @@
     <!-- Flat input box: label sits above the field, no floating hint -->
     <style name="Widget.App.CheckoutField" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintEnabled">false</item>
-        <item name="boxCornerRadiusTopStart">0dp</item>
-        <item name="boxCornerRadiusTopEnd">0dp</item>
-        <item name="boxCornerRadiusBottomStart">0dp</item>
-        <item name="boxCornerRadiusBottomEnd">0dp</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
         <item name="boxStrokeColor">@color/checkout_field_stroke</item>
         <item name="boxBackgroundColor">@color/surface</item>
     </style>

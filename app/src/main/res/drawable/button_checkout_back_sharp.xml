@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Checkout Back button: Solid dark color #2F3130 with pill radius -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#2F3130" />
+    <corners android:radius="@dimen/button_pill_radius" />
+</shape>

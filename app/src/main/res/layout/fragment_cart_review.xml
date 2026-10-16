@@ -69,17 +69,18 @@
 
     </LinearLayout>
 
-    <!-- Continue Button - Gradient Yellow to Orange -->
+    <!-- Continue Button - Gradient Yellow to Orange with rounded corners -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continueBtn"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/button_add_to_cart_gradient"
+        android:background="@drawable/button_checkout_continue_sharp"
         android:text="Continue to Shipping"
         android:textAllCaps="false"
         android:textColor="@color/dark_brown"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:backgroundTint="@null" />
+        app:backgroundTint="@null"
+        app:cornerRadius="@dimen/button_pill_radius" />
 
 </LinearLayout>
