@@ -4,9 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- Checkout Progress Header with Spinning Indicator -->
+    <include
+        android:id="@+id/checkoutProgressHeader"
+        layout="@layout/header_checkout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Fragment Container -->
     <FrameLayout
         android:id="@+id/checkoutContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
 </LinearLayout>
+

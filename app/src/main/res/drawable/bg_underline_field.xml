@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Focused: orange line -->
+    <item android:state_focused="true">
+        <layer-list>
+            <item
+                android:left="-2dp"
+                android:right="-2dp"
+                android:top="-2dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                    <stroke
+                        android:width="2dp"
+                        android:color="@color/brand_orange" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Idle: dark brown line -->
+    <item>
+        <layer-list>
+            <item
+                android:left="-2dp"
+                android:right="-2dp"
+                android:top="-2dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                    <stroke
+                        android:width="1.5dp"
+                        android:color="@color/form_underline_idle" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

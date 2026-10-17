@@ -101,4 +101,8 @@
 
     <!-- Category Stack Card Colors -->
     <color name="cat_yellow">#FDC011</color>
+
+    <!-- Underline fields on the yellow background -->
+    <color name="form_underline_idle">#733B2417</color>
+    <color name="form_hint">#803B2417</color>
 </resources>
