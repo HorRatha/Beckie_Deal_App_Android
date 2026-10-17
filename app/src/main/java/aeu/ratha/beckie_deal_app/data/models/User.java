@@ -17,6 +17,12 @@ public class User {
     
     @SerializedName("name")
     private String name;
+    
+    @SerializedName("avatar")
+    private String avatar;
+    
+    @SerializedName("avatar_url")
+    private String avatarUrl;
 
     // Getters
     public String getEmail() {
@@ -37,6 +43,14 @@ public class User {
     
     public String getName() {
         return name;
+    }
+    
+    public String getAvatar() {
+        return avatar;
+    }
+    
+    public String getAvatarUrl() {
+        return avatarUrl != null ? avatarUrl : avatar;
     }
 
     public String getFullName() {
@@ -68,5 +82,13 @@ public class User {
     
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+    
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

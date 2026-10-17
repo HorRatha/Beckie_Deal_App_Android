@@ -142,12 +142,22 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintVertical_bias="0.15">
 
+                    <!-- WebView to display DiceBear SVG avatar -->
+                    <WebView
+                        android:id="@+id/avatarWebView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent" />
+                    
+                    <!-- Fallback ImageView if WebView fails to load -->
                     <ImageView
                         android:id="@+id/avatarIcon"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_person"
+                        android:visibility="gone"
                         app:tint="@color/text_secondary" />
                 </com.google.android.material.card.MaterialCardView>
 

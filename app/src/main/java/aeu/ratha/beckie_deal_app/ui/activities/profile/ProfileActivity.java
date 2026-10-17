@@ -34,8 +34,12 @@ import aeu.ratha.beckie_deal_app.security.TokenManager;
 import aeu.ratha.beckie_deal_app.data.models.User;
 import aeu.ratha.beckie_deal_app.data.repository.ProfileRepository;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
+import aeu.ratha.beckie_deal_app.utils.avatar.AvatarManager;
 import okhttp3.MultipartBody;
 import androidx.drawerlayout.widget.DrawerLayout;
+import com.bumptech.glide.Glide;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 public class ProfileActivity extends BaseActivity {
     
@@ -178,19 +182,24 @@ public class ProfileActivity extends BaseActivity {
      * Fetch user profile from API and display it dynamically.
      * Always fetches fresh data from API (no cache on activity open).
      * Falls back to TokenManager data if API call fails.
+     * For guests: Shows DiceBear avatar generated from device ID.
      */
     private void fetchAndSetupUserProfile() {
         TextView userNameText = findViewById(R.id.userName);
         TextView userEmailText = findViewById(R.id.userEmail);
         
         if (!tokenManager.isLoggedIn()) {
-            // User not logged in - show Guest User message
+            // User not logged in - show Guest User with DiceBear avatar
             if (userNameText != null) {
                 userNameText.setText("Guest User");
             }
             if (userEmailText != null) {
                 userEmailText.setText("Sign in to your account");
             }
+            
+            // Load guest avatar using WebView
+            String guestAvatarUrl = AvatarManager.getAvatarUrl(this, null);
+            setupAvatarWebView(guestAvatarUrl);
             return;
         }
 
@@ -248,6 +257,7 @@ public class ProfileActivity extends BaseActivity {
 
     /**
      * Display user profile data in UI.
+     * Shows DiceBear SVG as default avatar unless user has uploaded a profile picture.
      */
     private void displayUserProfile(User user) {
         TextView userNameText = findViewById(R.id.userName);
@@ -255,14 +265,15 @@ public class ProfileActivity extends BaseActivity {
         
         String displayName = user.getFullName();
         String email = user.getEmail();
+        String userAvatarUrl = user.getAvatarUrl(); // Get user's uploaded avatar URL
         
-        // Debug logging to understand data structure
+        // Debug logging
         android.util.Log.d("ProfileActivity", "=== Profile Data Debug ===");
         android.util.Log.d("ProfileActivity", "Email: " + email);
         android.util.Log.d("ProfileActivity", "FirstName: " + user.getFirstName());
         android.util.Log.d("ProfileActivity", "LastName: " + user.getLastName());
-        android.util.Log.d("ProfileActivity", "Name: " + user.getName());
         android.util.Log.d("ProfileActivity", "FullName: " + displayName);
+        android.util.Log.d("ProfileActivity", "Avatar URL: " + userAvatarUrl);
         android.util.Log.d("ProfileActivity", "========================");
         
         if (userNameText != null) {
@@ -271,10 +282,15 @@ public class ProfileActivity extends BaseActivity {
         if (userEmailText != null) {
             userEmailText.setText(email != null ? email : "");
         }
+        
+        // Load avatar: if user has uploaded one, use it; otherwise use DiceBear
+        String avatarUrl = AvatarManager.getAvatarUrl(this, userAvatarUrl);
+        setupAvatarWebView(avatarUrl);
     }
 
     /**
      * Fall back to TokenManager data if API fetch fails.
+     * Uses DiceBear SVG as default avatar.
      */
     private void fallbackToTokenManagerData() {
         TextView userNameText = findViewById(R.id.userName);
@@ -294,6 +310,10 @@ public class ProfileActivity extends BaseActivity {
         if (userEmailText != null) {
             userEmailText.setText(email != null ? email : "");
         }
+        
+        // Load DiceBear avatar as default (no user avatar URL available)
+        String avatarUrl = AvatarManager.getAvatarUrl(this, null);
+        setupAvatarWebView(avatarUrl);
     }
 
     private void setupAuthButtons() {
@@ -480,5 +500,63 @@ public class ProfileActivity extends BaseActivity {
         }
         buffer.flush();
         return buffer.toByteArray();
+    }
+
+    /**
+     * Load avatar image using WebView to display DiceBear SVG avatars.
+     * WebView renders SVG perfectly and supports all parameters.
+     * 
+     * @param avatarUrl DiceBear SVG URL
+     */
+    private void setupAvatarWebView(String avatarUrl) {
+        WebView avatarWebView = findViewById(R.id.avatarWebView);
+        if (avatarWebView == null) {
+            android.util.Log.w("ProfileActivity", "avatarWebView not found in layout");
+            return;
+        }
+        
+        try {
+            // Configure WebView settings for proper rendering
+            avatarWebView.getSettings().setJavaScriptEnabled(true);
+            avatarWebView.getSettings().setDomStorageEnabled(true);
+            
+            // Set WebViewClient to prevent opening browser
+            avatarWebView.setWebViewClient(new WebViewClient());
+            
+            // Load HTML with SVG that scales to fill the entire WebView
+            // Avatar is positioned slightly lower and zoomed in
+            String htmlContent = "<!DOCTYPE html>" +
+                "<html><head>" +
+                "<meta charset=\"utf-8\">" +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                "<style>" +
+                "  * { margin: 0; padding: 0; box-sizing: border-box; }" +
+                "  body { width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; background: transparent; padding-bottom: 12px; }" +
+                "  img { width: 110%; height: 110%; object-fit: contain; max-width: none; max-height: none; }" +
+                "</style>" +
+                "</head><body>" +
+                "  <img src=\"" + avatarUrl + "\" alt=\"avatar\"/>" +
+                "</body></html>";
+            
+            // Load the HTML content with proper base URL handling
+            avatarWebView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null);
+            
+            android.util.Log.d("ProfileActivity", "Avatar loaded in WebView with full container fit: " + avatarUrl);
+        } catch (Exception e) {
+            android.util.Log.e("ProfileActivity", "Error setting up avatar WebView: " + e.getMessage());
+            // Show fallback icon
+            showAvatarFallback();
+        }
+    }
+    
+    /**
+     * Show fallback ImageView if WebView fails to load.
+     */
+    private void showAvatarFallback() {
+        ImageView avatarIcon = findViewById(R.id.avatarIcon);
+        if (avatarIcon != null) {
+            avatarIcon.setVisibility(View.VISIBLE);
+            android.util.Log.d("ProfileActivity", "Showing avatar fallback icon");
+        }
     }
 }

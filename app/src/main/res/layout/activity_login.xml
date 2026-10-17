@@ -188,20 +188,38 @@
                         android:textAppearance="@style/TextAppearance.App.CardPrice"
                         android:textColor="@color/dark_brown" />
 
-                    <EditText
-                        android:id="@+id/passwordInput"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/login_input_background_white"
-                        android:drawableStart="@drawable/ic_lock"
-                        android:drawableTint="@color/primary"
-                        android:drawablePadding="14dp"
-                        android:hint="Enter your password"
-                        android:inputType="textPassword"
-                        android:paddingHorizontal="18dp"
-                        android:textAppearance="@style/TextAppearance.App.CardProductName"
-                        android:textColorHint="@color/text_muted" />
+                        android:layout_marginTop="8dp">
+
+                        <EditText
+                            android:id="@+id/passwordInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/login_input_background_white"
+                            android:drawableStart="@drawable/ic_lock"
+                            android:drawableTint="@color/primary"
+                            android:drawablePadding="14dp"
+                            android:hint="Enter your password"
+                            android:inputType="textPassword"
+                            android:paddingHorizontal="18dp"
+                            android:paddingEnd="50dp"
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColorHint="@color/text_muted" />
+
+                        <ImageView
+                            android:id="@+id/togglePasswordVisibility"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Toggle password visibility"
+                            android:padding="12dp"
+                            android:src="@drawable/ic_password_hidden"
+                            app:tint="@color/primary" />
+
+                    </FrameLayout>
 
                     <!-- Remember me + Forgot password row -->
                     <LinearLayout
@@ -362,18 +380,38 @@
                         android:textAppearance="@style/TextAppearance.App.CardPrice"
                         android:textColor="@color/dark_brown" />
 
-                    <EditText
-                        android:id="@+id/regPasswordInput"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/login_input_background_white"
-                        android:drawableStart="@drawable/ic_lock"
-                        android:drawableTint="@color/primary"
-                        android:drawablePadding="14dp"
-                        android:hint="Min. 8 characters"
-                        android:inputType="textPassword"
-                        android:paddingHorizontal="18dp" />
+                        android:layout_marginTop="8dp">
+
+                        <EditText
+                            android:id="@+id/regPasswordInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/login_input_background_white"
+                            android:drawableStart="@drawable/ic_lock"
+                            android:drawableTint="@color/primary"
+                            android:drawablePadding="14dp"
+                            android:hint="Min. 8 characters"
+                            android:inputType="textPassword"
+                            android:paddingHorizontal="18dp"
+                            android:paddingEnd="50dp"
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColorHint="@color/text_muted" />
+
+                        <ImageView
+                            android:id="@+id/toggleRegPasswordVisibility"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Toggle password visibility"
+                            android:padding="12dp"
+                            android:src="@drawable/ic_password_hidden"
+                            app:tint="@color/primary" />
+
+                    </FrameLayout>
 
                     <!-- Confirm Password Field -->
                     <TextView
@@ -384,18 +422,38 @@
                         android:textAppearance="@style/TextAppearance.App.CardPrice"
                         android:textColor="@color/dark_brown" />
 
-                    <EditText
-                        android:id="@+id/regConfirmPasswordInput"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/login_input_background_white"
-                        android:drawableStart="@drawable/ic_lock"
-                        android:drawableTint="@color/primary"
-                        android:drawablePadding="14dp"
-                        android:hint="Confirm your password"
-                        android:inputType="textPassword"
-                        android:paddingHorizontal="18dp" />
+                        android:layout_marginTop="8dp">
+
+                        <EditText
+                            android:id="@+id/regConfirmPasswordInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/login_input_background_white"
+                            android:drawableStart="@drawable/ic_lock"
+                            android:drawableTint="@color/primary"
+                            android:drawablePadding="14dp"
+                            android:hint="Confirm your password"
+                            android:inputType="textPassword"
+                            android:paddingHorizontal="18dp"
+                            android:paddingEnd="50dp"
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColorHint="@color/text_muted" />
+
+                        <ImageView
+                            android:id="@+id/toggleRegConfirmPasswordVisibility"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Toggle password visibility"
+                            android:padding="12dp"
+                            android:src="@drawable/ic_password_hidden"
+                            app:tint="@color/primary" />
+
+                    </FrameLayout>
 
                     <!-- Register Button -->
                     <androidx.appcompat.widget.AppCompatButton

@@ -165,6 +165,13 @@ public class LoginActivity extends BaseActivity {
             loginLink.setOnClickListener(v -> switchToLoginForm());
         }
 
+        // Setup password visibility toggles for login form
+        setupPasswordVisibilityToggle(passwordInput, R.id.togglePasswordVisibility);
+
+        // Setup password visibility toggles for register form
+        setupPasswordVisibilityToggle(regPasswordInput, R.id.toggleRegPasswordVisibility);
+        setupPasswordVisibilityToggle(findViewById(R.id.regConfirmPasswordInput), R.id.toggleRegConfirmPasswordVisibility);
+
         // Set initial button states (Sign In activated by default)
         if (signInToggle != null) {
             signInToggle.setActivated(true);
@@ -178,6 +185,37 @@ public class LoginActivity extends BaseActivity {
             registerToggle.refreshDrawableState();
             Log.d(TAG, "Initial: Register button NOT ACTIVATED (white)");
         }
+    }
+
+    /**
+     * Setup password visibility toggle for a password field.
+     * @param passwordField The EditText field for password input
+     * @param toggleButtonId The ImageView ID for the toggle button
+     */
+    private void setupPasswordVisibilityToggle(EditText passwordField, int toggleButtonId) {
+        if (passwordField == null) return;
+
+        ImageView toggleButton = findViewById(toggleButtonId);
+        if (toggleButton == null) return;
+
+        final boolean[] isPasswordVisible = {false};
+
+        toggleButton.setOnClickListener(v -> {
+            isPasswordVisible[0] = !isPasswordVisible[0];
+
+            if (isPasswordVisible[0]) {
+                // Show password
+                passwordField.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                toggleButton.setImageResource(R.drawable.ic_password_visible);
+            } else {
+                // Hide password
+                passwordField.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                toggleButton.setImageResource(R.drawable.ic_password_hidden);
+            }
+
+            // Keep cursor at the end of the text
+            passwordField.setSelection(passwordField.getText().length());
+        });
     }
     
     /**
