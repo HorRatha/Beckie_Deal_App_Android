@@ -162,6 +162,12 @@ public class ProfileActivity extends BaseActivity {
                 public void onSuccess(User profile) {
                     android.util.Log.d("ProfileActivity", "Avatar uploaded successfully");
                     displayUserProfile(profile);
+                    
+                    // Refresh drawer to show updated avatar
+                    if (drawerHelper != null) {
+                        drawerHelper.refreshDrawerContent();
+                    }
+                    
                     Toast.makeText(ProfileActivity.this, "Avatar updated successfully", Toast.LENGTH_SHORT).show();
                 }
 

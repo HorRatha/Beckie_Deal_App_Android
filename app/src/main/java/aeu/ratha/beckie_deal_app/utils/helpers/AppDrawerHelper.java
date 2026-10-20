@@ -353,6 +353,48 @@ public class AppDrawerHelper {
         return null;
     }
 
+    // ── Load avatar SVG into WebView with consistent styling ──────────────
+
+    /** Load avatar URL into drawer WebView with the same styling as ProfileActivity */
+    private void loadAvatarInWebView(DrawerLayout drawerLayout, String avatarUrl) {
+        android.webkit.WebView avatarWebView = drawerLayout.findViewById(R.id.drawerAvatarWebView);
+        if (avatarWebView == null) {
+            android.util.Log.w("AppDrawerHelper", "drawerAvatarWebView not found");
+            return;
+        }
+
+        try {
+            // Configure WebView settings for proper rendering
+            avatarWebView.getSettings().setJavaScriptEnabled(true);
+            avatarWebView.getSettings().setDomStorageEnabled(true);
+            
+            // Set WebViewClient to prevent opening browser
+            avatarWebView.setWebViewClient(new android.webkit.WebViewClient());
+            
+            // Load HTML with SVG using same styling as ProfileActivity
+            // Avatar is positioned slightly lower and zoomed in
+            String htmlContent = "<!DOCTYPE html>" +
+                "<html><head>" +
+                "<meta charset=\"utf-8\">" +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                "<style>" +
+                "  * { margin: 0; padding: 0; box-sizing: border-box; }" +
+                "  body { width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; background: transparent; padding-bottom: 12px; }" +
+                "  img { width: 110%; height: 110%; object-fit: contain; max-width: none; max-height: none; }" +
+                "</style>" +
+                "</head><body>" +
+                "  <img src=\"" + avatarUrl + "\" alt=\"avatar\"/>" +
+                "</body></html>";
+            
+            // Load the HTML content with proper base URL handling
+            avatarWebView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null);
+            
+            android.util.Log.d("AppDrawerHelper", "Avatar loaded in drawer WebView: " + avatarUrl);
+        } catch (Exception e) {
+            android.util.Log.e("AppDrawerHelper", "Error loading avatar in WebView: " + e.getMessage());
+        }
+    }
+
     // ── Entrance animation for the menu rows ──────────────────────────────
 
     /** Slide + fade each drawer row in, staggered top-to-bottom. */
@@ -464,6 +506,33 @@ public class AppDrawerHelper {
             if (userEmail != null) {
                 userEmail.setText(email != null ? email : "");
             }
+            
+            // Load avatar using ProfileRepository to get user profile with avatar URL
+            aeu.ratha.beckie_deal_app.data.repository.ProfileRepository profileRepo =
+                aeu.ratha.beckie_deal_app.data.repository.ProfileRepository.getInstance(activity);
+            
+            profileRepo.getProfile(false, new aeu.ratha.beckie_deal_app.data.repository.ProfileRepository.ProfileCallback() {
+                @Override
+                public void onSuccess(aeu.ratha.beckie_deal_app.data.models.User profile) {
+                    activity.runOnUiThread(() -> {
+                        // Use AvatarManager to get consistent avatar (same as profile page)
+                        String avatarUrl = aeu.ratha.beckie_deal_app.utils.avatar.AvatarManager
+                            .getAvatarUrl(activity, profile.getAvatarUrl());
+                        loadAvatarInWebView(drawerLayout, avatarUrl);
+                    });
+                }
+                
+                @Override
+                public void onFailure(Exception error) {
+                    android.util.Log.e("AppDrawerHelper", "Failed to get profile: " + error.getMessage());
+                    // Fall back to guest avatar
+                    activity.runOnUiThread(() -> {
+                        String guestAvatarUrl = aeu.ratha.beckie_deal_app.utils.avatar.AvatarManager
+                            .getAvatarUrl(activity, null);
+                        loadAvatarInWebView(drawerLayout, guestAvatarUrl);
+                    });
+                }
+            });
         } else {
             // User is not logged in - show guest
             if (welcomeBack != null) {
@@ -471,6 +540,11 @@ public class AppDrawerHelper {
             }
             if (userName != null) userName.setText("Guest User");
             if (userEmail != null) userEmail.setText("Sign in to your account");
+            
+            // Load guest avatar using AvatarManager
+            String guestAvatarUrl = aeu.ratha.beckie_deal_app.utils.avatar.AvatarManager
+                .getAvatarUrl(activity, null);
+            loadAvatarInWebView(drawerLayout, guestAvatarUrl);
         }
 
         // ── Live wishlist badge ──────────────────────────────────────────
