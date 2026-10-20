@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -22,11 +25,23 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "API_BASE_URL", "\"https://laravel-app-114227311375.asia-southeast1.run.app/api/v1/\"")
+            val localProperties = Properties()
+            val localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                localProperties.load(FileInputStream(localPropertiesFile))
+            }
+            val apiBaseUrl = localProperties.getProperty("API_BASE_URL", "https://api.beckiedeal.com/api/v1/")
+            buildConfigField("String", "API_BASE_URL", "\"${apiBaseUrl}\"")
             isMinifyEnabled = false
         }
         release {
-            buildConfigField("String", "API_BASE_URL", "\"https://laravel-app-114227311375.asia-southeast1.run.app/api/v1/\"")
+            val localProperties = Properties()
+            val localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                localProperties.load(FileInputStream(localPropertiesFile))
+            }
+            val apiBaseUrl = localProperties.getProperty("API_BASE_URL", "https://api.beckiedeal.com/api/v1/")
+            buildConfigField("String", "API_BASE_URL", "\"${apiBaseUrl}\"")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

@@ -323,4 +323,4 @@ POST   /api/v1/coupons/apply           → Apply coupon (untested)
 **Generated**: From Beckie-Deal Android application models  
 **Version**: 1.1  
 **Last Updated**: Corrected with actual API implementation status  
-**Base URL**: `https://laravel-app-114227311375.asia-southeast1.run.app/api/v1`
+**Base URL**: Configured in `local.properties` (not hardcoded in repository)

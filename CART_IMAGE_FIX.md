@@ -6,15 +6,7 @@ Product images were not displaying in the cart page. When users added products t
 ## Root Cause
 The issue was that the API returns relative image URLs (e.g., `/uploads/products/image.jpg`), but Glide (the image loading library) needs complete URLs with the full domain to load images from the server.
 
-The app's API base URL is:
-```
-https://laravel-app-114227311375.asia-southeast1.run.app/api/v1/
-```
-
-But image URLs need to use:
-```
-https://laravel-app-114227311375.asia-southeast1.run.app/
-```
+The app's API base URL (configured in `local.properties`) is used to extract the base domain. Image URLs require the domain root without the `/api/v1/` path suffix.
 
 ## Solution
 Created a centralized `ImageUrlHelper` utility class that converts relative image paths to absolute URLs by:

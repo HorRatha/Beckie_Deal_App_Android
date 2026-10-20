@@ -1,0 +1,5 @@
+# TEMPLATE: Copy this file to 'local.properties' and update with your actual backend URL
+# Note: local.properties is Git-ignored and should NOT be committed to version control
+
+# API Configuration
+API_BASE_URL=https://your-backend-url/api/v1/
