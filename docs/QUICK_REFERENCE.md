@@ -168,7 +168,7 @@ POST   /api/v1/coupons/apply
 ## 📞 Quick Contacts
 
 **API Base URL**:  
-`https://laravel-app-114227311375.asia-southeast1.run.app/api/v1`
+Configured in `local.properties` (not exposed in public repository)
 
 **Last API Test**: September 10, 2026
 

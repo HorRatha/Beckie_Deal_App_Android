@@ -14,8 +14,14 @@
     </base-config>
     
     <!-- Production API configuration -->
+    <!-- 
+        NOTE: Domain name should be configured per-environment in your deployment.
+        This configuration uses certificate pinning to verify the backend domain.
+        For public repositories, use your production domain (e.g., api.yourdomain.com)
+        Update this before production deployment.
+    -->
     <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="true">laravel-app-114227311375.asia-southeast1.run.app</domain>
+        <domain includeSubdomains="true">api.beckiedeal.com</domain>
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>

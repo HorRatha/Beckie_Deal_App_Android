@@ -269,7 +269,7 @@ Use your editor's search function (Ctrl+F / Cmd+F) to search for entity names ac
 - **Version**: 1.1
 - **Last Updated**: Corrected with actual implementation status
 - **API Test Date**: September 10, 2026
-- **Base URL**: `https://laravel-app-114227311375.asia-southeast1.run.app/api/v1`
+- **Base URL**: Configured in `local.properties` (not exposed in public repository)
 - **Generated From**: Beckie-Deal Android application data models
 
 ---
