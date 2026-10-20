@@ -156,7 +156,8 @@ public class ShippingMethodRepository {
         for (ShippingMethod m : methods) {
             if (m.isActive()) result.add(m);
         }
-        return result;
+        // If filtering returned nothing, return all methods as safety fallback
+        return result.isEmpty() ? methods : result;
     }
 
     /** Invalidate the cache (e.g., after logout or a long background gap). */

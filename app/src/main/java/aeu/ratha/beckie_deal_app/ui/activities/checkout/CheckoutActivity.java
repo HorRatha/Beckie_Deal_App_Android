@@ -15,6 +15,7 @@ import aeu.ratha.beckie_deal_app.R;
 import aeu.ratha.beckie_deal_app.ui.components.AnimatedStepSpinnerView;
 import aeu.ratha.beckie_deal_app.ui.fragments.checkout.CartReviewFragment;
 import aeu.ratha.beckie_deal_app.ui.fragments.checkout.OrderReviewFragment;
+import aeu.ratha.beckie_deal_app.ui.fragments.checkout.PaymentMethodFragment;
 import aeu.ratha.beckie_deal_app.ui.fragments.checkout.ShippingAddressFragment;
 
 public class CheckoutActivity extends AppCompatActivity {
@@ -222,10 +223,10 @@ public class CheckoutActivity extends AppCompatActivity {
                 loadFragment(new ShippingAddressFragment());
                 break;
             case PAYMENT_STEP:
-                loadFragment(new OrderReviewFragment());
+                loadFragment(new PaymentMethodFragment());
                 break;
             case ORDER_REVIEW_STEP:
-                // OrderReviewFragment already loaded in PAYMENT_STEP
+                loadFragment(new OrderReviewFragment());
                 break;
         }
     }

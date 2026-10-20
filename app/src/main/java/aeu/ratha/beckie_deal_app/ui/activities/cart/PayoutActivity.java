@@ -190,6 +190,7 @@ public class PayoutActivity extends BaseActivity {
         renderStep(1, false);
         loadCartFromAPI();
         loadShippingMethods(); // pre-fetch so Step 2 is ready when user arrives
+        loadPaymentOptions();  // fetch payment options from API (/payments/options?platform=mobile)
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -604,13 +605,81 @@ public class PayoutActivity extends BaseActivity {
     // Payment method selection
     // ─────────────────────────────────────────────────────────────────────────
 
+    private boolean isAbaPaymentEnabled = true;
+    private boolean isCodPaymentEnabled = true;
+
+    private void loadPaymentOptions() {
+        aeu.ratha.beckie_deal_app.data.api.PaymentApiService apiService =
+                aeu.ratha.beckie_deal_app.network.RetrofitClient.getClient(this)
+                        .create(aeu.ratha.beckie_deal_app.data.api.PaymentApiService.class);
+
+        apiService.getPaymentOptions("mobile").enqueue(new retrofit2.Callback<aeu.ratha.beckie_deal_app.data.models.PaymentOption>() {
+            @Override
+            public void onResponse(@androidx.annotation.NonNull retrofit2.Call<aeu.ratha.beckie_deal_app.data.models.PaymentOption> call,
+                                   @androidx.annotation.NonNull retrofit2.Response<aeu.ratha.beckie_deal_app.data.models.PaymentOption> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().data != null) {
+                    java.util.List<aeu.ratha.beckie_deal_app.data.models.PaymentOption.PaymentMethod> methods = response.body().data.methods;
+                    if (methods != null) {
+                        boolean aba = false;
+                        boolean cod = false;
+                        for (aeu.ratha.beckie_deal_app.data.models.PaymentOption.PaymentMethod m : methods) {
+                            if (PAYMENT_ABA.equals(m.key)) {
+                                aba = m.enabled;
+                            } else if (PAYMENT_COD.equals(m.key)) {
+                                cod = m.enabled;
+                            }
+                        }
+                        final boolean finalAba = aba;
+                        final boolean finalCod = cod;
+                        runOnUiThread(() -> {
+                            isAbaPaymentEnabled = finalAba;
+                            isCodPaymentEnabled = finalCod;
+
+                            // If ABA is disabled and COD is enabled, default to COD
+                            if (!finalAba && finalCod) {
+                                selectPaymentMethod(PAYMENT_COD);
+                            } else if (finalAba) {
+                                selectPaymentMethod(PAYMENT_ABA);
+                            }
+
+                            if (paymentCardAba != null) {
+                                paymentCardAba.setAlpha(finalAba ? 1.0f : 0.5f);
+                            }
+                            if (paymentCardCod != null) {
+                                paymentCardCod.setAlpha(finalCod ? 1.0f : 0.5f);
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@androidx.annotation.NonNull retrofit2.Call<aeu.ratha.beckie_deal_app.data.models.PaymentOption> call,
+                                  @androidx.annotation.NonNull Throwable t) {
+                Log.e(TAG, "Failed to load payment options: " + t.getMessage());
+            }
+        });
+    }
+
     private void setupPaymentMethodSelection() {
         if (paymentCardAba != null) {
-            paymentCardAba.setOnClickListener(v -> selectPaymentMethod(PAYMENT_ABA));
+            paymentCardAba.setOnClickListener(v -> {
+                if (!isAbaPaymentEnabled) {
+                    Toast.makeText(this, "ABA PayWay is currently unavailable. Please select Cash on Delivery.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                selectPaymentMethod(PAYMENT_ABA);
+            });
             UiAnimations.pressBounce(paymentCardAba);
         }
         if (paymentCardCod != null) {
-            paymentCardCod.setOnClickListener(v -> selectPaymentMethod(PAYMENT_COD));
+            paymentCardCod.setOnClickListener(v -> {
+                if (!isCodPaymentEnabled) {
+                    Toast.makeText(this, "Cash on Delivery is currently unavailable.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                selectPaymentMethod(PAYMENT_COD);
+            });
             UiAnimations.pressBounce(paymentCardCod);
         }
         // Render initial state
@@ -1087,15 +1156,14 @@ public class PayoutActivity extends BaseActivity {
             checkoutData.put("email", userEmail);
         }
 
-        // For COD (Cash on Delivery), shipping_method_id might not be needed
-        // Try sending null for COD, and the ID only if a method is selected
-        if (PAYMENT_COD.equals(selectedPaymentMethod)) {
-            // For COD, send null shipping_method_id to bypass validation
-            // The backend should handle COD without requiring a shipping method
-            checkoutData.put("shipping_method_id", null);
-        } else if (selectedShippingMethod != null) {
-            // For online payments (ABA), use the selected shipping method
+        // Include shipping_method_id (required by backend for all payment methods including COD)
+        if (selectedShippingMethod != null) {
             checkoutData.put("shipping_method_id", selectedShippingMethod.getId());
+        } else if (!availableShippingMethods.isEmpty()) {
+            checkoutData.put("shipping_method_id", availableShippingMethods.get(0).getId());
+        } else {
+            // Default fallback ID (1) if no shipping method was explicitly selected or loaded
+            checkoutData.put("shipping_method_id", 1);
         }
 
         String state = getText(shippingStateInput);
@@ -1348,12 +1416,13 @@ public class PayoutActivity extends BaseActivity {
             shippingMethodRadioGroup.addView(rb);
         }
 
-        // Auto-select if there is only one option — avoids friction for most stores
-        if (methods.size() == 1) {
-            ShippingMethod only = methods.get(0);
-            shippingMethodRadioGroup.check(only.getId());
-            selectedShippingMethod = only;
-            Log.d(TAG, "Auto-selected only shipping method: " + only);
+        // Auto-select first method as default if none selected yet
+        if (!methods.isEmpty()) {
+            if (selectedShippingMethod == null) {
+                selectedShippingMethod = methods.get(0);
+            }
+            shippingMethodRadioGroup.check(selectedShippingMethod.getId());
+            Log.d(TAG, "Selected shipping method: " + selectedShippingMethod);
         }
 
         // When user manually picks a method
