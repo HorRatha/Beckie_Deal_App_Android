@@ -175,7 +175,27 @@ public class CartActivity extends BaseActivity {
             checkoutSection.setVisibility(View.VISIBLE);
             cartList.removeAllViews();
 
+            // ── Deduplicate items by product ID ────────────────────────────────
+            java.util.Map<String, CartItem> deduplicatedItems = new java.util.LinkedHashMap<>();
+            
             for (CartItem item : cart.getItems()) {
+                aeu.ratha.beckie_deal_app.data.models.Product product = item.getProduct();
+                String productId = (product != null && product.getId() != null) 
+                        ? product.getId() 
+                        : null;
+                
+                if (productId != null && deduplicatedItems.containsKey(productId)) {
+                    // Merge quantities: sum up quantities for duplicate product
+                    CartItem existing = deduplicatedItems.get(productId);
+                    existing.setQuantity(existing.getQuantity() + item.getQuantity());
+                } else if (productId != null) {
+                    // New product - add it
+                    deduplicatedItems.put(productId, item);
+                }
+            }
+            
+            // Display deduplicated items
+            for (CartItem item : deduplicatedItems.values()) {
                 inflateCartItem(cartList, item);
             }
 
@@ -289,6 +309,24 @@ public class CartActivity extends BaseActivity {
                 .centerInside()
                 .placeholder(R.drawable.placeholder_image)
                 .into(image);
+
+        // ── Product Click Navigation ────────────────────────────────────────
+        View.OnClickListener goToProductDetail = btn -> {
+            if (product != null && product.getId() != null) {
+                Intent intent = new Intent(CartActivity.this, aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity.class);
+                intent.putExtra("product_id", product.getId());
+                startActivity(intent);
+            }
+        };
+
+        if (image != null) {
+            image.setOnClickListener(goToProductDetail);
+            UiAnimations.pressBounce(image);
+        }
+
+        if (name != null) {
+            name.setOnClickListener(goToProductDetail);
+        }
 
         // Bind dynamic data
         refreshItemRow(item, quantityTv, subtotalTv);
