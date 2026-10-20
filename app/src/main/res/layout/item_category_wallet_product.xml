@@ -38,7 +38,6 @@
             android:layout_height="20dp"
             android:layout_gravity="top|end"
             android:layout_margin="3dp"
-            android:background="@drawable/favorite_background"
             android:padding="3dp"
             android:src="@drawable/ic_favorite_border"
             app:tint="@color/text_secondary"
@@ -94,10 +93,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="In stock"
-            android:textColor="#1565C0"
+            android:textColor="@color/status_shipped"
             android:textSize="8sp"
             android:drawableStart="@drawable/dot_small"
-            android:drawableTint="#1565C0"
+            android:drawableTint="@color/status_shipped"
             android:drawablePadding="1dp"
             android:maxLines="1" />
 
@@ -108,10 +107,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="1 yr"
-            android:textColor="#2E7D32"
+            android:textColor="@color/status_delivered"
             android:textSize="8sp"
             android:drawableStart="@drawable/dot_small"
-            android:drawableTint="#2E7D32"
+            android:drawableTint="@color/status_delivered"
             android:drawablePadding="1dp"
             android:maxLines="1" />
 

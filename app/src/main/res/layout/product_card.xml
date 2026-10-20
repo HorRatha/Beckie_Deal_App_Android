@@ -38,7 +38,6 @@
                 android:layout_height="28dp"
                 android:layout_gravity="top|end"
                 android:layout_margin="6dp"
-                android:background="@drawable/favorite_background"
                 android:padding="5dp"
                 android:src="@drawable/ic_favorite_border"
                 app:tint="@color/text_secondary" />
@@ -132,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:text="Available"
                         android:textAppearance="@style/TextAppearance.App.Label"
-                        android:textColor="#1565C0"
+                        android:textColor="@color/status_shipped"
                         android:maxLines="1"
                         android:ellipsize="end" />
                 </LinearLayout>
@@ -166,7 +165,7 @@
                         android:layout_height="wrap_content"
                         android:text="1 Year"
                         android:textAppearance="@style/TextAppearance.App.Label"
-                        android:textColor="#2E7D32"
+                        android:textColor="@color/status_delivered"
                         android:maxLines="1"
                         android:ellipsize="end" />
                 </LinearLayout>

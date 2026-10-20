@@ -130,15 +130,11 @@ public class ProductDetailActivity extends BaseActivity {
         ImageView back = findViewById(R.id.backButton);
         if (back != null) back.setOnClickListener(v -> finish());
 
-        ImageView share = findViewById(R.id.shareIcon);
-        if (share != null) share.setOnClickListener(v ->
-                Toast.makeText(this, "Link copied!", Toast.LENGTH_SHORT).show());
-
         View notificationContainer = findViewById(R.id.notificationContainer);
         if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
 
-        UiAnimations.pressBounce(back, share, notificationContainer);
+        UiAnimations.pressBounce(back, notificationContainer);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

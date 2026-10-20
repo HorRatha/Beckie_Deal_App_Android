@@ -26,7 +26,7 @@
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:strokeWidth="0dp"
-            app:cardBackgroundColor="#FFF7ED">
+            app:cardBackgroundColor="@color/badge_bg">
 
             <ImageView
                 android:id="@+id/specCardIcon"
