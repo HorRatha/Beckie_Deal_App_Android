@@ -48,6 +48,7 @@ public class WishlistActivity extends BaseActivity {
     private WishlistRepository wishlistRepository;
     private ProgressBar loadingIndicator;
     private List<MainActivity.Product> cachedWishlistProducts = new ArrayList<>();
+    private AppDrawerHelper drawerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class WishlistActivity extends BaseActivity {
         wishlistRepository = new WishlistRepository(this);
         loadingIndicator = findViewById(R.id.wishlistLoadingIndicator);
 
-        AppDrawerHelper drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         // Refresh drawer with latest user data from API to ensure sidebar shows correct user across all pages
         drawerHelper.refreshDrawerWithLatestUserData(this);
         setupTopBar();
@@ -181,6 +182,13 @@ public class WishlistActivity extends BaseActivity {
                         }
                         
                         displayWishlistGrid(cachedWishlistProducts, wishlistGrid, emptyState);
+                        
+                        // ── Update drawer badge with the actual filtered count ──────────────
+                        // Only count items that were successfully mapped and displayed
+                        int actualCount = cachedWishlistProducts.size();
+                        if (drawerHelper != null) {
+                            drawerHelper.updateWishlistBadgeCount(actualCount);
+                        }
                     }
                 });
             }
@@ -263,6 +271,12 @@ public class WishlistActivity extends BaseActivity {
                     showLoading(false);
                     Toast.makeText(WishlistActivity.this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
                     displayWishlist(); // Refresh the list
+                    
+                    // ── Refresh drawer badge after removing from wishlist ────────────
+                    // This ensures the sidebar badge updates in real-time
+                    if (drawerHelper != null) {
+                        drawerHelper.refreshWishlistBadge();
+                    }
                 });
             }
 

@@ -195,6 +195,64 @@ public class AppDrawerHelper {
     }
 
     /**
+     * Refresh only the wishlist badge in the drawer.
+     * Call this when the wishlist is updated without needing to refresh the whole drawer.
+     */
+    public void refreshWishlistBadge() {
+        if (drawerLayout == null) return;
+        
+        TextView wishlistBadge = drawerLayout.findViewById(R.id.drawerWishlistBadge);
+        if (wishlistBadge != null) {
+            // Fetch wishlist count from API
+            WishlistRepository wishlistRepository = new WishlistRepository(activity);
+            wishlistRepository.getWishlist(new WishlistRepository.WishlistCallback() {
+                @Override
+                public void onSuccess(WishlistResponse response) {
+                    activity.runOnUiThread(() -> {
+                        int wishlistCount = response.getData() != null ? response.getData().getItemCount() : 0;
+                        if (wishlistCount > 0) {
+                            wishlistBadge.setText(String.valueOf(wishlistCount));
+                            wishlistBadge.setVisibility(View.VISIBLE);
+                        } else {
+                            wishlistBadge.setVisibility(View.GONE);
+                        }
+                        android.util.Log.d("AppDrawerHelper", "✅ Wishlist badge updated to: " + wishlistCount);
+                    });
+                }
+                
+                @Override
+                public void onError(String error) {
+                    // On error, hide badge
+                    activity.runOnUiThread(() -> wishlistBadge.setVisibility(View.GONE));
+                    android.util.Log.e("AppDrawerHelper", "❌ Failed to refresh wishlist badge: " + error);
+                }
+            });
+        }
+    }
+
+    /**
+     * Update wishlist badge with a specific count value.
+     * Use this when you already have the accurate count from the UI and want to update the badge directly
+     * without making another API call.
+     * 
+     * @param count The actual count of wishlist items to display
+     */
+    public void updateWishlistBadgeCount(int count) {
+        if (drawerLayout == null) return;
+        
+        TextView wishlistBadge = drawerLayout.findViewById(R.id.drawerWishlistBadge);
+        if (wishlistBadge != null) {
+            if (count > 0) {
+                wishlistBadge.setText(String.valueOf(count));
+                wishlistBadge.setVisibility(View.VISIBLE);
+            } else {
+                wishlistBadge.setVisibility(View.GONE);
+            }
+            android.util.Log.d("AppDrawerHelper", "✅ Wishlist badge directly updated to: " + count);
+        }
+    }
+
+    /**
      * Refresh drawer with fresh user data from ProfileRepository.
      * Call this to fetch latest user info from API and update the drawer.
      * This ensures all activities show the same user name.
