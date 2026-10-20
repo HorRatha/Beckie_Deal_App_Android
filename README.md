@@ -14,17 +14,32 @@
 
 <div align="center">
   
-### Home & Discover
-<img src="assets/home1.png" alt="Home Screen" width="280" style="border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"/>
-
-### Browse & Explore
-<img src="assets/home2.png" alt="Explore Screen" width="280" style="border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"/>
-
-### Wishlist & Favorites
-<img src="assets/wishlist.png" alt="Wishlist" width="280" style="border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"/>
-
-### Profile & Account
-<img src="assets/profile.png" alt="Profile" width="280" style="border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"/>
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/home1.png" alt="Home Screen" width="250" style="border-radius: 20px;"/>
+      <br/>
+      <b>Home & Discover</b>
+    </td>
+    <td align="center">
+      <img src="assets/home2.png" alt="Explore Screen" width="250" style="border-radius: 20px;"/>
+      <br/>
+      <b>Browse & Explore</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/wishlist.png" alt="Wishlist" width="250" style="border-radius: 20px;"/>
+      <br/>
+      <b>Wishlist & Favorites</b>
+    </td>
+    <td align="center">
+      <img src="assets/profile.png" alt="Profile" width="250" style="border-radius: 20px;"/>
+      <br/>
+      <b>Profile & Account</b>
+    </td>
+  </tr>
+</table>
 
 </div>
 
