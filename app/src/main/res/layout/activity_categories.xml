@@ -109,26 +109,29 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingHorizontal="20dp"
-                    android:paddingTop="16dp"
+                    android:paddingTop="32dp"
                     android:paddingBottom="8dp"
                     android:layout_marginTop="-220dp"
-                    android:layout_marginBottom="20dp">
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:text="Categories"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_headline_large" />
+                        android:text="Explore Your Next Upgrade"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_size_headline_large"
+                        android:textAlignment="center" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Explore our premium collection by hardware type"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_body" />
+                        android:text="Discover laptops, computers, and premium tech from brands you trust."
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_size_body"
+                        android:textAlignment="center" />
 
                 </LinearLayout>
 

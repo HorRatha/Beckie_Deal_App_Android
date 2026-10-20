@@ -84,6 +84,129 @@
     <string name="slide_default_button">Learn More</string>
     <string name="slide_cta_button">View promotion</string>
 
+    <!-- ── Hero Section Content ── -->
+    <!-- Categories -->
+    <string name="hero_laptops_title">Power Your Productivity</string>
+    <string name="hero_laptops_desc">High-performance laptops from industry leaders. Perfect for work, gaming, and creation.</string>
+    
+    <string name="hero_gaming_laptops_title">Unleash Maximum Performance</string>
+    <string name="hero_gaming_laptops_desc">Top-tier gaming machines with cutting-edge GPUs and processors for ultimate gaming.</string>
+    
+    <string name="hero_ultrabooks_title">Ultimate Portability Meets Power</string>
+    <string name="hero_ultrabooks_desc">Ultra-thin, lightweight laptops designed for professionals on the move.</string>
+    
+    <string name="hero_desktop_title">Build Your Gaming Fortress</string>
+    <string name="hero_desktop_desc">Powerful desktop systems for serious gamers and professionals.</string>
+    
+    <string name="hero_components_title">Build Your Perfect Machine</string>
+    <string name="hero_components_desc">Premium components from top brands to upgrade and customize your PC.</string>
+    
+    <string name="hero_smartphones_title">Stay Connected, Always In Control</string>
+    <string name="hero_smartphones_desc">Latest flagship phones with stunning displays and powerful cameras.</string>
+    
+    <string name="hero_tablets_title">Your Portable Workspace</string>
+    <string name="hero_tablets_desc">Premium tablets for work, entertainment, and creativity.</string>
+    
+    <string name="hero_ipad_title">Innovation in Your Hands</string>
+    <string name="hero_ipad_desc">Apple\'s most advanced tablets for productivity and creativity.</string>
+    
+    <string name="hero_gaming_title">Level Up Your Game</string>
+    <string name="hero_gaming_desc">Everything you need to dominate—consoles, peripherals, and accessories.</string>
+    
+    <string name="hero_gaming_consoles_title">Experience Next-Gen Gaming</string>
+    <string name="hero_gaming_consoles_desc">Latest gaming systems with immersive gameplay and exclusive titles.</string>
+    
+    <string name="hero_gaming_peripherals_title">Competitive Edge Awaits</string>
+    <string name="hero_gaming_peripherals_desc">Pro-grade gaming mice, keyboards, and headsets for serious players.</string>
+    
+    <string name="hero_audio_title">Hear Every Detail</string>
+    <string name="hero_audio_desc">Premium audio equipment for music lovers and professionals.</string>
+    
+    <string name="hero_headphones_title">Immersive Sound Quality</string>
+    <string name="hero_headphones_desc">From casual listening to studio-grade headphones—find your perfect fit.</string>
+    
+    <string name="hero_earbuds_title">Freedom Without Compromise</string>
+    <string name="hero_earbuds_desc">True wireless audio with premium sound and long battery life.</string>
+    
+    <string name="hero_speakers_title">Fill Your Space With Sound</string>
+    <string name="hero_speakers_desc">Powerful speakers for home, office, or outdoor adventures.</string>
+    
+    <string name="hero_monitors_title">Visual Excellence Redefined</string>
+    <string name="hero_monitors_desc">Ultra-sharp displays for productivity, gaming, and creative work.</string>
+    
+    <string name="hero_gaming_monitors_title">Competitive Clarity</string>
+    <string name="hero_gaming_monitors_desc">High refresh rate monitors with stunning visuals for gaming supremacy.</string>
+    
+    <string name="hero_4k_displays_title">Crystal Clear Perfection</string>
+    <string name="hero_4k_displays_desc">Professional-grade 4K monitors for photographers and content creators.</string>
+    
+    <string name="hero_wearables_title">The Future On Your Wrist</string>
+    <string name="hero_wearables_desc">Smart wearables that keep you connected and healthy.</string>
+    
+    <string name="hero_smartwatches_title">Stay Connected On Your Wrist</string>
+    <string name="hero_smartwatches_desc">Feature-rich smartwatches for fitness, health, and style.</string>
+    
+    <string name="hero_fitness_trackers_title">Track Every Moment</string>
+    <string name="hero_fitness_trackers_desc">Advanced health monitoring for your active lifestyle.</string>
+    
+    <string name="hero_accessories_title">Complete Your Tech Setup</string>
+    <string name="hero_accessories_desc">Essential accessories to protect and enhance your devices.</string>
+    
+    <string name="hero_phone_cases_title">Protect What You Love</string>
+    <string name="hero_phone_cases_desc">Durable cases and screen protectors for all your devices.</string>
+    
+    <string name="hero_chargers_title">Power On Demand</string>
+    <string name="hero_chargers_desc">Fast chargers and reliable cables for all your tech needs.</string>
+    
+    <string name="hero_bags_title">Carry Your World</string>
+    <string name="hero_bags_desc">Quality bags and storage solutions for tech enthusiasts.</string>
+    
+    <!-- Brands -->
+    <string name="hero_apple_title">Innovation. Period.</string>
+    <string name="hero_apple_desc">Cutting-edge technology designed to perfection. Explore MacBooks, iPhones, and more.</string>
+    
+    <string name="hero_samsung_title">Experience Galaxy Innovation</string>
+    <string name="hero_samsung_desc">Premium devices that push the boundaries of technology and design.</string>
+    
+    <string name="hero_microsoft_title">Productivity Redefined</string>
+    <string name="hero_microsoft_desc">Surface devices and tech that empower your work and creativity.</string>
+    
+    <string name="hero_asus_rog_title">Republic of Gamers</string>
+    <string name="hero_asus_rog_desc">High-performance gaming rigs and peripherals for competitive play.</string>
+    
+    <string name="hero_razer_title">Focused. Intuitive. Lethal.</string>
+    <string name="hero_razer_desc">Gaming hardware engineered for peak performance and precision.</string>
+    
+    <string name="hero_corsair_title">Built For Performance</string>
+    <string name="hero_corsair_desc">Professional-grade gaming and PC components trusted by esports champions.</string>
+    
+    <string name="hero_dell_title">Enterprise Solutions</string>
+    <string name="hero_dell_desc">Reliable workstations and business laptops trusted worldwide.</string>
+    
+    <string name="hero_hp_title">Imagine What\'s Possible</string>
+    <string name="hero_hp_desc">Innovative devices for professionals and creators.</string>
+    
+    <string name="hero_lenovo_title">Innovation Never Stops</string>
+    <string name="hero_lenovo_desc">ThinkPad for professionals who demand reliability and performance.</string>
+    
+    <string name="hero_sony_title">Hear The Difference</string>
+    <string name="hero_sony_desc">Premium audio equipment with legendary sound quality.</string>
+    
+    <string name="hero_bose_title">Quiet. Powerful. Connected.</string>
+    <string name="hero_bose_desc">Revolutionary noise-canceling technology and superior sound.</string>
+    
+    <string name="hero_sennheiser_title">The Sound of Excellence</string>
+    <string name="hero_sennheiser_desc">Professional audio equipment for audiophiles and studios.</string>
+    
+    <string name="hero_xiaomi_title">Innovation For Everyone</string>
+    <string name="hero_xiaomi_desc">Feature-packed tech at exceptional value. Premium features, smart pricing.</string>
+    
+    <string name="hero_oneplus_title">Never Settle</string>
+    <string name="hero_oneplus_desc">Flagship performance without the flagship price tag.</string>
+    
+    <string name="hero_realme_title">Youth Unleashed</string>
+    <string name="hero_realme_desc">Youthful innovation. Powerful. Bold. Affordable.</string>
+
     <!-- ── Change Password ── -->
     <string name="change_password">Change Password</string>
     <string name="change_password_subtitle">Update your password to keep your account secure</string>

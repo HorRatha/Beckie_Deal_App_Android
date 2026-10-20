@@ -271,38 +271,6 @@
                     android:checked="false" />
             </LinearLayout>
 
-            <!-- Language -->
-            <LinearLayout
-                android:id="@+id/drawerLanguage"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:background="@drawable/drawer_item_bg"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="12dp">
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_language"
-                    android:contentDescription="Language"
-                    app:tint="@color/text_secondary" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="14dp"
-                    android:text="Language"
-                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
-                <TextView
-                    android:id="@+id/drawerLanguageValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="English"
-                    android:textAppearance="@style/TextAppearance.App.Body" />
-            </LinearLayout>
-
             <!-- Divider -->
             <View
                 android:layout_width="match_parent"

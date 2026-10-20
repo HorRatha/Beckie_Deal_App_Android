@@ -88,9 +88,9 @@ public class ProductCardBinder {
         TextView stockView = cardView.findViewById(R.id.stockStatus);
         if (stockView != null) {
             stockView.setText(product.inStock ? "Available In Stock" : "Out Of Stock");
-            stockView.setTextColor(product.inStock
-                    ? 0xFF1565C0   // blue
-                    : 0xFFB71C1C); // dark red
+            // Use theme colors for light/dark mode consistency
+            stockView.setTextColor(ContextCompat.getColor(context,
+                    product.inStock ? R.color.status_shipped : R.color.status_cancelled));
         }
 
         // ── Warranty ──────────────────────────────────────────────────────

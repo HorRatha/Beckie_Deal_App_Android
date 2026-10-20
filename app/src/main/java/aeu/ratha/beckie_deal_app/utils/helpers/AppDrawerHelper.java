@@ -660,13 +660,6 @@ public class AppDrawerHelper {
         });
         prepareDrawerItem(notifItem);
 
-        View languageItem = drawerLayout.findViewById(R.id.drawerLanguage);
-        if (languageItem != null) languageItem.setOnClickListener(v -> {
-            closeDrawer();
-            Toast.makeText(activity, "Language settings — coming soon", Toast.LENGTH_SHORT).show();
-        });
-        prepareDrawerItem(languageItem);
-
         View aboutItem = drawerLayout.findViewById(R.id.drawerAbout);
         if (aboutItem != null) aboutItem.setOnClickListener(v -> {
             closeDrawer();

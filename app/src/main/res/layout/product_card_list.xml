@@ -107,7 +107,7 @@
                 android:layout_marginTop="4dp"
                 android:text=""
                 android:textAppearance="@style/TextAppearance.App.Label"
-                android:textColor="#00897B"
+                android:textColor="@color/status_shipped"
                 android:visibility="gone" />
 
             <TextView

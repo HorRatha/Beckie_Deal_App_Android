@@ -29,6 +29,7 @@ import aeu.ratha.beckie_deal_app.ui.components.FilterBottomSheet;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.HeroContentManager;
 import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
 import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
 import aeu.ratha.beckie_deal_app.data.models.WishlistItemResponse;
@@ -180,8 +181,21 @@ public class CategoryDetailActivity extends BaseActivity {
         TextView heroTitle  = findViewById(R.id.heroTitle);
         TextView heroSub    = findViewById(R.id.heroSubtitle);
 
-        if (heroTitle != null) heroTitle.setText(currentCategoryName);
-        if (heroSub   != null) heroSub.setText(itemCount != null ? itemCount : "");
+        // Get tailored hero content based on category name
+        HeroContentManager heroManager = new HeroContentManager(this);
+        androidx.core.util.Pair<String, String> heroContent = heroManager.getHeroContentForCategory(currentCategoryName);
+        
+        if (heroTitle != null && heroContent != null) {
+            heroTitle.setText(heroContent.first);
+        } else if (heroTitle != null) {
+            heroTitle.setText(currentCategoryName);
+        }
+        
+        if (heroSub != null && heroContent != null) {
+            heroSub.setText(heroContent.second);
+        } else if (heroSub != null) {
+            heroSub.setText(itemCount != null ? itemCount : "");
+        }
         
         // Wave background is now used instead of dynamic image
     }

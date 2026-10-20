@@ -7,7 +7,7 @@
         <item name="android:fontFamily">@font/amulya_bold</item>
         <item name="android:textSize">28sp</item>
         <item name="android:letterSpacing">-0.02</item>
-        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColor">#000000</item>
     </style>
     
     <!-- Auth Title - Large Bold for Login/Register screens - Amulya Bold 34sp -->
@@ -64,7 +64,7 @@
         <item name="android:textSize">15sp</item>
         <item name="android:letterSpacing">0</item>
         <item name="android:lineSpacingMultiplier">1.6</item>
-        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textColor">#000000</item>
     </style>
     
     <!-- Specs List - Synonym Regular 14sp, line-height 1.5, tracking 0 -->
