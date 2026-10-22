@@ -131,4 +131,21 @@
     <style name="Widget.App.Button.Dialog.Text" parent="Widget.Material3.Button.TextButton">
         <item name="android:textColor">@color/text_secondary</item>
     </style>
+
+    <!-- Network Error Dialog Style -->
+    <style name="AppAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.App.AlertDialog</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.32</item>
+    </style>
+
+    <!-- Rounded corners for alert dialogs -->
+    <style name="ShapeAppearance.App.AlertDialog" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
 </resources>
