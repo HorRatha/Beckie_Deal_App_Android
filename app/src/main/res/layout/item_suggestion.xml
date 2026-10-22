@@ -1,84 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Suggestion Product Card — Matches product_card.xml design
+    Flat, no border, no shadow, no rounded corners. Full premium look.
+-->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/suggestionRoot"
-    android:layout_width="132dp"
+    android:layout_width="160dp"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="8dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/surface"
+    android:layout_margin="2dp"
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
-    app:strokeColor="@color/border_color"
-    app:strokeWidth="1dp">
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="@color/product_card_bg"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Product image with quick add button -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="104dp"
+            android:layout_height="160dp"
             android:background="@color/card_bg_secondary">
 
             <ImageView
                 android:id="@+id/suggestionImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="10dp"
-                android:scaleType="centerInside"
+                android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_image" />
 
-            <FrameLayout
+            <!-- Favorite icon (top-right) -->
+            <ImageView
+                android:id="@+id/suggestionFavorite"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="6dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_favorite_border"
+                android:contentDescription="Add to favorites"
+                app:tint="@color/text_secondary"
+                android:visibility="gone" />
+
+            <!-- Quick add button (bottom-right) -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/suggestionAdd"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="6dp"
-                android:background="@color/yellow_star"
-                android:clickable="true"
-                android:contentDescription="Add to cart"
-                android:focusable="true">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/yellow_star">
 
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_gravity="center"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_plus_24"
+                    android:src="@drawable/add_shopping_cart_24"
                     app:tint="@color/dark_brown" />
-            </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
         </FrameLayout>
 
+        <!-- Brand bar (horizontal divider) -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/brand_bar_gradient" />
+
+        <!-- Info section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:paddingHorizontal="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="8dp">
 
+            <!-- Product name -->
             <TextView
                 android:id="@+id/suggestionName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="2"
-                android:text="Product"
-                android:textAppearance="@style/TextAppearance.App.Label"
-                android:textAllCaps="false"
-                android:textColor="@color/text_primary" />
+                android:text="Product Name"
+                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                android:maxLines="2"
+                android:ellipsize="end" />
 
+            <!-- Price -->
             <TextView
                 android:id="@+id/suggestionPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:text="$0.00"
                 android:textAppearance="@style/TextAppearance.App.CardPrice"
-                android:textColor="@color/red_error" />
+                android:textSize="18sp"
+                android:textColor="@color/red_error"
+                android:textStyle="bold" />
+
+            <!-- Stock badge -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/dot_small"
+                    android:backgroundTint="@color/status_shipped" />
+
+                <TextView
+                    android:id="@+id/suggestionStock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="In Stock"
+                    android:textAppearance="@style/TextAppearance.App.Label"
+                    android:textColor="@color/status_shipped"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

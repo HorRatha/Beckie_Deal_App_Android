@@ -5,7 +5,9 @@ import aeu.ratha.beckie_deal_app.data.models.Cart;
 import aeu.ratha.beckie_deal_app.data.models.CartItem;
 import aeu.ratha.beckie_deal_app.data.models.CartItemResponse;
 import aeu.ratha.beckie_deal_app.data.models.CartResponse;
+import aeu.ratha.beckie_deal_app.data.models.Product;
 import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
+import aeu.ratha.beckie_deal_app.data.repository.ProductRepository;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
@@ -30,6 +32,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -391,27 +394,48 @@ public class CartActivity extends BaseActivity {
     // ─────────────────────────────────────────────────────────────────────────
 
     /**
-     * Fill this from your product API: for example products in the same category
-     * as the cart items, or featured / best-selling products. Already-in-cart
-     * products are skipped. While this passes null, the section stays hidden.
+     * Load suggested products to show in "You may also like" section.
+     * Fetches featured products and filters out items already in cart.
      */
     private void loadSuggestions(Set<String> cartProductIds) {
-        // TODO: replace with your real call. Example shape:
-        //
-        // productRepository.getRelatedProducts(cartProductIds, new ProductRepository.ListCallback() {
-        //     @Override public void onSuccess(List<Product> products) {
-        //         List<SuggestedProduct> tiles = new ArrayList<>();
-        //         for (Product p : products) {
-        //             if (cartProductIds.contains(p.getId())) continue;
-        //             tiles.add(new SuggestedProduct(p.getId(), p.getName(),
-        //                     p.hasDiscount() ? p.getSalePriceAsDouble() : p.getPriceAsDouble(),
-        //                     p.getThumbnail()));
-        //         }
-        //         runOnUiThread(() -> showSuggestions(tiles));
-        //     }
-        //     @Override public void onError(String error) { /* keep hidden */ }
-        // });
-        showSuggestions(null);
+        ProductRepository productRepository = ProductRepository.getInstance(this);
+        
+        // Fetch featured products (limit to 10, starting from offset 0)
+        productRepository.fetchProducts(10, 0, true, new ProductRepository.ProductCallback() {
+            @Override
+            public void onSuccess(List<Product> products, int total) {
+                List<SuggestedProduct> suggestions = new ArrayList<>();
+                
+                // Convert to SuggestedProduct, skipping items already in cart
+                for (Product p : products) {
+                    if (cartProductIds.contains(p.getId())) {
+                        continue; // Skip products already in cart
+                    }
+                    
+                    double price = (p.hasDiscount() && p.getSalePriceAsDouble() > 0)
+                            ? p.getSalePriceAsDouble()
+                            : p.getPriceAsDouble();
+                    
+                    suggestions.add(new SuggestedProduct(
+                            p.getId(),
+                            p.getName(),
+                            price,
+                            p.getThumbnail()
+                    ));
+                }
+                
+                // Show suggestions if we have any
+                if (!suggestions.isEmpty()) {
+                    runOnUiThread(() -> showSuggestions(suggestions));
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                // Silently fail - suggestions are optional
+                android.util.Log.e("CartActivity", "Failed to load suggestions: " + errorMessage);
+            }
+        });
     }
 
     private void showSuggestions(List<SuggestedProduct> items) {
@@ -432,13 +456,20 @@ public class CartActivity extends BaseActivity {
             ImageView img = tile.findViewById(R.id.suggestionImage);
             TextView name = tile.findViewById(R.id.suggestionName);
             TextView price = tile.findViewById(R.id.suggestionPrice);
+            TextView stock = tile.findViewById(R.id.suggestionStock);
             View add = tile.findViewById(R.id.suggestionAdd);
 
             name.setText(p.name);
             price.setText(String.format(Locale.US, "$%.2f", p.price));
+            
+            // Set stock status
+            if (stock != null) {
+                stock.setText("In Stock");
+            }
+            
             Glide.with(this)
                     .load(ImageUrlHelper.getImageUrlOrFallback(p.imageUrl))
-                    .centerInside()
+                    .centerCrop()
                     .placeholder(R.drawable.placeholder_image)
                     .into(img);
 
@@ -450,8 +481,23 @@ public class CartActivity extends BaseActivity {
             };
             tile.setOnClickListener(openDetail);
 
-            // TODO: quick add. Until you wire your add-to-cart call here, "+" opens the product.
-            add.setOnClickListener(openDetail);
+            // Quick add button: add to cart with quantity 1
+            add.setOnClickListener(v -> {
+                cartRepository.addToCart(p.id, 1, new CartRepository.CartItemCallback() {
+                    @Override
+                    public void onSuccess(CartItemResponse response) {
+                        Toast.makeText(CartActivity.this, p.name + " added to cart", Toast.LENGTH_SHORT).show();
+                        loadCartFromAPI(); // Reload cart to show updated items
+                        updateCartBadge();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(CartActivity.this, "Failed to add: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+            
             UiAnimations.pressBounce(add);
 
             row.addView(tile);
