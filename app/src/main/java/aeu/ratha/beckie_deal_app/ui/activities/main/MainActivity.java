@@ -363,80 +363,128 @@ public class MainActivity extends BaseActivity {
      * Endpoint: GET /api/v1/master/categories?limit=20&offset=0
      */
     private void fetchCategories() {
-        Log.d(TAG, "=== FETCHING CATEGORIES FROM API ===");
+        Log.d(TAG, "=== FETCHING CURATED CATEGORIES ===");
         
         categoryRepository.fetchActiveCategories(new CategoryRepository.CategoryCallback() {
             @Override
             public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Category> categories, int total) {
-                Log.d(TAG, "✓ API SUCCESS: Received " + categories.size() + " categories");
+                if (categories == null || categories.isEmpty()) {
+                    setupCategories(); // Render empty
+                    return;
+                }
+                
+                Log.d(TAG, "✓ Received " + categories.size() + " categories");
                 
                 apiCategories.clear();
-                categoryDisplayList.clear();
+                apiCategories.addAll(categories);
                 
-                if (categories != null) {
-                    apiCategories.addAll(categories);
+                // Efficient filtering with duplicate detection
+                categoryDisplayList.clear();
+                java.util.Set<Integer> usedOrders = new java.util.HashSet<>(9);
+                
+                for (aeu.ratha.beckie_deal_app.data.models.Category category : categories) {
+                    CuratedCategoryInfo info = getCuratedCategoryInfo(category.getName());
                     
-                    // Map API categories to UI display format
-                    for (aeu.ratha.beckie_deal_app.data.models.Category category : categories) {
-                        int iconRes = getCategoryIcon(category.getName());
-                        int accentIconRes = getCategoryAccentIcon(category.getName());
-                        boolean isHighlighted = category.isFeatured();
-                        
-                        Log.d(TAG, "  - " + category.getName() + " (ID: " + category.getId() + 
-                            ", slug: " + category.getSlug() + ", featured: " + isHighlighted + 
-                            ", children: " + category.getChildrenCount() + ")");
-                        
+                    if (info != null && usedOrders.add(info.displayOrder)) {
                         categoryDisplayList.add(new CategoryDisplay(
-                            category, 
-                            iconRes, 
-                            accentIconRes,
-                            isHighlighted
-                        ));
+                            category, info.imageResId, info.displayName, info.displayOrder));
                     }
                 }
                 
-                Log.d(TAG, "=== RENDERING " + categoryDisplayList.size() + " CATEGORIES ===");
+                // Guarantee "Laptop" curated category displays on frontend
+                // if no category explicitly matched Laptop from API
+                if (usedOrders.add(2)) {
+                    aeu.ratha.beckie_deal_app.data.models.Category fallbackLaptop = 
+                        new aeu.ratha.beckie_deal_app.data.models.Category(2, "Laptop", "laptops");
+                    categoryDisplayList.add(new CategoryDisplay(
+                        fallbackLaptop, R.drawable.laptop, "Laptop", 2));
+                }
+                
+                // Single sort operation
+                java.util.Collections.sort(categoryDisplayList, (a, b) -> 
+                    Integer.compare(a.displayOrder, b.displayOrder));
+                
+                Log.d(TAG, "✓ Filtered to " + categoryDisplayList.size() + " curated categories");
                 setupCategories();
             }
             
             @Override
             public void onError(String errorMessage) {
-                Log.e(TAG, "✗ API ERROR: " + errorMessage);
-                initFallbackCategories();
+                Log.e(TAG, "✗ Error: " + errorMessage);
+                categoryDisplayList.clear();
                 setupCategories();
             }
         });
     }
     
     /**
-     * Map category name from API to appropriate icon resource.
-     * This converts API category names like "Computer Components" to UI icons.
+     * Map curated category names to webp images and display order.
+     * Returns null if category is not in the curated list.
+     * 
+     * Curated categories in order:
+     * 1. accessories, 2. laptop, 3. macbook, 4. gaming, 5. smartphone, 
+     * 6. tablet, 7. storage, 8. network, 9. monitor
      */
-    private int getCategoryIcon(String categoryName) {
-        String name = categoryName.toLowerCase();
-        if (name.contains("laptop") || name.contains("computer")) return R.drawable.devices_24;
-        if (name.contains("phone") || name.contains("mobile")) return R.drawable.mobile_24;
-        if (name.contains("accessor")) return R.drawable.widgets_24;
-        if (name.contains("gaming") || name.contains("game")) return R.drawable.sports_esports_24;
-        if (name.contains("wearable") || name.contains("watch")) return R.drawable.devices_wearables_24;
-        if (name.contains("monitor") || name.contains("display")) return R.drawable.devices_24;
-        if (name.contains("storage") || name.contains("drive")) return R.drawable.widgets_24;
-        if (name.contains("network")) return R.drawable.widgets_24;
-        return R.drawable.widgets_24; // Default icon
+    private CuratedCategoryInfo getCuratedCategoryInfo(String categoryName) {
+        String name = categoryName.toLowerCase().trim();
+        
+        Log.d(TAG, "Matching category: '" + categoryName + "' -> '" + name + "'");
+        
+        // Check most specific patterns first to avoid false matches
+        
+        // Check for MacBook FIRST (before generic laptop check)
+        if (name.contains("macbook") || (name.contains("mac") && name.contains("book"))) {
+            Log.d(TAG, "  ✓ Matched as MacBook");
+            return new CuratedCategoryInfo("MacBook", R.drawable.macbook_pro, 3);
+        }
+        
+        // Define curated categories with their display order and image resource
+        if (name.contains("accessor")) {
+            Log.d(TAG, "  ✓ Matched as Accessories");
+            return new CuratedCategoryInfo("Accessories", R.drawable.accessories, 1);
+        } else if ((name.contains("laptop") || name.contains("computer") || name.contains("desktop") ||
+                    name.contains("asus") || name.contains("dell") || name.contains("hp") ||
+                    name.contains("lenovo") || name.contains("acer") || name.contains("msi") ||
+                    name.contains("notebook") || name.contains("ultrabook") || name.contains("workstation")) && !name.contains("gaming")) {
+            Log.d(TAG, "  ✓ Matched as Laptop");
+            return new CuratedCategoryInfo("Laptop", R.drawable.laptop, 2);
+        } else if (name.contains("gaming")) {
+            Log.d(TAG, "  ✓ Matched as Gaming");
+            return new CuratedCategoryInfo("Gaming", R.drawable.gaming_laptop, 4);
+        } else if (name.contains("phone") || name.contains("mobile") || name.contains("smartphone")) {
+            Log.d(TAG, "  ✓ Matched as Smartphone");
+            return new CuratedCategoryInfo("Smartphone", R.drawable.smartphone, 5);
+        } else if (name.contains("tablet") || name.contains("ipad")) {
+            Log.d(TAG, "  ✓ Matched as Tablet");
+            return new CuratedCategoryInfo("Tablet", R.drawable.tablet, 6);
+        } else if (name.contains("storage") || name.contains("drive") || name.contains("ssd")) {
+            Log.d(TAG, "  ✓ Matched as Storage");
+            return new CuratedCategoryInfo("Storage", R.drawable.storage, 7);
+        } else if (name.contains("network") || name.contains("wifi") || name.contains("router")) {
+            Log.d(TAG, "  ✓ Matched as Network");
+            return new CuratedCategoryInfo("Network", R.drawable.networking, 8);
+        } else if (name.contains("monitor") || name.contains("display")) {
+            Log.d(TAG, "  ✓ Matched as Monitor");
+            return new CuratedCategoryInfo("Monitor", R.drawable.monitor, 9);
+        }
+        
+        Log.d(TAG, "  ✗ No match for curated category");
+        return null; // Not a curated category
     }
     
     /**
-     * Get decorative accent icon for category.
-     * These are visual enhancements shown on category cards.
+     * Helper class to store curated category information
      */
-    private int getCategoryAccentIcon(String categoryName) {
-        String name = categoryName.toLowerCase();
-        if (name.contains("laptop") || name.contains("computer")) return R.drawable.category_accent_laptop;
-        if (name.contains("phone") || name.contains("mobile")) return R.drawable.category_accent_phone;
-        if (name.contains("accessor")) return R.drawable.category_accent_accessories;
-        if (name.contains("gaming") || name.contains("game")) return R.drawable.category_accent_gaming;
-        if (name.contains("wearable") || name.contains("watch")) return R.drawable.category_accent_wearables;
-        return R.drawable.decorative_sparkle_outline; // Default
+    private static class CuratedCategoryInfo {
+        String displayName;
+        int imageResId;
+        int displayOrder;
+        
+        CuratedCategoryInfo(String displayName, int imageResId, int displayOrder) {
+            this.displayName = displayName;
+            this.imageResId = imageResId;
+            this.displayOrder = displayOrder;
+        }
     }
     
     /**
@@ -969,56 +1017,59 @@ public class MainActivity extends BaseActivity {
      * This method is called after fetchCategories() completes successfully.
      */
     private void setupCategories() {
+        LinearLayout categoriesContainer = findViewById(R.id.categoriesContainer);
+        if (categoriesContainer == null) return;
+        
+        // Skip if no categories to display
+        if (categoryDisplayList.isEmpty()) {
+            categoriesContainer.removeAllViews();
+            return;
+        }
+        
+        // Setup header only once
         TextView viewAllCategories = findViewById(R.id.viewAllCategories);
         if (viewAllCategories != null) {
             viewAllCategories.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CategoriesActivity.class)));
+            UiAnimations.pressBounce(viewAllCategories);
         }
-        UiAnimations.pressBounce(viewAllCategories);
 
-        LinearLayout categoriesContainer = findViewById(R.id.categoriesContainer);
-        if (categoriesContainer == null) return;
         categoriesContainer.removeAllViews();
-
-        // Render categories in horizontal scrollable layout (like chips)
         categoriesContainer.setOrientation(LinearLayout.HORIZONTAL);
 
-        for (int i = 0; i < categoryDisplayList.size(); i++) {
-            final CategoryDisplay categoryDisplay = categoryDisplayList.get(i);
-            final aeu.ratha.beckie_deal_app.data.models.Category category = categoryDisplay.category;
+        // Cache layout params
+        final LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        itemParams.setMargins(3, 0, 3, 0);
 
+        // Render all category cards efficiently
+        for (CategoryDisplay categoryDisplay : categoryDisplayList) {
             View categoryView = LayoutInflater.from(this).inflate(R.layout.category_item, categoriesContainer, false);
-            
-            // Set wrap_content for horizontal layout
-            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
             categoryView.setLayoutParams(itemParams);
 
-            MaterialCardView categoryCard = categoryView.findViewById(R.id.categoryCard);
-            ImageView categoryIcon = categoryView.findViewById(R.id.categoryIcon);
-            TextView categoryName = categoryView.findViewById(R.id.categoryName);
-            ImageView decorativeIcon = categoryView.findViewById(R.id.categoryDecorativeIcon);
+            // Setup card styling - transparent background, no border, no elevation
+            MaterialCardView categoryCard = (MaterialCardView) categoryView.findViewById(R.id.categoryCard);
+            categoryCard.setCardBackgroundColor(android.graphics.Color.TRANSPARENT);
+            categoryCard.setStrokeWidth(0);
+            categoryCard.setCardElevation(0f);
 
-            categoryIcon.setImageResource(categoryDisplay.iconResId);
-            categoryName.setText(category.getName());
+            // Set image with scaleType fitCenter so transparent PNG/WEBP renders cleanly
+            ImageView categoryIcon = (ImageView) categoryView.findViewById(R.id.categoryIcon);
+            categoryIcon.setImageResource(categoryDisplay.imageResId);
+            categoryIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
-            // Apply highlight style for featured categories
-            if (categoryDisplay.isHighlighted) {
-                categoryCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.badge_bg));
-                categoryCard.setStrokeColor(ContextCompat.getColor(this, R.color.primary));
-                categoryCard.setStrokeWidth(dpToPx(2));
-            }
+            // Set category name
+            TextView categoryName = (TextView) categoryView.findViewById(R.id.categoryName);
+            categoryName.setText(categoryDisplay.displayName);
 
+            // Setup click listener (use local reference to avoid repeated field access)
+            final aeu.ratha.beckie_deal_app.data.models.Category category = categoryDisplay.category;
+            final String displayName = categoryDisplay.displayName;
+            
             categoryView.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, CategoryDetailActivity.class);
-                // Use category image from API
-                String heroUrl = category.getImage();
-                
-                // Map home-screen category names to detail-page names
-                String detailName = category.getName().equals("Phones") ? "Smartphones" : category.getName();
-
-                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,   detailName);
-                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, heroUrl);
+                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY, displayName);
+                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, category.getImage());
                 intent.putExtra("CATEGORY_ID", category.getId());
                 intent.putExtra("CATEGORY_SLUG", category.getSlug());
                 startActivity(intent);
@@ -1386,16 +1437,16 @@ public class MainActivity extends BaseActivity {
      */
     private static class CategoryDisplay {
         aeu.ratha.beckie_deal_app.data.models.Category category;
-        int iconResId;
-        int accentIconResId;
-        boolean isHighlighted;
+        int imageResId;  // Changed from iconResId to imageResId (webp image)
+        String displayName;
+        int displayOrder;
         
         CategoryDisplay(aeu.ratha.beckie_deal_app.data.models.Category category, 
-                       int iconResId, int accentIconResId, boolean isHighlighted) {
+                       int imageResId, String displayName, int displayOrder) {
             this.category = category;
-            this.iconResId = iconResId;
-            this.accentIconResId = accentIconResId;
-            this.isHighlighted = isHighlighted;
+            this.imageResId = imageResId;
+            this.displayName = displayName;
+            this.displayOrder = displayOrder;
         }
     }
 }
