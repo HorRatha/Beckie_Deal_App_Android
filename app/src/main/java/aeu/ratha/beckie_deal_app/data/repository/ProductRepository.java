@@ -404,7 +404,7 @@ public class ProductRepository {
         Log.d(TAG, "=== FETCHING PRODUCTS FOR CATEGORY ID: " + categoryId + " ===");
         
         // First, try to fetch all products and use their embedded category info
-        fetchProducts(limit, offset, false, new ProductCallback() {
+        fetchProducts(limit, offset, true, new ProductCallback() {
             @Override
             public void onSuccess(List<Product> products, int total) {
                 Log.d(TAG, "Initial fetch: " + products.size() + " products");
@@ -417,70 +417,38 @@ public class ProductRepository {
                     Log.d(TAG, "✓ Using embedded category info: " + filtered.size() + " products matched");
                     callback.onSuccess(filtered, filtered.size());
                 } else {
-                    // No results from embedded info — fall back to fetching individual details
-                    Log.d(TAG, "✗ No results from embedded info, falling back to detail fetch");
-                    fetchAllProductsWithDetails(limit, offset, new ProductCallback() {
-                        @Override
-                        public void onSuccess(List<Product> detailProducts, int detailTotal) {
-                            List<Product> detailFiltered = new ArrayList<>();
-                            Log.d(TAG, "Detail fetch complete: " + detailProducts.size() + " products");
-                            
-                            int matched = 0;
-                            int detailMissing = 0;
-                            int categoryNull = 0;
-                            int categoryMismatch = 0;
-                            
-                            for (Product p : detailProducts) {
-                                ProductDetail detail = detailCache.get(p.getId());
-                                
-                                if (detail == null) {
-                                    Log.w(TAG, "  ✗ Product " + p.getId() + " (" + p.getName() + "): detail not cached");
-                                    detailMissing++;
-                                    continue;
-                                }
-                                
-                                if (detail.getCategory() == null) {
-                                    Log.w(TAG, "  ✗ Product " + p.getId() + " (" + p.getName() + "): category is NULL");
-                                    categoryNull++;
-                                    continue;
-                                }
-                                
-                                int productCategoryId = detail.getCategory().getId();
-                                int parentCategoryId = detail.getCategory().getParentId();
-                                
-                                // Check for EXACT category match
-                                if (productCategoryId == categoryId) {
-                                    Log.d(TAG, "  ✓ Product " + p.getId() + " (" + p.getName() + "): category ID " + productCategoryId + " MATCHES (exact)");
+                    // Check if detailCache has cached details for any products
+                    List<Product> detailFiltered = new ArrayList<>();
+                    boolean hasCachedDetails = false;
+                    for (Product p : products) {
+                        ProductDetail detail = detailCache.get(p.getId());
+                        if (detail != null) {
+                            hasCachedDetails = true;
+                            if (detail.getCategory() != null) {
+                                if (detail.getCategory().getId() == categoryId || detail.getCategory().getParentId() == categoryId) {
                                     detailFiltered.add(p);
-                                    matched++;
-                                }
-                                // Check for PARENT category match (include products from child categories)
-                                else if (parentCategoryId == categoryId && parentCategoryId > 0) {
-                                    Log.d(TAG, "  ✓ Product " + p.getId() + " (" + p.getName() + "): category ID " + productCategoryId + " is child of parent " + parentCategoryId + " (MATCHES)");
-                                    detailFiltered.add(p);
-                                    matched++;
-                                }
-                                else {
-                                    Log.d(TAG, "  ✗ Product " + p.getId() + " (" + p.getName() + "): category ID " + productCategoryId + " (parent=" + parentCategoryId + ") != " + categoryId);
-                                    categoryMismatch++;
                                 }
                             }
-                            
-                            Log.d(TAG, "=== DETAIL FILTER RESULTS ===");
-                            Log.d(TAG, "Matched: " + matched);
-                            Log.d(TAG, "Detail missing: " + detailMissing);
-                            Log.d(TAG, "Category NULL: " + categoryNull);
-                            Log.d(TAG, "Category mismatch: " + categoryMismatch);
-                            Log.d(TAG, "Final result: " + detailFiltered.size() + " products");
-                            
-                            callback.onSuccess(detailFiltered, detailFiltered.size());
                         }
-
-                        @Override
-                        public void onError(String errorMessage) {
-                            callback.onError(errorMessage);
-                        }
-                    });
+                    }
+                    if (hasCachedDetails) {
+                        Log.d(TAG, "✓ Using cached details: " + detailFiltered.size() + " products matched");
+                        callback.onSuccess(detailFiltered, detailFiltered.size());
+                    } else {
+                        // Instant callback with filtered list (even if empty) to prevent UI stall
+                        Log.d(TAG, "✓ Instant callback with filtered list (" + filtered.size() + " items)");
+                        callback.onSuccess(filtered, filtered.size());
+                        
+                        // Background detail pre-fetch without blocking UI thread
+                        fetchAllProductsWithDetails(limit, offset, new ProductCallback() {
+                            @Override
+                            public void onSuccess(List<Product> detailProducts, int detailTotal) {
+                                Log.d(TAG, "Background detail pre-fetch complete");
+                            }
+                            @Override
+                            public void onError(String errorMessage) {}
+                        });
+                    }
                 }
             }
 
@@ -559,6 +527,44 @@ public class ProductRepository {
         String lowerName = productName.toLowerCase();
         
         switch (categoryId) {
+            // Laptops / Computers (ID = 1, 3, 15, 16, 70)
+            case 1:
+            case 3:
+            case 15:
+            case 16:
+            case 70:
+                return lowerName.contains("laptop") || lowerName.contains("macbook") || 
+                       lowerName.contains("thinkpad") || lowerName.contains("vivobook") ||
+                       lowerName.contains("zenbook") || lowerName.contains("rog") ||
+                       lowerName.contains("legion") || lowerName.contains("alienware") ||
+                       lowerName.contains("surface") || lowerName.contains("dell") ||
+                       lowerName.contains("hp") || lowerName.contains("asus") ||
+                       lowerName.contains("lenovo") || lowerName.contains("msi") ||
+                       lowerName.contains("probook") || lowerName.contains("latitude");
+
+            // Gaming (ID = 23, 77, 78)
+            case 23:
+            case 77:
+            case 78:
+                return lowerName.contains("gaming") || lowerName.contains("rog") || 
+                       lowerName.contains("rtx") || lowerName.contains("razer") ||
+                       lowerName.contains("alienware") || lowerName.contains("legion") ||
+                       lowerName.contains("strix") || lowerName.contains("msi");
+
+            // Wearables (ID = 26, 79)
+            case 26:
+            case 79:
+                return lowerName.contains("watch") || lowerName.contains("band") || 
+                       lowerName.contains("wearable") || lowerName.contains("fitbit") ||
+                       lowerName.contains("galaxy watch") || lowerName.contains("apple watch");
+
+            // Audio (ID = 27, 80)
+            case 27:
+            case 80:
+                return lowerName.contains("headphone") || lowerName.contains("earbud") || 
+                       lowerName.contains("speaker") || lowerName.contains("airpods") ||
+                       lowerName.contains("audio") || lowerName.contains("microphone");
+
             // Storage category (ID=2)
             case 2:
                 return lowerName.contains("ssd") || lowerName.contains("storage") || 
@@ -795,7 +801,7 @@ public class ProductRepository {
      */
     private void fetchAllProductsWithDetails(int limit, int offset,
                                               @NonNull ProductCallback callback) {
-        fetchProducts(limit, offset, false, new ProductCallback() {
+        fetchProducts(limit, offset, true, new ProductCallback() {
             @Override
             public void onSuccess(List<Product> products, int total) {
                 if (products.isEmpty()) {

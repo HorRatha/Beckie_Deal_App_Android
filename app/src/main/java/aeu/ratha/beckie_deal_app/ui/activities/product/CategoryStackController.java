@@ -302,6 +302,18 @@ public class CategoryStackController {
 
         }
 
+        // Pre-load product data in background so card expansions are instantaneous
+        preloadAllProducts();
+
+    }
+
+    /** Pre-load products for all category sections into memory cache. */
+    public void preloadAllProducts() {
+        for (Section s : sections) {
+            if (s.cache == null && s.data.itemCount > 0) {
+                loadProducts(s);
+            }
+        }
     }
 
     /** Collapse whatever is open (e.g. when the user leaves the screen). */
@@ -310,7 +322,7 @@ public class CategoryStackController {
 
         if (open != null) {
 
-            TransitionManager.beginDelayedTransition(container, new AutoTransition().setDuration(200));
+            TransitionManager.beginDelayedTransition(container, new AutoTransition().setDuration(160));
 
             setExpanded(open, false);
 
@@ -326,21 +338,25 @@ public class CategoryStackController {
 
         boolean willExpand = !s.expanded;
 
+        if (willExpand) {
+
+            loadProducts(s);
+
+        }
+
         if (willExpand && open != null && open != s) {
 
             setExpanded(open, false); // accordion: one open at a time
 
         }
 
-        TransitionManager.beginDelayedTransition(container, new AutoTransition().setDuration(220));
+        TransitionManager.beginDelayedTransition(container, new AutoTransition().setDuration(160));
 
         setExpanded(s, willExpand);
 
         open = willExpand ? s : null;
 
         if (willExpand) {
-
-            loadProducts(s);
 
             scrollToSection(s);
 
@@ -470,8 +486,6 @@ public class CategoryStackController {
 
         s.loading.setVisibility(View.GONE);
 
-        s.products.removeAllViews();
-
         s.empty.setOnClickListener(null);
 
         s.empty.setClickable(false);
@@ -496,9 +510,19 @@ public class CategoryStackController {
 
         s.empty.setVisibility(View.GONE);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-
         int shown = Math.min(list.size(), MAX_PREVIEW);
+
+        // Optimization: If views are already inflated and bound, reuse them instantly
+        if (s.products.getChildCount() == shown) {
+            int total = Math.max(s.data.itemCount, list.size());
+            s.viewAllText.setText(total > shown ? "View all " + total + " items" : "Open category");
+            s.viewAll.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        s.products.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(context);
 
         for (int i = 0; i < shown; i++) {
 

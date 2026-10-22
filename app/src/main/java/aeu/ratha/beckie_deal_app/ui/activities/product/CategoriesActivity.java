@@ -371,14 +371,19 @@ public class CategoriesActivity extends BaseActivity {
      */
     private void renderFilteredBrands(List<BrandDisplay> filteredBrands) {
         if (brandsGrid == null) return;
-        brandsGrid.removeAllViews();
+        boolean reuseViews = brandsGrid.getChildCount() == filteredBrands.size();
 
         for (int i = 0; i < filteredBrands.size(); i++) {
             BrandDisplay brandDisplay = filteredBrands.get(i);
             Brand brand = brandDisplay.brand;
             
-            View view = LayoutInflater.from(this)
-                    .inflate(R.layout.item_brand_square, brandsGrid, false);
+            View view;
+            if (reuseViews) {
+                view = brandsGrid.getChildAt(i);
+            } else {
+                view = LayoutInflater.from(this)
+                        .inflate(R.layout.item_brand_square, brandsGrid, false);
+            }
 
             com.google.android.material.card.MaterialCardView card = view.findViewById(R.id.brandCard);
             ImageView brandIcon = view.findViewById(R.id.brandIcon);
@@ -391,7 +396,7 @@ public class CategoriesActivity extends BaseActivity {
             Integer logoResId = getBrandLogo(brand.getSlug());
             if (logoResId != null) {
                 if (isDarkModeEnabled()) {
-                    if (brand.getSlug().toLowerCase().equals("apple")) {
+                    if ("apple".equalsIgnoreCase(brand.getSlug())) {
                         brandIcon.setImageResource(R.drawable.apple_white);
                     } else {
                         brandIcon.setImageResource(logoResId);
@@ -399,6 +404,7 @@ public class CategoriesActivity extends BaseActivity {
                     }
                 } else {
                     brandIcon.setImageResource(logoResId);
+                    brandIcon.clearColorFilter();
                 }
                 brandIcon.setVisibility(View.VISIBLE);
             } else {
@@ -442,7 +448,9 @@ public class CategoriesActivity extends BaseActivity {
             };
             card.setOnClickListener(onBrandClick);
 
-            brandsGrid.addView(view);
+            if (!reuseViews) {
+                brandsGrid.addView(view);
+            }
         }
     }
 
@@ -587,9 +595,9 @@ public class CategoriesActivity extends BaseActivity {
                         if (category.isActive()) {
                             int iconRes = CategoryIconMapper.getIconForCategory(category);
                             String imageUrl = getCategoryImageUrl(category);
-                            // Display actual product count (fetched synchronously)
-                            String countText = category.getProductsCount() > 0 
-                                ? category.getProductsCount() + " Items" 
+                            int productCount = category.getProductsCount();
+                            String countText = productCount > 0 
+                                ? productCount + " Items" 
                                 : "0 Items";
                             
                             Log.d(TAG, "  - " + category.getName() + 
@@ -601,6 +609,7 @@ public class CategoriesActivity extends BaseActivity {
                             categoriesList.add(new CategoryItem(
                                 category.getName(),
                                 countText,
+                                productCount,
                                 imageUrl,
                                 iconRes,
                                 category.isFeatured(),
@@ -612,11 +621,7 @@ public class CategoriesActivity extends BaseActivity {
                 }
                 
                 // Sort categories by product count (descending) - most products first
-                categoriesList.sort((a, b) -> {
-                    int countA = extractCountFromString(a.count);
-                    int countB = extractCountFromString(b.count);
-                    return Integer.compare(countB, countA); // Descending order
-                });
+                categoriesList.sort((a, b) -> Integer.compare(b.countInt, a.countInt));
                 
                 Log.d(TAG, "=== RENDERING " + categoriesList.size() + " CATEGORIES (sorted by count) ===");
                 setupAllCategories();
@@ -778,6 +783,7 @@ public class CategoriesActivity extends BaseActivity {
         // Set image loader using Glide
         stack.setImageLoader((iv, url) -> Glide.with(CategoriesActivity.this)
                 .load(url)
+                .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.ALL)
                 .centerCrop()
                 .placeholder(R.drawable.placeholder_image)
                 .into(iv));
@@ -788,7 +794,7 @@ public class CategoriesActivity extends BaseActivity {
             stackCategories.add(new CategoryStackController.CategoryUi(
                     String.valueOf(item.categoryId),
                     item.name,
-                    extractCountFromString(item.count),
+                    item.countInt,
                     item.iconRes
             ));
         }
@@ -821,14 +827,20 @@ public class CategoriesActivity extends BaseActivity {
     private static class CategoryItem {
         String name, count, imageUrl, categorySlug;
         int categoryId;  // Changed to int to match Category.getId()
+        int countInt;
         int iconRes;
         boolean isHot;
 
-        CategoryItem(String name, String count, String imageUrl, int iconRes, boolean isHot, 
-                    int categoryId, String categorySlug) {  // categoryId is now int
+        CategoryItem(String name, String count, int countInt, String imageUrl, int iconRes, boolean isHot, 
+                    int categoryId, String categorySlug) {
             this.name = name; 
             this.count = count; 
+            this.countInt = countInt;
             this.imageUrl = imageUrl;
+            this.iconRes = iconRes; 
+            this.isHot = isHot;
+            this.categoryId = categoryId;
+            this.categorySlug = categorySlug;
             this.iconRes = iconRes; 
             this.isHot = isHot;
             this.categoryId = categoryId;

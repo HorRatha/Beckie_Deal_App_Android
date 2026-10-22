@@ -202,48 +202,52 @@ public class CategoryRepository {
         // Get ProductRepository instance to fetch products per category
         ProductRepository productRepo = ProductRepository.getInstance(context);
         
-        // Counter for tracking completed fetches
-        final int[] completedFetches = {0};
-        final int totalCategories = categories.size();
-        
-        Log.d(TAG, "Fetching product counts for " + totalCategories + " categories");
-        
-        for (Category category : categories) {
-            productRepo.fetchProductsByCategory(category.getId(), 20, 0, 
-                new ProductRepository.ProductCallback() {
-                    @Override
-                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> products, int count) {
-                        // Set the product count for this category
-                        category.setProductsCount(count);
-                        Log.d(TAG, "Category '" + category.getName() + "' has " + count + " products");
-                        
-                        // Increment counter
-                        completedFetches[0]++;
-                        
-                        // Check if all fetches are complete
-                        if (completedFetches[0] == totalCategories) {
-                            Log.d(TAG, "✓ All product counts fetched");
-                            callback.onSuccess(categories, categories.size());
-                        }
-                    }
-                    
-                    @Override
-                    public void onError(String errorMessage) {
-                        Log.e(TAG, "Error fetching products for category '" + category.getName() + "': " + errorMessage);
-                        // Set count to 0 on error
-                        category.setProductsCount(0);
-                        
-                        // Increment counter
-                        completedFetches[0]++;
-                        
-                        // Check if all fetches are complete
-                        if (completedFetches[0] == totalCategories) {
-                            Log.d(TAG, "✓ All product counts fetched (some with errors)");
-                            callback.onSuccess(categories, categories.size());
-                        }
-                    }
-                });
-        }
+        // Fetch all products ONCE (using memory cache if fresh) before resolving category product counts
+        productRepo.fetchProducts(100, 0, true, new ProductRepository.ProductCallback() {
+            @Override
+            public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> allProducts, int total) {
+                // Counter for tracking completed fetches
+                final int[] completedFetches = {0};
+                final int totalCategories = categories.size();
+                
+                Log.d(TAG, "Fetching product counts for " + totalCategories + " categories (using cached products)");
+                
+                for (Category category : categories) {
+                    productRepo.fetchProductsByCategory(category.getId(), 20, 0, 
+                        new ProductRepository.ProductCallback() {
+                            @Override
+                            public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> products, int count) {
+                                category.setProductsCount(count);
+                                Log.d(TAG, "Category '" + category.getName() + "' has " + count + " products");
+                                
+                                completedFetches[0]++;
+                                if (completedFetches[0] == totalCategories) {
+                                    Log.d(TAG, "✓ All product counts fetched");
+                                    callback.onSuccess(categories, categories.size());
+                                }
+                            }
+                            
+                            @Override
+                            public void onError(String errorMessage) {
+                                Log.e(TAG, "Error fetching products for category '" + category.getName() + "': " + errorMessage);
+                                category.setProductsCount(0);
+                                
+                                completedFetches[0]++;
+                                if (completedFetches[0] == totalCategories) {
+                                    Log.d(TAG, "✓ All product counts fetched (some with errors)");
+                                    callback.onSuccess(categories, categories.size());
+                                }
+                            }
+                        });
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Failed to preload products for category counts: " + errorMessage);
+                callback.onSuccess(categories, categories.size());
+            }
+        });
     }
     
     /**
