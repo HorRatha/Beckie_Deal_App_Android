@@ -221,7 +221,8 @@ public class CategoriesActivity extends BaseActivity {
         Log.d(TAG, "=== FETCHING BRANDS FROM API ===");
         
         // Fetch all brands from API
-        brandRepository.fetchBrands(20, 0, false, new BrandRepository.BrandCallback() {
+        // PERF: Enable cache to show cached brands instantly while fetching fresh data
+        brandRepository.fetchBrands(20, 0, true, new BrandRepository.BrandCallback() {
             @Override
             public void onSuccess(List<Brand> brands, int total) {
                 Log.d(TAG, "✓ API SUCCESS: Received " + brands.size() + " brands from API");
@@ -577,7 +578,7 @@ public class CategoriesActivity extends BaseActivity {
         categoryRepository.fetchActiveCategories(new CategoryRepository.CategoryCallback() {
             @Override
             public void onSuccess(List<Category> categories, int total) {
-                Log.d(TAG, "✓ API SUCCESS: Received " + categories.size() + " categories");
+                Log.d(TAG, "✓ API SUCCESS: Received " + categories.size() + " categories with product counts");
                 
                 categoriesList.clear();
                 
@@ -586,6 +587,7 @@ public class CategoriesActivity extends BaseActivity {
                         if (category.isActive()) {
                             int iconRes = CategoryIconMapper.getIconForCategory(category);
                             String imageUrl = getCategoryImageUrl(category);
+                            // Display actual product count (fetched synchronously)
                             String countText = category.getProductsCount() > 0 
                                 ? category.getProductsCount() + " Items" 
                                 : "0 Items";

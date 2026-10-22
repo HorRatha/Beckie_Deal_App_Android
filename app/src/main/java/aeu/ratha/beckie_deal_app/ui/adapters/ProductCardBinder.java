@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 /**
@@ -35,13 +36,18 @@ public class ProductCardBinder {
     /**
      * Shared image options. Reused across every card so Glide doesn't rebuild
      * the request settings each bind.
+     *  - diskCacheStrategy(ALL) caches both original & resized images to disk
      *  - PREFER_RGB_565 halves decode memory & CPU vs ARGB_8888
      *  - override(400) caps decode resolution so a large source image can't
      *    block the main thread while being decoded/scaled
      *  - dontAnimate() skips the crossfade
      *  - error/placeholder settle cleanly on the 404 image URLs
+     * 
+     * PERFORMANCE: Disk caching ensures images load instantly on subsequent visits
+     * without needing to re-download from the network.
      */
     private static final RequestOptions CARD_IMAGE_OPTIONS = new RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)  // ✓ PERF: Cache images to disk
             .format(DecodeFormat.PREFER_RGB_565)
             .override(400)
             .centerInside()

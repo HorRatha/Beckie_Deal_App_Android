@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -148,6 +149,7 @@ public class SlideBannerAdapter extends RecyclerView.Adapter<SlideBannerAdapter.
                         try {
                             Glide.with(bannerImage)
                                     .load(primaryImage)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)  // ✓ PERF: Cache images
                                     .centerCrop()
                                     .into(bannerImage);
                             Log.d(TAG, "✓ Loaded slide image: " + primaryImage);
@@ -291,7 +293,14 @@ public class SlideBannerAdapter extends RecyclerView.Adapter<SlideBannerAdapter.
                 return;
             }
             
-            final int durationMs = slide.getDurationMs() > 0 ? slide.getDurationMs() : 3000;
+            // Enforce minimum frame delay to prevent excessive updates
+            // If API provides duration < 1000ms, clamp to 2000ms
+            int rawDurationMs = slide.getDurationMs() > 0 ? slide.getDurationMs() : 3000;
+            final int durationMs = Math.max(rawDurationMs, 2000); // Minimum 2 seconds per frame
+            
+            if (rawDurationMs < 2000) {
+                Log.w(TAG, "⚠ Carousel duration too low (" + rawDurationMs + "ms), clamped to " + durationMs + "ms");
+            }
             
             currentFrameIndex = 0;
             
@@ -309,19 +318,24 @@ public class SlideBannerAdapter extends RecyclerView.Adapter<SlideBannerAdapter.
                         if (currentFrameIndex < carouselImages.size()) {
                             String frameUrl = carouselImages.get(currentFrameIndex);
                             
+                            // Cancel any ongoing animations before loading new frame
+                            bannerImage.animate().cancel();
+                            
                             // Apply transition effect (fade/cut)
                             if ("fade".equalsIgnoreCase(slide.getTransition())) {
                                 bannerImage.setAlpha(0f);
-                                bannerImage.animate().alpha(1f).setDuration(500).start();
+                                // Use shorter fade duration (200ms) when carousel frame duration is long
+                                bannerImage.animate().alpha(1f).setDuration(200).start();
                             }
                             
                             // Use the view's context instead of adapter's context to handle activity recreation
                             Glide.with(bannerImage)
                                     .load(frameUrl)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)  // ✓ PERF: Cache carousel frames
                                     .centerCrop()
                                     .into(bannerImage);
                             
-                            Log.d(TAG, "Carousel frame " + (currentFrameIndex + 1) + "/" + carouselImages.size());
+                            Log.d(TAG, "Carousel frame " + (currentFrameIndex + 1) + "/" + carouselImages.size() + " (" + durationMs + "ms)");
                         }
                         
                         // Move to next frame (loop)

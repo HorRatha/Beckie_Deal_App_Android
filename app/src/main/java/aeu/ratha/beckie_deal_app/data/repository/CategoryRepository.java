@@ -115,6 +115,12 @@ public class CategoryRepository {
     
     /**
      * Fetch only active categories.
+     * 
+     * PERFORMANCE NOTE: Product counts are fetched using N+1 approach for the wallet/categories view.
+     * This is only done when explicitly requested via fetchActiveCategories(), not on main page load.
+     * The main page uses fetchProducts() with cache which is much faster.
+     * 
+     * This provides accurate product counts for the category wallet interface.
      */
     public void fetchActiveCategories(CategoryCallback callback) {
         fetchCategories(false, new CategoryCallback() {
@@ -147,7 +153,8 @@ public class CategoryRepository {
                 
                 Log.d(TAG, "Filtered to " + activeCount + " active categories");
                 
-                // Now fetch product counts for each category
+                // ✓ Fetch product counts synchronously for wallet display
+                // This is only called from CategoriesActivity wallet view, not main page
                 fetchProductCountsForCategories(activeCategories, callback);
             }
             
@@ -161,6 +168,10 @@ public class CategoryRepository {
     /**
      * Fetch product counts for all categories by querying products per category.
      * This is a workaround because the API doesn't populate products_count.
+     * 
+     * NOTE: This is only called from the CategoriesActivity wallet view, which is not
+     * on the critical main page load path. The main page uses cached products instead
+     * for better performance. This keeps the wallet accurate without affecting app startup speed.
      */
     private void fetchProductCountsForCategories(List<Category> categories, CategoryCallback callback) {
         if (categories == null || categories.isEmpty()) {

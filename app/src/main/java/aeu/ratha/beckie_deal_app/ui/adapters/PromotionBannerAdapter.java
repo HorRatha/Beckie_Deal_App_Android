@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -115,6 +116,7 @@ public class PromotionBannerAdapter extends RecyclerView.Adapter<PromotionBanner
                 // Load banner image
                 Glide.with(context)
                         .load(promotion.getBannerImage())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)  // ✓ PERF: Cache images
                         .centerCrop()
                         .into(bannerImage);
                 Log.d(TAG, "✓ Loaded banner image: " + promotion.getBannerImage());
