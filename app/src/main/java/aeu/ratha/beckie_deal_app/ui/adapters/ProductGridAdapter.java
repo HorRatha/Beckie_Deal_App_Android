@@ -42,6 +42,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         this.products = products;
         this.wishlistRepository = wishlistRepository;
         this.cartRepository = cartRepository;
+        setHasStableIds(true); // PERF: Enable stable IDs for smooth re-binds
     }
     
     // Legacy constructor for backward compatibility (creates its own repositories)
@@ -87,6 +88,17 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         // Distinct view types for grid vs list so RecyclerView doesn't try to
         // recycle a grid card into a list row (or vice versa) after a mode switch.
         return listMode ? 1 : 0;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (position >= 0 && position < products.size()) {
+            MainActivity.Product product = products.get(position);
+            if (product != null && product.id != null) {
+                return product.id.hashCode();
+            }
+        }
+        return position;
     }
 
     @Override

@@ -1084,8 +1084,11 @@ public class MainActivity extends BaseActivity {
         RecyclerView productsGrid = findViewById(R.id.productsGrid);
         if (productsGrid == null) return;
 
-        // Wishlist state managed by ProductGridAdapter
-        // No need to sync here
+        // PERF: Enable RecyclerView high-performance flags
+        productsGrid.setHasFixedSize(true);
+        productsGrid.setItemViewCacheSize(20);
+        productsGrid.setItemAnimator(null);
+        productsGrid.setNestedScrollingEnabled(false);
 
         boolean isListView = ViewModePreferences.isListView(this);
 
