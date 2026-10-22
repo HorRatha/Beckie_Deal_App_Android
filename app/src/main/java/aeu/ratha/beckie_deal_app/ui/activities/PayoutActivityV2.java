@@ -51,6 +51,7 @@ public class PayoutActivityV2 extends AppCompatActivity {
     // Data
     private String selectedPaymentMethod = "aba_payway";
     private String selectedShippingMethod = "standard";
+    private int shippingMethodId = 0;  // ID for API submission (set when COD is selected)
     private String shippingName, shippingPhone, shippingAddress, shippingCity, shippingPostalCode, shippingCountry;
     
     @Override
@@ -152,6 +153,12 @@ public class PayoutActivityV2 extends AppCompatActivity {
         selectedPaymentMethod = method;
         selectedCard.setStrokeWidth(2);
         unselectedCard.setStrokeWidth(1);
+        
+        // Auto-set shipping_method_id to 1 when COD is selected
+        if ("cod".equals(method)) {
+            shippingMethodId = 1;
+        }
+        
         Toast.makeText(this, "Payment: " + method, Toast.LENGTH_SHORT).show();
     }
     

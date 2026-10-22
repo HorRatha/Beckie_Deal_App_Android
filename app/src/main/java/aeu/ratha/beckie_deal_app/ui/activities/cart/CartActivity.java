@@ -30,13 +30,30 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class CartActivity extends BaseActivity {
 
     private CartRepository cartRepository;
     private Cart currentCart;
+
+    /** NEW: one tile in "You may also like". Map your own Product objects into this. */
+    public static class SuggestedProduct {
+        public final String id;
+        public final String name;
+        public final double price;
+        public final String imageUrl;
+
+        public SuggestedProduct(String id, String name, double price, String imageUrl) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.imageUrl = imageUrl;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +118,7 @@ public class CartActivity extends BaseActivity {
     private void setupCouponReminder() {
         View couponReminderCard = findViewById(R.id.couponReminderCard);
         View couponReminderButton = findViewById(R.id.couponReminderButton);
-        
+
         if (couponReminderButton != null) {
             couponReminderButton.setOnClickListener(v -> {
                 // Navigate to checkout where user can apply coupon
@@ -117,22 +134,16 @@ public class CartActivity extends BaseActivity {
     private void loadCartFromAPI() {
         // Check if user is logged in
         boolean isLoggedIn = aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this);
-        
+
         if (!isLoggedIn) {
             // Show login prompt
             displayCartItems(null);
             return;
         }
 
-        // Show loading (optional - if layout has loading indicator)
-        // ProgressBar loadingIndicator = findViewById(R.id.loadingIndicator);
-        // if (loadingIndicator != null) loadingIndicator.setVisibility(View.VISIBLE);
-
         cartRepository.getCart(new CartRepository.CartCallback() {
             @Override
             public void onSuccess(CartResponse response) {
-                // if (loadingIndicator != null) loadingIndicator.setVisibility(View.GONE);
-                
                 if (response.isSuccess() && response.hasData()) {
                     currentCart = response.getData();
                     displayCartItems(currentCart);
@@ -143,7 +154,6 @@ public class CartActivity extends BaseActivity {
 
             @Override
             public void onError(String error) {
-                // if (loadingIndicator != null) loadingIndicator.setVisibility(View.GONE);
                 Toast.makeText(CartActivity.this, "Failed to load cart: " + error, Toast.LENGTH_SHORT).show();
                 displayCartItems(null);
             }
@@ -156,7 +166,9 @@ public class CartActivity extends BaseActivity {
         View couponReminder   = findViewById(R.id.couponReminderCard);
         View checkoutSection  = findViewById(R.id.checkoutSection);
         TextView totalText    = findViewById(R.id.totalPriceText);
-        
+        TextView subtitle     = findViewById(R.id.cartSubtitle);   // NEW
+        View suggestions      = findViewById(R.id.suggestionsSection); // NEW
+
         // Check if user is logged in
         boolean isLoggedIn = aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper.isUserLoggedIn(this);
 
@@ -165,7 +177,9 @@ public class CartActivity extends BaseActivity {
             cartList.setVisibility(View.GONE);
             couponReminder.setVisibility(View.GONE);
             checkoutSection.setVisibility(View.GONE);
-            
+            if (subtitle != null) subtitle.setVisibility(View.GONE);       // NEW
+            if (suggestions != null) suggestions.setVisibility(View.GONE); // NEW
+
             // Update empty state UI based on login status
             setupEmptyState(isLoggedIn);
         } else {
@@ -177,13 +191,13 @@ public class CartActivity extends BaseActivity {
 
             // ── Deduplicate items by product ID ────────────────────────────────
             java.util.Map<String, CartItem> deduplicatedItems = new java.util.LinkedHashMap<>();
-            
+
             for (CartItem item : cart.getItems()) {
                 aeu.ratha.beckie_deal_app.data.models.Product product = item.getProduct();
-                String productId = (product != null && product.getId() != null) 
-                        ? product.getId() 
+                String productId = (product != null && product.getId() != null)
+                        ? product.getId()
                         : null;
-                
+
                 if (productId != null && deduplicatedItems.containsKey(productId)) {
                     // Merge quantities: sum up quantities for duplicate product
                     CartItem existing = deduplicatedItems.get(productId);
@@ -193,16 +207,26 @@ public class CartActivity extends BaseActivity {
                     deduplicatedItems.put(productId, item);
                 }
             }
-            
+
             // Display deduplicated items
+            int totalUnits = 0; // NEW
             for (CartItem item : deduplicatedItems.values()) {
                 inflateCartItem(cartList, item);
+                totalUnits += item.getQuantity(); // NEW
+            }
+
+            // NEW: "2 items · Swipe left to remove"
+            if (subtitle != null) {
+                subtitle.setText(totalUnits + (totalUnits == 1 ? " item" : " items")
+                        + " · Swipe left to remove");
+                subtitle.setVisibility(View.VISIBLE);
             }
 
             updateTotal(totalText, cart);
+            loadSuggestions(deduplicatedItems.keySet()); // NEW
         }
     }
-    
+
     /**
      * Setup empty state UI based on whether user is logged in or not.
      * Guest users see login prompt, logged-in users see "start shopping" message.
@@ -215,7 +239,7 @@ public class CartActivity extends BaseActivity {
         View loginButtonsContainer = findViewById(R.id.loginButtonsContainer);
         View loginBtn = findViewById(R.id.loginButton);
         View registerBtn = findViewById(R.id.registerButton);
-        
+
         if (!isLoggedIn) {
             // Guest user - show login prompt
             if (icon != null) icon.setImageResource(R.drawable.ic_lock);
@@ -223,14 +247,14 @@ public class CartActivity extends BaseActivity {
             if (message != null) message.setText("Sign in to see items you've added and continue shopping.");
             if (startShoppingBtn != null) startShoppingBtn.setVisibility(View.GONE);
             if (loginButtonsContainer != null) loginButtonsContainer.setVisibility(View.VISIBLE);
-            
+
             if (loginBtn != null) {
                 loginBtn.setOnClickListener(v -> {
                     startActivity(new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity.class));
                 });
                 UiAnimations.pressBounce(loginBtn);
             }
-            
+
             if (registerBtn != null) {
                 registerBtn.setOnClickListener(v -> {
                     Intent intent = new Intent(this, aeu.ratha.beckie_deal_app.ui.activities.auth.LoginActivity.class);
@@ -270,6 +294,7 @@ public class CartActivity extends BaseActivity {
         ImageView decrement     = v.findViewById(R.id.cartItemDecrement);
         ImageView increment     = v.findViewById(R.id.cartItemIncrement);
         ImageView removeBtn     = v.findViewById(R.id.cartItemRemove);
+        View      deletePanel   = v.findViewById(R.id.cartItemDeletePanel); // NEW
         UiAnimations.pressBounce(decrement, increment, removeBtn);
 
         // ── Product name ───────────────────────────────────────────────────
@@ -348,20 +373,96 @@ public class CartActivity extends BaseActivity {
             }
         });
 
-        // ── Remove ─────────────────────────────────────────────────────────
+        // ── Remove (small trash icon) ──────────────────────────────────────
         removeBtn.setOnClickListener(btn -> {
             removeCartItem(item.getId());
         });
 
+        // ── Remove (swipe left, then tap Delete) ── NEW ────────────────────
+        if (deletePanel != null) {
+            deletePanel.setOnClickListener(btn -> removeCartItem(item.getId()));
+        }
+
         parent.addView(v);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // NEW: "You may also like"
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Fill this from your product API: for example products in the same category
+     * as the cart items, or featured / best-selling products. Already-in-cart
+     * products are skipped. While this passes null, the section stays hidden.
+     */
+    private void loadSuggestions(Set<String> cartProductIds) {
+        // TODO: replace with your real call. Example shape:
+        //
+        // productRepository.getRelatedProducts(cartProductIds, new ProductRepository.ListCallback() {
+        //     @Override public void onSuccess(List<Product> products) {
+        //         List<SuggestedProduct> tiles = new ArrayList<>();
+        //         for (Product p : products) {
+        //             if (cartProductIds.contains(p.getId())) continue;
+        //             tiles.add(new SuggestedProduct(p.getId(), p.getName(),
+        //                     p.hasDiscount() ? p.getSalePriceAsDouble() : p.getPriceAsDouble(),
+        //                     p.getThumbnail()));
+        //         }
+        //         runOnUiThread(() -> showSuggestions(tiles));
+        //     }
+        //     @Override public void onError(String error) { /* keep hidden */ }
+        // });
+        showSuggestions(null);
+    }
+
+    private void showSuggestions(List<SuggestedProduct> items) {
+        View section = findViewById(R.id.suggestionsSection);
+        LinearLayout row = findViewById(R.id.suggestionsRow);
+        if (section == null || row == null) return;
+
+        row.removeAllViews();
+        if (items == null || items.isEmpty()) {
+            section.setVisibility(View.GONE);
+            return;
+        }
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (SuggestedProduct p : items) {
+            View tile = inflater.inflate(R.layout.item_suggestion, row, false);
+
+            ImageView img = tile.findViewById(R.id.suggestionImage);
+            TextView name = tile.findViewById(R.id.suggestionName);
+            TextView price = tile.findViewById(R.id.suggestionPrice);
+            View add = tile.findViewById(R.id.suggestionAdd);
+
+            name.setText(p.name);
+            price.setText(String.format(Locale.US, "$%.2f", p.price));
+            Glide.with(this)
+                    .load(ImageUrlHelper.getImageUrlOrFallback(p.imageUrl))
+                    .centerInside()
+                    .placeholder(R.drawable.placeholder_image)
+                    .into(img);
+
+            View.OnClickListener openDetail = btn -> {
+                Intent intent = new Intent(CartActivity.this,
+                        aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity.class);
+                intent.putExtra("product_id", p.id);
+                startActivity(intent);
+            };
+            tile.setOnClickListener(openDetail);
+
+            // TODO: quick add. Until you wire your add-to-cart call here, "+" opens the product.
+            add.setOnClickListener(openDetail);
+            UiAnimations.pressBounce(add);
+
+            row.addView(tile);
+        }
+        section.setVisibility(View.VISIBLE);
     }
 
     /**
      * Update cart item quantity via API.
      */
     private void updateCartItemQuantity(int cartItemId, int newQuantity) {
-        // Show loading (optional)
-        
         cartRepository.updateQuantity(cartItemId, newQuantity, new CartRepository.CartItemCallback() {
             @Override
             public void onSuccess(CartItemResponse response) {
@@ -381,8 +482,6 @@ public class CartActivity extends BaseActivity {
      * Remove item from cart via API.
      */
     private void removeCartItem(int cartItemId) {
-        // Show loading (optional)
-        
         cartRepository.removeFromCart(cartItemId, new CartRepository.SimpleCallback() {
             @Override
             public void onSuccess() {
@@ -408,15 +507,15 @@ public class CartActivity extends BaseActivity {
     /** Refresh the grand total text in the checkout bar. */
     private void updateTotal(TextView totalText, Cart cart) {
         if (totalText == null || cart == null) return;
-        
+
         // Use API subtotal (dynamic from backend)
         double total = cart.getSubtotalFromAPI();
-        
+
         // Fallback to client calculation if API doesn't provide subtotal
         if (total == 0.0) {
             total = cart.getTotalPrice(); // Calculate from items as fallback
         }
-        
+
         totalText.setText(String.format(Locale.US, "$%.2f", total));
     }
 

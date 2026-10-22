@@ -1,188 +1,224 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<aeu.ratha.beckie_deal_app.ui.views.SwipeRevealLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/border_color"
-    app:cardBackgroundColor="@color/surface">
+    android:layout_height="wrap_content">
 
+    <!-- Child 0: Delete panel (revealed by swiping left) -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:baselineAligned="false">
+        android:id="@+id/cartItemDeletePanel"
+        android:layout_width="88dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/red_error"
+        android:clickable="true"
+        android:contentDescription="Delete item"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <!-- Product image -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="84dp"
-            android:layout_height="84dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/card_bg_secondary">
-
-            <ImageView
-                android:id="@+id/cartItemImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:padding="8dp"
-                android:src="@drawable/placeholder_image" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Product info + quantity controls -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="12dp">
-
-            <!-- Name -->
-            <TextView
-                android:id="@+id/cartItemName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Product Name"
-                android:textAppearance="@style/TextAppearance.App.CardProductName"
-                android:maxLines="2"
-                android:ellipsize="end" />
-
-            <!-- SKU -->
-            <TextView
-                android:id="@+id/cartItemSku"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="SKU: —"
-                android:textSize="11sp"
-                android:textColor="@color/text_secondary"
-                android:fontFamily="monospace" />
-
-            <!-- Price row: sale price + original price (strikethrough) -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="4dp">
-
-                <!-- Effective unit price (sale or regular) -->
-                <TextView
-                    android:id="@+id/cartItemUnitPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$0.00"
-                    android:textAppearance="@style/TextAppearance.App.Label"
-                    android:textAllCaps="false"
-                    android:textColor="@color/text_secondary" />
-
-                <!-- Original price (strikethrough, visible only when on sale) -->
-                <TextView
-                    android:id="@+id/cartItemOriginalPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="$0.00"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <!-- Out of Stock badge (hidden when in stock) -->
-            <TextView
-                android:id="@+id/cartItemOutOfStock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="2dp"
-                android:text="Out of Stock"
-                android:textSize="10sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/badge_out_of_stock"
-                android:visibility="gone" />
-
-            <!-- Quantity stepper + subtotal row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="10dp"
-                android:baselineAligned="false">
-
-                <!-- Decrement -->
-                <ImageView
-                    android:id="@+id/cartItemDecrement"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:padding="6dp"
-                    android:background="@drawable/stepper_btn_outline"
-                    android:src="@drawable/ic_minus_24"
-                    android:scaleType="fitCenter"
-                    android:contentDescription="Decrease quantity" />
-
-                <!-- Quantity -->
-                <TextView
-                    android:id="@+id/cartItemQuantity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="34dp"
-                    android:gravity="center"
-                    android:text="01"
-                    android:textAppearance="@style/TextAppearance.App.CardPrice" />
-
-                <!-- Increment -->
-                <ImageView
-                    android:id="@+id/cartItemIncrement"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:padding="6dp"
-                    android:background="@drawable/stepper_btn_filled"
-                    android:src="@drawable/ic_plus_24"
-                    android:scaleType="fitCenter"
-                    android:contentDescription="Increase quantity" />
-
-                <!-- Spacer -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
-                <!-- Line subtotal -->
-                <TextView
-                    android:id="@+id/cartItemSubtotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="$0.00"
-                    android:textAppearance="@style/TextAppearance.App.SectionHeader"
-                    android:textColor="@color/primary" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Remove button -->
         <ImageView
-            android:id="@+id/cartItemRemove"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="8dp"
-            android:padding="7dp"
-            android:background="@drawable/cart_remove_bg"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:importantForAccessibility="no"
             android:src="@drawable/ic_trash_24"
-            android:scaleType="fitCenter"
-            android:contentDescription="Remove from cart" />
+            app:tint="@color/white_fixed" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Delete"
+            android:textColor="@color/white_fixed"
+            android:textSize="12sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    <!-- Child 1: Foreground row (must have a solid background to hide the panel) -->
+    <LinearLayout
+        android:id="@+id/cartItemForeground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:padding="14dp">
+
+            <!-- Big product image -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                app:cardBackgroundColor="@color/card_bg_secondary"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/border_color"
+                app:strokeWidth="1dp">
+
+                <ImageView
+                    android:id="@+id/cartItemImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/placeholder_image" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Name + small trash (kept for accessibility / discoverability) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/cartItemName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="Product Name"
+                        android:textAppearance="@style/TextAppearance.App.CardProductName" />
+
+                    <ImageView
+                        android:id="@+id/cartItemRemove"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="-6dp"
+                        android:layout_marginEnd="-6dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Remove from cart"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_trash_24"
+                        app:tint="@color/text_secondary" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/cartItemSku"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="monospace"
+                    android:text="SKU: —"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/cartItemUnitPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$0.00"
+                        android:textAllCaps="false"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
+                        android:id="@+id/cartItemOriginalPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="$0.00"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/cartItemOutOfStock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:background="@drawable/badge_out_of_stock"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:text="Out of Stock"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+                <!-- Stepper + line total -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/cartItemDecrement"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/stepper_btn_outline"
+                        android:contentDescription="Decrease quantity"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_minus_24" />
+
+                    <TextView
+                        android:id="@+id/cartItemQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="34dp"
+                        android:text="01"
+                        android:textAppearance="@style/TextAppearance.App.CardPrice" />
+
+                    <ImageView
+                        android:id="@+id/cartItemIncrement"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/stepper_btn_filled"
+                        android:contentDescription="Increase quantity"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_plus_24" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <!-- Now dark red instead of yellow, so it is readable on white -->
+                    <TextView
+                        android:id="@+id/cartItemSubtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="$0.00"
+                        android:textAppearance="@style/TextAppearance.App.SectionHeader"
+                        android:textColor="@color/red_error" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Row divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/border_color" />
+    </LinearLayout>
+</aeu.ratha.beckie_deal_app.ui.views.SwipeRevealLayout>

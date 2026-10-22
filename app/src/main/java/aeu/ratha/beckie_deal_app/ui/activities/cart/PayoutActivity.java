@@ -88,6 +88,7 @@ public class PayoutActivity extends BaseActivity {
     // ── Shipping method selection ──────────────────────────────────────────────
     private List<ShippingMethod> availableShippingMethods = new ArrayList<>();
     private ShippingMethod selectedShippingMethod = null;
+    private int shippingMethodIdForCheckout = 0;  // Auto-set to 1 when COD is selected
 
     // ── Location ──────────────────────────────────────────────────────────────
     private FusedLocationProviderClient fusedLocationClient;
@@ -688,8 +689,15 @@ public class PayoutActivity extends BaseActivity {
 
     private void selectPaymentMethod(String method) {
         selectedPaymentMethod = method;
+        
+        // Auto-set shipping_method_id to 1 when COD is selected
+        // This allows checkout to work when no shipping methods are available from API
+        if (PAYMENT_COD.equals(method)) {
+            shippingMethodIdForCheckout = 1;
+        }
+        
         applyPaymentSelectionUI(method);
-        Log.d(TAG, "Payment method selected: " + method);
+        Log.d(TAG, "Payment method selected: " + method + " (shipping_method_id: " + shippingMethodIdForCheckout + ")");
     }
 
     /**
@@ -1159,6 +1167,9 @@ public class PayoutActivity extends BaseActivity {
         // Include shipping_method_id (required by backend for all payment methods including COD)
         if (selectedShippingMethod != null) {
             checkoutData.put("shipping_method_id", selectedShippingMethod.getId());
+        } else if (shippingMethodIdForCheckout > 0) {
+            // Use the auto-set ID from COD selection (ID 1)
+            checkoutData.put("shipping_method_id", shippingMethodIdForCheckout);
         } else if (!availableShippingMethods.isEmpty()) {
             checkoutData.put("shipping_method_id", availableShippingMethods.get(0).getId());
         } else {

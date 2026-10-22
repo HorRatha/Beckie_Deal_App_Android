@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/suggestionRoot"
+    android:layout_width="132dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/surface"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/border_color"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="104dp"
+            android:background="@color/card_bg_secondary">
+
+            <ImageView
+                android:id="@+id/suggestionImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/placeholder_image" />
+
+            <FrameLayout
+                android:id="@+id/suggestionAdd"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="6dp"
+                android:background="@color/yellow_star"
+                android:clickable="true"
+                android:contentDescription="Add to cart"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_plus_24"
+                    app:tint="@color/dark_brown" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/suggestionName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="2"
+                android:text="Product"
+                android:textAppearance="@style/TextAppearance.App.Label"
+                android:textAllCaps="false"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/suggestionPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="$0.00"
+                android:textAppearance="@style/TextAppearance.App.CardPrice"
+                android:textColor="@color/red_error" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
