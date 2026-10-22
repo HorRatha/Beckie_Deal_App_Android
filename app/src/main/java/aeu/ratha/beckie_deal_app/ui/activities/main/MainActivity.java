@@ -365,7 +365,8 @@ public class MainActivity extends BaseActivity {
     private void fetchCategories() {
         Log.d(TAG, "=== FETCHING CURATED CATEGORIES ===");
         
-        categoryRepository.fetchActiveCategories(new CategoryRepository.CategoryCallback() {
+        // Use fast cached category fetch without N+1 product count queries
+        categoryRepository.fetchCategories(false, new CategoryRepository.CategoryCallback() {
             @Override
             public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Category> categories, int total) {
                 if (categories == null || categories.isEmpty()) {

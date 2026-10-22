@@ -25,6 +25,11 @@ public class CategoryRepository {
     private final CategoryApiService apiService;
     private final Context context;
     
+    // In-memory cache for fast response
+    private java.util.List<Category> cachedCategories = null;
+    private long cacheTimestamp = 0;
+    private static final long CACHE_EXPIRATION_MS = 5 * 60 * 1000; // 5 minutes
+    
     private CategoryRepository(Context context) {
         this.context = context.getApplicationContext();
         this.apiService = RetrofitClient.getClient(context)
@@ -48,10 +53,20 @@ public class CategoryRepository {
      * It returns all categories at once with parent categories containing
      * a "children" array for subcategories.
      * 
-     * @param forceRefresh Whether to force a fresh API call (not implemented yet)
+     * @param forceRefresh Whether to force a fresh API call
      * @param callback Callback to handle success/error
      */
     public void fetchCategories(boolean forceRefresh, CategoryCallback callback) {
+        // Return instant memory cache if available and fresh
+        if (!forceRefresh && cachedCategories != null && 
+                (System.currentTimeMillis() - cacheTimestamp < CACHE_EXPIRATION_MS)) {
+            Log.d(TAG, "⚡ Returning " + cachedCategories.size() + " cached categories from memory");
+            if (callback != null) {
+                callback.onSuccess(cachedCategories, cachedCategories.size());
+            }
+            return;
+        }
+
         Log.d(TAG, "Fetching categories from /api/v1/categories");
         
         apiService.getCategories().enqueue(new Callback<CategoryResponse>() {
@@ -64,6 +79,10 @@ public class CategoryRepository {
                             && categoryResponse.getData() != null) {
                         java.util.List<Category> categories = categoryResponse.getData();
                         int total = categories.size();
+                        
+                        // Update in-memory cache
+                        cachedCategories = categories;
+                        cacheTimestamp = System.currentTimeMillis();
                         
                         Log.d(TAG, "Successfully fetched " + total + " categories");
                         logCategoryHierarchy(categories);
