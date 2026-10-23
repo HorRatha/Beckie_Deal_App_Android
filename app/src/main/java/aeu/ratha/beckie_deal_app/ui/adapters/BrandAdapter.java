@@ -31,16 +31,17 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
     private static final Map<String, Integer> BRAND_LOGO_MAP = new HashMap<>();
     
     static {
-        // Map brand names to their logo drawables - using new logos first
+        // Map brand names to authentic logo drawables in res/drawable
         BRAND_LOGO_MAP.put("apple", R.drawable.apple);
         BRAND_LOGO_MAP.put("dell", R.drawable.dell);
         BRAND_LOGO_MAP.put("hp", R.drawable.hp);
         BRAND_LOGO_MAP.put("lenovo", R.drawable.lenovo);
         BRAND_LOGO_MAP.put("msi", R.drawable.msi);
-        BRAND_LOGO_MAP.put("nvidia", R.drawable.nvidia);
         BRAND_LOGO_MAP.put("rog", R.drawable.republicofgamers);
+        BRAND_LOGO_MAP.put("republicofgamers", R.drawable.republicofgamers);
+        BRAND_LOGO_MAP.put("asus", R.drawable.asus);
+        BRAND_LOGO_MAP.put("nvidia", R.drawable.nvidia);
         BRAND_LOGO_MAP.put("razer", R.drawable.ic_brand_razer);
-        BRAND_LOGO_MAP.put("asus", R.drawable.ic_brand_asus);
         BRAND_LOGO_MAP.put("acer", R.drawable.ic_brand_acer);
         BRAND_LOGO_MAP.put("microsoft", R.drawable.ic_brand_microsoft);
         BRAND_LOGO_MAP.put("samsung", R.drawable.ic_brand_samsung);

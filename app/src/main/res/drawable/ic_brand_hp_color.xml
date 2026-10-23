@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <!-- HP logo -->
+  <path
+      android:fillColor="#0096D6"
+      android:pathData="M4,6h3v12h-3z"/>
+  <path
+      android:fillColor="#0096D6"
+      android:pathData="M8,6h8v3h-8z"/>
+  <path
+      android:fillColor="#0096D6"
+      android:pathData="M8,11h8v3h-8z"/>
+  <path
+      android:fillColor="#0096D6"
+      android:pathData="M8,16h8v2h-8z"/>
+  <path
+      android:fillColor="#0096D6"
+      android:pathData="M18,8h3v10h-3z"/>
+</vector>

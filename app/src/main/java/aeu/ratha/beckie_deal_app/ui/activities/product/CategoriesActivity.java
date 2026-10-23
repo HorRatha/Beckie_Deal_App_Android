@@ -8,7 +8,7 @@ import aeu.ratha.beckie_deal_app.data.repository.CategoryRepository;
 import aeu.ratha.beckie_deal_app.data.repository.ProductRepository;
 import aeu.ratha.beckie_deal_app.data.models.Product;
 import aeu.ratha.beckie_deal_app.R;
-
+import aeu.ratha.beckie_deal_app.ui.components.BrandTabsManager;
 
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
@@ -185,7 +185,7 @@ public class CategoriesActivity extends BaseActivity {
         // menuIcon click handled by AppDrawerHelper
         View searchBar = findViewById(R.id.searchBar);
         View notificationContainer = findViewById(R.id.notificationContainer);
-        View viewAllBrands = findViewById(R.id.viewAllBrands);
+        View viewAllBrands = findViewById(R.id.viewAllBrandsBtn);
 
         if (searchBar != null) searchBar.setOnClickListener(v ->
                 startActivity(new Intent(this, SearchActivity.class)));
@@ -200,7 +200,7 @@ public class CategoriesActivity extends BaseActivity {
     /** Fades/slides the hero header and section headers into place — brand/category
      *  grids themselves are left untouched (grid-of-cards, kept static). */
     private void setupEntranceAnimation() {
-        UiAnimations.fadeSlideUp(findViewById(R.id.laptopBrandsSectionHeader), 80);
+        UiAnimations.fadeSlideUp(findViewById(R.id.brandTabsSectionHeader), 80);
         UiAnimations.fadeSlideUp(findViewById(R.id.allCategoriesTitle), 140);
     }
     
@@ -278,26 +278,23 @@ public class CategoriesActivity extends BaseActivity {
     }
 
     /**
-     * Get brand logo drawable ID by brand slug.
+     * Get brand logo drawable ID by brand slug or name.
      */
     private Integer getBrandLogo(String slug) {
-        if (slug == null) return null;
+        if (slug == null) return R.drawable.apple;
         String name = slug.toLowerCase();
-        // Use new logos first
-        if (name.equals("apple")) return R.drawable.apple;
-        if (name.equals("dell")) return R.drawable.dell;
-        if (name.equals("hp")) return R.drawable.hp;
-        if (name.equals("lenovo")) return R.drawable.lenovo;
-        if (name.equals("msi")) return R.drawable.msi;
-        if (name.equals("nvidia")) return R.drawable.nvidia;
-        if (name.equals("rog")) return R.drawable.republicofgamers;
-        // Fallback to old logos if available
-        if (name.equals("razer")) return R.drawable.ic_brand_razer;
-        if (name.equals("asus")) return R.drawable.ic_brand_asus;
-        if (name.equals("acer")) return R.drawable.ic_brand_acer;
-        if (name.equals("microsoft")) return R.drawable.ic_brand_microsoft;
-        if (name.equals("samsung")) return R.drawable.ic_brand_samsung;
-        return null;
+        if (name.contains("apple") || name.contains("mac")) {
+            return isDarkModeEnabled() ? R.drawable.apple_white : R.drawable.apple;
+        }
+        if (name.contains("dell") || name.contains("alienware")) return R.drawable.dell;
+        if (name.contains("hp") || name.contains("hewlett") || name.contains("omen")) return R.drawable.hp;
+        if (name.contains("lenovo") || name.contains("thinkpad") || name.contains("legion")) return R.drawable.lenovo;
+        if (name.contains("msi")) return R.drawable.msi;
+        if (name.contains("rog") || name.contains("republic")) return R.drawable.republicofgamers;
+        if (name.contains("asus")) return R.drawable.asus;
+        if (name.contains("razer")) return R.drawable.ic_brand_razer;
+        if (name.contains("samsung")) return R.drawable.ic_brand_samsung;
+        return R.drawable.apple;
     }
 
     /**
@@ -322,136 +319,88 @@ public class CategoriesActivity extends BaseActivity {
         });
     }
 
-    private void setupLaptopBrands() {
-        brandsGrid = findViewById(R.id.laptopBrandsGrid);
-        // Set column count to 3 for 3 cards per row
-        if (brandsGrid != null) brandsGrid.setColumnCount(3);
+    private BrandTabsManager brandTabsManager;
 
-        TextView brandsSubtitle = findViewById(R.id.brandsAvailableSubtitle);
+    private void setupLaptopBrands() {
+        // Get the brand tabs container and initialize the manager
+        LinearLayout brandTabsContainer = findViewById(R.id.brandTabsContainer);
         
-        // Create 6 static brands with logos (2 rows x 3 columns)
-        List<BrandDisplay> staticBrands = new ArrayList<>();
-        
-        // Create static Brand objects
-        Brand apple = new Brand(1, "Apple", "apple");
-        apple.setActive(true);
-        staticBrands.add(new BrandDisplay(apple, 0, false));
-        
-        Brand dell = new Brand(2, "Dell", "dell");
-        dell.setActive(true);
-        staticBrands.add(new BrandDisplay(dell, 0, false));
-        
-        Brand hp = new Brand(3, "HP", "hp");
-        hp.setActive(true);
-        staticBrands.add(new BrandDisplay(hp, 0, false));
-        
-        Brand lenovo = new Brand(4, "Lenovo", "lenovo");
-        lenovo.setActive(true);
-        staticBrands.add(new BrandDisplay(lenovo, 0, false));
-        
-        Brand msi = new Brand(5, "MSI", "msi");
-        msi.setActive(true);
-        staticBrands.add(new BrandDisplay(msi, 0, false));
-        
-        Brand rog = new Brand(6, "ROG", "rog");
-        rog.setActive(true);
-        staticBrands.add(new BrandDisplay(rog, 0, false));
-        
-        // Update subtitle
-        if (brandsSubtitle != null) {
-            brandsSubtitle.setText(staticBrands.size() + " brands available");
+        if (brandTabsContainer == null) {
+            Log.e(TAG, "Brand tabs container not found!");
+            return;
         }
 
-        // Render the static brands
-        renderFilteredBrands(staticBrands);
+        // Create and initialize the brand tabs manager
+        brandTabsManager = new BrandTabsManager(this, brandTabsContainer);
+
+        // Prepare 6 laptop brands in exact requested order: Apple, Asus, MSI, Dell, HP, Lenovo
+        List<Brand> brandsForTabs = buildLaptopBrandsList(brandsList);
+
+        // Get the parent view containing all the brand tabs elements
+        View parentSection = (View) brandTabsContainer.getParent();
+        if (parentSection != null) {
+            parentSection = (View) parentSection.getParent();
+        }
+        
+        if (parentSection == null) {
+            parentSection = findViewById(R.id.brandTabsSectionHeader);
+            if (parentSection != null) {
+                parentSection = (View) parentSection.getParent().getParent();
+            }
+        }
+        
+        // Initialize the brand tabs manager with the section view
+        if (parentSection != null) {
+            brandTabsManager.initializeBrandTabs(brandsForTabs, parentSection);
+        }
     }
 
-    /**
-     * Render filtered brands list (for Laptop Brands section).
-     */
-    private void renderFilteredBrands(List<BrandDisplay> filteredBrands) {
-        if (brandsGrid == null) return;
-        boolean reuseViews = brandsGrid.getChildCount() == filteredBrands.size();
+    private List<Brand> buildLaptopBrandsList(List<BrandDisplay> apiBrandsList) {
+        List<Brand> result = new ArrayList<>();
 
-        for (int i = 0; i < filteredBrands.size(); i++) {
-            BrandDisplay brandDisplay = filteredBrands.get(i);
-            Brand brand = brandDisplay.brand;
-            
-            View view;
-            if (reuseViews) {
-                view = brandsGrid.getChildAt(i);
+        // Target 6 brands in exact requested order:
+        // 1. Apple, 2. Asus, 3. MSI, 4. Dell, 5. HP, 6. Lenovo
+        String[][] targetBrands = new String[][]{
+            {"Apple", "apple", "12"},
+            {"Asus", "asus", "10"},
+            {"MSI", "msi", "6"},
+            {"Dell", "dell", "8"},
+            {"HP", "hp", "10"},
+            {"Lenovo", "lenovo", "9"}
+        };
+
+        for (int i = 0; i < targetBrands.length; i++) {
+            String name = targetBrands[i][0];
+            String slug = targetBrands[i][1];
+            int defaultCount = Integer.parseInt(targetBrands[i][2]);
+
+            Brand foundBrand = findBrandInApiList(apiBrandsList, slug, name);
+            if (foundBrand != null) {
+                result.add(foundBrand);
             } else {
-                view = LayoutInflater.from(this)
-                        .inflate(R.layout.item_brand_square, brandsGrid, false);
-            }
-
-            com.google.android.material.card.MaterialCardView card = view.findViewById(R.id.brandCard);
-            ImageView brandIcon = view.findViewById(R.id.brandIcon);
-            TextView nameText = view.findViewById(R.id.brandName);
-            View checkBadge = view.findViewById(R.id.selectedCheckBadge);
-
-            nameText.setText(brand.getName());
-
-            // Display brand logo with dark mode support
-            Integer logoResId = getBrandLogo(brand.getSlug());
-            if (logoResId != null) {
-                if (isDarkModeEnabled()) {
-                    if ("apple".equalsIgnoreCase(brand.getSlug())) {
-                        brandIcon.setImageResource(R.drawable.apple_white);
-                    } else {
-                        brandIcon.setImageResource(logoResId);
-                        brandIcon.setColorFilter(ContextCompat.getColor(this, R.color.white_fixed));
-                    }
-                } else {
-                    brandIcon.setImageResource(logoResId);
-                    brandIcon.clearColorFilter();
-                }
-                brandIcon.setVisibility(View.VISIBLE);
-            } else {
-                brandIcon.setVisibility(View.GONE);
-            }
-
-            if (brandDisplay.isSelected) {
-                int primaryColor = ContextCompat.getColor(this, R.color.primary);
-                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.brand_selected_bg));
-                card.setStrokeWidth(0);
-                card.setCardElevation(4f);
-                nameText.setTextColor(primaryColor);
-                if (checkBadge != null) checkBadge.setVisibility(View.VISIBLE);
-            } else {
-                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
-                card.setStrokeWidth(0);
-                card.setCardElevation(1f);
-                nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
-                if (checkBadge != null) checkBadge.setVisibility(View.GONE);
-            }
-
-            final int index = i;
-            final List<BrandDisplay> finalFilteredBrands = filteredBrands;
-            View.OnClickListener onBrandClick = v -> {
-                for (int j = 0; j < finalFilteredBrands.size(); j++)
-                    finalFilteredBrands.get(j).isSelected = (j == index);
-                renderFilteredBrands(finalFilteredBrands);
-                
-                // Open CategoryDetailActivity pre-filtered to this brand
-                String category = brandToCategory(brand.getName());
-                int total = brand.getProductsCount();
-                
-                Intent intent = new Intent(this, CategoryDetailActivity.class);
-                intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY,     category);
-                intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE,   heroImageFor(category));
-                intent.putExtra(CategoryDetailActivity.EXTRA_ITEM_COUNT,   total + " Items");
-                intent.putExtra(CategoryDetailActivity.EXTRA_BRAND_FILTER, brand.getName());
-                intent.putExtra("BRAND_ID", brand.getId());
-                intent.putExtra("BRAND_SLUG", brand.getSlug());
-                startActivity(intent);
-            };
-            card.setOnClickListener(onBrandClick);
-
-            if (!reuseViews) {
-                brandsGrid.addView(view);
+                Brand fallback = new Brand(i + 1, name, slug);
+                fallback.setActive(true);
+                fallback.setProductsCount(defaultCount);
+                result.add(fallback);
             }
         }
+
+        return result;
+    }
+
+    private Brand findBrandInApiList(List<BrandDisplay> apiBrandsList, String targetSlug, String targetName) {
+        if (apiBrandsList == null) return null;
+        for (BrandDisplay bd : apiBrandsList) {
+            if (bd == null || bd.brand == null) continue;
+            Brand b = bd.brand;
+            String bName = b.getName() != null ? b.getName().toLowerCase() : "";
+            String bSlug = b.getSlug() != null ? b.getSlug().toLowerCase() : "";
+            if (bSlug.equals(targetSlug) || bName.equals(targetName.toLowerCase()) || 
+                bSlug.contains(targetSlug) || bName.contains(targetName.toLowerCase())) {
+                return b;
+            }
+        }
+        return null;
     }
 
     /** Rotating tint pairs (background, foreground) applied to brand icon containers
@@ -489,15 +438,11 @@ public class CategoriesActivity extends BaseActivity {
 
             // Display brand logo if available
             Integer logoResId = getBrandLogo(brand.getSlug());
+            if (logoResId == null && brand.getName() != null) {
+                logoResId = getBrandLogo(brand.getName());
+            }
             if (logoResId != null) {
-                // Check if dark mode and apple logo, use white version
-                if (brand.getSlug().toLowerCase().equals("apple") && isDarkModeEnabled()) {
-                    brandIcon.setImageResource(R.drawable.apple_white);
-                } else if (logoResId.equals(R.drawable.apple) && isDarkModeEnabled()) {
-                    brandIcon.setImageResource(R.drawable.apple_white);
-                } else {
-                    brandIcon.setImageResource(logoResId);
-                }
+                brandIcon.setImageResource(logoResId);
                 brandIcon.setVisibility(View.VISIBLE);
             } else {
                 brandIcon.setVisibility(View.GONE);

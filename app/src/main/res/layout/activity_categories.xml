@@ -162,109 +162,12 @@
                         android:textSize="@dimen/text_size_body" />
                 </FrameLayout>
 
-                <!-- Laptops Brands Section -->
-                <LinearLayout
+                <!-- Laptops Brands Section with Tabs + Preview -->
+                <include
+                    layout="@layout/section_brand_tabs_preview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="20dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="20dp">
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="16dp">
-
-                    <!-- Section header row -->
-                    <LinearLayout
-                        android:id="@+id/laptopBrandsSectionHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingBottom="14dp">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="0dp"
-                            app:cardBackgroundColor="@color/badge_bg"
-                            app:strokeWidth="0dp">
-
-                            <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/devices_24"
-                                app:tint="@color/primary" />
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="12dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Laptop Brands"
-                                android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_body_large"
-                                android:fontFamily="sans-serif-medium" />
-
-                            <TextView
-                                android:id="@+id/brandsAvailableSubtitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="1dp"
-                                android:text="9 brands available"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="@dimen/text_size_caption" />
-
-                        </LinearLayout>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/viewAllBrands"
-                            android:layout_width="wrap_content"
-                            android:layout_height="32dp"
-                            app:cardCornerRadius="16dp"
-                            app:cardElevation="0dp"
-                            app:cardBackgroundColor="@color/badge_bg"
-                            app:strokeWidth="0dp"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:paddingHorizontal="14dp"
-                                android:text="View All"
-                                android:textColor="@color/primary"
-                                android:textSize="@dimen/text_size_caption"
-                                android:fontFamily="sans-serif-medium" />
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                    </LinearLayout>
-
-                    <!-- Brands Grid -->
-                    <GridLayout
-                        android:id="@+id/laptopBrandsGrid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:columnCount="3" />
-
-                </LinearLayout>
+                    android:layout_marginTop="8dp" />
 
                 <!-- CHANGED: All Categories header now has the orange bar (same TextView ID) -->
                 <LinearLayout
