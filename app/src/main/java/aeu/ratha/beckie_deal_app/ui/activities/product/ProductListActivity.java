@@ -404,13 +404,14 @@ public class ProductListActivity extends BaseActivity
         if (productsGrid == null) return;
 
         boolean isListView = ViewModePreferences.isListView(this);
+        int columns = isListView ? 1 : ScreenUtils.productGridColumns(this);
 
         if (resultsLabel != null)
             resultsLabel.setText("Showing " + products.size() + " products");
 
         if (productAdapter == null) {
             // First time setup: create adapter with GridLayoutManager
-            GridLayoutManager layoutManager = new GridLayoutManager(this, isListView ? 1 : 2);
+            GridLayoutManager layoutManager = new GridLayoutManager(this, columns);
             productsGrid.setLayoutManager(layoutManager);
             productAdapter = new ProductGridAdapter(this, products, wishlistRepository, cartRepository);
             productAdapter.setListMode(isListView);
@@ -418,7 +419,7 @@ public class ProductListActivity extends BaseActivity
         } else {
             // Already has adapter: update span count and refresh data
             GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
-            if (layoutManager != null) layoutManager.setSpanCount(isListView ? 1 : 2);
+            if (layoutManager != null) layoutManager.setSpanCount(columns);
             productAdapter.setListMode(isListView);
             // Update the adapter's product list
             productAdapter.updateProducts(products);

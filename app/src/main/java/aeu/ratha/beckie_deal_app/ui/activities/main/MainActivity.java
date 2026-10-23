@@ -21,6 +21,7 @@ import aeu.ratha.beckie_deal_app.utils.animations.ViewModeAnimator;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
 import aeu.ratha.beckie_deal_app.utils.preferences.ViewModePreferences;
 import aeu.ratha.beckie_deal_app.utils.preferences.ScrollStatePreferences;
 
@@ -1091,12 +1092,13 @@ public class MainActivity extends BaseActivity {
         productsGrid.setNestedScrollingEnabled(false);
 
         boolean isListView = ViewModePreferences.isListView(this);
+        int gridColumns = isListView ? 1 : ScreenUtils.productGridColumns(this);
 
         if (productAdapter == null) {
             // First setup: create the adapter and attach a GridLayoutManager.
             // nestedScrollingEnabled=false (set in XML) lets the outer NestedScrollView
             // control the scroll, so the whole page scrolls as one — smooth and natural.
-            GridLayoutManager layoutManager = new GridLayoutManager(this, isListView ? 1 : 2);
+            GridLayoutManager layoutManager = new GridLayoutManager(this, gridColumns);
             productsGrid.setLayoutManager(layoutManager);
             productAdapter = new ProductGridAdapter(this, products, wishlistRepository, cartRepository);
             productAdapter.setListMode(isListView);
@@ -1107,7 +1109,7 @@ public class MainActivity extends BaseActivity {
         } else {
             // onResume path: apply current view mode + refresh to pick up wishlist changes
             GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
-            if (layoutManager != null) layoutManager.setSpanCount(isListView ? 1 : 2);
+            if (layoutManager != null) layoutManager.setSpanCount(gridColumns);
             productAdapter.setListMode(isListView);
             productAdapter.notifyDataSetChanged();
             
@@ -1132,7 +1134,10 @@ public class MainActivity extends BaseActivity {
 
                 if (productsGrid != null) {
                     GridLayoutManager layoutManager = (GridLayoutManager) productsGrid.getLayoutManager();
-                    if (layoutManager != null) layoutManager.setSpanCount(newListView ? 1 : 2);
+                    if (layoutManager != null) {
+                        int columns = newListView ? 1 : ScreenUtils.productGridColumns(this);
+                        layoutManager.setSpanCount(columns);
+                    }
                 }
                 if (productAdapter != null) productAdapter.setListMode(newListView);
             });
