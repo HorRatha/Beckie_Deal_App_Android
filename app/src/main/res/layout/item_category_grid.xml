@@ -39,23 +39,23 @@
         android:textColor="@color/white_fixed"
         android:visibility="gone" />
 
-    <!-- Category icon top-right -->
+    <!-- Category 3D image top-right -->
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="top|end"
         android:layout_margin="10dp"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="#33FFFFFF"
+        app:cardBackgroundColor="#FFFFFF"
         app:strokeWidth="0dp">
         <ImageView
-            android:id="@+id/categorySmallIcon"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:id="@+id/categoryImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/devices_24"
-            app:tint="@android:color/white" />
+            android:scaleType="fitCenter"
+            android:contentDescription="Category 3D Image" />
     </com.google.android.material.card.MaterialCardView>
 
     <!-- Title + count bottom-left -->

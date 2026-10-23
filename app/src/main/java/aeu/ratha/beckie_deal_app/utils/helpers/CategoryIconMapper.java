@@ -37,73 +37,79 @@ public class CategoryIconMapper {
      */
     private static final Map<String, Integer> CATEGORY_ICON_MAP = 
         new LinkedHashMap<String, Integer>() {{
-            // Laptops & Computers - Blue theme
-            put("laptops", R.drawable.devices_24);
-            put("computers", R.drawable.devices_24);
-            put("desktop", R.drawable.devices_24);
-            put("workstation", R.drawable.devices_24);
-            put("ultrabook", R.drawable.devices_24);
+            // Laptops & Computers 3D images
+            put("macbook", R.drawable.macbook_pro);
+            put("macbook-pro", R.drawable.macbook_pro);
+            put("mac", R.drawable.macbook_pro);
+            put("laptops", R.drawable.laptop);
+            put("laptop", R.drawable.laptop);
+            put("computers", R.drawable.laptop);
+            put("desktop", R.drawable.laptop);
+            put("workstation", R.drawable.laptop);
+            put("ultrabook", R.drawable.laptop);
+            put("notebook", R.drawable.laptop);
             
-            // Mobile & Phones - Pink/Red theme
-            put("smartphones", R.drawable.mobile_24);
-            put("phones", R.drawable.mobile_24);
-            put("mobile", R.drawable.mobile_24);
-            put("tablets", R.drawable.mobile_24);
-            put("ipad", R.drawable.mobile_24);
+            // Mobile & Phones 3D images
+            put("smartphones", R.drawable.smartphone);
+            put("smartphone", R.drawable.smartphone);
+            put("phones", R.drawable.smartphone);
+            put("phone", R.drawable.smartphone);
+            put("mobile", R.drawable.smartphone);
+            put("tablets", R.drawable.tablet);
+            put("tablet", R.drawable.tablet);
+            put("ipad", R.drawable.tablet);
             
-            // Gaming - Purple theme
-            put("gaming", R.drawable.sports_esports_24);
-            put("game", R.drawable.sports_esports_24);
-            put("console", R.drawable.sports_esports_24);
-            put("gaming-laptops", R.drawable.sports_esports_24);
-            put("gaming-pc", R.drawable.sports_esports_24);
+            // Gaming 3D image
+            put("gaming", R.drawable.gaming_laptop);
+            put("game", R.drawable.gaming_laptop);
+            put("console", R.drawable.gaming_laptop);
+            put("gaming-laptops", R.drawable.gaming_laptop);
+            put("gaming-pc", R.drawable.gaming_laptop);
             
-            // Wearables - Orange theme
-            put("wearables", R.drawable.devices_wearables_24);
-            put("smartwatch", R.drawable.devices_wearables_24);
-            put("watch", R.drawable.devices_wearables_24);
-            put("fitness", R.drawable.devices_wearables_24);
-            put("bands", R.drawable.devices_wearables_24);
+            // Displays & Monitors 3D image
+            put("monitors", R.drawable.monitor);
+            put("monitor", R.drawable.monitor);
+            put("displays", R.drawable.monitor);
+            put("display", R.drawable.monitor);
+            put("tv", R.drawable.monitor);
+            put("projector", R.drawable.monitor);
             
-            // Displays & Monitors - Cyan theme
-            put("monitors", R.drawable.devices_24);
-            put("displays", R.drawable.devices_24);
-            put("tv", R.drawable.devices_24);
-            put("projector", R.drawable.devices_24);
+            // Accessories 3D image
+            put("accessories", R.drawable.accessories);
+            put("accessory", R.drawable.accessories);
+            put("wearables", R.drawable.accessories);
+            put("smartwatch", R.drawable.accessories);
+            put("watch", R.drawable.accessories);
+            put("cables", R.drawable.accessories);
+            put("chargers", R.drawable.accessories);
+            put("mouse", R.drawable.accessories);
+            put("keyboard", R.drawable.accessories);
+            put("bag", R.drawable.accessories);
+            put("screen-protector", R.drawable.accessories);
+            put("audio", R.drawable.accessories);
+            put("headphones", R.drawable.accessories);
+            put("speakers", R.drawable.accessories);
+            put("earbuds", R.drawable.accessories);
             
-            // Accessories - Yellow theme
-            put("accessories", R.drawable.widgets_24);
-            put("cables", R.drawable.widgets_24);
-            put("chargers", R.drawable.widgets_24);
-            put("mouse", R.drawable.widgets_24);
-            put("keyboard", R.drawable.widgets_24);
-            put("bag", R.drawable.widgets_24);
-            put("screen-protector", R.drawable.widgets_24);
+            // Storage 3D image
+            put("storage", R.drawable.storage);
+            put("drives", R.drawable.storage);
+            put("drive", R.drawable.storage);
+            put("ssd", R.drawable.storage);
+            put("hdd", R.drawable.storage);
+            put("memory", R.drawable.storage);
+            put("usb", R.drawable.storage);
             
-            // Storage - Green theme
-            put("storage", R.drawable.widgets_24);
-            put("drives", R.drawable.widgets_24);
-            put("ssd", R.drawable.widgets_24);
-            put("hdd", R.drawable.widgets_24);
-            put("memory", R.drawable.widgets_24);
-            put("usb", R.drawable.widgets_24);
-            
-            // Networking - Teal theme
-            put("networking", R.drawable.widgets_24);
-            put("router", R.drawable.widgets_24);
-            put("modem", R.drawable.widgets_24);
-            put("wifi", R.drawable.widgets_24);
-            put("adapter", R.drawable.widgets_24);
-            
-            // Audio - Deep Orange theme
-            put("audio", R.drawable.devices_24);
-            put("headphones", R.drawable.devices_24);
-            put("speakers", R.drawable.devices_24);
-            put("earbuds", R.drawable.devices_24);
-            put("microphone", R.drawable.devices_24);
+            // Networking 3D image
+            put("networking", R.drawable.networking);
+            put("network", R.drawable.networking);
+            put("router", R.drawable.networking);
+            put("modem", R.drawable.networking);
+            put("wifi", R.drawable.networking);
+            put("adapter", R.drawable.networking);
             
             // Default fallback
-            put("default", R.drawable.ic_category_default);
+            put("default", R.drawable.laptop);
     }};
     
     /**
@@ -220,21 +226,69 @@ public class CategoryIconMapper {
      */
     private static int getIconBySmartMatch(String categoryName) {
         if (categoryName == null || categoryName.isEmpty()) {
-            return 0;
+            return R.drawable.laptop;
         }
         
-        String name = categoryName.toLowerCase();
+        String name = categoryName.toLowerCase().trim();
+        
+        // Check MacBook / Apple
+        if (name.contains("macbook") || name.contains("macebook") || (name.contains("mac") && name.contains("book"))) {
+            return R.drawable.macbook_pro;
+        }
+        
+        // Check Accessories / Fashion
+        if (name.contains("accessor") || name.contains("fashion")) {
+            return R.drawable.accessories;
+        }
+        
+        // Check Gaming
+        if (name.contains("gaming") || name.contains("game") || name.contains("alienware") || name.contains("rog")) {
+            return R.drawable.gaming_laptop;
+        }
+        
+        // Check Laptops (including brand/series names)
+        if (name.contains("laptop") || name.contains("computer") || name.contains("desktop") ||
+            name.contains("asus") || name.contains("dell") || name.contains("hp") ||
+            name.contains("lenovo") || name.contains("acer") || name.contains("msi") ||
+            name.contains("notebook") || name.contains("ultrabook") || name.contains("workstation") ||
+            name.contains("vivobook") || name.contains("zenbook") || name.contains("thinkpad")) {
+            return R.drawable.laptop;
+        }
+        
+        // Check Smartphones
+        if (name.contains("phone") || name.contains("mobile") || name.contains("smartphone") || name.contains("samsung")) {
+            return R.drawable.smartphone;
+        }
+        
+        // Check Tablets
+        if (name.contains("tablet") || name.contains("ipad")) {
+            return R.drawable.tablet;
+        }
+        
+        // Check Storage
+        if (name.contains("storage") || name.contains("drive") || name.contains("ssd") || name.contains("hdd")) {
+            return R.drawable.storage;
+        }
+        
+        // Check Networking
+        if (name.contains("network") || name.contains("wifi") || name.contains("router")) {
+            return R.drawable.networking;
+        }
+        
+        // Check Monitor
+        if (name.contains("monitor") || name.contains("display") || name.contains("screen") || name.contains("tv")) {
+            return R.drawable.monitor;
+        }
         
         // Check all entries in map against category name
         for (Map.Entry<String, Integer> entry : CATEGORY_ICON_MAP.entrySet()) {
             if (name.contains(entry.getKey())) {
-                Log.d(TAG, "Smart matched '" + categoryName + "' to key '" + 
-                      entry.getKey() + "'");
+                Log.d(TAG, "Smart matched '" + categoryName + "' to key '" + entry.getKey() + "'");
                 return entry.getValue();
             }
         }
         
-        return 0;
+        return R.drawable.laptop;
     }
     
     /**

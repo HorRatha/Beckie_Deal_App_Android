@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|top"
-                android:layout_marginEnd="56dp"
+                android:layout_marginEnd="68dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -49,20 +49,28 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/stackIcon"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+            <!-- Category 3D Image Display -->
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_gravity="end|top"
-                android:importantForAccessibility="no" />
+                android:background="@android:color/transparent">
+                
+                <ImageView
+                    android:id="@+id/stackIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/stackChevron"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="end|top"
-                android:layout_marginTop="46dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginTop="62dp"
+                android:layout_marginEnd="18dp"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_cat_expand_more" />
 

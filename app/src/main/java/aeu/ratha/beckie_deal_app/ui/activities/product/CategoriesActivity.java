@@ -648,9 +648,9 @@ public class CategoriesActivity extends BaseActivity {
 
     private int getCategoryIcon(String categoryName) {
         String name = categoryName.toLowerCase();
-        if (name.contains("laptop") || name.contains("computer")) return R.drawable.devices_24;
+        if (name.contains("laptop") || name.contains("computer") || name.contains("asus") || name.contains("vivobook")) return R.drawable.devices_24;
         if (name.contains("phone") || name.contains("mobile")) return R.drawable.mobile_24;
-        if (name.contains("accessor")) return R.drawable.widgets_24;
+        if (name.contains("accessor") || name.contains("fashion")) return R.drawable.widgets_24;
         if (name.contains("gaming") || name.contains("game")) return R.drawable.sports_esports_24;
         if (name.contains("wearable") || name.contains("watch")) return R.drawable.devices_wearables_24;
         if (name.contains("monitor") || name.contains("display")) return R.drawable.devices_24;
@@ -795,7 +795,8 @@ public class CategoriesActivity extends BaseActivity {
                     String.valueOf(item.categoryId),
                     item.name,
                     item.countInt,
-                    item.iconRes
+                    item.iconRes,
+                    item.imageUrl
             ));
         }
 
@@ -837,10 +838,6 @@ public class CategoriesActivity extends BaseActivity {
             this.count = count; 
             this.countInt = countInt;
             this.imageUrl = imageUrl;
-            this.iconRes = iconRes; 
-            this.isHot = isHot;
-            this.categoryId = categoryId;
-            this.categorySlug = categorySlug;
             this.iconRes = iconRes; 
             this.isHot = isHot;
             this.categoryId = categoryId;

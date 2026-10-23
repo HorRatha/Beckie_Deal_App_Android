@@ -59,6 +59,8 @@ public class CategoryStackController {
 
         @DrawableRes public final int iconRes;
 
+        @Nullable public final String imageUrl;
+
         public CategoryUi(String id, String name, int itemCount, @DrawableRes int iconRes) {
 
             this.id = id;
@@ -68,6 +70,22 @@ public class CategoryStackController {
             this.itemCount = itemCount;
 
             this.iconRes = iconRes;
+
+            this.imageUrl = null;
+
+        }
+
+        public CategoryUi(String id, String name, int itemCount, @DrawableRes int iconRes, @Nullable String imageUrl) {
+
+            this.id = id;
+
+            this.name = name;
+
+            this.itemCount = itemCount;
+
+            this.iconRes = iconRes;
+
+            this.imageUrl = imageUrl;
 
         }
 
@@ -261,9 +279,8 @@ public class CategoryStackController {
 
             count.setTextColor(textColor);
 
-            icon.setImageResource(c.iconRes);
-
-            ImageViewCompat.setImageTintList(icon, ColorStateList.valueOf(iconColor));
+            // Load category image if available, otherwise use default icon
+            bindCategoryIcon(icon, c.imageUrl, c.iconRes, iconColor);
 
             ImageViewCompat.setImageTintList(s.chevron, ColorStateList.valueOf(textColor));
 
@@ -614,6 +631,38 @@ public class CategoryStackController {
             img.setPadding(pad, pad, pad, pad);
 
             img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+        }
+
+    }
+
+    private void bindCategoryIcon(ImageView icon, @Nullable String imageUrl, @DrawableRes int iconRes, int iconColor) {
+
+        // ALWAYS remove tinting and color filters so 3D WebP images render in their full vivid colors
+        icon.setColorFilter(null);
+        icon.clearColorFilter();
+        ImageViewCompat.setImageTintList(icon, null);
+        icon.setImageTintList(null);
+
+        // Try to load image from URL first if present
+        if (imageLoader != null && imageUrl != null && !imageUrl.trim().isEmpty()) {
+
+            icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            android.util.Log.d("CategoryStack", "Loading image URL: " + imageUrl);
+            imageLoader.load(icon, imageUrl);
+
+        } else if (iconRes != 0) {
+
+            // Display 3D image drawable directly without any tint filter
+            android.util.Log.d("CategoryStack", "Displaying 3D WebP drawable res: " + iconRes);
+            icon.setImageResource(iconRes);
+            icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        } else {
+
+            icon.setImageResource(R.drawable.laptop);
+            icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
         }
 
