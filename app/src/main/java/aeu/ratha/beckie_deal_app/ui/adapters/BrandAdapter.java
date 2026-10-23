@@ -24,28 +24,10 @@ import aeu.ratha.beckie_deal_app.data.models.Brand;
 
 /**
  * RecyclerView adapter for displaying brands with logo and colored borders.
- * Shows brand logo vectors with gradient-colored borders.
+ * Shows brand logo images (webp) with gradient-colored borders.
+ * Logos are loaded statically from res/drawable since backend doesn't provide them.
  */
 public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHolder> {
-    
-    private static final Map<String, Integer> BRAND_LOGO_MAP = new HashMap<>();
-    
-    static {
-        // Map brand names to authentic logo drawables in res/drawable
-        BRAND_LOGO_MAP.put("apple", R.drawable.apple);
-        BRAND_LOGO_MAP.put("dell", R.drawable.dell);
-        BRAND_LOGO_MAP.put("hp", R.drawable.hp);
-        BRAND_LOGO_MAP.put("lenovo", R.drawable.lenovo);
-        BRAND_LOGO_MAP.put("msi", R.drawable.msi);
-        BRAND_LOGO_MAP.put("rog", R.drawable.republicofgamers);
-        BRAND_LOGO_MAP.put("republicofgamers", R.drawable.republicofgamers);
-        BRAND_LOGO_MAP.put("asus", R.drawable.asus);
-        BRAND_LOGO_MAP.put("nvidia", R.drawable.nvidia);
-        BRAND_LOGO_MAP.put("razer", R.drawable.ic_brand_razer);
-        BRAND_LOGO_MAP.put("acer", R.drawable.ic_brand_acer);
-        BRAND_LOGO_MAP.put("microsoft", R.drawable.ic_brand_microsoft);
-        BRAND_LOGO_MAP.put("samsung", R.drawable.ic_brand_samsung);
-    }
     
     private Context context;
     private List<Brand> brands;
@@ -176,19 +158,23 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
             // Set brand name
             brandName.setText(brand.getName());
             
-            // Display brand logo if available
-            Integer logoResId = BRAND_LOGO_MAP.get(brand.getSlug().toLowerCase());
-            if (logoResId != null) {
-                // Check if dark mode is enabled and use white apple logo if needed
-                if (brand.getSlug().toLowerCase().equals("apple") && isDarkModeEnabled(itemView.getContext())) {
-                    brandIcon.setImageResource(R.drawable.apple_white);
-                } else if (logoResId.equals(R.drawable.apple) && isDarkModeEnabled(itemView.getContext())) {
-                    brandIcon.setImageResource(R.drawable.apple_white);
+            // Display brand logo from static drawable resources
+            try {
+                int logoResId = brand.getLogoResourceId();
+                if (logoResId != 0) {  // 0 means no logo found
+                    // Check if dark mode is enabled and use white apple logo if needed
+                    if (brand.getSlug() != null && brand.getSlug().toLowerCase().equals("apple") && isDarkModeEnabled(itemView.getContext())) {
+                        brandIcon.setImageResource(R.drawable.apple_white);
+                    } else {
+                        brandIcon.setImageResource(logoResId);
+                    }
+                    brandIcon.setVisibility(View.VISIBLE);
                 } else {
-                    brandIcon.setImageResource(logoResId);
+                    // No logo found, show placeholder with brand initial
+                    brandIcon.setVisibility(View.GONE);
                 }
-                brandIcon.setVisibility(View.VISIBLE);
-            } else {
+            } catch (Exception e) {
+                android.util.Log.e("BrandAdapter", "Error loading brand logo for: " + brand.getName(), e);
                 brandIcon.setVisibility(View.GONE);
             }
             

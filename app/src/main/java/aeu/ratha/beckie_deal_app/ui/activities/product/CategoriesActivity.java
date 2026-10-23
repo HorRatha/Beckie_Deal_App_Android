@@ -289,7 +289,7 @@ public class CategoriesActivity extends BaseActivity {
         if (name.contains("dell") || name.contains("alienware")) return R.drawable.dell;
         if (name.contains("hp") || name.contains("hewlett") || name.contains("omen")) return R.drawable.hp;
         if (name.contains("lenovo") || name.contains("thinkpad") || name.contains("legion")) return R.drawable.lenovo;
-        if (name.contains("msi")) return R.drawable.msi;
+        if (name.contains("msi")) return R.drawable.msi_official_red_glossy;
         if (name.contains("rog") || name.contains("republic")) return R.drawable.republicofgamers;
         if (name.contains("asus")) return R.drawable.asus;
         if (name.contains("razer")) return R.drawable.ic_brand_razer;

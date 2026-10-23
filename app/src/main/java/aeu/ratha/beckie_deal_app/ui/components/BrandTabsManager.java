@@ -29,6 +29,7 @@ import aeu.ratha.beckie_deal_app.utils.helpers.ImageUrlHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.ui.activities.product.CategoryDetailActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.product.ProductDetailActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.product.AllBrandsActivityV2;
 
 /**
  * Manager for Brand Tabs + Preview section
@@ -74,6 +75,16 @@ public class BrandTabsManager {
         // Update subtitle
         if (brandTabsSubtitle != null) {
             brandTabsSubtitle.setText(brands.size() + " brands available");
+        }
+
+        // Setup View All button
+        MaterialCardView viewAllBrandsBtn = parentView.findViewById(R.id.viewAllBrandsBtn);
+        if (viewAllBrandsBtn != null) {
+            viewAllBrandsBtn.setOnClickListener(v -> {
+                // Open All Brands Activity
+                Intent intent = new Intent(activity, AllBrandsActivityV2.class);
+                activity.startActivity(intent);
+            });
         }
 
         // Clear existing views before rendering tabs
@@ -441,7 +452,7 @@ public class BrandTabsManager {
 
         if (str.contains("apple") || str.contains("mac")) return R.drawable.apple;
         if (str.contains("asus") || str.contains("rog") || str.contains("republic")) return R.drawable.asus;
-        if (str.contains("msi")) return R.drawable.msi;
+        if (str.contains("msi")) return R.drawable.msi_official_red_glossy;
         if (str.contains("dell") || str.contains("alienware")) return R.drawable.dell;
         if (str.contains("hp") || str.contains("hewlett") || str.contains("omen")) return R.drawable.hp;
         if (str.contains("lenovo") || str.contains("thinkpad") || str.contains("legion")) return R.drawable.lenovo;
@@ -451,7 +462,7 @@ public class BrandTabsManager {
 
         if (str.contains("app")) return R.drawable.apple;
         if (str.contains("asu")) return R.drawable.asus;
-        if (str.contains("ms")) return R.drawable.msi;
+        if (str.contains("ms")) return R.drawable.msi_official_red_glossy;
         if (str.contains("del")) return R.drawable.dell;
         if (str.contains("len")) return R.drawable.lenovo;
 

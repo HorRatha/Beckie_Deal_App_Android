@@ -52,6 +52,9 @@
             android:name=".ui.activities.product.AllBrandsActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activities.product.AllBrandsActivityV2"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.product.CategoryDetailActivity"
             android:exported="false" />
         <activity
