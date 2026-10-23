@@ -35,8 +35,10 @@ public class AllBrandsActivity extends BaseActivity {
     
     private GridLayout allBrandsGrid;
     private ProgressBar progressBar;
+    private TextView brandCountTextView;
     private BrandApiService brandApiService;
     private List<Brand> brandsList = new ArrayList<>();
+    private int totalBrandsCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class AllBrandsActivity extends BaseActivity {
     private void initViews() {
         allBrandsGrid = findViewById(R.id.allBrandsGrid);
         progressBar = findViewById(R.id.progressBar);
+        brandCountTextView = findViewById(R.id.brandCount);
     }
     
     /**
@@ -72,8 +75,17 @@ public class AllBrandsActivity extends BaseActivity {
     private void setupTopBar() {
         ImageView backButton = findViewById(R.id.backButton);
         if (backButton != null) {
-            backButton.setOnClickListener(v -> finish());
-            UiAnimations.pressBounce(backButton);
+            backButton.setOnClickListener(v -> {
+                Log.d(TAG, "Back button clicked");
+                finish();
+            });
+            try {
+                UiAnimations.pressBounce(backButton);
+            } catch (Exception e) {
+                Log.w(TAG, "Animation error on back button", e);
+            }
+        } else {
+            Log.w(TAG, "Back button not found in layout");
         }
     }
     
@@ -100,9 +112,18 @@ public class AllBrandsActivity extends BaseActivity {
                         
                         brandsList = brandResponse.getData().getBrands();
                         
+                        // Get total count from pagination
+                        if (brandResponse.getData().getPagination() != null) {
+                            totalBrandsCount = brandResponse.getData().getPagination().getTotal();
+                        } else {
+                            totalBrandsCount = brandsList.size();
+                        }
+                        
                         Log.d(TAG, "Brands fetched successfully: " + brandsList.size() + " items");
-                        Log.d(TAG, "Total brands available: " + 
-                              brandResponse.getData().getPagination().getTotal());
+                        Log.d(TAG, "Total brands available: " + totalBrandsCount);
+                        
+                        // Update brand count display
+                        updateBrandCount(totalBrandsCount);
                         
                         displayBrands(brandsList);
                     } else {
@@ -149,7 +170,6 @@ public class AllBrandsActivity extends BaseActivity {
                     .inflate(R.layout.item_brand_square, allBrandsGrid, false);
 
             ImageView brandIcon = view.findViewById(R.id.brandIcon);
-            TextView iconText = view.findViewById(R.id.brandIconText);
             TextView nameText = view.findViewById(R.id.brandName);
             TextView productCount = view.findViewById(R.id.brandProductCount);
 
@@ -165,23 +185,18 @@ public class AllBrandsActivity extends BaseActivity {
                 productCount.setVisibility(View.GONE);
             }
 
-            // Try to load logo, fallback to initial letter
-            if (brand.getLogo() != null && !brand.getLogo().isEmpty()) {
-                try {
-                    com.bumptech.glide.Glide.with(this)
-                            .load(brand.getLogo())
-                            .placeholder(R.drawable.placeholder_image)
-                            .error(R.drawable.placeholder_image)
-                            .fitCenter()
-                            .into(brandIcon);
+            // Load logo from drawable resources
+            try {
+                int logoResId = brand.getLogoResourceId();
+                if (logoResId != 0) {
+                    brandIcon.setImageResource(logoResId);
                     brandIcon.setVisibility(View.VISIBLE);
-                    iconText.setVisibility(View.GONE);
-                } catch (Exception e) {
-                    Log.w(TAG, "Failed to load logo for " + brand.getName(), e);
-                    showBrandInitial(brandIcon, iconText, brand.getName());
+                } else {
+                    brandIcon.setVisibility(View.GONE);
                 }
-            } else {
-                showBrandInitial(brandIcon, iconText, brand.getName());
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to load logo for " + brand.getName(), e);
+                brandIcon.setVisibility(View.GONE);
             }
 
             // Open CategoryDetailActivity filtered to this brand's products
@@ -215,6 +230,18 @@ public class AllBrandsActivity extends BaseActivity {
     }
     
     /**
+     * Update brand count display in the header.
+     * @param count Number of brands to display
+     */
+    private void updateBrandCount(int count) {
+        if (brandCountTextView != null) {
+            String text = count + (count == 1 ? " brand" : " brands");
+            brandCountTextView.setText(text);
+            Log.d(TAG, "Updated brand count: " + text);
+        }
+    }
+    
+    /**
      * Display fallback/hardcoded brands when API fails.
      */
     private void displayFallbackBrands() {
@@ -233,6 +260,9 @@ public class AllBrandsActivity extends BaseActivity {
         brands.add(new FallbackBrand("Razer", R.drawable.ic_brand_razer));
         brands.add(new FallbackBrand("Microsoft", R.drawable.ic_brand_microsoft));
 
+        // Update brand count for fallback brands
+        updateBrandCount(brands.size());
+
         if (allBrandsGrid == null) return;
         
         allBrandsGrid.removeAllViews();
@@ -241,14 +271,10 @@ public class AllBrandsActivity extends BaseActivity {
                     .inflate(R.layout.item_brand_square, allBrandsGrid, false);
 
             ImageView brandIcon = view.findViewById(R.id.brandIcon);
-            TextView iconText = view.findViewById(R.id.brandIconText);
             TextView nameText = view.findViewById(R.id.brandName);
             TextView productCount = view.findViewById(R.id.brandProductCount);
 
-            brandIcon.setVisibility(View.VISIBLE);
-            iconText.setVisibility(View.GONE);
             brandIcon.setImageResource(brand.imageResId);
-            brandIcon.clearColorFilter();
             nameText.setText(brand.name);
             
             // Hide product count for fallback brands

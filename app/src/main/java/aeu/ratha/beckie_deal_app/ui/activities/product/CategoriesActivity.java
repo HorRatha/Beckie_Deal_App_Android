@@ -429,7 +429,6 @@ public class CategoriesActivity extends BaseActivity {
             View view = LayoutInflater.from(this)
                     .inflate(R.layout.item_brand_square, brandsGrid, false);
 
-            com.google.android.material.card.MaterialCardView card = view.findViewById(R.id.brandCard);
             ImageView brandIcon = view.findViewById(R.id.brandIcon);
             TextView nameText = view.findViewById(R.id.brandName);
             View checkBadge = view.findViewById(R.id.selectedCheckBadge);
@@ -453,17 +452,9 @@ public class CategoriesActivity extends BaseActivity {
 
             if (brandDisplay.isSelected) {
                 int primaryColor = ContextCompat.getColor(this, R.color.primary);
-                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.brand_selected_bg));
-                card.setStrokeWidth(dpToPx(2));
-                card.setStrokeColor(primaryColor);
-                card.setCardElevation(4f);
                 nameText.setTextColor(primaryColor);
                 if (checkBadge != null) checkBadge.setVisibility(View.VISIBLE);
             } else {
-                card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface));
-                card.setStrokeWidth(dpToPx(2));
-                card.setStrokeColor(tintFg);
-                card.setCardElevation(1f);
                 nameText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
                 if (checkBadge != null) checkBadge.setVisibility(View.GONE);
             }
@@ -487,7 +478,7 @@ public class CategoriesActivity extends BaseActivity {
                 intent.putExtra("BRAND_SLUG", brand.getSlug());
                 startActivity(intent);
             };
-            card.setOnClickListener(onBrandClick);
+            view.setOnClickListener(onBrandClick);
 
             brandsGrid.addView(view);
         }

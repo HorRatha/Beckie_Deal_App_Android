@@ -50,10 +50,12 @@
             android:exported="false" />
         <activity
             android:name=".ui.activities.product.AllBrandsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.activities.main.MainActivity" />
         <activity
             android:name=".ui.activities.product.AllBrandsActivityV2"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.activities.main.MainActivity" />
         <activity
             android:name=".ui.activities.product.CategoryDetailActivity"
             android:exported="false" />

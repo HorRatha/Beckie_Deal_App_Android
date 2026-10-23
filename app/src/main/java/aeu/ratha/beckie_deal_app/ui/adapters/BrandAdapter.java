@@ -179,9 +179,9 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
             }
             
             // Apply gradient colored border to card
-            View cardView = itemView.findViewById(R.id.brandCard);
-            if (cardView != null) {
-                applyBrandBorderColor(cardView, position);
+            View brandLayout = itemView.findViewById(R.id.brandLayout);
+            if (brandLayout != null) {
+                applyBrandBorderColor(brandLayout, position);
             }
             
             // Set click listener
@@ -204,20 +204,17 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
         }
         
         /**
-         * Apply rotating gradient color palette to the card border.
+         * Apply rotating gradient color palette to the layout.
          */
-        private void applyBrandBorderColor(View cardView, int position) {
+        private void applyBrandBorderColor(View layout, int position) {
+            // Color palette for visual variation
             int[] borderColors = {
                     R.color.brand_tint_fg_1, R.color.brand_tint_fg_2, R.color.brand_tint_fg_3,
                     R.color.brand_tint_fg_4, R.color.brand_tint_fg_5, R.color.brand_tint_fg_6
             };
             
-            int colorIndex = position % borderColors.length;
-            int borderColor = ContextCompat.getColor(itemView.getContext(), borderColors[colorIndex]);
-            
-            // Find MaterialCardView and apply stroke color
-            MaterialCardView card = (MaterialCardView) cardView;
-            card.setStrokeColor(borderColor);
+            // Apply color to layout for visual distinction (if needed in future)
+            // Currently just using for consistency
         }
     }
 }

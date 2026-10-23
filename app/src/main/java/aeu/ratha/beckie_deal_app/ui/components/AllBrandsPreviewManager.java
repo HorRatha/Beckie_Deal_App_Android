@@ -30,7 +30,6 @@ public class AllBrandsPreviewManager {
     private GridLayout brandsGrid;
     private HorizontalScrollView scrollView;
     private MaterialCardView browseAllBtn;
-    private TextView viewAllLink;
     private List<Brand> allBrands;
 
     public AllBrandsPreviewManager(Activity activity, View rootView) {
@@ -43,21 +42,8 @@ public class AllBrandsPreviewManager {
      * Initialize UI components
      */
     private void initializeViews() {
-        brandsGrid = rootView.findViewById(R.id.allBrandsGrid);
-        scrollView = rootView.findViewById(R.id.allBrandsScrollView);
-        browseAllBtn = rootView.findViewById(R.id.browseAllBrandsBtn);
-        viewAllLink = rootView.findViewById(R.id.viewAllLink);
-        TextView subtitle = rootView.findViewById(R.id.allBrandsSubtitle);
-
-        // Setup "Browse All" button
-        if (browseAllBtn != null) {
-            browseAllBtn.setOnClickListener(v -> openAllBrandsPage());
-        }
-
-        // Setup "View All" link at bottom
-        if (viewAllLink != null) {
-            viewAllLink.setOnClickListener(v -> openAllBrandsPage());
-        }
+        // This manager is no longer actively used
+        // Layout references have been moved to other sections
     }
 
     /**
@@ -66,42 +52,29 @@ public class AllBrandsPreviewManager {
     public void displayBrands(List<Brand> brands) {
         this.allBrands = brands;
         
-        if (brands == null || brands.isEmpty()) {
+        if (brands == null || brands.isEmpty() || brandsGrid == null) {
             rootView.setVisibility(View.GONE);
             return;
         }
 
-        // Update subtitle
-        TextView subtitle = rootView.findViewById(R.id.allBrandsSubtitle);
-        if (subtitle != null) {
-            subtitle.setText(brands.size() + " brands available");
-        }
-
-        // Update view all link
-        if (viewAllLink != null) {
-            viewAllLink.setText("View All " + brands.size() + " Brands →");
-        }
-
         // Clear existing grid items
-        if (brandsGrid != null) {
-            brandsGrid.removeAllViews();
+        brandsGrid.removeAllViews();
 
-            // Display first 6 brands (2 rows × 3 columns) or all if less than 6
-            int itemsToDisplay = Math.min(6, brands.size());
+        // Display first 6 brands (2 rows × 3 columns) or all if less than 6
+        int itemsToDisplay = Math.min(6, brands.size());
+        
+        for (int i = 0; i < itemsToDisplay; i++) {
+            Brand brand = brands.get(i);
+            View brandCard = createBrandCard(brand, i);
             
-            for (int i = 0; i < itemsToDisplay; i++) {
-                Brand brand = brands.get(i);
-                View brandCard = createBrandCard(brand, i);
-                
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.rowSpec = GridLayout.spec(i / 3);
-                params.columnSpec = GridLayout.spec(i % 3);
-                params.width = 0;  // Will be set by columnCount weight
-                params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                params.setMargins(4, 4, 4, 4);
-                
-                brandsGrid.addView(brandCard, params);
-            }
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.rowSpec = GridLayout.spec(i / 3);
+            params.columnSpec = GridLayout.spec(i % 3);
+            params.width = 0;  // Will be set by columnCount weight
+            params.height = GridLayout.LayoutParams.WRAP_CONTENT;
+            params.setMargins(4, 4, 4, 4);
+            
+            brandsGrid.addView(brandCard, params);
         }
 
         rootView.setVisibility(View.VISIBLE);
@@ -145,11 +118,8 @@ public class AllBrandsPreviewManager {
             }
         }
 
-        // Apply colored border based on position
-        MaterialCardView card = cardView.findViewById(R.id.brandCard);
-        if (card != null) {
-            applyBrandBorderColor(card, position);
-        }
+        // Apply colored border based on position (removed since we're using clean logo layout)
+        // The layout now shows just the logo without card backgrounds
 
         // Handle card click to view brand details
         cardView.setOnClickListener(v -> {

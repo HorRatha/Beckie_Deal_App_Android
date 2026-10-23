@@ -227,4 +227,11 @@
     <string name="password_requirement_3">Contains numbers and special characters</string>
     <string name="btn_change_password">Change Password</string>
     <string name="btn_cancel">Cancel</string>
+
+    <!-- ── All Brands Screen ── -->
+    <string name="all_brands">All Brands</string>
+    <string name="search">Search</string>
+    <string name="search_brands">Search brands</string>
+    <string name="sort_popular">Sort: Popular</string>
+    <string name="brands_icon">Brands icon</string>
 </resources>

@@ -75,7 +75,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:paddingHorizontal="14dp"
-                android:text="View All"
+                android:text="See More"
                 android:textColor="@color/primary"
                 android:textSize="@dimen/text_size_caption"
                 android:fontFamily="sans-serif-medium" />

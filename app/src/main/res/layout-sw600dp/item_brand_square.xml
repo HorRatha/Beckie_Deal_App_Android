@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tablet layout for brand items (600dp+) -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_columnWeight="1"
+    android:layout_margin="10dp">
+
+    <LinearLayout
+        android:id="@+id/brandLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <!-- Brand logo image - clean, no background -->
+        <ImageView
+            android:id="@+id/brandIcon"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginBottom="12dp"
+            android:scaleType="centerInside"
+            android:contentDescription="Brand Logo" />
+
+        <!-- Brand name -->
+        <TextView
+            android:id="@+id/brandName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Brand Name"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:gravity="center" />
+
+        <!-- Product count badge -->
+        <TextView
+            android:id="@+id/brandProductCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="0 products"
+            android:textSize="11sp"
+            android:textColor="@color/text_secondary"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- Selected checkmark badge, floats over the top-end corner of the card -->
+    <ImageView
+        android:id="@+id/selectedCheckBadge"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/about_icon_circle_bg"
+        android:backgroundTint="@color/primary"
+        android:padding="4dp"
+        android:src="@drawable/selected_check_badge"
+        android:visibility="gone" />
+
+    <!-- Icon container for compatibility -->
+    <FrameLayout
+        android:id="@+id/iconContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+</FrameLayout>

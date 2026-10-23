@@ -26,7 +26,7 @@ import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 public class AllBrandsActivityV2 extends BaseActivity {
     
     private static final String TAG = "AllBrandsActivityV2";
-    private static final int GRID_COLUMNS = 3;
+    private static final int GRID_COLUMNS = 4;
     
     // UI Components
     private GridLayout allBrandsGrid;
@@ -42,20 +42,33 @@ public class AllBrandsActivityV2 extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_brands);
         
+        Log.d(TAG, "onCreate called");
         initViews();
         setupTopBar();
         initRepository();
         loadBrands(false);
         
-        UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
+        // Animate top bar
+        View topAppBar = findViewById(R.id.topAppBar);
+        if (topAppBar != null) {
+            UiAnimations.fadeSlideDown(topAppBar, 0);
+        }
     }
     
     /**
      * Initialize view references.
      */
     private void initViews() {
+        Log.d(TAG, "initViews called");
         allBrandsGrid = findViewById(R.id.allBrandsGrid);
         progressBar = findViewById(R.id.progressBar);
+        
+        if (allBrandsGrid == null) {
+            Log.e(TAG, "ERROR: allBrandsGrid not found!");
+        }
+        if (progressBar == null) {
+            Log.e(TAG, "ERROR: progressBar not found!");
+        }
     }
     
     /**
@@ -64,8 +77,17 @@ public class AllBrandsActivityV2 extends BaseActivity {
     private void setupTopBar() {
         ImageView backButton = findViewById(R.id.backButton);
         if (backButton != null) {
-            backButton.setOnClickListener(v -> finish());
-            UiAnimations.pressBounce(backButton);
+            backButton.setOnClickListener(v -> {
+                Log.d(TAG, "Back button clicked");
+                finish();
+            });
+            try {
+                UiAnimations.pressBounce(backButton);
+            } catch (Exception e) {
+                Log.w(TAG, "Animation error on back button", e);
+            }
+        } else {
+            Log.w(TAG, "Back button not found in layout");
         }
     }
     
