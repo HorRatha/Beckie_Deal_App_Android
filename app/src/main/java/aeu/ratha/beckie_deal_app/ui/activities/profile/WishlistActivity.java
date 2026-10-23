@@ -47,7 +47,7 @@ public class WishlistActivity extends BaseActivity {
     private static final String TAG = "WishlistActivity";
     private WishlistRepository wishlistRepository;
     private ProgressBar loadingIndicator;
-    private List<MainActivity.Product> cachedWishlistProducts = new ArrayList<>();
+    private static final List<MainActivity.Product> cachedWishlistProducts = new ArrayList<>();
     private AppDrawerHelper drawerHelper;
 
     @Override
@@ -149,9 +149,17 @@ public class WishlistActivity extends BaseActivity {
             return;
         }
 
-        // User is logged in - fetch wishlist from API
-        showLoading(true);
-        
+        // Render memory-cached items instantly if available (0ms response)
+        if (!cachedWishlistProducts.isEmpty()) {
+            displayWishlistGrid(cachedWishlistProducts, wishlistGrid, emptyState);
+            if (drawerHelper != null) {
+                drawerHelper.updateWishlistBadgeCount(cachedWishlistProducts.size());
+            }
+        } else {
+            showLoading(true);
+        }
+
+        // Fetch latest wishlist from API in background
         wishlistRepository.getWishlist(new WishlistRepository.WishlistCallback() {
             @Override
             public void onSuccess(WishlistResponse response) {
@@ -160,31 +168,33 @@ public class WishlistActivity extends BaseActivity {
                     
                     Wishlist wishlist = response.getData();
                     if (wishlist == null || wishlist.getItems() == null || wishlist.getItems().isEmpty()) {
-                        // Empty wishlist
+                        cachedWishlistProducts.clear();
                         emptyState.setVisibility(View.VISIBLE);
                         wishlistGrid.setVisibility(View.GONE);
                         setupWishlistEmptyState(true);
-                        UiAnimations.fadeSlideUp(emptyState, 60);
+                        if (drawerHelper != null) {
+                            drawerHelper.updateWishlistBadgeCount(0);
+                        }
                     } else {
                         // Convert WishlistItem to MainActivity.Product for display
-                        cachedWishlistProducts.clear();
+                        List<MainActivity.Product> freshList = new ArrayList<>();
                         for (WishlistItem item : wishlist.getItems()) {
                             Product apiProduct = item.getProduct();
                             if (apiProduct != null) {
-                                // Use ProductMapper to properly convert API product to UI product
                                 MainActivity.Product displayProduct = ProductMapper.toUiProduct(apiProduct);
                                 if (displayProduct != null) {
                                     displayProduct.isInWishlist = true;
-                                    displayProduct.wishlistItemId = item.getId(); // Save for deletion
-                                    cachedWishlistProducts.add(displayProduct);
+                                    displayProduct.wishlistItemId = item.getId();
+                                    freshList.add(displayProduct);
                                 }
                             }
                         }
                         
+                        cachedWishlistProducts.clear();
+                        cachedWishlistProducts.addAll(freshList);
+                        
                         displayWishlistGrid(cachedWishlistProducts, wishlistGrid, emptyState);
                         
-                        // ── Update drawer badge with the actual filtered count ──────────────
-                        // Only count items that were successfully mapped and displayed
                         int actualCount = cachedWishlistProducts.size();
                         if (drawerHelper != null) {
                             drawerHelper.updateWishlistBadgeCount(actualCount);
@@ -198,18 +208,25 @@ public class WishlistActivity extends BaseActivity {
                 runOnUiThread(() -> {
                     showLoading(false);
                     Log.e(TAG, "Failed to load wishlist: " + error);
-                    Toast.makeText(WishlistActivity.this, "Failed to load wishlist", Toast.LENGTH_SHORT).show();
                     
-                    // Show empty state on error
-                    emptyState.setVisibility(View.VISIBLE);
-                    wishlistGrid.setVisibility(View.GONE);
-                    setupWishlistEmptyState(true);
+                    if (cachedWishlistProducts.isEmpty()) {
+                        emptyState.setVisibility(View.VISIBLE);
+                        wishlistGrid.setVisibility(View.GONE);
+                        setupWishlistEmptyState(true);
+                    }
                 });
             }
         });
     }
     
     private void displayWishlistGrid(List<MainActivity.Product> products, GridLayout wishlistGrid, View emptyState) {
+        if (products == null || products.isEmpty()) {
+            emptyState.setVisibility(View.VISIBLE);
+            wishlistGrid.setVisibility(View.GONE);
+            setupWishlistEmptyState(true);
+            return;
+        }
+
         // Responsive columns: 2 on phone, 3 on tablet, 4 on large tablet
         int columns = ScreenUtils.productGridColumns(this);
         wishlistGrid.setColumnCount(columns);
@@ -257,36 +274,35 @@ public class WishlistActivity extends BaseActivity {
 
             wishlistGrid.addView(productView);
         }
-        
-        // Cards now have fixed width, no spacers needed
     }
     
     private void removeFromWishlist(MainActivity.Product product) {
-        showLoading(true);
-        
-        wishlistRepository.removeFromWishlist(product.wishlistItemId, new WishlistRepository.SimpleCallback() {
+        // Optimistic local removal: update UI instantly (0ms response)
+        int removedItemId = product.wishlistItemId;
+        cachedWishlistProducts.remove(product);
+
+        GridLayout wishlistGrid = findViewById(R.id.wishlistGrid);
+        View emptyState = findViewById(R.id.emptyState);
+        displayWishlistGrid(cachedWishlistProducts, wishlistGrid, emptyState);
+
+        if (drawerHelper != null) {
+            drawerHelper.updateWishlistBadgeCount(cachedWishlistProducts.size());
+        }
+
+        Toast.makeText(WishlistActivity.this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
+
+        // Perform API deletion in background
+        wishlistRepository.removeFromWishlist(removedItemId, new WishlistRepository.SimpleCallback() {
             @Override
             public void onSuccess() {
-                runOnUiThread(() -> {
-                    showLoading(false);
-                    Toast.makeText(WishlistActivity.this, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
-                    displayWishlist(); // Refresh the list
-                    
-                    // ── Refresh drawer badge after removing from wishlist ────────────
-                    // This ensures the sidebar badge updates in real-time
-                    if (drawerHelper != null) {
-                        drawerHelper.refreshWishlistBadge();
-                    }
-                });
+                if (drawerHelper != null) {
+                    drawerHelper.refreshWishlistBadge();
+                }
             }
 
             @Override
             public void onError(String error) {
-                runOnUiThread(() -> {
-                    showLoading(false);
-                    Log.e(TAG, "Failed to remove from wishlist: " + error);
-                    Toast.makeText(WishlistActivity.this, "Failed to remove item", Toast.LENGTH_SHORT).show();
-                });
+                Log.e(TAG, "Failed to remove from wishlist via API: " + error);
             }
         });
     }

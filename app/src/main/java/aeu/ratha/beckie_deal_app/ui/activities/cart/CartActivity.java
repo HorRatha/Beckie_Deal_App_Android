@@ -131,6 +131,8 @@ public class CartActivity extends BaseActivity {
         }
     }
 
+    private static Cart cachedCart = null;
+
     /**
      * Load cart from API (dynamic data).
      */
@@ -144,21 +146,30 @@ public class CartActivity extends BaseActivity {
             return;
         }
 
+        // Render memory-cached cart instantly if available (0ms delay)
+        if (cachedCart != null && !cachedCart.isEmpty()) {
+            currentCart = cachedCart;
+            displayCartItems(currentCart);
+        }
+
         cartRepository.getCart(new CartRepository.CartCallback() {
             @Override
             public void onSuccess(CartResponse response) {
                 if (response.isSuccess() && response.hasData()) {
                     currentCart = response.getData();
+                    cachedCart = currentCart;
                     displayCartItems(currentCart);
-                } else {
+                    updateCartBadge();
+                } else if (cachedCart == null) {
                     displayCartItems(null);
                 }
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(CartActivity.this, "Failed to load cart: " + error, Toast.LENGTH_SHORT).show();
-                displayCartItems(null);
+                if (cachedCart == null) {
+                    displayCartItems(null);
+                }
             }
         });
     }
@@ -362,28 +373,28 @@ public class CartActivity extends BaseActivity {
         // ── Increment ──────────────────────────────────────────────────────
         increment.setOnClickListener(btn -> {
             int newQuantity = item.getQuantity() + 1;
-            updateCartItemQuantity(item.getId(), newQuantity);
+            updateCartItemQuantityOptimistic(item, newQuantity, quantityTv, subtotalTv);
         });
 
         // ── Decrement ──────────────────────────────────────────────────────
         decrement.setOnClickListener(btn -> {
             if (item.getQuantity() <= 1) {
                 // Last unit — remove from cart entirely
-                removeCartItem(item.getId());
+                removeCartItemOptimistic(item);
             } else {
                 int newQuantity = item.getQuantity() - 1;
-                updateCartItemQuantity(item.getId(), newQuantity);
+                updateCartItemQuantityOptimistic(item, newQuantity, quantityTv, subtotalTv);
             }
         });
 
         // ── Remove (small trash icon) ──────────────────────────────────────
         removeBtn.setOnClickListener(btn -> {
-            removeCartItem(item.getId());
+            removeCartItemOptimistic(item);
         });
 
         // ── Remove (swipe left, then tap Delete) ── NEW ────────────────────
         if (deletePanel != null) {
-            deletePanel.setOnClickListener(btn -> removeCartItem(item.getId()));
+            deletePanel.setOnClickListener(btn -> removeCartItemOptimistic(item));
         }
 
         parent.addView(v);
@@ -506,39 +517,63 @@ public class CartActivity extends BaseActivity {
     }
 
     /**
-     * Update cart item quantity via API.
+     * Update cart item quantity via API with instant optimistic UI update.
      */
-    private void updateCartItemQuantity(int cartItemId, int newQuantity) {
-        cartRepository.updateQuantity(cartItemId, newQuantity, new CartRepository.CartItemCallback() {
+    private void updateCartItemQuantityOptimistic(CartItem item, int newQuantity, TextView quantityTv, TextView subtotalTv) {
+        int oldQuantity = item.getQuantity();
+        item.setQuantity(newQuantity);
+
+        // Instant local update (0ms latency)
+        refreshItemRow(item, quantityTv, subtotalTv);
+        TextView totalText = findViewById(R.id.totalPriceText);
+        updateTotal(totalText, currentCart);
+        updateCartBadge();
+
+        cartRepository.updateQuantity(item.getId(), newQuantity, new CartRepository.CartItemCallback() {
             @Override
             public void onSuccess(CartItemResponse response) {
-                Toast.makeText(CartActivity.this, "Quantity updated", Toast.LENGTH_SHORT).show();
-                loadCartFromAPI(); // Reload cart
                 updateCartBadge();
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(CartActivity.this, "Failed to update: " + error, Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> {
+                    item.setQuantity(oldQuantity);
+                    refreshItemRow(item, quantityTv, subtotalTv);
+                    updateTotal(totalText, currentCart);
+                    updateCartBadge();
+                    Toast.makeText(CartActivity.this, "Failed to update quantity", Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }
 
     /**
-     * Remove item from cart via API.
+     * Remove item from cart via API with instant optimistic UI update.
      */
-    private void removeCartItem(int cartItemId) {
-        cartRepository.removeFromCart(cartItemId, new CartRepository.SimpleCallback() {
+    private void removeCartItemOptimistic(CartItem item) {
+        if (currentCart != null && currentCart.getItems() != null) {
+            currentCart.getItems().remove(item);
+            cachedCart = currentCart;
+        }
+
+        // Instant UI update (0ms latency)
+        displayCartItems(currentCart);
+        updateCartBadge();
+        Toast.makeText(CartActivity.this, "Removed from cart", Toast.LENGTH_SHORT).show();
+
+        cartRepository.removeFromCart(item.getId(), new CartRepository.SimpleCallback() {
             @Override
             public void onSuccess() {
-                Toast.makeText(CartActivity.this, "Removed from cart", Toast.LENGTH_SHORT).show();
-                loadCartFromAPI(); // Reload cart
                 updateCartBadge();
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(CartActivity.this, "Failed to remove: " + error, Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> {
+                    loadCartFromAPI();
+                    Toast.makeText(CartActivity.this, "Failed to remove item", Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }
