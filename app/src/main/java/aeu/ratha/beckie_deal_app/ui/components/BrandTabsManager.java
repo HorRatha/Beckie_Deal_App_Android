@@ -77,16 +77,6 @@ public class BrandTabsManager {
             brandTabsSubtitle.setText(brands.size() + " brands available");
         }
 
-        // Setup View All button
-        MaterialCardView viewAllBrandsBtn = parentView.findViewById(R.id.viewAllBrandsBtn);
-        if (viewAllBrandsBtn != null) {
-            viewAllBrandsBtn.setOnClickListener(v -> {
-                // Open All Brands Activity
-                Intent intent = new Intent(activity, AllBrandsActivityV2.class);
-                activity.startActivity(intent);
-            });
-        }
-
         // Clear existing views before rendering tabs
         brandTabsContainer.removeAllViews();
 
@@ -96,6 +86,10 @@ public class BrandTabsManager {
             View tabView = createBrandTab(brand, i);
             brandTabsContainer.addView(tabView);
         }
+
+        // Add "See More" tab next to the last brand logo
+        View seeMoreTabView = createSeeMoreTab();
+        brandTabsContainer.addView(seeMoreTabView);
 
         // Select first brand by default
         if (!brands.isEmpty()) {
@@ -133,19 +127,152 @@ public class BrandTabsManager {
         return tabView;
     }
 
-    private final java.util.Map<String, List<Product>> brandProductsCache = new java.util.HashMap<>();
+    /**
+     * Create a "See More" tab item positioned next to the last brand logo in the same row
+     */
+    private View createSeeMoreTab() {
+        View tabView = LayoutInflater.from(activity).inflate(R.layout.item_brand_tab, brandTabsContainer, false);
 
-    /** Pre-fetch products for all brand tabs in background for 0ms tab switching */
+        ImageView logo = tabView.findViewById(R.id.brandTabLogo);
+        View indicator = tabView.findViewById(R.id.brandTabIndicator);
+        View placeholder = tabView.findViewById(R.id.brandTabPlaceholder);
+
+        if (indicator != null) indicator.setVisibility(View.GONE);
+        if (placeholder != null) placeholder.setVisibility(View.VISIBLE);
+
+        if (logo != null) {
+            logo.setBackgroundResource(R.drawable.circle_see_more_bg);
+            logo.setImageResource(R.drawable.ic_chevron_right);
+            logo.setColorFilter(ContextCompat.getColor(activity, R.color.brand_orange));
+            int padding = (int) (14 * activity.getResources().getDisplayMetrics().density);
+            logo.setPadding(padding, padding, padding, padding);
+            logo.setContentDescription("See More Brands");
+        }
+
+        tabView.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, AllBrandsActivityV2.class);
+            activity.startActivity(intent);
+        });
+
+        return tabView;
+    }
+
+    private final java.util.Map<String, List<Product>> brandProductsCache = new java.util.concurrent.ConcurrentHashMap<>();
+    private boolean isPreloading = false;
+
+    /** Pre-fetch all products once and filter into brand caches for 0ms tab switching */
     public void preloadAllBrandProducts() {
-        if (brands == null) return;
+        if (brands == null || isPreloading) return;
+        isPreloading = true;
+
         ProductRepository productRepo = ProductRepository.getInstance(activity);
-        for (Brand b : brands) {
-            String bName = b.getName() != null ? b.getName() : "";
-            String key = (b.getId() + "_" + bName).toLowerCase();
-            if (!brandProductsCache.containsKey(key)) {
-                fetchBrandProductsInternal(productRepo, b, bName, key, true);
+        productRepo.fetchProducts(50, 0, true, new ProductRepository.ProductCallback() {
+            @Override
+            public void onSuccess(List<Product> allProducts, int total) {
+                activity.runOnUiThread(() -> {
+                    isPreloading = false;
+                    if (allProducts == null) return;
+
+                    // Filter and store products for each brand
+                    for (Brand b : brands) {
+                        String bName = b.getName() != null ? b.getName() : "";
+                        String key = (b.getId() + "_" + bName).toLowerCase();
+                        List<Product> brandProds = filterProductsForBrand(allProducts, b);
+                        brandProductsCache.put(key, brandProds);
+                    }
+
+                    // Update currently selected brand UI instantly if available
+                    if (selectedBrand != null) {
+                        String selName = selectedBrand.getName() != null ? selectedBrand.getName() : "";
+                        String selKey = (selectedBrand.getId() + "_" + selName).toLowerCase();
+                        List<Product> selectedProds = brandProductsCache.get(selKey);
+                        if (selectedProds != null) {
+                            if (loadingState != null) loadingState.setVisibility(View.GONE);
+                            if (previewHeaderText != null) {
+                                previewHeaderText.setText(selName + " - " + selectedProds.size() + " products");
+                            }
+                            displayProducts(selectedProds);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                activity.runOnUiThread(() -> {
+                    isPreloading = false;
+                    // Fallback to individual fetches if master fetch fails
+                    for (Brand b : brands) {
+                        String bName = b.getName() != null ? b.getName() : "";
+                        String key = (b.getId() + "_" + bName).toLowerCase();
+                        if (!brandProductsCache.containsKey(key)) {
+                            fetchBrandProductsInternal(productRepo, b, bName, key, true);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private List<Product> filterProductsForBrand(List<Product> allProducts, Brand brand) {
+        List<Product> result = new ArrayList<>();
+        if (allProducts == null || brand == null) return result;
+
+        String brandName = brand.getName() != null ? brand.getName().toLowerCase() : "";
+        String brandSlug = brand.getSlug() != null ? brand.getSlug().toLowerCase() : "";
+        int brandId = brand.getId();
+
+        for (Product p : allProducts) {
+            if (p == null) continue;
+
+            // 1. Direct ID match if product has Brand object
+            if (p.getBrand() != null) {
+                if (p.getBrand().getId() == brandId) {
+                    result.add(p);
+                    continue;
+                }
+                String pBrandName = p.getBrand().getName() != null ? p.getBrand().getName().toLowerCase() : "";
+                String pBrandSlug = p.getBrand().getSlug() != null ? p.getBrand().getSlug().toLowerCase() : "";
+                if (!brandName.isEmpty() && (pBrandName.contains(brandName) || pBrandSlug.contains(brandSlug))) {
+                    result.add(p);
+                    continue;
+                }
+            }
+
+            // 2. Keyword match against product name & slug
+            String pName = p.getName() != null ? p.getName().toLowerCase() : "";
+            String pSlug = p.getSlug() != null ? p.getSlug().toLowerCase() : "";
+            String combined = pName + " " + pSlug;
+
+            if (matchesBrandKeywords(combined, brandName, brandSlug)) {
+                result.add(p);
             }
         }
+
+        return result;
+    }
+
+    private boolean matchesBrandKeywords(String combined, String brandName, String brandSlug) {
+        if (brandSlug.contains("apple") || brandName.contains("apple")) {
+            return combined.contains("apple") || combined.contains("macbook") || combined.contains("mac") || combined.contains("ipad") || combined.contains("airpods");
+        }
+        if (brandSlug.contains("asus") || brandName.contains("asus")) {
+            return combined.contains("asus") || combined.contains("rog") || combined.contains("vivobook") || combined.contains("zenbook") || combined.contains("strix") || combined.contains("tuf");
+        }
+        if (brandSlug.contains("msi") || brandName.contains("msi")) {
+            return combined.contains("msi") || combined.contains("katana") || combined.contains("cyborg") || combined.contains("stealth") || combined.contains("raider");
+        }
+        if (brandSlug.contains("dell") || brandName.contains("dell")) {
+            return combined.contains("dell") || combined.contains("alienware") || combined.contains("xps") || combined.contains("latitude") || combined.contains("inspiron");
+        }
+        if (brandSlug.contains("hp") || brandName.contains("hp") || brandName.contains("hewlett")) {
+            return combined.contains("hp") || combined.contains("hewlett") || combined.contains("omen") || combined.contains("victus") || combined.contains("probook") || combined.contains("pavilion") || combined.contains("envy");
+        }
+        if (brandSlug.contains("lenovo") || brandName.contains("lenovo")) {
+            return combined.contains("lenovo") || combined.contains("thinkpad") || combined.contains("legion") || combined.contains("ideapad") || combined.contains("yoga") || combined.contains("loq");
+        }
+
+        return (!brandName.isEmpty() && combined.contains(brandName)) || (!brandSlug.isEmpty() && combined.contains(brandSlug));
     }
 
     /**
@@ -180,13 +307,11 @@ public class BrandTabsManager {
             ImageView logo = tabView.findViewById(R.id.brandTabLogo);
             
             if (i == selectedBrandIndex) {
-                indicator.setVisibility(View.VISIBLE);
-                placeholder.setVisibility(View.GONE);
-                // Keep full color for selected tab
+                if (indicator != null) indicator.setVisibility(View.VISIBLE);
+                if (placeholder != null) placeholder.setVisibility(View.GONE);
             } else {
-                indicator.setVisibility(View.GONE);
-                placeholder.setVisibility(View.VISIBLE);
-                // Dim color for unselected tab (will implement with tint)
+                if (indicator != null) indicator.setVisibility(View.GONE);
+                if (placeholder != null) placeholder.setVisibility(View.VISIBLE);
             }
         }
 
@@ -267,13 +392,9 @@ public class BrandTabsManager {
 
         if (loadingState != null) loadingState.setVisibility(View.VISIBLE);
         if (emptyState != null) emptyState.setVisibility(View.GONE);
-        if (previewProductsContainer != null) {
-            previewProductsContainer.removeAllViews();
-            previewProductsContainer.setVisibility(View.GONE);
-        }
 
-        ProductRepository productRepo = ProductRepository.getInstance(activity);
-        fetchBrandProductsInternal(productRepo, brand, brandName, cacheKey, false);
+        // Preload master product list to populate all brand caches instantly
+        preloadAllBrandProducts();
     }
 
     private void fetchBrandProductsInternal(ProductRepository productRepo, Brand brand, String brandName, String cacheKey, boolean isBackgroundSync) {

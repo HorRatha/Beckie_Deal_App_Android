@@ -188,17 +188,6 @@
                         android:textSize="@dimen/text_size_title_small"
                         android:textStyle="bold" />
                 </LinearLayout>
-                <TextView
-                    android:id="@+id/viewAllCategories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="Explore "
-                    android:textColor="@color/primary"
-                    android:textSize="@dimen/text_size_body" />
             </RelativeLayout>
 
             <!-- Horizontal scrollable categories -->

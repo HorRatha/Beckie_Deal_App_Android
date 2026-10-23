@@ -58,30 +58,6 @@
 
         </LinearLayout>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/viewAllBrandsBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/badge_bg"
-            app:strokeWidth="0dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:paddingHorizontal="14dp"
-                android:text="See More"
-                android:textColor="@color/primary"
-                android:textSize="@dimen/text_size_caption"
-                android:fontFamily="sans-serif-medium" />
-
-        </com.google.android.material.card.MaterialCardView>
-
     </LinearLayout>
 
     <!-- Horizontal scrollable brand tabs -->

@@ -40,9 +40,14 @@ public class ProductMapper {
         String specs = generateSpecs(apiProduct);
         String freeItems = generateFreeItems(apiProduct);
         
+        // Extract category and brand names
+        String categoryName = getCategoryName(apiProduct);
+        String brandName = getBrandName(apiProduct);
+        
         return new MainActivity.Product(
             id, name, price, rating, isFavorite, imageUrl,
-            sku, inStock, warrantyYears, specs, freeItems
+            sku, inStock, warrantyYears, specs, freeItems,
+            categoryName, brandName
         );
     }
     

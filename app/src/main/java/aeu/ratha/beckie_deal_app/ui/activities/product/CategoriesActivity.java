@@ -185,16 +185,13 @@ public class CategoriesActivity extends BaseActivity {
         // menuIcon click handled by AppDrawerHelper
         View searchBar = findViewById(R.id.searchBar);
         View notificationContainer = findViewById(R.id.notificationContainer);
-        View viewAllBrands = findViewById(R.id.viewAllBrandsBtn);
 
         if (searchBar != null) searchBar.setOnClickListener(v ->
                 startActivity(new Intent(this, SearchActivity.class)));
         if (notificationContainer != null) notificationContainer.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
-        if (viewAllBrands != null) viewAllBrands.setOnClickListener(v ->
-                startActivity(new Intent(this, AllBrandsActivity.class)));
 
-        UiAnimations.pressBounce(searchBar, notificationContainer, viewAllBrands);
+        UiAnimations.pressBounce(searchBar, notificationContainer);
     }
 
     /** Fades/slides the hero header and section headers into place — brand/category

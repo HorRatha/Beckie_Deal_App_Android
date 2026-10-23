@@ -1027,13 +1027,6 @@ public class MainActivity extends BaseActivity {
             categoriesContainer.removeAllViews();
             return;
         }
-        
-        // Setup header only once
-        TextView viewAllCategories = findViewById(R.id.viewAllCategories);
-        if (viewAllCategories != null) {
-            viewAllCategories.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CategoriesActivity.class)));
-            UiAnimations.pressBounce(viewAllCategories);
-        }
 
         categoriesContainer.removeAllViews();
         categoriesContainer.setOrientation(LinearLayout.HORIZONTAL);
@@ -1067,18 +1060,53 @@ public class MainActivity extends BaseActivity {
             // Setup click listener (use local reference to avoid repeated field access)
             final aeu.ratha.beckie_deal_app.data.models.Category category = categoryDisplay.category;
             final String displayName = categoryDisplay.displayName;
+            final int displayOrder = categoryDisplay.displayOrder;
             
             categoryView.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, CategoryDetailActivity.class);
                 intent.putExtra(CategoryDetailActivity.EXTRA_CATEGORY, displayName);
                 intent.putExtra(CategoryDetailActivity.EXTRA_HERO_IMAGE, category.getImage());
-                intent.putExtra("CATEGORY_ID", category.getId());
-                intent.putExtra("CATEGORY_SLUG", category.getSlug());
+                
+                // For MacBook curated category, use Apple brand filter instead of category ID
+                // This ensures we show Apple products (MacBooks) rather than random products
+                if (displayOrder == 3 && displayName.equals("MacBook")) {
+                    // MacBook curated category: filter by Apple brand (brand_id = 25)
+                    intent.putExtra("BRAND_ID", 25); // Apple brand ID
+                    intent.putExtra("BRAND_SLUG", "apple");
+                    intent.putExtra("CATEGORY_ID", -1); // No specific category filter
+                } else {
+                    // For other curated categories, use the matched category from API
+                    intent.putExtra("CATEGORY_ID", category.getId());
+                    intent.putExtra("CATEGORY_SLUG", category.getSlug());
+                }
                 startActivity(intent);
             });
 
             categoriesContainer.addView(categoryView);
         }
+
+        // Add "See More" item at the end of the curated categories row
+        View seeMoreView = LayoutInflater.from(this).inflate(R.layout.category_item, categoriesContainer, false);
+        seeMoreView.setLayoutParams(itemParams);
+
+        MaterialCardView seeMoreCard = seeMoreView.findViewById(R.id.categoryCard);
+        seeMoreCard.setCardBackgroundColor(android.graphics.Color.TRANSPARENT);
+        seeMoreCard.setStrokeWidth(0);
+        seeMoreCard.setCardElevation(0f);
+
+        ImageView seeMoreIcon = seeMoreView.findViewById(R.id.categoryIcon);
+        seeMoreIcon.setBackgroundResource(R.drawable.circle_see_more_bg);
+        seeMoreIcon.setImageResource(R.drawable.ic_chevron_right);
+        seeMoreIcon.setColorFilter(androidx.core.content.ContextCompat.getColor(this, R.color.brand_orange));
+        int padding = (int) (16 * getResources().getDisplayMetrics().density);
+        seeMoreIcon.setPadding(padding, padding, padding, padding);
+
+        TextView seeMoreName = seeMoreView.findViewById(R.id.categoryName);
+        seeMoreName.setText("See More");
+
+        seeMoreView.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CategoriesActivity.class)));
+
+        categoriesContainer.addView(seeMoreView);
     }
 
     private void setupProducts() {
@@ -1415,30 +1443,40 @@ public class MainActivity extends BaseActivity {
         public String freeItems;     // e.g. "Free 8 items"
         public boolean isInWishlist;
         public int wishlistItemId;   // Wishlist item ID for API removal
+        public String categoryName;  // Category name from API (e.g., "Electronics", "Mac")
+        public String brandName;     // Brand name from API (e.g., "Apple")
 
         // Minimal constructor (legacy — no SKU/stock/warranty/specs)
         public Product(String n, String p, String r, boolean w, String i) {
-            this("", n, p, r, w, i, "", true, 1, "", "");
+            this("", n, p, r, w, i, "", true, 1, "", "", "", "");
         }
         
         // Simplified constructor with ID only (for wishlist display)
         public Product(String id, String n, String p, String i, String r) {
-            this(id, n, p, r, false, i, "", true, 1, "", "");
+            this(id, n, p, r, false, i, "", true, 1, "", "", "", "");
         }
 
         // Full constructor (without ID - legacy)
         public Product(String n, String p, String r, boolean w, String i,
                 String sku, boolean inStock, int warranty, String specs, String freeItems) {
-            this("", n, p, r, w, i, sku, inStock, warranty, specs, freeItems);
+            this("", n, p, r, w, i, sku, inStock, warranty, specs, freeItems, "", "");
         }
         
         // Complete constructor (with ID)
         public Product(String id, String n, String p, String r, boolean w, String i,
                 String sku, boolean inStock, int warranty, String specs, String freeItems) {
+            this(id, n, p, r, w, i, sku, inStock, warranty, specs, freeItems, "", "");
+        }
+        
+        // Complete constructor (with ID, category, and brand)
+        public Product(String id, String n, String p, String r, boolean w, String i,
+                String sku, boolean inStock, int warranty, String specs, String freeItems,
+                String categoryName, String brandName) {
             this.id = id;
             name=n; price=p; rating=r; isInWishlist=w; imageUrl=i;
             this.sku=sku; this.inStock=inStock; this.warrantyYears=warranty;
             this.specs=specs; this.freeItems=freeItems;
+            this.categoryName=categoryName; this.brandName=brandName;
         }
     }
     /**

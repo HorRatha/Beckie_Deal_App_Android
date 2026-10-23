@@ -207,20 +207,12 @@ public class CategoryDetailActivity extends BaseActivity {
 
         List<String> chips = new ArrayList<>();
         chips.add("All");
-        
-        // Extract unique brand names from fetched products
-        java.util.Set<String> uniqueBrands = new java.util.LinkedHashSet<>();
-        for (MainActivity.Product product : allProducts) {
-            // Extract brand from product name or SKU (since UI products don't have direct brand field)
-            // The brand is typically the first word in the product name
-            if (product.name != null && !product.name.isEmpty()) {
-                String[] parts = product.name.split(" ");
-                if (parts.length > 0) {
-                    uniqueBrands.add(parts[0]);
-                }
-            }
-        }
-        chips.addAll(uniqueBrands);
+        chips.add("Apple");
+        chips.add("Asus");
+        chips.add("MSI");
+        chips.add("Dell");
+        chips.add("HP");
+        chips.add("Lenovo");
 
         brandFilterContainer.removeAllViews();
         for (String brand : chips) {
@@ -229,7 +221,8 @@ public class CategoryDetailActivity extends BaseActivity {
             TextView chipText = chip.findViewById(R.id.chipText);
             if (chipText != null) chipText.setText(brand);
 
-            applyChipStyle((MaterialCardView) chip, chipText, brand.equals(currentBrandFilter));
+            boolean isSelected = isBrandChipSelected(brand, currentBrandFilter);
+            applyChipStyle((MaterialCardView) chip, chipText, isSelected);
 
             chip.setOnClickListener(v -> {
                 currentBrandFilter = brand;
@@ -239,6 +232,13 @@ public class CategoryDetailActivity extends BaseActivity {
             UiAnimations.pressBounce(chip);
             brandFilterContainer.addView(chip);
         }
+    }
+
+    private boolean isBrandChipSelected(String chipBrand, String activeFilter) {
+        if (chipBrand == null || activeFilter == null) return false;
+        if (chipBrand.equalsIgnoreCase(activeFilter)) return true;
+        if (chipBrand.equalsIgnoreCase("Apple") && (activeFilter.equalsIgnoreCase("MacBook") || activeFilter.equalsIgnoreCase("Mac"))) return true;
+        return false;
     }
 
     private void applyChipStyle(MaterialCardView card, TextView text, boolean selected) {
@@ -269,9 +269,6 @@ public class CategoryDetailActivity extends BaseActivity {
      */
     private void fetchProducts() {
         android.util.Log.d(TAG, "=== FETCHING PRODUCTS FROM API ===");
-        android.util.Log.d(TAG, "🔍 DEBUGGING: Category Name: " + currentCategoryName);
-        android.util.Log.d(TAG, "🔍 DEBUGGING: Category ID: " + currentCategoryId);
-        android.util.Log.d(TAG, "🔍 DEBUGGING: Category Slug: " + currentCategorySlug);
         android.util.Log.d(TAG, "Category: " + currentCategoryName + " (ID: " + currentCategoryId + ")");
         android.util.Log.d(TAG, "Brand filter: " + currentBrandFilter + " (ID: " + currentBrandId + ")");
         
@@ -280,65 +277,19 @@ public class CategoryDetailActivity extends BaseActivity {
             resultsLabel.setText("Loading products...");
         }
         
-        // Determine which API call to make based on filters
-        if (currentCategoryId > 0 && currentBrandId > 0) {
-            // Fetch by category AND brand (filters by exact category ID match)
-            productRepository.fetchProductsByCategoryAndBrand(currentCategoryId, currentBrandId, 100, 0,
-                new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
-                    @Override
-                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
-                        handleProductsFetched(apiProducts, total);
-                    }
-                    
-                    @Override
-                    public void onError(String errorMessage) {
-                        handleProductsError(errorMessage);
-                    }
-                });
-        } else if (currentCategoryId > 0) {
-            // Fetch by category only
-            productRepository.fetchProductsByCategory(currentCategoryId, 100, 0,
-                new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
-                    @Override
-                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
-                        handleProductsFetched(apiProducts, total);
-                    }
-                    
-                    @Override
-                    public void onError(String errorMessage) {
-                        handleProductsError(errorMessage);
-                    }
-                });
-        } else if (currentBrandId > 0) {
-            // Fetch by brand only
-            productRepository.fetchProductsByBrand(currentBrandId, 100, 0,
-                new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
-                    @Override
-                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
-                        handleProductsFetched(apiProducts, total);
-                    }
-                    
-                    @Override
-                    public void onError(String errorMessage) {
-                        handleProductsError(errorMessage);
-                    }
-                });
-        } else {
-            // Fallback: fetch all products (shouldn't normally happen)
-            android.util.Log.w(TAG, "No category or brand ID provided, fetching all products");
-            productRepository.fetchProducts(100, 0, false,
-                new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
-                    @Override
-                    public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
-                        handleProductsFetched(apiProducts, total);
-                    }
-                    
-                    @Override
-                    public void onError(String errorMessage) {
-                        handleProductsError(errorMessage);
-                    }
-                });
-        }
+        // Fetch all products (uses cached list if available for 0ms latency)
+        productRepository.fetchProducts(100, 0, true,
+            new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
+                @Override
+                public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
+                    handleProductsFetched(apiProducts, total);
+                }
+                
+                @Override
+                public void onError(String errorMessage) {
+                    handleProductsError(errorMessage);
+                }
+            });
     }
     
     /**
@@ -460,22 +411,27 @@ public class CategoryDetailActivity extends BaseActivity {
         android.util.Log.d(TAG, "=== APPLYING FILTERS AND RENDERING ===");
         android.util.Log.d(TAG, "Starting with " + allProducts.size() + " total products");
         
-        // DEBUG: Log all products before filtering
-        for (int i = 0; i < allProducts.size(); i++) {
-            MainActivity.Product p = allProducts.get(i);
-            android.util.Log.d(TAG, "  AllProduct[" + i + "]: " + p.name + " - $" + p.price);
-        }
-        
         List<MainActivity.Product> filtered = new ArrayList<>(allProducts);
         
-        // Apply brand filter (if not fetched by brand already)
-        if (currentBrandId <= 0 && !"All".equals(currentBrandFilter)) {
+        // Apply category filter if specified
+        if (currentCategoryName != null && !currentCategoryName.isEmpty() 
+                && !"Category".equalsIgnoreCase(currentCategoryName) 
+                && !"All".equalsIgnoreCase(currentCategoryName) 
+                && !"All Categories".equalsIgnoreCase(currentCategoryName)) {
+            List<MainActivity.Product> catFiltered = new ArrayList<>();
+            for (MainActivity.Product p : filtered) {
+                if (matchesCategoryFilter(p.name, p.sku, currentCategoryName)) {
+                    catFiltered.add(p);
+                }
+            }
+            if (!catFiltered.isEmpty()) filtered = catFiltered;
+        }
+
+        // Apply brand filter
+        if (!"All".equalsIgnoreCase(currentBrandFilter)) {
             List<MainActivity.Product> brandFiltered = new ArrayList<>();
             for (MainActivity.Product p : filtered) {
-                // Match by product name or SKU containing brand name
-                if (p.name != null && p.name.toLowerCase().contains(currentBrandFilter.toLowerCase())) {
-                    brandFiltered.add(p);
-                } else if (p.sku != null && p.sku.toLowerCase().contains(currentBrandFilter.toLowerCase())) {
+                if (matchesBrandFilter(p.name, p.sku, currentBrandFilter)) {
                     brandFiltered.add(p);
                 }
             }
@@ -572,6 +528,40 @@ public class CategoryDetailActivity extends BaseActivity {
         try {
             return Double.parseDouble(price.replace("$", "").replace(",", ""));
         } catch (NumberFormatException e) { return 0; }
+    }
+
+    /**
+     * Check if a product matches the category filter.
+     * Compares product's category name with the filter (case-insensitive).
+     */
+    private boolean matchesCategoryFilter(String productName, String productSku, String filterCategory) {
+        // Find the product in allProducts to get its categoryName
+        for (MainActivity.Product p : allProducts) {
+            if ((p.name != null && p.name.equals(productName)) || 
+                (p.sku != null && p.sku.equals(productSku))) {
+                if (p.categoryName != null && p.categoryName.equalsIgnoreCase(filterCategory)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if a product matches the brand filter.
+     * Compares product's brand name with the filter (case-insensitive).
+     */
+    private boolean matchesBrandFilter(String productName, String productSku, String filterBrand) {
+        // Find the product in allProducts to get its brandName
+        for (MainActivity.Product p : allProducts) {
+            if ((p.name != null && p.name.equals(productName)) || 
+                (p.sku != null && p.sku.equals(productSku))) {
+                if (p.brandName != null && p.brandName.equalsIgnoreCase(filterBrand)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void renderProducts(List<MainActivity.Product> products) {
