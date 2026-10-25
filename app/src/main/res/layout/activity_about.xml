@@ -86,14 +86,15 @@
             android:layout_height="0dp"
             android:fillViewport="true"
             app:layout_constraintTop_toBottomOf="@id/topAppBar"
-            app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <!-- CHANGED: no side padding here, so the hero image can go edge to edge -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="32dp">
+                android:clipToPadding="false"
+                android:paddingBottom="100dp">
 
                 <!-- ══ NEW: full-width image hero with title on top ══ -->
                 <FrameLayout

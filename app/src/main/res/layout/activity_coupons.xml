@@ -59,6 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -66,7 +67,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:paddingBottom="100dp"
+            android:clipToPadding="false">
 
             <!-- Header Info Card -->
             <com.google.android.material.card.MaterialCardView
@@ -128,5 +131,8 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- Floating Bottom Navigation Bar -->
+    <include layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

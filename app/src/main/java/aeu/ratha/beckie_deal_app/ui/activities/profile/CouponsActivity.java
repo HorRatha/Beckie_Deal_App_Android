@@ -79,6 +79,9 @@ public class CouponsActivity extends BaseActivity {
         setupTopBar();
         displayCoupons();
         setupEntranceAnimation();
+
+        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.setup(this, aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.NavItem.ACCOUNT);
+        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(this);
     }
 
     private void setupTopBar() {

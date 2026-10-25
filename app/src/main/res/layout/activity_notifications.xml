@@ -135,6 +135,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/chipScroll"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -183,9 +184,13 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="16dp"
                 android:paddingTop="8dp"
-                android:paddingBottom="24dp" />
+                android:paddingBottom="100dp"
+                android:clipToPadding="false" />
 
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- Floating Bottom Navigation Bar -->
+    <include layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:clipToPadding="false"
-                android:paddingBottom="100dp">
+                android:paddingBottom="140dp">
 
                 <!-- Wave Background (behind content) -->
                 <ImageView

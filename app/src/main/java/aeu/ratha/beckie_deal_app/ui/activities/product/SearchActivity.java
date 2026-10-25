@@ -90,6 +90,9 @@ public class SearchActivity extends BaseActivity {
         UiAnimations.pressBounce(backBtn, clearButton);
         UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
 
+        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.setup(this, aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.NavItem.HOME);
+        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(this);
+
         // View mode toggle (grid ⇄ list)
         viewModeIcon = findViewById(R.id.viewModeIcon);
         View viewModeBtn = findViewById(R.id.viewModeButton);

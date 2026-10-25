@@ -49,6 +49,9 @@ public class AllBrandsActivity extends BaseActivity {
         setupTopBar();
         initApiService();
         fetchBrandsFromApi();
+
+        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.setup(this, aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.NavItem.CATEGORIES);
+        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(this);
         
         UiAnimations.fadeSlideDown(findViewById(R.id.topAppBar), 0);
     }

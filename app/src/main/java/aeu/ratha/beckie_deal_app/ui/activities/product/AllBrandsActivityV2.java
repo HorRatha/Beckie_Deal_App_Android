@@ -47,6 +47,9 @@ public class AllBrandsActivityV2 extends BaseActivity {
         setupTopBar();
         initRepository();
         loadBrands(false);
+
+        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.setup(this, aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.NavItem.CATEGORIES);
+        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(this);
         
         // Animate top bar
         View topAppBar = findViewById(R.id.topAppBar);
