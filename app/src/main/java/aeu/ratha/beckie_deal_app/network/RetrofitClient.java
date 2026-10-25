@@ -123,9 +123,17 @@ public class RetrofitClient {
         @Override
         public Response intercept(Chain chain) throws java.io.IOException {
             Request originalRequest = chain.request();
+            String url = originalRequest.url().toString();
             
             // Don't cache POST, PUT, DELETE requests (only GET)
             if (!originalRequest.method().equals("GET")) {
+                return chain.proceed(originalRequest);
+            }
+            
+            // ⚠️ CRITICAL: Don't cache cart/checkout endpoints - they change frequently after purchase
+            // Caching these for 5 minutes was causing stale cart data to be shown after successful checkout
+            if (url.contains("/cart") || url.contains("/checkout")) {
+                android.util.Log.d("CacheInterceptor", "Cache disabled for cart endpoint: " + url);
                 return chain.proceed(originalRequest);
             }
             

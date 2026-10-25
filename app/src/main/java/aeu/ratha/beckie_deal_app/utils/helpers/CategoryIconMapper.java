@@ -108,6 +108,15 @@ public class CategoryIconMapper {
             put("wifi", R.drawable.networking);
             put("adapter", R.drawable.networking);
             
+            // Printers & Scanners 3D image
+            put("printers", R.drawable.printers_scanners);
+            put("printer", R.drawable.printers_scanners);
+            put("scanners", R.drawable.printers_scanners);
+            put("scanner", R.drawable.printers_scanners);
+            put("printers-scanners", R.drawable.printers_scanners);
+            put("printers & scanners", R.drawable.printers_scanners);
+            put("printers and scanners", R.drawable.printers_scanners);
+            
             // Default fallback
             put("default", R.drawable.laptop);
     }};
@@ -278,6 +287,11 @@ public class CategoryIconMapper {
         // Check Monitor
         if (name.contains("monitor") || name.contains("display") || name.contains("screen") || name.contains("tv")) {
             return R.drawable.monitor;
+        }
+        
+        // Check Printers & Scanners
+        if (name.contains("printer") || name.contains("scanner")) {
+            return R.drawable.printers_scanners;
         }
         
         // Check all entries in map against category name

@@ -12,6 +12,7 @@ import aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
 import aeu.ratha.beckie_deal_app.utils.managers.CouponManager;
+import aeu.ratha.beckie_deal_app.utils.managers.CartManager;
 import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
 
 import android.Manifest;
@@ -973,27 +974,37 @@ public class PayoutActivity extends BaseActivity {
         double subtotal = currentCart.getSubtotalFromAPI();
         if (subtotal == 0.0) subtotal = currentCart.getTotalPrice();
 
-        // Use CouponManager as the single source of truth for discount state.
-        // It is synced from the backend cart in loadCartFromAPI(), so it reflects
-        // exactly what the backend has — no stale or phantom discounts.
+        // Check if CouponManager or currentCart has a discount/coupon
         boolean hasCoupon = CouponManager.getInstance().hasCoupon();
-        double discount   = hasCoupon ? CouponManager.getInstance().getDiscountAmount() : 0.0;
-        double shipping   = calculateShippingFee(subtotal);
-        double total      = subtotal - discount + shipping;
+        double discount = 0.0;
+        String couponCode = null;
+
+        if (hasCoupon) {
+            discount = CouponManager.getInstance().getDiscountAmount();
+            couponCode = CouponManager.getInstance().getAppliedCouponCode();
+        } else if (currentCart.getDiscountTotal() > 0) {
+            discount = currentCart.getDiscountTotal();
+            couponCode = currentCart.getCouponCode();
+        }
+
+        double shipping = calculateShippingFee(subtotal);
+        double total = Math.max(0.0, subtotal - discount + shipping);
 
         if (summarySubtotalText != null)
             summarySubtotalText.setText(String.format(Locale.US, "$%.2f", subtotal));
 
         if (discountRow != null && summaryDiscountText != null) {
-            if (hasCoupon && discount > 0) {
+            if (discount > 0) {
                 discountRow.setVisibility(View.VISIBLE);
                 summaryDiscountText.setText(String.format(Locale.US, "-$%.2f", discount));
-                // Show the coupon code badge
                 if (reviewCouponCode != null) {
-                    String code = CouponManager.getInstance().getAppliedCouponCode();
-                    reviewCouponCode.setText(code != null ? code.toUpperCase() : "");
-                    reviewCouponCode.setVisibility(code != null && !code.isEmpty()
-                            ? View.VISIBLE : View.GONE);
+                    if (couponCode != null && !couponCode.isEmpty()) {
+                        reviewCouponCode.setText(couponCode.toUpperCase());
+                        reviewCouponCode.setVisibility(View.VISIBLE);
+                    } else {
+                        reviewCouponCode.setText("DISCOUNT");
+                        reviewCouponCode.setVisibility(View.VISIBLE);
+                    }
                 }
             } else {
                 discountRow.setVisibility(View.GONE);
@@ -1019,6 +1030,12 @@ public class PayoutActivity extends BaseActivity {
     }
 
     private double calculateShippingFee(double total) {
+        if (selectedShippingMethod != null) {
+            return selectedShippingMethod.getBaseCostAsDouble();
+        }
+        if (availableShippingMethods != null && !availableShippingMethods.isEmpty()) {
+            return availableShippingMethods.get(0).getBaseCostAsDouble();
+        }
         return total >= 50.00 ? 0.0 : 15.00;
     }
 
@@ -1156,6 +1173,15 @@ public class PayoutActivity extends BaseActivity {
         checkoutData.put("payment_method", selectedPaymentMethod); // "aba_payway" or "cod"
         checkoutData.put("notes",          "");
         checkoutData.put("metadata",       new HashMap<String, Object>()); // required by backend
+
+        // Include coupon_code if available
+        String appliedCoupon = CouponManager.getInstance().getAppliedCouponCode();
+        if ((appliedCoupon == null || appliedCoupon.isEmpty()) && currentCart != null) {
+            appliedCoupon = currentCart.getCouponCode();
+        }
+        if (appliedCoupon != null && !appliedCoupon.isEmpty()) {
+            checkoutData.put("coupon_code", appliedCoupon);
+        }
 
         // Include the logged-in user's email (backend requires it for order record)
         String userEmail = aeu.ratha.beckie_deal_app.security.TokenManager
@@ -1310,9 +1336,33 @@ public class PayoutActivity extends BaseActivity {
         Map<String, Object> data = extractMap(response, "data");
         Map<String, Object> src  = (data != null) ? data : response;
 
-        String orderId      = extractString(src, "order_id",     "—");
-        Double totalAmount  = extractDouble(src, "total_amount");
-        String paymentUsed  = extractString(src, "payment_method", selectedPaymentMethod);
+        // Unwrap "order" map if present
+        Map<String, Object> orderMap = extractMap(src, "order");
+        if (orderMap != null) {
+            src = orderMap;
+        }
+
+        String orderId = extractString(src, "order_id", null);
+        if (orderId == null) orderId = extractString(src, "order_number", null);
+        if (orderId == null) orderId = extractString(src, "id", "—");
+
+        Double totalAmount = extractDouble(src, "total_amount");
+        if (totalAmount == null) totalAmount = extractDouble(src, "grand_total");
+        if (totalAmount == null) totalAmount = extractDouble(src, "total");
+        if (totalAmount == null) totalAmount = extractDouble(src, "amount");
+
+        // Fallback calculation if server response didn't supply a non-zero total
+        if ((totalAmount == null || totalAmount <= 0.0) && currentCart != null) {
+            double subtotal = currentCart.getSubtotalFromAPI();
+            if (subtotal == 0.0) subtotal = currentCart.getTotalPrice();
+            double discount = CouponManager.getInstance().hasCoupon()
+                    ? CouponManager.getInstance().getDiscountAmount()
+                    : currentCart.getDiscountTotal();
+            double shipping = calculateShippingFee(subtotal);
+            totalAmount = Math.max(0.0, subtotal - discount + shipping);
+        }
+
+        String paymentUsed = extractString(src, "payment_method", selectedPaymentMethod);
 
         Log.d(TAG, "Order placed — ID: " + orderId
                 + "  total: $" + totalAmount
@@ -1344,20 +1394,50 @@ public class PayoutActivity extends BaseActivity {
 
         if (homeBtn != null) {
             homeBtn.setOnClickListener(v -> {
-                startActivity(new Intent(this, MainActivity.class));
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 finish();
             });
             UiAnimations.pressBounce(homeBtn);
         }
         if (ordersBtn != null) {
             ordersBtn.setOnClickListener(v -> {
-                startActivity(new Intent(this, MyOrdersActivity.class));
+                Intent intent = new Intent(this, MyOrdersActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 finish();
             });
             UiAnimations.pressBounce(ordersBtn);
         }
 
+        // Clear cart and coupon after successful checkout
+        CartManager.getInstance().clearCart();
         CouponManager.getInstance().removeCoupon();
+        
+        // ⚠️ CRITICAL: Clear the static cache in CartActivity to prevent stale data
+        CartActivity.clearStaticCache();
+
+        // Update bottom navigation cart badge
+        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        View successView = findViewById(R.id.successView);
+        if (successView != null && successView.getVisibility() == View.VISIBLE) {
+            // After successful order, redirect user to MainActivity (home), not back to cart screen
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+        if (currentStep > 1) {
+            goToStep(currentStep - 1);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -1434,6 +1514,7 @@ public class PayoutActivity extends BaseActivity {
             }
             shippingMethodRadioGroup.check(selectedShippingMethod.getId());
             Log.d(TAG, "Selected shipping method: " + selectedShippingMethod);
+            updateOrderSummary();
         }
 
         // When user manually picks a method
@@ -1442,6 +1523,7 @@ public class PayoutActivity extends BaseActivity {
             if (checked != null && checked.getTag() instanceof ShippingMethod) {
                 selectedShippingMethod = (ShippingMethod) checked.getTag();
                 Log.d(TAG, "Shipping method selected: " + selectedShippingMethod);
+                updateOrderSummary();
             }
         });
     }

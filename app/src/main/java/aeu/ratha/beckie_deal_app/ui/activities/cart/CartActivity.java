@@ -19,6 +19,7 @@ import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -134,6 +135,16 @@ public class CartActivity extends BaseActivity {
     private static Cart cachedCart = null;
 
     /**
+     * Clear the static cart cache (call this after successful checkout).
+     * ⚠️ CRITICAL: CartActivity uses a static cache that persists across activity lifecycle.
+     * If this cache is not cleared after checkout, stale cart data will be shown.
+     */
+    public static void clearStaticCache() {
+        Log.d("CartActivity", "Clearing static cart cache");
+        cachedCart = null;
+    }
+
+    /**
      * Load cart from API (dynamic data).
      */
     private void loadCartFromAPI() {
@@ -157,10 +168,16 @@ public class CartActivity extends BaseActivity {
             public void onSuccess(CartResponse response) {
                 if (response.isSuccess() && response.hasData()) {
                     currentCart = response.getData();
-                    cachedCart = currentCart;
-                    displayCartItems(currentCart);
+                    if (currentCart == null || currentCart.isEmpty()) {
+                        cachedCart = null;
+                        displayCartItems(null);
+                    } else {
+                        cachedCart = currentCart;
+                        displayCartItems(currentCart);
+                    }
                     updateCartBadge();
-                } else if (cachedCart == null) {
+                } else {
+                    cachedCart = null;
                     displayCartItems(null);
                 }
             }

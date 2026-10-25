@@ -97,6 +97,11 @@ public class CartManager {
         return total;
     }
 
+    /** Clear all items from the cart (call after successful checkout). */
+    public void clearCart() {
+        cartItems.clear();
+    }
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     /** Find an existing CartItem by product name (name is the stable identifier). */

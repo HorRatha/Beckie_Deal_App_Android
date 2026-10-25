@@ -63,9 +63,15 @@ public class OrderConfirmationActivity extends AppCompatActivity {
         textOrderNumber.setText("Order #" + orderId);
         textConfirmationMessage.setText("Thank You!");
         
+        double totalAmount = getIntent().getDoubleExtra("total_amount", 0.0);
+        String statusText = getIntent().getStringExtra("status");
+        if (statusText == null || statusText.isEmpty()) statusText = "PROCESSING";
+        
         StringBuilder status = new StringBuilder();
-        status.append("Status: PROCESSING\n");
-        status.append("Amount: $0.00\n");
+        status.append("Status: ").append(statusText).append("\n");
+        if (totalAmount > 0) {
+            status.append("Amount: ").append(String.format(java.util.Locale.US, "$%.2f", totalAmount)).append("\n");
+        }
         status.append("Date: Today\n");
         status.append("Expected Delivery: Soon");
         

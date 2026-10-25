@@ -101,7 +101,7 @@ public class CategoryDetailActivity extends BaseActivity {
 
         setupTopBar();
         setupHero(heroImageUrl, itemCount);
-        // setupBrandFilters() will be called after products are fetched
+        setupCategoryChips(); // Setup master category chips on load
 
         // Wire Filter & Sort button
         View sortBtn = findViewById(R.id.sortButton);
@@ -200,44 +200,53 @@ public class CategoryDetailActivity extends BaseActivity {
         // Wave background is now used instead of dynamic image
     }
 
-    // ── Brand filter chips ────────────────────────────────────────────────────
+    // ── Master Category filter chips ──────────────────────────────────────────
 
-    private void setupBrandFilters() {
+    private void setupCategoryChips() {
         if (brandFilterContainer == null) return;
 
-        List<String> chips = new ArrayList<>();
-        chips.add("All");
-        chips.add("Apple");
-        chips.add("Asus");
-        chips.add("MSI");
-        chips.add("Dell");
-        chips.add("HP");
-        chips.add("Lenovo");
+        List<String> subcategories = new ArrayList<>();
+        subcategories.add("All");
+        subcategories.add("Laptops");
+        subcategories.add("Desktop Computers");
+        subcategories.add("MacBook");
+        subcategories.add("Storage");
+        subcategories.add("Networking");
+        subcategories.add("Monitors");
+        subcategories.add("Printers & Scanners");
+        subcategories.add("Smartphones");
+        subcategories.add("Tablets");
+        subcategories.add("Accessories");
+        subcategories.add("Gaming");
 
         brandFilterContainer.removeAllViews();
-        for (String brand : chips) {
+        for (String subcat : subcategories) {
             View chip = LayoutInflater.from(this)
                     .inflate(R.layout.item_brand_chip, brandFilterContainer, false);
             TextView chipText = chip.findViewById(R.id.chipText);
-            if (chipText != null) chipText.setText(brand);
+            if (chipText != null) chipText.setText(subcat);
 
-            boolean isSelected = isBrandChipSelected(brand, currentBrandFilter);
+            boolean isSelected = isCategoryChipSelected(subcat, currentCategoryName);
             applyChipStyle((MaterialCardView) chip, chipText, isSelected);
 
             chip.setOnClickListener(v -> {
-                currentBrandFilter = brand;
-                setupBrandFilters();
-                applyFiltersAndRender(); // Re-filter with new brand selection
+                if (!"All".equalsIgnoreCase(subcat)) {
+                    currentCategoryName = subcat;
+                } else {
+                    currentCategoryName = "Category";
+                }
+                setupCategoryChips();
+                applyFiltersAndRender(); // Re-filter products by master category/subcategory
             });
             UiAnimations.pressBounce(chip);
             brandFilterContainer.addView(chip);
         }
     }
 
-    private boolean isBrandChipSelected(String chipBrand, String activeFilter) {
-        if (chipBrand == null || activeFilter == null) return false;
-        if (chipBrand.equalsIgnoreCase(activeFilter)) return true;
-        if (chipBrand.equalsIgnoreCase("Apple") && (activeFilter.equalsIgnoreCase("MacBook") || activeFilter.equalsIgnoreCase("Mac"))) return true;
+    private boolean isCategoryChipSelected(String chipSubcat, String activeCategory) {
+        if (chipSubcat == null || activeCategory == null) return false;
+        if (chipSubcat.equalsIgnoreCase(activeCategory)) return true;
+        if (activeCategory.toLowerCase().contains(chipSubcat.toLowerCase())) return true;
         return false;
     }
 
@@ -277,8 +286,7 @@ public class CategoryDetailActivity extends BaseActivity {
             resultsLabel.setText("Loading products...");
         }
         
-        // Fetch all products (uses cached list if available for 0ms latency)
-        productRepository.fetchProducts(100, 0, true,
+        aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback productCallback = 
             new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
                 @Override
                 public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {
@@ -289,7 +297,26 @@ public class CategoryDetailActivity extends BaseActivity {
                 public void onError(String errorMessage) {
                     handleProductsError(errorMessage);
                 }
-            });
+            };
+
+        boolean isApple = currentBrandId == 25 || (currentCategoryName != null && currentCategoryName.equalsIgnoreCase("MacBook"));
+        
+        if (isApple) {
+            android.util.Log.d(TAG, "Fetching Apple products by category ID: " + currentCategoryId);
+            productRepository.fetchProductsByCategoryAndBrand(currentCategoryId > 0 ? currentCategoryId : 0, 25, 50, 0, productCallback);
+        } else if (currentCategoryId > 0 && currentBrandId > 0) {
+            android.util.Log.d(TAG, "Fetching products by category ID " + currentCategoryId + " and brand ID " + currentBrandId);
+            productRepository.fetchProductsByCategoryAndBrand(currentCategoryId, currentBrandId, 50, 0, productCallback);
+        } else if (currentCategoryId > 0) {
+            android.util.Log.d(TAG, "Fetching products by category ID: " + currentCategoryId);
+            productRepository.fetchProductsByCategory(currentCategoryId, 50, 0, productCallback);
+        } else if (currentBrandId > 0) {
+            android.util.Log.d(TAG, "Fetching products by brand ID: " + currentBrandId);
+            productRepository.fetchProductsByBrand(currentBrandId, 50, 0, productCallback);
+        } else {
+            android.util.Log.d(TAG, "Fetching all products (default)");
+            productRepository.fetchProducts(100, 0, true, productCallback);
+        }
     }
     
     /**
@@ -319,7 +346,7 @@ public class CategoryDetailActivity extends BaseActivity {
         
         // Apply filters and render on UI thread
         runOnUiThread(() -> {
-            setupBrandFilters(); // Update brand chips with brands from fetched products
+            setupCategoryChips(); // Update category chips
             applyFiltersAndRender();
         });
     }
@@ -535,16 +562,28 @@ public class CategoryDetailActivity extends BaseActivity {
      * Compares product's category name with the filter (case-insensitive).
      */
     private boolean matchesCategoryFilter(String productName, String productSku, String filterCategory) {
-        // Find the product in allProducts to get its categoryName
+        if (filterCategory == null || "Category".equalsIgnoreCase(filterCategory) || 
+            "All".equalsIgnoreCase(filterCategory) || "All Categories".equalsIgnoreCase(filterCategory)) {
+            return true;
+        }
+        // If we fetched specifically using a category ID or brand ID, trust the API results
+        if (currentCategoryId > 0 || currentBrandId > 0) {
+            return true;
+        }
         for (MainActivity.Product p : allProducts) {
             if ((p.name != null && p.name.equals(productName)) || 
                 (p.sku != null && p.sku.equals(productSku))) {
-                if (p.categoryName != null && p.categoryName.equalsIgnoreCase(filterCategory)) {
+                String cat = p.categoryName != null ? p.categoryName.toLowerCase() : "";
+                String filter = filterCategory.toLowerCase();
+                if (cat.contains(filter) || filter.contains(cat) ||
+                    (filter.equals("macbook") && (cat.contains("mac") || cat.contains("apple"))) ||
+                    (filter.equals("laptop") && (cat.contains("laptop") || cat.contains("computer") || cat.contains("notebook"))) ||
+                    (filter.equals("printers & scanners") && (cat.contains("printer") || cat.contains("scanner") || cat.contains("office")))) {
                     return true;
                 }
             }
         }
-        return false;
+        return true; // Default to true to prevent empty lists due to name variations
     }
 
     /**
