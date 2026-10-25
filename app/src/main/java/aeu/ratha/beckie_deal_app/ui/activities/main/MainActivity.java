@@ -239,11 +239,8 @@ public class MainActivity extends BaseActivity {
     private void fetchProducts() {
         Log.d(TAG, "=== FETCHING ALL PRODUCTS FROM API ===");
         
-        // Fetch more products for homepage
-        // NOTE: API has per_page limit (~100 max), so use reasonable value
-        // The pagination system will fetch all pages automatically
-        // PERF: Enable cache to show cached products instantly while fetching fresh data
-        productRepository.fetchProducts(20, 0, true, 
+        // Fetch featured products from API (per_page=12, sort_by=featured)
+        productRepository.fetchProducts(12, 0, true, 
             new aeu.ratha.beckie_deal_app.data.repository.ProductRepository.ProductCallback() {
             @Override
             public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Product> apiProducts, int total) {

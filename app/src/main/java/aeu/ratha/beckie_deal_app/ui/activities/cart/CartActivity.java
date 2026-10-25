@@ -576,6 +576,8 @@ public class CartActivity extends BaseActivity {
 
         // Instant UI update (0ms latency)
         displayCartItems(currentCart);
+        TextView totalText = findViewById(R.id.totalPriceText);
+        updateTotal(totalText, currentCart);
         updateCartBadge();
         Toast.makeText(CartActivity.this, "Removed from cart", Toast.LENGTH_SHORT).show();
 
@@ -606,12 +608,12 @@ public class CartActivity extends BaseActivity {
     private void updateTotal(TextView totalText, Cart cart) {
         if (totalText == null || cart == null) return;
 
-        // Use API subtotal (dynamic from backend)
-        double total = cart.getSubtotalFromAPI();
+        // Calculate total dynamically from current items in cart for instant accurate increase/decrease
+        double total = cart.getTotalPrice();
 
-        // Fallback to client calculation if API doesn't provide subtotal
+        // Fallback to API subtotal if calculated total is 0
         if (total == 0.0) {
-            total = cart.getTotalPrice(); // Calculate from items as fallback
+            total = cart.getSubtotalFromAPI();
         }
 
         totalText.setText(String.format(Locale.US, "$%.2f", total));

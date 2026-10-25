@@ -25,7 +25,7 @@ public class ProductMapper {
         
         // Extract basic fields
         String name = apiProduct.getName() != null ? apiProduct.getName() : "Unknown Product";
-        String price = "$" + apiProduct.getPrice();
+        String price = apiProduct.getFormattedPrice();
         
         // Generate rating from sales and views (mock calculation since API doesn't have rating)
         String rating = generateRating(apiProduct);

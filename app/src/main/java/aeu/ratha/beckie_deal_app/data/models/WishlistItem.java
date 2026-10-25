@@ -115,7 +115,7 @@ public class WishlistItem {
     }
     
     public String getProductPrice() {
-        return product != null ? product.getPrice() : "0.00";
+        return product != null ? product.getFormattedPrice() : "0.00";
     }
     
     public String getProductThumbnail() {
