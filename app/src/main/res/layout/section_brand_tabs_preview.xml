@@ -155,7 +155,7 @@
                 android:textSize="@dimen/text_size_body" />
 
         </LinearLayout>
-
+    
         <!-- Empty state (shown when brand has no products) -->
         <LinearLayout
             android:id="@+id/emptyState"

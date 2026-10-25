@@ -527,6 +527,14 @@ public class ProductRepository {
         String lowerName = productName.toLowerCase();
         
         switch (categoryId) {
+            // Printers & Scanners category (ID = 10)
+            case 10:
+                return lowerName.contains("printer") || lowerName.contains("scanner") || 
+                       lowerName.contains("print") || lowerName.contains("canon") ||
+                       lowerName.contains("brother") || lowerName.contains("epson") ||
+                       lowerName.contains("officejet") || lowerName.contains("laserjet") ||
+                       lowerName.contains("inkjet");
+
             // Laptops / Computers (ID = 1, 3, 15, 16, 70)
             case 1:
             case 3:
@@ -729,6 +737,44 @@ public class ProductRepository {
                     }
                 }
                 Log.d(TAG, "Category+Brand filter → " + filtered.size() + " products");
+                callback.onSuccess(filtered, filtered.size());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                callback.onError(errorMessage);
+            }
+        });
+    }
+
+    /**
+     * Fetch products related to Apple brand, MacBooks, Mac accessories, Mac Neo, etc.
+     */
+    public void fetchAppleProducts(int limit, int offset, @NonNull ProductCallback callback) {
+        Log.d(TAG, "Fetching Apple & MacBook related products");
+        fetchAllProductsWithDetails(limit, offset, new ProductCallback() {
+            @Override
+            public void onSuccess(List<Product> products, int total) {
+                List<Product> filtered = new ArrayList<>();
+                for (Product p : products) {
+                    ProductDetail detail = detailCache.get(p.getId());
+                    boolean isAppleBrand = detail != null && detail.getBrand() != null && 
+                                           (detail.getBrand().getId() == 25 || 
+                                            (detail.getBrand().getName() != null && detail.getBrand().getName().toLowerCase().contains("apple")));
+                    
+                    String name = p.getName() != null ? p.getName().toLowerCase() : "";
+                    boolean isAppleKeyword = name.contains("mac") || name.contains("apple") || 
+                                             name.contains("macbook") || name.contains("ipad") || 
+                                             name.contains("iphone") || name.contains("airpods") ||
+                                             name.contains("neo") || name.contains("magsafe") ||
+                                             name.contains("magic keyboard") || name.contains("magic mouse") ||
+                                             name.contains("studio display");
+
+                    if (isAppleBrand || isAppleKeyword) {
+                        filtered.add(p);
+                    }
+                }
+                Log.d(TAG, "Apple products filter → " + filtered.size() + " products matched");
                 callback.onSuccess(filtered, filtered.size());
             }
 

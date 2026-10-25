@@ -382,7 +382,7 @@ public class MainActivity extends BaseActivity {
                 
                 // Efficient filtering with duplicate detection
                 categoryDisplayList.clear();
-                java.util.Set<Integer> usedOrders = new java.util.HashSet<>(9);
+                java.util.Set<Integer> usedOrders = new java.util.HashSet<>(12);
                 
                 for (aeu.ratha.beckie_deal_app.data.models.Category category : categories) {
                     CuratedCategoryInfo info = getCuratedCategoryInfo(category.getName());
@@ -400,6 +400,15 @@ public class MainActivity extends BaseActivity {
                         new aeu.ratha.beckie_deal_app.data.models.Category(2, "Laptop", "laptops");
                     categoryDisplayList.add(new CategoryDisplay(
                         fallbackLaptop, R.drawable.laptop, "Laptop", 2));
+                }
+
+                // Guarantee "Printers & Scanners" curated category displays on frontend
+                // if no category explicitly matched Printers & Scanners from API
+                if (usedOrders.add(10)) {
+                    aeu.ratha.beckie_deal_app.data.models.Category fallbackPrinters = 
+                        new aeu.ratha.beckie_deal_app.data.models.Category(10, "Printers & Scanners", "printers-scanners");
+                    categoryDisplayList.add(new CategoryDisplay(
+                        fallbackPrinters, R.drawable.printers_scanners, "Printers & Scanners", 10));
                 }
                 
                 // Single sort operation
@@ -425,7 +434,7 @@ public class MainActivity extends BaseActivity {
      * 
      * Curated categories in order:
      * 1. accessories, 2. laptop, 3. macbook, 4. gaming, 5. smartphone, 
-     * 6. tablet, 7. storage, 8. network, 9. monitor
+     * 6. tablet, 7. storage, 8. network, 9. monitor, 10. printers & scanners
      */
     private CuratedCategoryInfo getCuratedCategoryInfo(String categoryName) {
         String name = categoryName.toLowerCase().trim();
@@ -468,6 +477,9 @@ public class MainActivity extends BaseActivity {
         } else if (name.contains("monitor") || name.contains("display")) {
             Log.d(TAG, "  ✓ Matched as Monitor");
             return new CuratedCategoryInfo("Monitor", R.drawable.monitor, 9);
+        } else if (name.contains("printer") || name.contains("scanner")) {
+            Log.d(TAG, "  ✓ Matched as Printers & Scanners");
+            return new CuratedCategoryInfo("Printers & Scanners", R.drawable.printers_scanners, 10);
         }
         
         Log.d(TAG, "  ✗ No match for curated category");

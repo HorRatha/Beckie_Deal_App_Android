@@ -302,8 +302,8 @@ public class CategoryDetailActivity extends BaseActivity {
         boolean isApple = currentBrandId == 25 || (currentCategoryName != null && currentCategoryName.equalsIgnoreCase("MacBook"));
         
         if (isApple) {
-            android.util.Log.d(TAG, "Fetching Apple products by category ID: " + currentCategoryId);
-            productRepository.fetchProductsByCategoryAndBrand(currentCategoryId > 0 ? currentCategoryId : 0, 25, 50, 0, productCallback);
+            android.util.Log.d(TAG, "Fetching Apple & MacBook related products");
+            productRepository.fetchAppleProducts(50, 0, productCallback);
         } else if (currentCategoryId > 0 && currentBrandId > 0) {
             android.util.Log.d(TAG, "Fetching products by category ID " + currentCategoryId + " and brand ID " + currentBrandId);
             productRepository.fetchProductsByCategoryAndBrand(currentCategoryId, currentBrandId, 50, 0, productCallback);

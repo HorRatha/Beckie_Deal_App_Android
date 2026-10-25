@@ -15,6 +15,8 @@ import java.util.Map;
  * - "mac" → Apple products and MacBooks
  * - "gaming" → Gaming laptops (ROG, MSI RTX, Razer Blade)
  * - "storage_network" → SSDs, HDDs, RAM, Network Cards, Routers
+ * - "printer" → Printers and related office equipment
+ * - "scanner" → Scanners and related office equipment
  */
 public class CategoryClassifier {
     
@@ -23,6 +25,8 @@ public class CategoryClassifier {
     private static final String TYPE_MAC = "mac";
     private static final String TYPE_GAMING = "gaming";
     private static final String TYPE_STORAGE_NETWORK = "storage_network";
+    private static final String TYPE_PRINTER = "printer";
+    private static final String TYPE_SCANNER = "scanner";
     private static final String TYPE_OTHER = "other";
     
     /**
@@ -40,14 +44,29 @@ public class CategoryClassifier {
     /**
      * Classify by category name (case-insensitive).
      * Priority order:
-     * 1. Gaming (most specific)
-     * 2. Mac (Apple products)
-     * 3. Storage & Network
-     * 4. Accessories
-     * 5. Laptop (general)
+     * 1. Printer & Scanner (most specific)
+     * 2. Gaming (most specific)
+     * 3. Mac (Apple products)
+     * 4. Storage & Network
+     * 5. Accessories
+     * 6. Laptop (general)
      */
     private static String classifyByName(String name) {
         String lower = name.toLowerCase().trim();
+        
+        // Printer - check first (high priority)
+        if (lower.contains("printer") || 
+            lower.contains("printing") ||
+            lower.contains("laser") && lower.contains("print")) {
+            return TYPE_PRINTER;
+        }
+        
+        // Scanner - check second (high priority)
+        if (lower.contains("scanner") || 
+            lower.contains("scanning") ||
+            lower.contains("scan device")) {
+            return TYPE_SCANNER;
+        }
         
         // Gaming laptops - most specific match
         if ((lower.contains("gaming") && lower.contains("laptop")) ||
@@ -129,6 +148,10 @@ public class CategoryClassifier {
                 return "Gaming Laptops";
             case TYPE_STORAGE_NETWORK:
                 return "Storage & Network";
+            case TYPE_PRINTER:
+                return "Printers";
+            case TYPE_SCANNER:
+                return "Scanners";
             default:
                 return "Products";
         }
@@ -144,6 +167,8 @@ public class CategoryClassifier {
         types.add(TYPE_MAC);
         types.add(TYPE_GAMING);
         types.add(TYPE_STORAGE_NETWORK);
+        types.add(TYPE_PRINTER);
+        types.add(TYPE_SCANNER);
         return types;
     }
     
@@ -189,6 +214,18 @@ public class CategoryClassifier {
                 subcategories.add("Networking");
                 subcategories.add("Storage Devices");
                 break;
+            case TYPE_PRINTER:
+                subcategories.add("Inkjet");
+                subcategories.add("Laser");
+                subcategories.add("All-in-One");
+                subcategories.add("Photo Printer");
+                break;
+            case TYPE_SCANNER:
+                subcategories.add("Document");
+                subcategories.add("Photo");
+                subcategories.add("Portable");
+                subcategories.add("Sheet-fed");
+                break;
         }
         
         return subcategories;
@@ -225,6 +262,10 @@ public class CategoryClassifier {
                 return "ic_gaming";
             case TYPE_STORAGE_NETWORK:
                 return "ic_storage";
+            case TYPE_PRINTER:
+                return "ic_printer";
+            case TYPE_SCANNER:
+                return "ic_scanner";
             default:
                 return "ic_products";
         }
