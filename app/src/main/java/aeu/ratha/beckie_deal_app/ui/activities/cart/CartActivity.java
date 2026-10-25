@@ -94,8 +94,15 @@ public class CartActivity extends BaseActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        setupBottomNavigation();
         loadCartFromAPI();
         updateCartBadge();
     }
@@ -218,7 +225,6 @@ public class CartActivity extends BaseActivity {
             cartList.setVisibility(View.VISIBLE);
             couponReminder.setVisibility(View.VISIBLE);
             checkoutSection.setVisibility(View.VISIBLE);
-            cartList.removeAllViews();
 
             // ── Deduplicate items by product ID ────────────────────────────────
             java.util.Map<String, CartItem> deduplicatedItems = new java.util.LinkedHashMap<>();
@@ -239,14 +245,21 @@ public class CartActivity extends BaseActivity {
                 }
             }
 
-            // Display deduplicated items
-            int totalUnits = 0; // NEW
-            for (CartItem item : deduplicatedItems.values()) {
-                inflateCartItem(cartList, item);
-                totalUnits += item.getQuantity(); // NEW
+            // Display deduplicated items with view recycling (0ms inflation overhead)
+            int existingChildCount = cartList.getChildCount();
+            int newCount = deduplicatedItems.size();
+            if (existingChildCount > newCount) {
+                cartList.removeViews(newCount, existingChildCount - newCount);
             }
 
-            // NEW: "2 items · Swipe left to remove"
+            int index = 0;
+            int totalUnits = 0;
+            for (CartItem item : deduplicatedItems.values()) {
+                renderCartItemView(cartList, index++, item);
+                totalUnits += item.getQuantity();
+            }
+
+            // "2 items · Swipe left to remove"
             if (subtitle != null) {
                 subtitle.setText(totalUnits + (totalUnits == 1 ? " item" : " items")
                         + " · Swipe left to remove");
@@ -254,7 +267,7 @@ public class CartActivity extends BaseActivity {
             }
 
             updateTotal(totalText, cart);
-            loadSuggestions(deduplicatedItems.keySet()); // NEW
+            loadSuggestions(deduplicatedItems.keySet());
         }
     }
 
@@ -311,8 +324,14 @@ public class CartActivity extends BaseActivity {
         }
     }
 
-    private void inflateCartItem(LinearLayout parent, CartItem item) {
-        View v = LayoutInflater.from(this).inflate(R.layout.item_cart, parent, false);
+    private void renderCartItemView(LinearLayout parent, int index, CartItem item) {
+        View v;
+        if (index < parent.getChildCount()) {
+            v = parent.getChildAt(index);
+        } else {
+            v = LayoutInflater.from(this).inflate(R.layout.item_cart, parent, false);
+            parent.addView(v);
+        }
 
         ImageView image         = v.findViewById(R.id.cartItemImage);
         TextView  name          = v.findViewById(R.id.cartItemName);
@@ -325,7 +344,7 @@ public class CartActivity extends BaseActivity {
         ImageView decrement     = v.findViewById(R.id.cartItemDecrement);
         ImageView increment     = v.findViewById(R.id.cartItemIncrement);
         ImageView removeBtn     = v.findViewById(R.id.cartItemRemove);
-        View      deletePanel   = v.findViewById(R.id.cartItemDeletePanel); // NEW
+        View      deletePanel   = v.findViewById(R.id.cartItemDeletePanel);
         UiAnimations.pressBounce(decrement, increment, removeBtn);
 
         // ── Product name ───────────────────────────────────────────────────
@@ -409,12 +428,10 @@ public class CartActivity extends BaseActivity {
             removeCartItemOptimistic(item);
         });
 
-        // ── Remove (swipe left, then tap Delete) ── NEW ────────────────────
+        // ── Remove (swipe left, then tap Delete) ───────────────────────────
         if (deletePanel != null) {
             deletePanel.setOnClickListener(btn -> removeCartItemOptimistic(item));
         }
-
-        parent.addView(v);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

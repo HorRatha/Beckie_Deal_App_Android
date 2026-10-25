@@ -50,6 +50,20 @@ public class ProfileActivity extends BaseActivity {
     private AppDrawerHelper drawerHelper;
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupBottomNavigation();
+        fetchAndSetupUserProfile();
+        BottomNavHelper.updateCartBadge(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);

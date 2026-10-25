@@ -226,32 +226,35 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
                 
                 Log.d(TAG, "Quick add to cart - Product ID: " + product.id + ", Name: " + product.name);
                 
-                // Add 1 quantity to cart via API
+                // Instant optimistic feedback (0ms response)
+                if (lastToast != null) lastToast.cancel();
+                lastToast = Toast.makeText(context, "Added to cart!", Toast.LENGTH_SHORT);
+                lastToast.show();
+                
+                if (context instanceof android.app.Activity) {
+                    aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(
+                            (android.app.Activity) context);
+                }
+
+                // Add 1 quantity to cart via API in background
                 cartRepository.addToCart(product.id, 1, new CartRepository.CartItemCallback() {
                     @Override
                     public void onSuccess(CartItemResponse response) {
-                        ((android.app.Activity) context).runOnUiThread(() -> {
-                            // Show feedback toast
-                            if (lastToast != null) lastToast.cancel();
-                            lastToast = Toast.makeText(context, "Added to cart!", Toast.LENGTH_SHORT);
-                            lastToast.show();
-                            
-                            // Update cart badge
-                            if (context instanceof aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity) {
+                        if (context instanceof android.app.Activity) {
+                            ((android.app.Activity) context).runOnUiThread(() -> {
                                 aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(
                                         (android.app.Activity) context);
-                            }
-                        });
+                            });
+                        }
                     }
-                    
+
                     @Override
                     public void onError(String error) {
-                        ((android.app.Activity) context).runOnUiThread(() -> {
-                            Log.e(TAG, "Failed to add to cart: " + error);
-                            if (lastToast != null) lastToast.cancel();
-                            lastToast = Toast.makeText(context, "Failed to add to cart", Toast.LENGTH_SHORT);
-                            lastToast.show();
-                        });
+                        if (context instanceof android.app.Activity) {
+                            ((android.app.Activity) context).runOnUiThread(() -> {
+                                Log.e(TAG, "Failed to add to cart on server: " + error);
+                            });
+                        }
                     }
                 });
             });

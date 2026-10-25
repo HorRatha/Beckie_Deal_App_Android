@@ -60,38 +60,48 @@ public final class BottomNavHelper {
         // Set initial selected state (no animation on first load)
         selectItem(activity, currentItem, false);
 
-        // Wire click handlers with animation
+        // Wire click handlers with animation using standard intent flags
         homeFrame.setOnClickListener(v -> {
             if (currentItem != NavItem.HOME) {
-                activity.startActivity(new Intent(activity, MainActivity.class));
+                Intent intent = new Intent(activity, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
 
         categoriesFrame.setOnClickListener(v -> {
             if (currentItem != NavItem.CATEGORIES) {
-                activity.startActivity(new Intent(activity, CategoriesActivity.class));
+                Intent intent = new Intent(activity, CategoriesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
 
         wishlistFrame.setOnClickListener(v -> {
             if (currentItem != NavItem.WISHLIST) {
-                activity.startActivity(new Intent(activity, WishlistActivity.class));
+                Intent intent = new Intent(activity, WishlistActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
 
         cartFrame.setOnClickListener(v -> {
             if (currentItem != NavItem.CART) {
-                activity.startActivity(new Intent(activity, CartActivity.class));
+                Intent intent = new Intent(activity, CartActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
 
         accountFrame.setOnClickListener(v -> {
             if (currentItem != NavItem.ACCOUNT) {
-                activity.startActivity(new Intent(activity, ProfileActivity.class));
+                Intent intent = new Intent(activity, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
@@ -193,7 +203,7 @@ public final class BottomNavHelper {
      * @param item       Item to select
      * @param animate    Whether to animate the transition
      */
-    private static void selectItem(Context context, NavItem item, boolean animate) {
+    public static void selectItem(Context context, NavItem item, boolean animate) {
         int[] ids = {
                 R.id.navItemHome, R.id.navItemCategories, R.id.navItemWishlist,
                 R.id.navItemCart, R.id.navItemAccount

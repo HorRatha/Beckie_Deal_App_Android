@@ -22,7 +22,8 @@
         <!-- Main Activity -->
         <activity
             android:name=".ui.activities.main.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -44,7 +45,8 @@
         <!-- Product Activities -->
         <activity
             android:name=".ui.activities.product.CategoriesActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.activities.product.ProductDetailActivity"
             android:exported="false" />
@@ -70,7 +72,8 @@
         <!-- Cart & Order Activities -->
         <activity
             android:name=".ui.activities.cart.CartActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.activities.cart.PayoutActivity"
             android:exported="false" />
@@ -98,7 +101,8 @@
         <!-- Profile Activities -->
         <activity
             android:name=".ui.activities.profile.ProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.activities.profile.EditProfileActivity"
             android:exported="false" />
@@ -113,7 +117,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.activities.profile.WishlistActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.activities.profile.CouponsActivity"
             android:exported="false" />

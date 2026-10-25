@@ -133,8 +133,15 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        setupBottomNavigation();
         setupProducts();
         
         // Setup scroll-to-top button

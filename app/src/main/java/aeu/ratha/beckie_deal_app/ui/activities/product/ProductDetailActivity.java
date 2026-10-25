@@ -717,22 +717,30 @@ public class ProductDetailActivity extends BaseActivity {
                 Toast.makeText(this, "Product info missing. Please try again.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            // Instant optimistic feedback (0ms latency)
+            String msg = selectedQuantity == 1 ? "Added to cart!"
+                    : selectedQuantity + "× added to cart!";
+            View root = findViewById(android.R.id.content);
+            if (root == null) root = v;
+            try {
+                Snackbar snackbar = Snackbar.make(root, msg, Snackbar.LENGTH_LONG)
+                        .setAction("View Cart ♥", view -> startActivity(
+                                new Intent(ProductDetailActivity.this, CartActivity.class)))
+                        .setActionTextColor(getResources().getColor(R.color.primary, null));
+                snackbar.show();
+            } catch (Exception e) {
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            }
+            BottomNavHelper.updateCartBadge(ProductDetailActivity.this);
+
             cartRepository.addToCart(pid, selectedQuantity, new CartRepository.CartItemCallback() {
                 @Override public void onSuccess(CartItemResponse response) {
-                    runOnUiThread(() -> {
-                        BottomNavHelper.updateCartBadge(ProductDetailActivity.this);
-                        String msg = selectedQuantity == 1 ? "Added to cart!"
-                                : selectedQuantity + "× added to cart!";
-                        Snackbar snackbar = Snackbar.make(v, msg, Snackbar.LENGTH_LONG)
-                                .setAction("View Cart ♥", view -> startActivity(
-                                        new Intent(ProductDetailActivity.this, CartActivity.class)))
-                                .setActionTextColor(getResources().getColor(R.color.primary, null));
-                        snackbar.show();
-                    });
+                    runOnUiThread(() -> BottomNavHelper.updateCartBadge(ProductDetailActivity.this));
                 }
                 @Override public void onError(String error) {
                     runOnUiThread(() -> Toast.makeText(ProductDetailActivity.this,
-                            "Failed to add to cart", Toast.LENGTH_SHORT).show());
+                            "Failed to update cart on server", Toast.LENGTH_SHORT).show());
                 }
             });
         });

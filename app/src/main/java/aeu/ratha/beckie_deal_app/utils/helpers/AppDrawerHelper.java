@@ -617,7 +617,9 @@ public class AppDrawerHelper {
         if (homeItem != null) homeItem.setOnClickListener(v -> {
             closeDrawer();
             if (!(activity instanceof MainActivity)) {
-                activity.startActivity(new Intent(activity, MainActivity.class));
+                Intent intent = new Intent(activity, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
@@ -627,7 +629,9 @@ public class AppDrawerHelper {
         if (categoriesItem != null) categoriesItem.setOnClickListener(v -> {
             closeDrawer();
             if (!(activity instanceof CategoriesActivity)) {
-                activity.startActivity(new Intent(activity, CategoriesActivity.class));
+                Intent intent = new Intent(activity, CategoriesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
@@ -637,7 +641,9 @@ public class AppDrawerHelper {
         if (ordersItem != null) ordersItem.setOnClickListener(v -> {
             closeDrawer();
             if (!(activity instanceof MyOrdersActivity)) {
-                activity.startActivity(new Intent(activity, MyOrdersActivity.class));
+                Intent intent = new Intent(activity, MyOrdersActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
@@ -647,7 +653,9 @@ public class AppDrawerHelper {
         if (wishlistItem != null) wishlistItem.setOnClickListener(v -> {
             closeDrawer();
             if (!(activity instanceof WishlistActivity)) {
-                activity.startActivity(new Intent(activity, WishlistActivity.class));
+                Intent intent = new Intent(activity, WishlistActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
@@ -703,7 +711,9 @@ public class AppDrawerHelper {
                 loginItem.setOnClickListener(v -> {
                     closeDrawer();
                     if (!(activity instanceof ProfileActivity)) {
-                        activity.startActivity(new Intent(activity, ProfileActivity.class));
+                        Intent intent = new Intent(activity, ProfileActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        activity.startActivity(intent);
                         activity.overridePendingTransition(0, 0);
                     }
                 });

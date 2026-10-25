@@ -149,6 +149,19 @@ public class CategoriesActivity extends BaseActivity {
     private ProductRepository productRepository;
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupBottomNavigation();
+        updateCartBadge();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
@@ -786,6 +799,10 @@ public class CategoriesActivity extends BaseActivity {
 
     private void setupBottomNavigation() {
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.CATEGORIES);
+    }
+
+    private void updateCartBadge() {
+        BottomNavHelper.updateCartBadge(this);
     }
 
     // ── Data classes ──────────────────────────────────────────────────────────

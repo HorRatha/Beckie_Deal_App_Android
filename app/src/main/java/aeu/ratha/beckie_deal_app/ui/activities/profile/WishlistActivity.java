@@ -66,8 +66,16 @@ public class WishlistActivity extends BaseActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        setupBottomNavigation();
+        updateCartBadge();
         displayWishlist();
         
         // Restore scroll position after wishlist is displayed
@@ -223,6 +231,7 @@ public class WishlistActivity extends BaseActivity {
         if (products == null || products.isEmpty()) {
             emptyState.setVisibility(View.VISIBLE);
             wishlistGrid.setVisibility(View.GONE);
+            wishlistGrid.removeAllViews();
             setupWishlistEmptyState(true);
             return;
         }
@@ -232,11 +241,34 @@ public class WishlistActivity extends BaseActivity {
         wishlistGrid.setColumnCount(columns);
         emptyState.setVisibility(View.GONE);
         wishlistGrid.setVisibility(View.VISIBLE);
-        wishlistGrid.removeAllViews();
 
-        for (MainActivity.Product product : products) {
-            View productView = LayoutInflater.from(this)
-                    .inflate(R.layout.product_card, wishlistGrid, false);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int parentPadding = dp(16) * 2; // LinearLayout has 16dp padding on each side
+        int availableWidth = screenWidth - parentPadding;
+        int margins = dp(2);
+        int cardWidth = (availableWidth / columns) - (margins * 2);
+
+        int existingCount = wishlistGrid.getChildCount();
+        int newCount = products.size();
+
+        // Remove excess views if list shrunk
+        if (existingCount > newCount) {
+            wishlistGrid.removeViews(newCount, existingCount - newCount);
+        }
+
+        for (int i = 0; i < newCount; i++) {
+            MainActivity.Product product = products.get(i);
+            View productView;
+
+            if (i < existingCount) {
+                // Reuse existing view (0ms inflation overhead)
+                productView = wishlistGrid.getChildAt(i);
+            } else {
+                // Inflate only if new view needed
+                productView = LayoutInflater.from(this)
+                        .inflate(R.layout.product_card, wishlistGrid, false);
+                wishlistGrid.addView(productView);
+            }
 
             // Bind all fields via shared binder
             ProductCardBinder.bind(this, productView, product);
@@ -259,20 +291,19 @@ public class WishlistActivity extends BaseActivity {
                 });
             }
 
-            // Each card takes fixed width based on available width divided by columns
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            int screenWidth = getResources().getDisplayMetrics().widthPixels;
-            int parentPadding = dp(16) * 2; // LinearLayout has 16dp padding on each side
-            int availableWidth = screenWidth - parentPadding;
-            int margins = dp(2);
-            int cardWidth = (availableWidth / columns) - (margins * 2);
+            // Apply card dimensions safely
+            android.view.ViewGroup.LayoutParams existingParams = productView.getLayoutParams();
+            GridLayout.LayoutParams params;
+            if (existingParams instanceof GridLayout.LayoutParams) {
+                params = (GridLayout.LayoutParams) existingParams;
+            } else {
+                params = new GridLayout.LayoutParams();
+            }
             params.width = cardWidth;
             params.height = GridLayout.LayoutParams.WRAP_CONTENT;
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1);
             params.setMargins(margins, margins, margins, margins);
             productView.setLayoutParams(params);
-
-            wishlistGrid.addView(productView);
         }
     }
     
@@ -372,5 +403,9 @@ public class WishlistActivity extends BaseActivity {
 
     private void setupBottomNavigation() {
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.WISHLIST);
+    }
+
+    private void updateCartBadge() {
+        BottomNavHelper.updateCartBadge(this);
     }
 }
