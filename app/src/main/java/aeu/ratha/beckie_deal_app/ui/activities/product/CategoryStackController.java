@@ -55,7 +55,7 @@ public class CategoryStackController {
 
         public final String name;
 
-        public final int itemCount;
+        public int itemCount;
 
         @DrawableRes public final int iconRes;
 
@@ -480,6 +480,13 @@ public class CategoryStackController {
                 container.post(() -> {
 
                     s.cache = copy;
+                    if (!copy.isEmpty() && copy.size() < s.data.itemCount) {
+                        s.data.itemCount = copy.size();
+                        TextView count = s.root.findViewById(R.id.stackCount);
+                        if (count != null) {
+                            count.setText(countLabel(s.data.itemCount));
+                        }
+                    }
 
                     render(s, copy);
 
@@ -644,8 +651,15 @@ public class CategoryStackController {
         ImageViewCompat.setImageTintList(icon, null);
         icon.setImageTintList(null);
 
-        // Try to load image from URL first if present
-        if (imageLoader != null && imageUrl != null && !imageUrl.trim().isEmpty()) {
+        // Prioritize local iconRes (3D WebP drawables like printers_scanners, laptop, macbook_pro, etc.) if available
+        if (iconRes != 0 && iconRes != R.drawable.widgets_24) {
+
+            // Display 3D image drawable directly without any tint filter
+            android.util.Log.d("CategoryStack", "Displaying 3D WebP drawable res: " + iconRes);
+            icon.setImageResource(iconRes);
+            icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        } else if (imageLoader != null && imageUrl != null && !imageUrl.trim().isEmpty()) {
 
             icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
