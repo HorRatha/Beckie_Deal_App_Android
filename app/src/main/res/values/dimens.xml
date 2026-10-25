@@ -69,7 +69,7 @@
     <dimen name="button_pill_radius">999dp</dimen>
 
     <!-- Bottom nav pill margins -->
-    <dimen name="bottom_nav_side_margin">0dp</dimen>
-    <dimen name="bottom_nav_bottom_margin">0dp</dimen>
-    <dimen name="bottom_nav_corner_radius">0dp</dimen>
+    <dimen name="bottom_nav_side_margin">16dp</dimen>
+    <dimen name="bottom_nav_bottom_margin">16dp</dimen>
+    <dimen name="bottom_nav_corner_radius">32dp</dimen>
 </resources>

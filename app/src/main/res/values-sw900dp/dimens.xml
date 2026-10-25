@@ -35,7 +35,7 @@
     <dimen name="card_inner_padding">20dp</dimen>
     <dimen name="section_spacing">40dp</dimen>
 
-    <dimen name="bottom_nav_side_margin">160dp</dimen>
+    <dimen name="bottom_nav_side_margin">180dp</dimen>
     <dimen name="bottom_nav_bottom_margin">28dp</dimen>
     <dimen name="bottom_nav_corner_radius">36dp</dimen>
 </resources>

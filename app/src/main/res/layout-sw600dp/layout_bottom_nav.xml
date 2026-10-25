@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Tablet Bottom Navigation - Simplified background for cleaner appearance
+    Removes layered background effects that look bad on wider screens
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomNavGlassHost"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/bottom_nav_side_margin"
+    android:layout_marginEnd="@dimen/bottom_nav_side_margin"
+    android:layout_marginBottom="@dimen/bottom_nav_bottom_margin"
+    android:background="@drawable/bottom_nav_glass_bg"
+    android:clipToOutline="true"
+    android:elevation="8dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+    <LinearLayout
+        android:id="@+id/customBottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:weightSum="5.0">
+
+        <!-- Home -->
+        <LinearLayout
+            android:id="@+id/navItemHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <LinearLayout
+                android:id="@+id/navPillHome"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:background="@drawable/nav_pill_background">
+
+                <ImageView
+                    android:id="@+id/navIconHome"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/bottom_nav_home_icon"
+                    android:scaleType="fitCenter" />
+
+                <TextView
+                    android:id="@+id/navLabelHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="Home"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:alpha="0"
+                    android:includeFontPadding="false" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Categories -->
+        <LinearLayout
+            android:id="@+id/navItemCategories"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <LinearLayout
+                android:id="@+id/navPillCategories"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:background="@drawable/nav_pill_background">
+
+                <ImageView
+                    android:id="@+id/navIconCategories"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/bottom_nav_categories_icon"
+                    android:scaleType="fitCenter" />
+
+                <TextView
+                    android:id="@+id/navLabelCategories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="Categories"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:alpha="0"
+                    android:includeFontPadding="false"
+                    android:maxLines="1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Wishlist -->
+        <LinearLayout
+            android:id="@+id/navItemWishlist"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <LinearLayout
+                android:id="@+id/navPillWishlist"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:background="@drawable/nav_pill_background">
+
+                <ImageView
+                    android:id="@+id/navIconWishlist"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/bottom_nav_favorites_icon"
+                    android:scaleType="fitCenter" />
+
+                <TextView
+                    android:id="@+id/navLabelWishlist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="Wishlist"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:alpha="0"
+                    android:includeFontPadding="false"
+                    android:maxLines="1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Cart -->
+        <LinearLayout
+            android:id="@+id/navItemCart"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <LinearLayout
+                android:id="@+id/navPillCart"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:background="@drawable/nav_pill_background">
+
+                <ImageView
+                    android:id="@+id/navIconCart"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/bottom_nav_cart_icon"
+                    android:scaleType="fitCenter" />
+
+                <!-- Cart Badge - compact circular badge -->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-6dp"
+                    android:layout_marginTop="-4dp">
+                    
+                    <TextView
+                        android:id="@+id/cartBadge"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/badge_pill"
+                        android:backgroundTint="@color/primary"
+                        android:textSize="9sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white_fixed"
+                        android:visibility="gone"
+                        android:includeFontPadding="false"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/navLabelCart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="Cart"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:alpha="0"
+                    android:includeFontPadding="false" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Account -->
+        <LinearLayout
+            android:id="@+id/navItemAccount"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <LinearLayout
+                android:id="@+id/navPillAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:background="@drawable/nav_pill_background">
+
+                <ImageView
+                    android:id="@+id/navIconAccount"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/bottom_nav_account_icon"
+                    android:scaleType="fitCenter" />
+
+                <TextView
+                    android:id="@+id/navLabelAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="Account"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:alpha="0"
+                    android:includeFontPadding="false" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

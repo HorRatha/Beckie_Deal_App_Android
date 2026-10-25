@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Full-width bottom nav bar — solid surface color, rounded top corners only.
-    Sits flush at the screen bottom so no background bleed around the edges.
+    Floating pill bottom navigation bar — solid surface color, fully rounded corners on all sides.
 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/nav_surface" />
-    <corners
-        android:topLeftRadius="20dp"
-        android:topRightRadius="20dp"
-        android:bottomLeftRadius="0dp"
-        android:bottomRightRadius="0dp" />
+    <solid android:color="@color/surface" />
+    <corners android:radius="32dp" />
 </shape>

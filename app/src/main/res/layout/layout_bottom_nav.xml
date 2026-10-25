@@ -15,7 +15,7 @@
     android:layout_marginBottom="@dimen/bottom_nav_bottom_margin"
     android:background="@drawable/bottom_nav_glass_bg"
     android:clipToOutline="true"
-    android:elevation="4dp"
+    android:elevation="8dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent">
@@ -26,9 +26,9 @@
         android:layout_height="60dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:weightSum="5.5">
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:weightSum="5.0">
 
         <!-- Home -->
         <LinearLayout
