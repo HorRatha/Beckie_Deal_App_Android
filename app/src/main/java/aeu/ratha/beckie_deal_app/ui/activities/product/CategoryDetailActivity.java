@@ -59,11 +59,13 @@ public class CategoryDetailActivity extends BaseActivity {
     private ImageView viewModeIcon;
     
     private aeu.ratha.beckie_deal_app.data.repository.ProductRepository productRepository;
+    private aeu.ratha.beckie_deal_app.data.repository.CategoryRepository categoryRepository;
     private WishlistRepository wishlistRepository;
     private CartRepository cartRepository;
     private ProductGridAdapter productAdapter;
     private List<MainActivity.Product> allProducts = new ArrayList<>(); // All products from API
     private List<MainActivity.Product> filteredProducts = new ArrayList<>(); // Filtered/sorted products
+    private List<aeu.ratha.beckie_deal_app.data.models.Category> apiCategories = new ArrayList<>(); // Master categories from API
 
     // Filter state (from FilterBottomSheet)
     private String currentSort     = FilterBottomSheet.SORT_DEFAULT;
@@ -75,10 +77,14 @@ public class CategoryDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_detail);
 
-        // Initialize repository
+        // Initialize repositories
         productRepository = aeu.ratha.beckie_deal_app.data.repository.ProductRepository.getInstance(this);
+        categoryRepository = aeu.ratha.beckie_deal_app.data.repository.CategoryRepository.getInstance(this);
         wishlistRepository = new WishlistRepository(this);
         cartRepository = new CartRepository(this);
+
+        // Pre-fetch categories for fast pill navigation mapping
+        loadApiCategories();
 
         // Get intent extras
         currentCategoryName = getIntent().getStringExtra(EXTRA_CATEGORY);
@@ -200,6 +206,54 @@ public class CategoryDetailActivity extends BaseActivity {
         // Wave background is now used instead of dynamic image
     }
 
+    // ── API Categories pre-fetch & resolution ──────────────────────────────────
+
+    private void loadApiCategories() {
+        if (categoryRepository == null) return;
+        categoryRepository.fetchCategories(false, new aeu.ratha.beckie_deal_app.data.repository.CategoryRepository.CategoryCallback() {
+            @Override
+            public void onSuccess(List<aeu.ratha.beckie_deal_app.data.models.Category> categories, int total) {
+                if (categories != null) {
+                    apiCategories.clear();
+                    apiCategories.addAll(categories);
+                    android.util.Log.d(TAG, "✓ Cached " + apiCategories.size() + " API categories for pill navigation");
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                android.util.Log.e(TAG, "Failed to load categories for pill lookup: " + errorMessage);
+            }
+        });
+    }
+
+    private aeu.ratha.beckie_deal_app.data.models.Category findCategoryForName(String name) {
+        if (name == null || apiCategories.isEmpty()) return null;
+        String lower = name.toLowerCase().trim();
+        for (aeu.ratha.beckie_deal_app.data.models.Category cat : apiCategories) {
+            if (cat.getName() == null) continue;
+            String catName = cat.getName().toLowerCase().trim();
+            if (catName.equalsIgnoreCase(lower) || catName.contains(lower) || lower.contains(catName)) {
+                return cat;
+            }
+        }
+        // Keyword fallback matching
+        for (aeu.ratha.beckie_deal_app.data.models.Category cat : apiCategories) {
+            if (cat.getName() == null) continue;
+            String catName = cat.getName().toLowerCase().trim();
+            if (lower.contains("accessor") && catName.contains("accessor")) return cat;
+            if ((lower.contains("laptop") || lower.contains("desktop")) && (catName.contains("laptop") || catName.contains("computer"))) return cat;
+            if (lower.contains("gaming") && catName.contains("gaming")) return cat;
+            if (lower.contains("storage") && catName.contains("storage")) return cat;
+            if (lower.contains("network") && catName.contains("network")) return cat;
+            if (lower.contains("monitor") && catName.contains("monitor")) return cat;
+            if ((lower.contains("printer") || lower.contains("scanner")) && (catName.contains("printer") || catName.contains("scanner"))) return cat;
+            if (lower.contains("phone") && catName.contains("phone")) return cat;
+            if (lower.contains("tablet") && catName.contains("tablet")) return cat;
+        }
+        return null;
+    }
+
     // ── Master Category filter chips ──────────────────────────────────────────
 
     private void setupCategoryChips() {
@@ -229,25 +283,94 @@ public class CategoryDetailActivity extends BaseActivity {
             boolean isSelected = isCategoryChipSelected(subcat, currentCategoryName);
             applyChipStyle((MaterialCardView) chip, chipText, isSelected);
 
-            chip.setOnClickListener(v -> {
-                if (!"All".equalsIgnoreCase(subcat)) {
-                    currentCategoryName = subcat;
-                } else {
-                    currentCategoryName = "Category";
-                }
-                setupCategoryChips();
-                applyFiltersAndRender(); // Re-filter products by master category/subcategory
-            });
+            final String selectedPillName = subcat;
+            chip.setOnClickListener(v -> onCategoryChipClicked(selectedPillName));
             UiAnimations.pressBounce(chip);
             brandFilterContainer.addView(chip);
+
+            if (isSelected) {
+                final View selectedChipView = chip;
+                brandFilterContainer.post(() -> {
+                    if (selectedChipView.getParent() != null && brandFilterContainer.getParent() instanceof android.widget.HorizontalScrollView) {
+                        int scrollTo = selectedChipView.getLeft() - (brandFilterContainer.getWidth() / 2) + (selectedChipView.getWidth() / 2);
+                        ((android.widget.HorizontalScrollView) brandFilterContainer.getParent()).smoothScrollTo(Math.max(0, scrollTo), 0);
+                    }
+                });
+            }
         }
+    }
+
+    private void onCategoryChipClicked(String subcat) {
+        if (subcat == null) return;
+
+        // If clicking the currently selected category, do nothing
+        if (subcat.equalsIgnoreCase(currentCategoryName)) return;
+
+        android.util.Log.d(TAG, "=== CATEGORY PILL CLICKED: " + subcat + " ===");
+
+        currentCategoryName = subcat;
+        currentBrandFilter = "All";
+
+        if ("All".equalsIgnoreCase(subcat)) {
+            currentCategoryName = "All";
+            currentCategoryId = -1;
+            currentBrandId = -1;
+            currentCategorySlug = "";
+            currentBrandSlug = "";
+        } else if ("MacBook".equalsIgnoreCase(subcat)) {
+            currentCategoryName = "MacBook";
+            currentCategoryId = -1;
+            currentBrandId = 25; // Apple brand
+            currentCategorySlug = "macbook";
+            currentBrandSlug = "apple";
+        } else {
+            aeu.ratha.beckie_deal_app.data.models.Category matchedCat = findCategoryForName(subcat);
+            if (matchedCat != null) {
+                currentCategoryId = matchedCat.getId();
+                currentCategorySlug = matchedCat.getSlug();
+                currentBrandId = -1;
+                currentBrandSlug = "";
+                android.util.Log.d(TAG, "✓ Matched API Category: id=" + currentCategoryId + ", name=" + matchedCat.getName());
+            } else {
+                // Fallback ID mappings
+                if ("Accessories".equalsIgnoreCase(subcat)) currentCategoryId = 1;
+                else if ("Laptops".equalsIgnoreCase(subcat) || "Desktop Computers".equalsIgnoreCase(subcat)) currentCategoryId = 2;
+                else if ("Printers & Scanners".equalsIgnoreCase(subcat)) currentCategoryId = 10;
+                else if ("Storage".equalsIgnoreCase(subcat)) currentCategoryId = 2;
+                else if ("Gaming".equalsIgnoreCase(subcat)) currentCategoryId = 23;
+                else currentCategoryId = -1;
+
+                currentBrandId = -1;
+                currentCategorySlug = "";
+                currentBrandSlug = "";
+                android.util.Log.d(TAG, "Using fallback Category ID: " + currentCategoryId);
+            }
+        }
+
+        // Update Top Bar Title
+        TextView titleView = findViewById(R.id.categoryTitleText);
+        if (titleView != null) {
+            titleView.setText("All".equalsIgnoreCase(subcat) ? "All Products" : currentCategoryName);
+        }
+
+        // Update Hero Title & Description for selected category
+        setupHero(null, null);
+
+        // Update Chips Selection UI
+        setupCategoryChips();
+
+        // Fetch products for newly selected category from API
+        fetchProducts();
     }
 
     private boolean isCategoryChipSelected(String chipSubcat, String activeCategory) {
         if (chipSubcat == null || activeCategory == null) return false;
         if (chipSubcat.equalsIgnoreCase(activeCategory)) return true;
-        if (activeCategory.toLowerCase().contains(chipSubcat.toLowerCase())) return true;
-        return false;
+        if ("All".equalsIgnoreCase(chipSubcat) && ("All".equalsIgnoreCase(activeCategory) || "Category".equalsIgnoreCase(activeCategory) || "All Products".equalsIgnoreCase(activeCategory))) return true;
+
+        String c1 = chipSubcat.toLowerCase().replace("s", "").trim();
+        String c2 = activeCategory.toLowerCase().replace("s", "").trim();
+        return c1.equals(c2);
     }
 
     private void applyChipStyle(MaterialCardView card, TextView text, boolean selected) {
@@ -447,7 +570,7 @@ public class CategoryDetailActivity extends BaseActivity {
                 && !"All Categories".equalsIgnoreCase(currentCategoryName)) {
             List<MainActivity.Product> catFiltered = new ArrayList<>();
             for (MainActivity.Product p : filtered) {
-                if (matchesCategoryFilter(p.name, p.sku, currentCategoryName)) {
+                if (matchesCategoryFilter(p, currentCategoryName)) {
                     catFiltered.add(p);
                 }
             }
@@ -559,9 +682,9 @@ public class CategoryDetailActivity extends BaseActivity {
 
     /**
      * Check if a product matches the category filter.
-     * Compares product's category name with the filter (case-insensitive).
      */
-    private boolean matchesCategoryFilter(String productName, String productSku, String filterCategory) {
+    private boolean matchesCategoryFilter(MainActivity.Product p, String filterCategory) {
+        if (p == null) return false;
         if (filterCategory == null || "Category".equalsIgnoreCase(filterCategory) || 
             "All".equalsIgnoreCase(filterCategory) || "All Categories".equalsIgnoreCase(filterCategory)) {
             return true;
@@ -570,20 +693,45 @@ public class CategoryDetailActivity extends BaseActivity {
         if (currentCategoryId > 0 || currentBrandId > 0) {
             return true;
         }
-        for (MainActivity.Product p : allProducts) {
-            if ((p.name != null && p.name.equals(productName)) || 
-                (p.sku != null && p.sku.equals(productSku))) {
-                String cat = p.categoryName != null ? p.categoryName.toLowerCase() : "";
-                String filter = filterCategory.toLowerCase();
-                if (cat.contains(filter) || filter.contains(cat) ||
-                    (filter.equals("macbook") && (cat.contains("mac") || cat.contains("apple"))) ||
-                    (filter.equals("laptop") && (cat.contains("laptop") || cat.contains("computer") || cat.contains("notebook"))) ||
-                    (filter.equals("printers & scanners") && (cat.contains("printer") || cat.contains("scanner") || cat.contains("office")))) {
-                    return true;
-                }
-            }
+
+        String cat = p.categoryName != null ? p.categoryName.toLowerCase() : "";
+        String name = p.name != null ? p.name.toLowerCase() : "";
+        String filter = filterCategory.toLowerCase().trim();
+
+        if (cat.contains(filter) || filter.contains(cat) || name.contains(filter)) {
+            return true;
         }
-        return true; // Default to true to prevent empty lists due to name variations
+        if (filter.contains("macbook") && (cat.contains("mac") || cat.contains("apple") || name.contains("macbook") || name.contains("mac"))) {
+            return true;
+        }
+        if ((filter.contains("laptop") || filter.contains("laptops")) && (cat.contains("laptop") || name.contains("laptop") || name.contains("notebook") || name.contains("vivobook") || name.contains("zenbook") || name.contains("thinkpad"))) {
+            return true;
+        }
+        if ((filter.contains("printer") || filter.contains("scanner")) && (cat.contains("printer") || cat.contains("scanner") || name.contains("printer") || name.contains("scanner"))) {
+            return true;
+        }
+        if (filter.contains("accessor") && (cat.contains("accessor") || name.contains("mouse") || name.contains("headphone") || name.contains("keyboard") || name.contains("cable") || name.contains("adapter"))) {
+            return true;
+        }
+        if (filter.contains("gaming") && (cat.contains("gaming") || name.contains("gaming") || name.contains("rog") || name.contains("rtx") || name.contains("razer"))) {
+            return true;
+        }
+        if (filter.contains("storage") && (cat.contains("storage") || name.contains("ssd") || name.contains("hdd") || name.contains("drive") || name.contains("nvme"))) {
+            return true;
+        }
+        if (filter.contains("network") && (cat.contains("network") || name.contains("router") || name.contains("wifi") || name.contains("modem"))) {
+            return true;
+        }
+        if (filter.contains("monitor") && (cat.contains("monitor") || name.contains("monitor") || name.contains("display"))) {
+            return true;
+        }
+        if (filter.contains("phone") && (cat.contains("phone") || name.contains("iphone") || name.contains("galaxy") || name.contains("smartphone"))) {
+            return true;
+        }
+        if (filter.contains("tablet") && (cat.contains("tablet") || name.contains("ipad") || name.contains("tablet"))) {
+            return true;
+        }
+        return false;
     }
 
     /**

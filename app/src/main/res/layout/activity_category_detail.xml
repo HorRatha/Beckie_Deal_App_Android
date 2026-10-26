@@ -45,16 +45,6 @@
                 android:textAppearance="@style/TextAppearance.App.SectionHeader" />
 
             <!-- Category image icon - wallet section -->
-            <ImageView
-                android:id="@+id/categoryImageIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="4dp"
-                android:scaleType="fitCenter"
-                android:contentDescription="Category Image"
-                android:background="@drawable/chip_unselected" />
 
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
