@@ -47,6 +47,14 @@ public class CategoryStackController {
     @ColorRes private static final int[] CARD_ICON =
             {R.color.dark_brown, R.color.cat_yellow, R.color.white_fixed, R.color.primary};
 
+    // Vector art tints per card index
+    @ColorRes private static final int[] ART_TINTS = {
+            R.color.white_fixed,   // on yellow
+            R.color.yellow_star,   // on brown
+            R.color.white_fixed,   // on orange
+            R.color.brand_orange   // on cream
+    };
+
     // ---------- Models: map your own classes into these ----------
 
     public static class CategoryUi {
@@ -55,6 +63,8 @@ public class CategoryStackController {
 
         public final String name;
 
+        @Nullable public final String description;
+
         public int itemCount;
 
         @DrawableRes public final int iconRes;
@@ -62,31 +72,20 @@ public class CategoryStackController {
         @Nullable public final String imageUrl;
 
         public CategoryUi(String id, String name, int itemCount, @DrawableRes int iconRes) {
-
-            this.id = id;
-
-            this.name = name;
-
-            this.itemCount = itemCount;
-
-            this.iconRes = iconRes;
-
-            this.imageUrl = null;
-
+            this(id, name, null, itemCount, iconRes, null);
         }
 
         public CategoryUi(String id, String name, int itemCount, @DrawableRes int iconRes, @Nullable String imageUrl) {
+            this(id, name, null, itemCount, iconRes, imageUrl);
+        }
 
+        public CategoryUi(String id, String name, @Nullable String description, int itemCount, @DrawableRes int iconRes, @Nullable String imageUrl) {
             this.id = id;
-
             this.name = name;
-
+            this.description = description;
             this.itemCount = itemCount;
-
             this.iconRes = iconRes;
-
             this.imageUrl = imageUrl;
-
         }
 
     }
@@ -265,7 +264,17 @@ public class CategoryStackController {
 
             s.card.setCardBackgroundColor(ContextCompat.getColor(context, CARD_BG[p]));
 
+            // Tint top-right swoosh art per card
+            ImageView categoryArt = s.root.findViewById(R.id.categoryArt);
+            if (categoryArt != null) {
+                ImageViewCompat.setImageTintList(
+                        categoryArt,
+                        ColorStateList.valueOf(ContextCompat.getColor(context, ART_TINTS[p % ART_TINTS.length])));
+            }
+
             TextView name = s.root.findViewById(R.id.stackName);
+
+            TextView description = s.root.findViewById(R.id.stackDescription);
 
             TextView count = s.root.findViewById(R.id.stackCount);
 
@@ -275,9 +284,35 @@ public class CategoryStackController {
 
             name.setTextColor(textColor);
 
+            // Short category description
+            String descText = c.description;
+            if (descText == null || descText.trim().isEmpty()) {
+                descText = getDefaultCategoryDescription(c.name);
+            }
+            if (description != null) {
+                if (descText != null && !descText.trim().isEmpty()) {
+                    description.setText(descText);
+                    description.setTextColor(textColor);
+                    description.setVisibility(View.VISIBLE);
+                } else {
+                    description.setVisibility(View.GONE);
+                }
+            }
+
+            // Item count pill
             count.setText(countLabel(c.itemCount));
 
             count.setTextColor(textColor);
+
+            if (p == 0) { // on yellow
+                count.setBackgroundTintList(ColorStateList.valueOf(android.graphics.Color.parseColor("#3BFFF3D6")));
+            } else if (p == 1) { // on dark brown
+                count.setBackgroundTintList(ColorStateList.valueOf(android.graphics.Color.parseColor("#33FFFFFF")));
+            } else if (p == 2) { // on orange
+                count.setBackgroundTintList(ColorStateList.valueOf(android.graphics.Color.parseColor("#33FFFFFF")));
+            } else { // on cream
+                count.setBackgroundTintList(ColorStateList.valueOf(android.graphics.Color.parseColor("#28F97316")));
+            }
 
             // Load category image if available, otherwise use default icon
             bindCategoryIcon(icon, c.imageUrl, c.iconRes, iconColor);
@@ -680,6 +715,24 @@ public class CategoryStackController {
 
         }
 
+    }
+
+    private static String getDefaultCategoryDescription(@Nullable String name) {
+        if (name == null) return null;
+        String lower = name.toLowerCase().trim();
+        if (lower.contains("accessor")) return "Mouse, keyboards and headsets";
+        if (lower.contains("asus") || lower.contains("vivobook")) return "Everyday laptops for work";
+        if (lower.contains("laptop") || lower.contains("notebook")) return "Everyday laptops for work & gaming";
+        if (lower.contains("printer") || lower.contains("scanner")) return "Print, scan and copy";
+        if (lower.contains("gaming")) return "High performance gaming gear";
+        if (lower.contains("fashion")) return "Bags, cases and wearables";
+        if (lower.contains("storage") || lower.contains("drive")) return "SSDs, HDDs and memory drives";
+        if (lower.contains("network") || lower.contains("wifi")) return "Routers, Wi-Fi and networking";
+        if (lower.contains("monitor") || lower.contains("display")) return "Displays, monitors and screens";
+        if (lower.contains("phone") || lower.contains("mobile")) return "Smartphones and mobile devices";
+        if (lower.contains("tablet") || lower.contains("ipad")) return "Tablets and accessories";
+        if (lower.contains("mac") || lower.contains("apple")) return "MacBooks, iPads and Apple gear";
+        return "Explore top quality items";
     }
 
     // ---------- Helpers ----------

@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
+        android:clipToOutline="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="26dp"
         app:cardElevation="0dp"
@@ -21,58 +22,86 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="118dp"
-            android:padding="16dp">
+            android:layout_height="118dp">
 
+            <!-- Background swoosh art in top-right corner -->
+            <ImageView
+                android:id="@+id/categoryArt"
+                android:layout_width="110dp"
+                android:layout_height="71dp"
+                android:layout_gravity="top|end"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_card_swoosh" />
+
+            <!-- Card Content Row (Image left + Name + Description + Count) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|top"
-                android:layout_marginEnd="68dp"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/stackName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-medium"
-                    android:maxLines="2"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/stackCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <!-- Category 3D Image Display -->
-            <FrameLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="end|top"
-                android:background="@android:color/transparent">
-                
+                <!-- Left Thumbnail Image -->
                 <ImageView
                     android:id="@+id/stackIcon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginEnd="12dp"
+                    android:scaleType="fitCenter"
                     android:importantForAccessibility="no" />
-            </FrameLayout>
 
-            <ImageView
-                android:id="@+id/stackChevron"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="end|top"
-                android:layout_marginTop="62dp"
-                android:layout_marginEnd="18dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_cat_expand_more" />
+                <!-- Middle Content: Name, Short Description, Item Count Pill -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/stackName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif-bold"
+                        android:maxLines="1"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/stackDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/stackCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="3dp"
+                        android:background="@drawable/bg_count_pill"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="11sp" />
+
+                </LinearLayout>
+
+                <!-- Expand Chevron Indicator -->
+                <ImageView
+                    android:id="@+id/stackChevron"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_cat_expand_more" />
+
+            </LinearLayout>
 
         </FrameLayout>
 
