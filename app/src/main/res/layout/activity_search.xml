@@ -46,7 +46,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="4dp"
                 android:background="@drawable/search_background"
-                android:hint="Search products, brands..."
+                android:hint="Search products, brands, categories..."
                 android:textColorHint="@color/text_secondary"
                 android:textAppearance="@style/TextAppearance.App.Body"
                 android:paddingStart="44dp"
@@ -95,18 +95,61 @@
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- Results count label -->
-    <TextView
-        android:id="@+id/resultsLabel"
+    <!-- Discovery / Idle State Layout (Curated Categories & Trending Searches) -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/discoveryScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="4dp"
-        android:text="Type to search products..."
-        android:textAppearance="@style/TextAppearance.App.Body"
-        android:textColor="@color/text_secondary"
-        app:layout_constraintTop_toBottomOf="@id/topAppBar" />
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:paddingBottom="120dp">
+
+            <!-- Trending Searches Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trending Searches"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/trendingChipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="4dp" />
+
+            <!-- Curated Categories Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Curated Categories"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Categories Chip Group Container (Pill buttons, no image) -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/categoriesGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="6dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Products grid (scrollable results) -->
     <androidx.core.widget.NestedScrollView
@@ -116,7 +159,7 @@
         android:fillViewport="true"
         android:clipToPadding="false"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/resultsLabel"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <GridLayout
@@ -140,7 +183,8 @@
         android:orientation="vertical"
         android:gravity="center"
         android:padding="32dp"
-        app:layout_constraintTop_toBottomOf="@id/resultsLabel"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -150,14 +194,15 @@
             android:layout_height="72dp"
             android:src="@android:drawable/ic_menu_search"
             app:tint="@color/text_secondary"
-            android:alpha="0.4" />
+            android:alpha="0.4"
+            android:contentDescription="@null" />
 
         <TextView
             android:id="@+id/emptyTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Search for products"
+            android:text="No products found"
             android:textAppearance="@style/TextAppearance.App.CardProductName"
             android:gravity="center" />
 
@@ -166,7 +211,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Try searching by product name, brand, or category"
+            android:text="Try searching with a different keyword or category"
             android:textAppearance="@style/TextAppearance.App.Body"
             android:textColor="@color/text_secondary"
             android:gravity="center" />

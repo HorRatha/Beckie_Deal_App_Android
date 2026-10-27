@@ -6,8 +6,8 @@
     android:viewportWidth="360"
     android:viewportHeight="240">
 
-    <!-- Main wave: bright gold to soft gold -->
-    <path android:pathData="M0,0 H360 V170 C280,232 220,120 140,160 C72,194 32,240 0,216 Z">
+    <!-- ── Base Gold Gradient Wave Layer ────────────────────────────────────── -->
+    <path android:pathData="M0,0 H360 V180 C270,235 210,130 130,170 C60,205 30,240 0,220 Z">
         <aapt:attr name="android:fillColor">
             <gradient
                 android:type="linear"
@@ -15,14 +15,136 @@
                 android:startY="0"
                 android:endX="360"
                 android:endY="240">
-                <item android:offset="0" android:color="#FDC011" />
-                <item android:offset="1" android:color="#F5C842" />
+                <item android:offset="0.0" android:color="#FDC011" />
+                <item android:offset="0.5" android:color="#F5A81D" />
+                <item android:offset="1.0" android:color="#E68A00" />
             </gradient>
         </aapt:attr>
     </path>
 
-    <!-- Soft white highlight wave for depth -->
+    <!-- ── Rich Golden Orange Middle Wave Band (Depth Layer) ───────────────── -->
     <path
-        android:fillColor="#2EFFFFFF"
-        android:pathData="M0,0 H360 V120 C288,184 208,80 136,112 C64,144 32,184 0,160 Z" />
+        android:fillColor="#35C86C00"
+        android:pathData="M0,40 C90,10 180,110 270,80 C310,67 340,85 360,95 V175 C280,225 190,120 120,160 C50,195 20,225 0,210 Z" />
+
+    <!-- ── Soft Translucent White Highlight Wave ───────────────────────────── -->
+    <path
+        android:fillColor="#22FFFFFF"
+        android:pathData="M0,0 H360 V125 C280,185 200,85 130,115 C60,145 30,185 0,165 Z" />
+
+    <!-- ── Accent Wave Edge Overlay ────────────────────────────────────────── -->
+    <path
+        android:fillColor="#15FFFFFF"
+        android:pathData="M0,130 C80,100 170,180 260,140 C310,118 340,140 360,150 V180 C270,235 210,130 130,170 C60,205 30,240 0,220 Z" />
+
+    <!-- ── PCB Circuit Traces & Nodes (Right-aligned, fading left) ───────── -->
+    <group android:name="pcb_circuit_traces">
+
+        <!-- Trace 1a (Top short) -->
+        <path
+            android:pathData="M360,25 H325 L315,35 H275"
+            android:strokeColor="#FFFFFF"
+            android:strokeAlpha="0.35"
+            android:strokeWidth="1.2"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.60"
+            android:pathData="M272.5,35 a2.5,2.5 0 1,1 5,0 a2.5,2.5 0 1,1 -5,0 z" />
+
+        <!-- Trace 1b (Top mid) -->
+        <path
+            android:pathData="M360,45 H295 L285,35 H225"
+            android:strokeColor="#FFFFFF"
+            android:strokeAlpha="0.50"
+            android:strokeWidth="1.3"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.75"
+            android:pathData="M222,35 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0 z" />
+
+        <!-- Trace 2a (Main long trace reaching x=160) -->
+        <path
+            android:pathData="M360,70 H280 L265,55 H160"
+            android:strokeColor="#FFFFFF"
+            android:strokeAlpha="0.60"
+            android:strokeWidth="1.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.85"
+            android:pathData="M156.5,55 a3.5,3.5 0 1,1 7,0 a3.5,3.5 0 1,1 -7,0 z" />
+
+        <!-- Branch 2a_sub (Split off trace 2a) -->
+        <path
+            android:pathData="M280,70 L268,82 H210"
+            android:strokeColor="#FFFFFF"
+            android:strokeAlpha="0.45"
+            android:strokeWidth="1.2"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.70"
+            android:pathData="M207,82 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0 z" />
+
+        <!-- Trace 2b (Mid right) -->
+        <path
+            android:pathData="M360,95 H315 L303,83 H250"
+            android:strokeColor="#FFFFFF"
+            android:strokeAlpha="0.40"
+            android:strokeWidth="1.2"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.65"
+            android:pathData="M247.2,83 a2.8,2.8 0 1,1 5.6,0 a2.8,2.8 0 1,1 -5.6,0 z" />
+
+        <!-- Branch 3a_sub (Top branch of trace 3a) -->
+        <path
+            android:pathData="M330,120 L320,110 H280"
+            android:strokeColor="#FFFFFF"
+            android:strokeAlpha="0.35"
+            android:strokeWidth="1.2"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.60"
+            android:pathData="M277.5,110 a2.5,2.5 0 1,1 5,0 a2.5,2.5 0 1,1 -5,0 z" />
+
+        <!-- Trace 3a (Lower mid) -->
+        <path
+            android:pathData="M360,120 H330 L316,134 H235"
+            android:strokeColor="#FFFFFF"
+            android:strokeAlpha="0.50"
+            android:strokeWidth="1.3"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.70"
+            android:pathData="M232,134 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0 z" />
+
+        <!-- Trace 3b (Bottom short) -->
+        <path
+            android:pathData="M360,150 H325 L315,160 H270"
+            android:strokeColor="#FFFFFF"
+            android:strokeAlpha="0.35"
+            android:strokeWidth="1.2"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.55"
+            android:pathData="M267.5,160 a2.5,2.5 0 1,1 5,0 a2.5,2.5 0 1,1 -5,0 z" />
+
+    </group>
+
 </vector>
+

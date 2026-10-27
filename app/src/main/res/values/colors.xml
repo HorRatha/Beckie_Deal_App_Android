@@ -74,7 +74,13 @@
     <color name="black">#000000</color>
     <color name="secondary">#8F4D27</color>
     <color name="on_secondary">#FFFFFF</color>
-    
+
+    <!-- User Custom Alias Colors (Linked to Original App Theme) -->
+    <color name="bg_screen">@color/background</color>
+    <color name="ink">@color/text_primary</color>
+    <color name="ink_muted">@color/text_muted</color>
+    <color name="tab_text">@color/text_secondary</color>
+
     <!-- Coupon Colors -->
     <color name="coupon_accent">#F59E0B</color>
     <color name="coupon_label">#FCD34D</color>
@@ -105,4 +111,7 @@
     <!-- Underline fields on the yellow background -->
     <color name="form_underline_idle">#733B2417</color>
     <color name="form_hint">#803B2417</color>
+
+    <!-- Dashed Divider Color -->
+    <color name="divider_dashed">#E3C57B</color>
 </resources>

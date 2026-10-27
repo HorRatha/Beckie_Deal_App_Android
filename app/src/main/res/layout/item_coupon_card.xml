@@ -1,130 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Ticket-style coupon card with continuous vertical dotted line and top/bottom cutouts. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="2dp"
-    app:strokeColor="@color/primary"
-    app:cardBackgroundColor="@color/surface">
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
-    <LinearLayout
+    <!-- Card Background Container -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="18dp">
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_color"
+        app:cardBackgroundColor="@color/surface">
 
-        <!-- Top Section: Code + Discount -->
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-            
-            <!-- Dashed Border Icon Container -->
-            <FrameLayout
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@drawable/coupon_icon_bg">
-                
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_discount_tag"
-                    app:tint="@color/primary" />
-            </FrameLayout>
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
+            <!-- Optional Banner Image (if present) -->
+            <ImageView
+                android:id="@+id/ivBannerImage"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:contentDescription="@null" />
+
+            <!-- Left: Value Block -->
+            <LinearLayout
+                android:id="@+id/leftValueBlock"
+                android:layout_width="104dp"
+                android:layout_height="0dp"
+                android:background="@drawable/bg_coupon_left"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingVertical="16dp"
+                app:layout_constraintTop_toBottomOf="@id/ivBannerImage"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/tvValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ink"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    tools:text="10%" />
+
+                <TextView
+                    android:id="@+id/tvUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:letterSpacing="0.08"
+                    android:textColor="@color/ink"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="OFF" />
+            </LinearLayout>
+
+            <!-- Continuous Vertical Dotted Line View -->
+            <aeu.ratha.beckie_deal_app.ui.components.DashedLineView
+                android:id="@+id/dashedDivider"
+                android:layout_width="4dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/leftValueBlock" />
+
+            <!-- Right: Details Section -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="16dp"
-                android:orientation="vertical">
-                
-                <TextView
-                    android:id="@+id/couponCode"
-                    android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="14dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="14dp"
+                app:layout_constraintTop_toBottomOf="@id/ivBannerImage"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/dashedDivider"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="WELCOME10"
-                    android:textAppearance="@style/TextAppearance.App.SectionHeader"
-                    android:fontFamily="monospace" />
-                
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvCode"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="monospace"
+                        android:letterSpacing="0.04"
+                        android:singleLine="true"
+                        android:textColor="@color/ink"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvExpiry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/ink_muted"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
                 <TextView
-                    android:id="@+id/couponDiscount"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvDesc"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="10% OFF"
-                    android:textAppearance="@style/TextAppearance.App.PriceHero"
-                    android:textColor="@color/primary" />
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/ink"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvMin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_chip_min"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="4dp"
+                        android:textColor="@color/ink_muted"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:minWidth="0dp"
+                        android:paddingStart="18dp"
+                        android:paddingEnd="18dp"
+                        android:textAllCaps="false"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/chip_selected_bg"
+                        app:cornerRadius="22dp"
+                        app:elevation="0dp" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <!-- Description -->
-        <TextView
-            android:id="@+id/couponDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="10% off for new users"
-            android:textAppearance="@style/TextAppearance.App.Body" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginVertical="16dp"
-            android:background="@color/border_color" />
+    <!-- Top Notch (Centered on the dotted line) -->
+    <View
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="top"
+        android:layout_marginStart="96dp"
+        android:background="@drawable/bg_notch"
+        android:elevation="6dp"
+        android:outlineProvider="none" />
 
-        <!-- Bottom Section: Min Purchase + Copy Button -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-            
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-                
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_info"
-                    app:tint="@color/text_muted" />
-                
-                <TextView
-                    android:id="@+id/couponMinPurchase"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="No minimum"
-                    android:textAppearance="@style/TextAppearance.App.Body" />
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/copyCouponButton"
-                android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:text="Copy Code"
-                android:backgroundTint="@color/primary"
-                android:paddingHorizontal="20dp"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.App.CardProductName"
-                android:textColor="@color/white_fixed"
-                app:cornerRadius="12dp"
-                app:icon="@drawable/ic_copy"
-                app:iconTint="@color/white_fixed"
-                app:iconGravity="textStart"
-                app:iconPadding="6dp" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</com.google.android.material.card.MaterialCardView>
+    <!-- Bottom Notch (Centered on the dotted line) -->
+    <View
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="96dp"
+        android:background="@drawable/bg_notch"
+        android:elevation="6dp"
+        android:outlineProvider="none" />
+</FrameLayout>
