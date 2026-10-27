@@ -170,8 +170,27 @@ public class SearchActivity extends BaseActivity {
         loadCuratedCategories();
         loadProducts();
 
-        // Show idle state initially
-        showIdleState(true);
+        // Check for passed intent query/category/brand
+        Intent intent = getIntent();
+        if (intent != null) {
+            String initialQuery = intent.getStringExtra("query");
+            if (initialQuery == null || initialQuery.isEmpty()) {
+                initialQuery = intent.getStringExtra("category");
+            }
+            if (initialQuery == null || initialQuery.isEmpty()) {
+                initialQuery = intent.getStringExtra("brand");
+            }
+            if (initialQuery != null && !initialQuery.isEmpty()) {
+                searchEditText.setText(initialQuery);
+                searchEditText.setSelection(initialQuery.length());
+                performSearch(initialQuery);
+            } else {
+                showIdleState(true);
+            }
+        } else {
+            // Show idle state initially
+            showIdleState(true);
+        }
 
         // Auto-open keyboard
         searchEditText.requestFocus();

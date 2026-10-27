@@ -63,6 +63,19 @@ public class AllBrandsActivity extends BaseActivity {
         allBrandsGrid = findViewById(R.id.allBrandsGrid);
         progressBar = findViewById(R.id.progressBar);
         brandCountTextView = findViewById(R.id.brandCount);
+
+        View searchBarContainer = findViewById(R.id.searchBarContainer);
+        View searchEditText = findViewById(R.id.searchEditText);
+        if (searchBarContainer != null) {
+            searchBarContainer.setOnClickListener(v ->
+                startActivity(new android.content.Intent(this, SearchActivity.class)));
+        }
+        if (searchEditText != null) {
+            searchEditText.setFocusable(false);
+            searchEditText.setClickable(true);
+            searchEditText.setOnClickListener(v ->
+                startActivity(new android.content.Intent(this, SearchActivity.class)));
+        }
     }
     
     /**

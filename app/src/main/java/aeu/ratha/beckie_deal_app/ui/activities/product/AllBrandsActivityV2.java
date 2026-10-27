@@ -66,6 +66,19 @@ public class AllBrandsActivityV2 extends BaseActivity {
         allBrandsGrid = findViewById(R.id.allBrandsGrid);
         progressBar = findViewById(R.id.progressBar);
         
+        View searchBarContainer = findViewById(R.id.searchBarContainer);
+        View searchEditText = findViewById(R.id.searchEditText);
+        if (searchBarContainer != null) {
+            searchBarContainer.setOnClickListener(v ->
+                startActivity(new Intent(this, SearchActivity.class)));
+        }
+        if (searchEditText != null) {
+            searchEditText.setFocusable(false);
+            searchEditText.setClickable(true);
+            searchEditText.setOnClickListener(v ->
+                startActivity(new Intent(this, SearchActivity.class)));
+        }
+        
         if (allBrandsGrid == null) {
             Log.e(TAG, "ERROR: allBrandsGrid not found!");
         }
