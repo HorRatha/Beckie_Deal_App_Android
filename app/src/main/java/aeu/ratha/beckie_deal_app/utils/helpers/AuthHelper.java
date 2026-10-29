@@ -124,6 +124,15 @@ public class AuthHelper {
                 Log.e(TAG, "Error clearing product image cache: " + e.getMessage());
             }
 
+            // Clear in-memory cart and static cache on logout
+            try {
+                aeu.ratha.beckie_deal_app.utils.managers.CartManager.getInstance().clearCart();
+                aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity.clearStaticCache();
+                Log.d(TAG, "Cart memory and static cache cleared");
+            } catch (Exception e) {
+                Log.e(TAG, "Error clearing cart state: " + e.getMessage());
+            }
+
             Log.d(TAG, "Logout completed successfully - restarting app");
             
             // 6. Restart to MainActivity with clean task stack

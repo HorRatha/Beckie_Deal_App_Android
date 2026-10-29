@@ -1476,6 +1476,26 @@ public class PayoutActivity extends BaseActivity {
         // ⚠️ CRITICAL: Clear the static cache in CartActivity to prevent stale data
         CartActivity.clearStaticCache();
 
+        // Explicitly remove each cart item from the backend using DELETE /api/v1/cart/items/{cartItemId}
+        if (currentCart != null && currentCart.getItems() != null && !currentCart.getItems().isEmpty()) {
+            for (aeu.ratha.beckie_deal_app.data.models.CartItem item : currentCart.getItems()) {
+                if (item.getId() > 0) {
+                    Log.d(TAG, "Auto-removing cart item ID: " + item.getId() + " after successful checkout");
+                    cartRepository.removeFromCart(item.getId(), new CartRepository.SimpleCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TAG, "Successfully removed cart item ID: " + item.getId());
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            Log.w(TAG, "Failed to remove cart item ID " + item.getId() + ": " + error);
+                        }
+                    });
+                }
+            }
+        }
+
         // Update bottom navigation cart badge
         aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(this);
     }
