@@ -284,7 +284,7 @@ public class ProductDetailActivity extends BaseActivity {
                 detail.getCategory() != null ? detail.getCategory().getName() : "Uncategorized", 
                 R.drawable.devices_24));
         specCards.add(new SpecCard("STOCK", 
-                detail.isTrackInventory() ? detail.getStockQuantity() + " units" : "N/A", 
+                detail.isInStock() ? "In Stock" : "Out of Stock", 
                 R.drawable.sports_esports_24));
         specCards.add(new SpecCard("TYPE", 
                 detail.isDigital() ? "Digital" : "Physical", 

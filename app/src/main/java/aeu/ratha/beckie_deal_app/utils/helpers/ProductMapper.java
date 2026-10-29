@@ -125,12 +125,6 @@ public class ProductMapper {
             specs.append("-").append(desc);
         }
         
-        // Add stock info
-        if (apiProduct.isInStock()) {
-            if (specs.length() > 0) specs.append("\n");
-            specs.append("-").append(apiProduct.getStockQuantity()).append(" units available");
-        }
-        
         // Add dimensions if available
         if (apiProduct.getWeight() != null && !apiProduct.getWeight().isEmpty()) {
             if (specs.length() > 0) specs.append("\n");

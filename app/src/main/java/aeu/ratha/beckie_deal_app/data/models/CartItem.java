@@ -132,8 +132,8 @@ public class CartItem {
      */
     public double getPriceAsDouble() {
         if (price == null || price.isEmpty()) {
-            // Fall back to product price
-            return product != null ? product.getPriceAsDouble() : 0.0;
+            // Fall back to product effective price (sale price if available, otherwise regular price)
+            return product != null ? product.getEffectivePrice() : 0.0;
         }
         try {
             return Double.parseDouble(price);

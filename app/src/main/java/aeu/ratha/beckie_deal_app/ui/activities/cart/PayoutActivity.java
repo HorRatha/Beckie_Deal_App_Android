@@ -182,6 +182,9 @@ public class PayoutActivity extends BaseActivity {
         setupPaymentMethodSelection();
         setupCouponSection();
 
+        // Clear any stale coupon state from previous sessions so fresh checkout starts clean
+        CouponManager.getInstance().removeCoupon();
+
         // Default values
         if (shippingCountryInput != null) shippingCountryInput.setText("Cambodia");
 
@@ -974,7 +977,7 @@ public class PayoutActivity extends BaseActivity {
         double subtotal = currentCart.getSubtotalFromAPI();
         if (subtotal == 0.0) subtotal = currentCart.getTotalPrice();
 
-        // Check if CouponManager or currentCart has a discount/coupon
+        // Check if CouponManager has an actively applied coupon for this session
         boolean hasCoupon = CouponManager.getInstance().hasCoupon();
         double discount = 0.0;
         String couponCode = null;
@@ -982,9 +985,6 @@ public class PayoutActivity extends BaseActivity {
         if (hasCoupon) {
             discount = CouponManager.getInstance().getDiscountAmount();
             couponCode = CouponManager.getInstance().getAppliedCouponCode();
-        } else if (currentCart.getDiscountTotal() > 0) {
-            discount = currentCart.getDiscountTotal();
-            couponCode = currentCart.getCouponCode();
         }
 
         double shipping = calculateShippingFee(subtotal);
@@ -1149,8 +1149,8 @@ public class PayoutActivity extends BaseActivity {
         View overlay = findViewById(R.id.processingOverlay);
         if (overlay != null) overlay.setVisibility(View.VISIBLE);
 
-        String country = getText(shippingCountryInput);
-        if (country.isEmpty()) country = "Cambodia";
+        String countryInput = getText(shippingCountryInput);
+        String countryCode = toIsoCountryCode(countryInput);
 
         // Guard: shipping method must be selected (only enforced when methods are available)
         if (selectedShippingMethod == null && !availableShippingMethods.isEmpty()) {
@@ -1167,7 +1167,7 @@ public class PayoutActivity extends BaseActivity {
         checkoutData.put("recipient_name", getText(shippingNameInput));
         checkoutData.put("address_line_1", getText(shippingAddressInput));
         checkoutData.put("city",           getText(shippingCityInput));
-        checkoutData.put("country",        country);
+        checkoutData.put("country",        countryCode);
         checkoutData.put("phone",          getText(shippingPhoneInput));
         checkoutData.put("postal_code",    getText(shippingPostalCodeInput));
         checkoutData.put("payment_method", selectedPaymentMethod); // "aba_payway" or "cod"
@@ -1224,6 +1224,64 @@ public class PayoutActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    /**
+     * Converts a country name or input string to a 2-letter ISO 3166-1 alpha-2 code.
+     * Required by backend checkout validation ('country' must be 2 chars, e.g. "KH").
+     */
+    private String toIsoCountryCode(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return "KH";
+        }
+        String trimmed = input.trim();
+        if (trimmed.length() == 2) {
+            return trimmed.toUpperCase(Locale.US);
+        }
+
+        String lower = trimmed.toLowerCase(Locale.US);
+        switch (lower) {
+            case "cambodia":
+                return "KH";
+            case "united states":
+            case "united states of america":
+            case "usa":
+                return "US";
+            case "thailand":
+                return "TH";
+            case "vietnam":
+            case "viet nam":
+                return "VN";
+            case "singapore":
+                return "SG";
+            case "china":
+                return "CN";
+            case "japan":
+                return "JP";
+            case "korea":
+            case "south korea":
+                return "KR";
+            case "australia":
+                return "AU";
+            case "france":
+                return "FR";
+            case "germany":
+                return "DE";
+            case "united kingdom":
+            case "uk":
+                return "GB";
+            case "canada":
+                return "CA";
+            default:
+                for (String iso : Locale.getISOCountries()) {
+                    Locale l = new Locale("", iso);
+                    if (l.getDisplayCountry(Locale.US).equalsIgnoreCase(trimmed) ||
+                        l.getDisplayCountry().equalsIgnoreCase(trimmed)) {
+                        return iso.toUpperCase(Locale.US);
+                    }
+                }
+                return "KH";
+        }
     }
 
     /**
