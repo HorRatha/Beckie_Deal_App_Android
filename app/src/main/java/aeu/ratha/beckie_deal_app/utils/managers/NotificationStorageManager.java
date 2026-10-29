@@ -1,35 +1,32 @@
 package aeu.ratha.beckie_deal_app.utils.managers;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
-import androidx.core.app.NotificationCompat;
+import android.view.View;
+import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import aeu.ratha.beckie_deal_app.R;
-import aeu.ratha.beckie_deal_app.data.models.ApiOrder;
+import aeu.ratha.beckie_deal_app.data.models.Promotion;
+import aeu.ratha.beckie_deal_app.data.repository.PromotionRepository;
+import aeu.ratha.beckie_deal_app.security.TokenManager;
 
 public class NotificationStorageManager {
 
-    private static final String PREF_NAME = "beckie_deal_notifications_pref";
-    private static final String KEY_NOTIFICATIONS = "stored_notifications_json";
-    private static final String KEY_ORDER_STATUS_MAP = "order_status_history_map";
-    private static final String CHANNEL_ID = "order_updates_channel";
+    private static final String PREF_BASE_NAME = "beckie_deal_notifications_pref_";
 
     public static class NotificationData {
         public String id;
         public String title;
         public String body;
         public String timeAgo;
-        public String type; // "order", "promo", "alert"
+        public String type; // "promo"
         public int iconRes;
         public int iconTint;
         public boolean unread;
@@ -49,13 +46,30 @@ public class NotificationStorageManager {
         }
     }
 
+    private static String getPrefName(Context context) {
+        try {
+            TokenManager tm = TokenManager.getInstance(context);
+            String userId = tm.getUserId();
+            if (userId == null || userId.trim().isEmpty()) {
+                userId = tm.getUserEmail();
+            }
+            if (userId == null || userId.trim().isEmpty()) {
+                userId = "guest";
+            }
+            userId = userId.replaceAll("[^a-zA-Z0-9_]", "_");
+            return PREF_BASE_NAME + userId;
+        } catch (Exception e) {
+            return PREF_BASE_NAME + "guest";
+        }
+    }
+
     private static SharedPreferences getPrefs(Context context) {
-        return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return context.getApplicationContext().getSharedPreferences(getPrefName(context), Context.MODE_PRIVATE);
     }
 
     public static List<NotificationData> getNotifications(Context context) {
         SharedPreferences prefs = getPrefs(context);
-        String json = prefs.getString(KEY_NOTIFICATIONS, null);
+        String json = prefs.getString("stored_notifications_json", null);
         if (json == null || json.trim().isEmpty()) {
             return new ArrayList<>();
         }
@@ -71,13 +85,7 @@ public class NotificationStorageManager {
     public static void saveNotifications(Context context, List<NotificationData> notifications) {
         SharedPreferences prefs = getPrefs(context);
         String json = new Gson().toJson(notifications);
-        prefs.edit().putString(KEY_NOTIFICATIONS, json).apply();
-    }
-
-    public static void addNotification(Context context, NotificationData notification) {
-        List<NotificationData> list = getNotifications(context);
-        list.add(0, notification); // newest first
-        saveNotifications(context, list);
+        prefs.edit().putString("stored_notifications_json", json).apply();
     }
 
     public static void markAllAsRead(Context context) {
@@ -86,85 +94,87 @@ public class NotificationStorageManager {
             item.unread = false;
         }
         saveNotifications(context, list);
+        updateNotificationBadge(context instanceof Activity ? (Activity) context : null);
     }
 
     /**
-     * Inspects list of fetched orders, detects status or tracking changes,
-     * and generates dynamic notifications + posts system notification!
+     * Updates the top bar notification badge (R.id.notificationBadge) with unread count.
      */
-    public static void checkAndNotifyStatusChanges(Context context, List<ApiOrder> orders) {
-        if (orders == null || orders.isEmpty() || context == null) return;
+    public static void updateNotificationBadge(Activity activity) {
+        if (activity == null) return;
+        TextView badge = activity.findViewById(R.id.notificationBadge);
+        if (badge == null) return;
 
-        SharedPreferences prefs = getPrefs(context);
-        String mapJson = prefs.getString(KEY_ORDER_STATUS_MAP, null);
-        Gson gson = new Gson();
-        Type mapType = new TypeToken<HashMap<String, String>>() {}.getType();
-        Map<String, String> statusMap = mapJson != null ? gson.fromJson(mapJson, mapType) : new HashMap<>();
-        if (statusMap == null) statusMap = new HashMap<>();
-
-        boolean updatedMap = false;
-
-        for (ApiOrder order : orders) {
-            String orderKey = String.valueOf(order.id);
-            String currentStatus = order.getStatusLabel();
-
-            if (statusMap.containsKey(orderKey)) {
-                String previousStatus = statusMap.get(orderKey);
-                if (previousStatus != null && !previousStatus.equalsIgnoreCase(currentStatus)) {
-                    // Status changed! Generate notification
-                    String title = "Order #" + order.getDisplayOrderNumber() + " Updated";
-                    String body = "Your order status is now: " + currentStatus + ". Tap to track your shipment.";
-
-                    NotificationData notification = new NotificationData(
-                            title,
-                            body,
-                            "Just now",
-                            "order",
-                            R.drawable.ic_local_shipping,
-                            R.color.primary,
-                            true
-                    );
-                    addNotification(context, notification);
-                    postSystemNotification(context, title, body, (int) (order.id % 10000));
-
-                    statusMap.put(orderKey, currentStatus);
-                    updatedMap = true;
-                }
-            } else {
-                // First time seeing this order
-                statusMap.put(orderKey, currentStatus);
-                updatedMap = true;
-            }
+        List<NotificationData> list = getNotifications(activity);
+        int unreadCount = 0;
+        for (NotificationData nd : list) {
+            if (nd.unread) unreadCount++;
         }
 
-        if (updatedMap) {
-            prefs.edit().putString(KEY_ORDER_STATUS_MAP, gson.toJson(statusMap)).apply();
+        if (unreadCount > 0) {
+            badge.setText(String.valueOf(unreadCount));
+            badge.setVisibility(View.VISIBLE);
+        } else {
+            badge.setVisibility(View.GONE);
         }
     }
 
-    private static void postSystemNotification(Context context, String title, String body, int notificationId) {
-        try {
-            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (nm == null) return;
+    /**
+     * Automatically fetches active promotions/discount codes from PromotionRepository
+     * and syncs them into the notification feed as professional discount alerts.
+     */
+    public static void syncPromotionsToNotifications(Context context, Runnable onSynced) {
+        if (context == null) {
+            if (onSynced != null) onSynced.run();
+            return;
+        }
+        PromotionRepository repo = new PromotionRepository(context);
+        repo.getPromotions(new PromotionRepository.PromotionCallback() {
+            @Override
+            public void onSuccess(List<Promotion> promotions) {
+                if (promotions == null || promotions.isEmpty()) {
+                    if (onSynced != null) onSynced.run();
+                    return;
+                }
+                List<NotificationData> currentList = getNotifications(context);
+                boolean addedNew = false;
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel(
-                        CHANNEL_ID,
-                        "Order Tracking Updates",
-                        NotificationManager.IMPORTANCE_DEFAULT
-                );
-                channel.setDescription("Notifications when your order status is updated");
-                nm.createNotificationChannel(channel);
+                for (Promotion p : promotions) {
+                    String promoId = "promo_" + p.getId();
+                    boolean exists = false;
+                    for (NotificationData nd : currentList) {
+                        if (nd.id != null && nd.id.equals(promoId)) {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (!exists) {
+                        NotificationData nd = new NotificationData(
+                                "New Discount Code: " + p.getCode(),
+                                p.getDescription() != null ? p.getDescription() : ("Use code " + p.getCode() + " for special discount!"),
+                                "Just now",
+                                "promo",
+                                R.drawable.ic_local_offer,
+                                R.color.primary,
+                                true
+                        );
+                        nd.id = promoId;
+                        currentList.add(0, nd);
+                        addedNew = true;
+                    }
+                }
+
+                if (addedNew) {
+                    saveNotifications(context, currentList);
+                }
+                if (onSynced != null) onSynced.run();
             }
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_notifications)
-                    .setContentTitle(title)
-                    .setContentText(body)
-                    .setAutoCancel(true)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-            nm.notify(notificationId, builder.build());
-        } catch (Exception ignored) {}
+            @Override
+            public void onError(String errorMessage) {
+                if (onSynced != null) onSynced.run();
+            }
+        });
     }
 }

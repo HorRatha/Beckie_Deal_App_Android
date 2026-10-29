@@ -102,10 +102,31 @@ public class AuthHelper {
             } catch (Exception e) {
                 Log.e(TAG, "Error clearing view mode: " + e.getMessage());
             }
-            
+
+            // 5. Clear user notifications and order caches on logout
+            try {
+                context.getSharedPreferences("beckie_deal_notifications_pref", Context.MODE_PRIVATE)
+                        .edit()
+                        .clear()
+                        .apply();
+                Log.d(TAG, "Notifications preferences cleared");
+            } catch (Exception e) {
+                Log.e(TAG, "Error clearing notifications: " + e.getMessage());
+            }
+
+            try {
+                context.getSharedPreferences("beckie_deal_product_images_cache", Context.MODE_PRIVATE)
+                        .edit()
+                        .clear()
+                        .apply();
+                Log.d(TAG, "Product image cache cleared");
+            } catch (Exception e) {
+                Log.e(TAG, "Error clearing product image cache: " + e.getMessage());
+            }
+
             Log.d(TAG, "Logout completed successfully - restarting app");
             
-            // 5. Restart to MainActivity with clean task stack
+            // 6. Restart to MainActivity with clean task stack
             // This ensures no Guest user data is visible to the next logged-in user
             Intent intent = new Intent(context, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

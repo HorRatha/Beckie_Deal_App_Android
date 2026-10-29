@@ -80,7 +80,8 @@
                 android:text="2 hours ago"
                 android:textAppearance="@style/TextAppearance.App.Label"
                 android:textAllCaps="false"
-                android:textColor="@color/text_muted" />
+                android:textColor="@color/text_muted"
+                android:visibility="gone" />
 
         </LinearLayout>
 

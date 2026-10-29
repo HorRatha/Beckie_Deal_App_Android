@@ -11,7 +11,6 @@ import aeu.ratha.beckie_deal_app.data.models.ApiOrder;
 import aeu.ratha.beckie_deal_app.data.models.OrdersApiResponse;
 import aeu.ratha.beckie_deal_app.data.models.SingleOrderApiResponse;
 import aeu.ratha.beckie_deal_app.network.RetrofitClient;
-import aeu.ratha.beckie_deal_app.utils.managers.NotificationStorageManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,7 +69,6 @@ public class OrderRepository {
                     } else {
                         Log.d(TAG, "Successfully loaded all orders pages. Total count: " + accumulatedOrders.size());
                         if (context != null) {
-                            NotificationStorageManager.checkAndNotifyStatusChanges(context, accumulatedOrders);
                             aeu.ratha.beckie_deal_app.utils.managers.ProductImageCacheManager.resolveOrderProductImages(context, accumulatedOrders, null);
                         }
                         callback.onSuccess(accumulatedOrders);

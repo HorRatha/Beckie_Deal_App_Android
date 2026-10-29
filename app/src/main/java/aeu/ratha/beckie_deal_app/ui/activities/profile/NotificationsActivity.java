@@ -22,7 +22,7 @@ public class NotificationsActivity extends BaseActivity {
 
     private LinearLayout notificationsList;
     private View emptyState;
-    private List<NotificationItem> allNotifications;
+    private List<NotificationItem> allNotifications = new ArrayList<>();
 
     // Filter chips
     private TextView chipAll, chipOrders, chipPromos, chipAlerts;
@@ -40,7 +40,6 @@ public class NotificationsActivity extends BaseActivity {
         emptyState = findViewById(R.id.emptyState);
 
         loadNotifications();
-        displayNotifications("all");
 
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.ACCOUNT);
         BottomNavHelper.updateCartBadge(this);
@@ -66,6 +65,10 @@ public class NotificationsActivity extends BaseActivity {
         chipAlerts = findViewById(R.id.chipAlerts);
 
         activeChip = chipAll;
+        if (chipAll != null) {
+            chipAll.setBackground(ContextCompat.getDrawable(this, R.drawable.chip_selected));
+            chipAll.setTextColor(ContextCompat.getColor(this, R.color.chip_selected_text));
+        }
 
         chipAll.setOnClickListener(v -> selectChip(chipAll, "all"));
         chipOrders.setOnClickListener(v -> selectChip(chipOrders, "order"));
@@ -81,7 +84,7 @@ public class NotificationsActivity extends BaseActivity {
             activeChip.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
         }
         chip.setBackground(ContextCompat.getDrawable(this, R.drawable.chip_selected));
-        chip.setTextColor(ContextCompat.getColor(this, R.color.white_fixed));
+        chip.setTextColor(ContextCompat.getColor(this, R.color.chip_selected_text));
         activeChip = chip;
 
         displayNotifications(filter);
@@ -106,10 +109,22 @@ public class NotificationsActivity extends BaseActivity {
     private static final long CARD_STAGGER_MS = 45L;
 
     private void loadNotifications() {
+        // First display what is currently stored
+        loadStoredNotifications();
+        displayNotifications(getCurrentFilter());
+
+        // Then sync new promotions from backend repository in background
+        NotificationStorageManager.syncPromotionsToNotifications(this, () -> {
+            loadStoredNotifications();
+            runOnUiThread(() -> displayNotifications(getCurrentFilter()));
+        });
+    }
+
+    private void loadStoredNotifications() {
         allNotifications = new ArrayList<>();
         List<NotificationStorageManager.NotificationData> stored = NotificationStorageManager.getNotifications(this);
 
-        if (stored != null && !stored.isEmpty()) {
+        if (stored != null) {
             for (NotificationStorageManager.NotificationData data : stored) {
                 allNotifications.add(new NotificationItem(
                         data.title,
@@ -121,12 +136,11 @@ public class NotificationsActivity extends BaseActivity {
                         data.unread
                 ));
             }
-        } else {
-            initMockNotifications();
         }
     }
 
     private void displayNotifications(String filter) {
+        if (notificationsList == null) return;
         notificationsList.removeAllViews();
 
         List<NotificationItem> filtered = new ArrayList<>();
@@ -137,11 +151,11 @@ public class NotificationsActivity extends BaseActivity {
         }
 
         if (filtered.isEmpty()) {
-            emptyState.setVisibility(View.VISIBLE);
+            if (emptyState != null) emptyState.setVisibility(View.VISIBLE);
             notificationsList.setVisibility(View.GONE);
-            UiAnimations.popIn(emptyState, 0);
+            if (emptyState != null) UiAnimations.popIn(emptyState, 0);
         } else {
-            emptyState.setVisibility(View.GONE);
+            if (emptyState != null) emptyState.setVisibility(View.GONE);
             notificationsList.setVisibility(View.VISIBLE);
 
             for (int i = 0; i < filtered.size(); i++) {
@@ -189,60 +203,6 @@ public class NotificationsActivity extends BaseActivity {
         UiAnimations.fadeSlideUp(card, position * CARD_STAGGER_MS);
 
         notificationsList.addView(card);
-    }
-
-    private void initMockNotifications() {
-        allNotifications = new ArrayList<>();
-
-        allNotifications.add(new NotificationItem(
-                "Your order has shipped!",
-                "Order #ORD-20261028103702-WYPKF is on its way to your address.",
-                "2 hours ago",
-                "order",
-                R.drawable.ic_local_shipping,
-                R.color.primary,
-                true
-        ));
-
-        allNotifications.add(new NotificationItem(
-                "Flash Sale: 20% Off!",
-                "Selected electronics are discounted today only.",
-                "5 hours ago",
-                "promo",
-                R.drawable.ic_local_offer,
-                R.color.primary,
-                true
-        ));
-
-        allNotifications.add(new NotificationItem(
-                "Order Delivered",
-                "Order #ORD-20261025124219-KNRRF has been delivered successfully.",
-                "Yesterday",
-                "order",
-                R.drawable.ic_check_circle,
-                R.color.green_stock,
-                false
-        ));
-
-        allNotifications.add(new NotificationItem(
-                "Price Drop Alert",
-                "iPhone 15 Pro Max dropped $50 in price.",
-                "2 days ago",
-                "alert",
-                R.drawable.ic_trending_down,
-                R.color.primary,
-                false
-        ));
-
-        allNotifications.add(new NotificationItem(
-                "Order Confirmed",
-                "Order #ORD-20261028103702-WYPKF has been confirmed and payment is completed.",
-                "4 days ago",
-                "order",
-                R.drawable.ic_package,
-                R.color.primary,
-                false
-        ));
     }
 
     static class NotificationItem {

@@ -2,7 +2,6 @@ package aeu.ratha.beckie_deal_app.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -178,107 +177,9 @@ public class SlideBannerAdapter extends RecyclerView.Adapter<SlideBannerAdapter.
             }
         }
         
-        /**
-         * Apply gradient background overlay.
-         */
         private void applyGradient(String gradientCss) {
-            if (gradientCss == null || gradientCss.isEmpty()) {
+            if (gradientOverlay != null) {
                 gradientOverlay.setBackground(null);
-                return;
-            }
-            
-            try {
-                // Parse CSS gradient like "linear-gradient(135deg, #1b2a4a 0%, #6d28d9 100%)"
-                // Extract colors and angle
-                if (gradientCss.contains("linear-gradient")) {
-                    // Extract angle and colors
-                    String[] parts = gradientCss.split(",");
-                    
-                    if (parts.length >= 3) {
-                        // Parse angle (e.g., "135deg")
-                        int angle = parseAngle(parts[0]);
-                        
-                        // Parse first color (e.g., "#1b2a4a 0%")
-                        int color1 = parseColor(parts[1]);
-                        
-                        // Parse second color (e.g., "#6d28d9 100%")
-                        int color2 = parseColor(parts[2]);
-                        
-                        // Create gradient drawable
-                        GradientDrawable gradient = new GradientDrawable();
-                        gradient.setColors(new int[]{color1, color2});
-                        
-                        // Set orientation based on angle
-                        gradient.setOrientation(getGradientOrientation(angle));
-                        
-                        gradientOverlay.setBackground(gradient);
-                        Log.d(TAG, "✓ Applied gradient - angle: " + angle + ", colors: " + 
-                              String.format("%06X", color1) + " → " + String.format("%06X", color2));
-                    }
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "✗ Failed to parse gradient: " + e.getMessage());
-            }
-        }
-        
-        /**
-         * Parse angle from gradient CSS (e.g., "135deg" → 135)
-         */
-        private int parseAngle(String anglePart) {
-            try {
-                String cleaned = anglePart.replaceAll("[^0-9]", "");
-                return Integer.parseInt(cleaned);
-            } catch (Exception e) {
-                return 135; // Default 135 degrees
-            }
-        }
-        
-        /**
-         * Parse hex color from CSS (e.g., "#1b2a4a" or "#1b2a4a 0%")
-         */
-        private int parseColor(String colorPart) {
-            try {
-                // Extract hex color (format: #RRGGBB)
-                String hex = colorPart.trim();
-                int percentIndex = hex.indexOf(' ');
-                if (percentIndex > 0) {
-                    hex = hex.substring(0, percentIndex).trim();
-                }
-                
-                // Remove # if present
-                if (hex.startsWith("#")) {
-                    hex = hex.substring(1);
-                }
-                
-                // Pad to 6 characters if needed
-                if (hex.length() == 3) {
-                    hex = "" + hex.charAt(0) + hex.charAt(0) + 
-                          hex.charAt(1) + hex.charAt(1) + 
-                          hex.charAt(2) + hex.charAt(2);
-                }
-                
-                return (int) Long.parseLong(hex, 16) | 0xFF000000; // Add alpha channel
-            } catch (Exception e) {
-                Log.e(TAG, "✗ Failed to parse color: " + colorPart);
-                return 0xFF000000; // Default black
-            }
-        }
-        
-        /**
-         * Get GradientDrawable orientation from angle.
-         */
-        private GradientDrawable.Orientation getGradientOrientation(int angle) {
-            // Normalize angle to 0-360
-            angle = ((angle % 360) + 360) % 360;
-            
-            if (angle >= 45 && angle < 135) {
-                return GradientDrawable.Orientation.BR_TL; // 90 degrees
-            } else if (angle >= 135 && angle < 225) {
-                return GradientDrawable.Orientation.BL_TR; // 180 degrees
-            } else if (angle >= 225 && angle < 315) {
-                return GradientDrawable.Orientation.TL_BR; // 270 degrees
-            } else {
-                return GradientDrawable.Orientation.TR_BL; // 0/360 degrees
             }
         }
         

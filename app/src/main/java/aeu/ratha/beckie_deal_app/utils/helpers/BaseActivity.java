@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import aeu.ratha.beckie_deal_app.ui.dialogs.NoInternetDialogFragment;
 import aeu.ratha.beckie_deal_app.utils.NetworkConnectivityHelper;
+import aeu.ratha.beckie_deal_app.utils.managers.NotificationStorageManager;
 import aeu.ratha.beckie_deal_app.utils.preferences.SessionManager;
 import aeu.ratha.beckie_deal_app.utils.preferences.ScrollStatePreferences;
 import aeu.ratha.beckie_deal_app.utils.preferences.ThemePreferences;
@@ -140,6 +141,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         
         // Check current network status when resuming
         checkNetworkConnectivity();
+
+        // Update notification badge count
+        NotificationStorageManager.updateNotificationBadge(this);
     }
     
     @Override
