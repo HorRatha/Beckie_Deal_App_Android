@@ -62,7 +62,7 @@
         android:fillViewport="true"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toTopOf="@id/bottomNav">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,7 +71,7 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:paddingTop="20dp"
-            android:paddingBottom="100dp"
+            android:paddingBottom="120dp"
             android:clipToPadding="false">
 
             <!-- Order Header Card -->
@@ -96,37 +96,75 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
-                        <TextView
-                            android:id="@+id/detailOrderId"
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Order #BD-1001"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_body_large"
-                            android:textStyle="bold" />
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/detailOrderId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Order #WYPKF"
+                                android:textColor="@color/text_primary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/detailOrderNumberFull"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:ellipsize="middle"
+                                android:fontFamily="monospace"
+                                android:maxLines="1"
+                                android:text="ORD-20261026110427-39X1Z"
+                                android:textColor="@color/text_muted"
+                                android:textSize="11sp" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/detailStatusBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/order_status_badge_bg"
-                            android:paddingHorizontal="12dp"
+                            android:paddingHorizontal="10dp"
                             android:paddingVertical="4dp"
-                            android:text="Processing"
-                            android:textColor="@color/primary"
-                            android:textSize="@dimen/text_size_caption"
+                            android:text="Pending Shipment"
+                            android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/detailOrderDate"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Placed on Jul 13, 2026"
-                        android:textColor="@color/text_muted"
-                        android:textSize="@dimen/text_size_body" />
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/detailOrderDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Placed on Oct 26, 2026"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/detailPaidChip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_chip_paid"
+                            android:paddingHorizontal="7dp"
+                            android:paddingVertical="2dp"
+                            android:text="✓ Paid"
+                            android:textColor="@color/chip_green_fg"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -143,6 +181,7 @@
                 android:textStyle="bold" />
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/trackingCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -158,6 +197,65 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Delivery Address Section -->
+            <TextView
+                android:id="@+id/shippingAddressHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Shipping Address"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_size_body_large"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/shippingAddressCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_color"
+                app:cardBackgroundColor="@color/surface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/detailRecipientName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="John Doe"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_size_body"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/detailRecipientPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="+855 12 345 678"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/text_size_body" />
+
+                    <TextView
+                        android:id="@+id/detailRecipientAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Phnom Penh, Cambodia"
+                        android:textColor="@color/text_muted"
+                        android:textSize="@dimen/text_size_caption" />
+
+                </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -281,13 +379,15 @@
             <!-- Bottom spacing -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="120dp" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
     <!-- Floating Bottom Navigation Bar -->
-    <include layout="@layout/layout_bottom_nav" />
+    <include
+        android:id="@+id/bottomNav"
+        layout="@layout/layout_bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -69,6 +69,19 @@
     <color name="status_delivered">#22C55E</color>
     <color name="status_cancelled">#EF4444</color>
 
+    <!-- Status chips (one color per status, used everywhere) -->
+    <color name="chip_amber_bg">#FEF3C7</color>
+    <color name="chip_amber_fg">#B45309</color>
+    <color name="chip_blue_bg">#E0F2FE</color>
+    <color name="chip_blue_fg">#0369A1</color>
+    <color name="chip_green_bg">#DCFCE7</color>
+    <color name="chip_green_fg">#15803D</color>
+    <color name="chip_red_bg">#FEE2E2</color>
+    <color name="chip_red_fg">#B91C1C</color>
+    <color name="chip_paid_stroke">#86EFAC</color>
+    <color name="step_done_green">#16A34A</color>
+    <color name="orange_dark">#C2410C</color>
+
     <!-- Compatibility -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>

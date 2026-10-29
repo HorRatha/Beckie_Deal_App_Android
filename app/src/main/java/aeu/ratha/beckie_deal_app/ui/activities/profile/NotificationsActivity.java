@@ -1,42 +1,22 @@
 package aeu.ratha.beckie_deal_app.ui.activities.profile;
 
-import aeu.ratha.beckie_deal_app.R;
-
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-
 import android.os.Bundle;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-
 import android.view.LayoutInflater;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-
 import android.view.View;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-
 import android.widget.ImageView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-
 import android.widget.LinearLayout;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.utils.managers.NotificationStorageManager;
 
 public class NotificationsActivity extends BaseActivity {
 
@@ -59,11 +39,11 @@ public class NotificationsActivity extends BaseActivity {
         notificationsList = findViewById(R.id.notificationsList);
         emptyState = findViewById(R.id.emptyState);
 
-        initMockNotifications();
+        loadNotifications();
         displayNotifications("all");
 
-        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.setup(this, aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.NavItem.ACCOUNT);
-        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(this);
+        BottomNavHelper.setup(this, BottomNavHelper.NavItem.ACCOUNT);
+        BottomNavHelper.updateCartBadge(this);
 
         UiAnimations.fadeSlideDown(findViewById(R.id.appBarLayout), 0);
         UiAnimations.fadeSlideUp(findViewById(R.id.chipScroll), 80);
@@ -111,7 +91,7 @@ public class NotificationsActivity extends BaseActivity {
         for (NotificationItem item : allNotifications) {
             item.unread = false;
         }
-        // Refresh the current view
+        NotificationStorageManager.markAllAsRead(this);
         String filter = getCurrentFilter();
         displayNotifications(filter);
     }
@@ -123,8 +103,28 @@ public class NotificationsActivity extends BaseActivity {
         return "all";
     }
 
-    // Stagger delay between each notification card's entrance.
     private static final long CARD_STAGGER_MS = 45L;
+
+    private void loadNotifications() {
+        allNotifications = new ArrayList<>();
+        List<NotificationStorageManager.NotificationData> stored = NotificationStorageManager.getNotifications(this);
+
+        if (stored != null && !stored.isEmpty()) {
+            for (NotificationStorageManager.NotificationData data : stored) {
+                allNotifications.add(new NotificationItem(
+                        data.title,
+                        data.body,
+                        data.timeAgo != null ? data.timeAgo : "Recent",
+                        data.type != null ? data.type : "order",
+                        data.iconRes != 0 ? data.iconRes : R.drawable.ic_notifications,
+                        data.iconTint != 0 ? data.iconTint : R.color.primary,
+                        data.unread
+                ));
+            }
+        } else {
+            initMockNotifications();
+        }
+    }
 
     private void displayNotifications(String filter) {
         notificationsList.removeAllViews();
@@ -158,24 +158,20 @@ public class NotificationsActivity extends BaseActivity {
         TextView time = card.findViewById(R.id.notificationTime);
         ImageView icon = card.findViewById(R.id.notificationTypeIcon);
         View unreadDot = card.findViewById(R.id.unreadDot);
-        View iconBg = card.findViewById(R.id.iconBackground);
 
         title.setText(item.title);
         body.setText(item.body);
         time.setText(item.timeAgo);
 
-        // Set icon based on type
         icon.setImageResource(item.iconRes);
         icon.setColorFilter(ContextCompat.getColor(this, item.iconTint));
 
-        // Unread indicator
         if (item.unread) {
             unreadDot.setVisibility(View.VISIBLE);
         } else {
             unreadDot.setVisibility(View.GONE);
         }
 
-        // Tap to mark as read — fade the unread dot out instead of an instant cut
         card.setOnClickListener(v -> {
             item.unread = false;
             if (unreadDot.getVisibility() == View.VISIBLE) {
@@ -190,20 +186,17 @@ public class NotificationsActivity extends BaseActivity {
         });
         UiAnimations.pressBounce(card);
 
-        // Staggered slide-up + fade entrance for each card, top to bottom
         UiAnimations.fadeSlideUp(card, position * CARD_STAGGER_MS);
 
         notificationsList.addView(card);
     }
-
-    // ── Mock Data ─────────────────────────────────────────────────────────────
 
     private void initMockNotifications() {
         allNotifications = new ArrayList<>();
 
         allNotifications.add(new NotificationItem(
                 "Your order has shipped!",
-                "Order #1042 is on its way to your address.",
+                "Order #ORD-20261028103702-WYPKF is on its way to your address.",
                 "2 hours ago",
                 "order",
                 R.drawable.ic_local_shipping,
@@ -223,7 +216,7 @@ public class NotificationsActivity extends BaseActivity {
 
         allNotifications.add(new NotificationItem(
                 "Order Delivered",
-                "Order #1038 has been delivered successfully.",
+                "Order #ORD-20261025124219-KNRRF has been delivered successfully.",
                 "Yesterday",
                 "order",
                 R.drawable.ic_check_circle,
@@ -242,37 +235,15 @@ public class NotificationsActivity extends BaseActivity {
         ));
 
         allNotifications.add(new NotificationItem(
-                "Weekend Deal: Free Shipping",
-                "All orders over $100 ship free this weekend.",
-                "3 days ago",
-                "promo",
-                R.drawable.ic_local_offer,
-                R.color.primary,
-                false
-        ));
-
-        allNotifications.add(new NotificationItem(
                 "Order Confirmed",
-                "Order #1042 has been confirmed and is being prepared.",
+                "Order #ORD-20261028103702-WYPKF has been confirmed and payment is completed.",
                 "4 days ago",
                 "order",
                 R.drawable.ic_package,
                 R.color.primary,
                 false
         ));
-
-        allNotifications.add(new NotificationItem(
-                "Back in Stock",
-                "MacBook Pro M3 is now available again.",
-                "5 days ago",
-                "alert",
-                R.drawable.ic_notifications,
-                R.color.primary,
-                false
-        ));
     }
-
-    // ── Data class ────────────────────────────────────────────────────────────
 
     static class NotificationItem {
         String title;

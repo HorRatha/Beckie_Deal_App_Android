@@ -1,114 +1,101 @@
 package aeu.ratha.beckie_deal_app.ui.activities.cart;
 
-import aeu.ratha.beckie_deal_app.R;
-
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.OrderDetailActivity;
-
 import android.content.Intent;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.OrderDetailActivity;
-
-import android.graphics.Color;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.OrderDetailActivity;
-
-import android.graphics.drawable.GradientDrawable;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.OrderDetailActivity;
-
 import android.os.Bundle;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.OrderDetailActivity;
-
-import android.view.LayoutInflater;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.OrderDetailActivity;
-
 import android.view.View;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.OrderDetailActivity;
-
 import android.widget.ImageView;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.OrderDetailActivity;
-
 import android.widget.LinearLayout;
-
-import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
-import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
-import aeu.ratha.beckie_deal_app.utils.helpers.ScreenUtils;
-import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
-import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
-import aeu.ratha.beckie_deal_app.ui.activities.cart.OrderDetailActivity;
-
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.material.card.MaterialCardView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.data.models.ApiOrder;
+import aeu.ratha.beckie_deal_app.data.models.ApiOrderItem;
+import aeu.ratha.beckie_deal_app.data.models.ApiTracking;
+import aeu.ratha.beckie_deal_app.data.models.ApiTrackingEvent;
+import aeu.ratha.beckie_deal_app.data.repository.OrderRepository;
+import aeu.ratha.beckie_deal_app.ui.activities.main.MainActivity;
+import aeu.ratha.beckie_deal_app.ui.orders.OrderCardBinder;
+import aeu.ratha.beckie_deal_app.ui.orders.OrderCardData;
+import aeu.ratha.beckie_deal_app.ui.orders.OrderFormat;
+import aeu.ratha.beckie_deal_app.ui.orders.TrackingStep;
+import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
+import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
+import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
 
 public class MyOrdersActivity extends BaseActivity {
 
     private LinearLayout ordersList;
     private View emptyState;
     private TabLayout tabLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar loadingProgressBar;
+
+    private OrderRepository orderRepository;
+    private List<ApiOrder> apiOrders = new ArrayList<>();
+
+    private final OrderCardBinder.Listener cardListener = new OrderCardBinder.Listener() {
+        @Override
+        public void onViewDetails(OrderCardData d) {
+            Intent intent = new Intent(MyOrdersActivity.this, OrderDetailActivity.class);
+            if (d.apiOrder != null) {
+                intent.putExtra("order_data", d.apiOrder);
+            } else if (d.mockOrder != null) {
+                List<OrderManager.Order> allOrders = OrderManager.getInstance().getAllOrders();
+                int index = allOrders.indexOf(d.mockOrder);
+                intent.putExtra("order_index", index);
+            } else {
+                intent.putExtra("order_id", d.orderId);
+            }
+            startActivity(intent);
+        }
+
+        @Override
+        public void onTrack(OrderCardData d) {
+            Intent intent = new Intent(MyOrdersActivity.this, OrderDetailActivity.class);
+            if (d.apiOrder != null) {
+                intent.putExtra("order_data", d.apiOrder);
+            } else if (d.mockOrder != null) {
+                List<OrderManager.Order> allOrders = OrderManager.getInstance().getAllOrders();
+                int index = allOrders.indexOf(d.mockOrder);
+                intent.putExtra("order_index", index);
+            } else {
+                intent.putExtra("order_id", d.orderId);
+            }
+            intent.putExtra("scroll_to_tracking", true);
+            startActivity(intent);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
 
+        orderRepository = new OrderRepository(this);
+
         setupTopBar();
         setupTabs();
+
         ordersList = findViewById(R.id.ordersList);
         emptyState = findViewById(R.id.emptyState);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        loadingProgressBar = findViewById(R.id.loadingProgressBar);
 
-        // Show active orders by default
-        displayOrders(OrderManager.getInstance().getActiveOrders(), "active");
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setColorSchemeResources(R.color.brand_orange);
+            swipeRefreshLayout.setOnRefreshListener(this::loadOrders);
+        }
 
         // Start Shopping button in empty state
         View shopBtn = findViewById(R.id.startShoppingButton);
@@ -122,31 +109,37 @@ public class MyOrdersActivity extends BaseActivity {
 
         UiAnimations.fadeSlideDown(findViewById(R.id.appBarLayout), 0);
 
-        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.setup(this, aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.NavItem.ACCOUNT);
-        aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(this);
+        BottomNavHelper.setup(this, BottomNavHelper.NavItem.ACCOUNT);
+        BottomNavHelper.updateCartBadge(this);
+
+        // Fetch orders from API (all pages)
+        loadOrders();
     }
 
     private void setupTopBar() {
         ImageView backButton = findViewById(R.id.backButton);
-        if (backButton != null) backButton.setOnClickListener(v -> finish());
-        UiAnimations.pressBounce(backButton);
+        if (backButton != null) {
+            backButton.setOnClickListener(v -> finish());
+            UiAnimations.pressBounce(backButton);
+        }
     }
 
     private void setupTabs() {
         tabLayout = findViewById(R.id.orderTabLayout);
         if (tabLayout == null) return;
 
-        tabLayout.addTab(tabLayout.newTab().setText("Active"));
-        tabLayout.addTab(tabLayout.newTab().setText("Completed"));
+        String[] labels = {"All", "Pending", "Processing", "Completed", "Cancelled"};
+        String[] keys   = {"all", "pending", "processing", "completed", "cancelled"};
+
+        for (int i = 0; i < labels.length; i++) {
+            tabLayout.addTab(tabLayout.newTab().setText(labels[i]).setTag(keys[i]));
+        }
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    displayOrders(OrderManager.getInstance().getActiveOrders(), "active");
-                } else {
-                    displayOrders(OrderManager.getInstance().getCompletedOrders(), "completed");
-                }
+                String filterKey = tab.getTag() != null ? (String) tab.getTag() : "all";
+                renderCurrentTabOrders(filterKey);
             }
 
             @Override
@@ -157,137 +150,190 @@ public class MyOrdersActivity extends BaseActivity {
         });
     }
 
-    private void displayOrders(List<OrderManager.Order> orders, String type) {
-        if (orders.isEmpty()) {
+    private void loadOrders() {
+        if (apiOrders.isEmpty() && loadingProgressBar != null) {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        orderRepository.fetchAllOrders(new OrderRepository.OrdersCallback() {
+            @Override
+            public void onSuccess(List<ApiOrder> orders) {
+                if (loadingProgressBar != null) loadingProgressBar.setVisibility(View.GONE);
+                if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
+
+                apiOrders = orders != null ? orders : new ArrayList<>();
+                String filterKey = getCurrentFilterKey();
+                renderCurrentTabOrders(filterKey);
+
+                // Asynchronously resolve real product thumbnails from /products/{id} endpoint
+                aeu.ratha.beckie_deal_app.utils.managers.ProductImageCacheManager.resolveOrderProductImages(
+                        MyOrdersActivity.this,
+                        apiOrders,
+                        (productId, imageUrl) -> runOnUiThread(() -> renderCurrentTabOrders(getCurrentFilterKey()))
+                );
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                if (loadingProgressBar != null) loadingProgressBar.setVisibility(View.GONE);
+                if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
+
+                // If API fails or is offline, fallback to local/mock orders if available
+                if (apiOrders.isEmpty()) {
+                    List<OrderManager.Order> mockOrders = OrderManager.getInstance().getAllOrders();
+                    if (!mockOrders.isEmpty()) {
+                        displayMockOrders(mockOrders);
+                        return;
+                    }
+                }
+
+                if (!apiOrders.isEmpty()) {
+                    Toast.makeText(MyOrdersActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                } else {
+                    renderCurrentTabOrders(getCurrentFilterKey());
+                }
+            }
+        });
+    }
+
+    private String getCurrentFilterKey() {
+        if (tabLayout == null) return "all";
+        int pos = tabLayout.getSelectedTabPosition();
+        TabLayout.Tab tab = tabLayout.getTabAt(pos >= 0 ? pos : 0);
+        return tab != null && tab.getTag() != null ? (String) tab.getTag() : "all";
+    }
+
+    private void renderCurrentTabOrders(String filterKey) {
+        List<ApiOrder> filtered = new ArrayList<>();
+        for (ApiOrder order : apiOrders) {
+            String st = order.status != null ? order.status.toLowerCase(Locale.ROOT) : "";
+            if ("all".equals(filterKey)) {
+                filtered.add(order);
+            } else if (filterKey.equals(st) || ("cancelled".equals(filterKey) && "canceled".equals(st))) {
+                filtered.add(order);
+            }
+        }
+
+        if (filtered.isEmpty()) {
             emptyState.setVisibility(View.VISIBLE);
             ordersList.setVisibility(View.GONE);
             UiAnimations.fadeSlideUp(emptyState, 60);
 
-            // Customize empty state message based on tab
             TextView emptyTitle = findViewById(R.id.emptyTitle);
             TextView emptySubtitle = findViewById(R.id.emptySubtitle);
-            if (type.equals("active")) {
-                if (emptyTitle != null) emptyTitle.setText("No active orders");
-                if (emptySubtitle != null)
-                    emptySubtitle.setText("Your active orders will appear here.");
+            if (!"all".equals(filterKey)) {
+                if (emptyTitle != null) emptyTitle.setText("No " + filterKey + " orders");
+                if (emptySubtitle != null) emptySubtitle.setText("Your " + filterKey + " orders will appear here.");
             } else {
-                if (emptyTitle != null) emptyTitle.setText("No completed orders");
-                if (emptySubtitle != null)
-                    emptySubtitle.setText("Completed and cancelled orders will show here.");
+                if (emptyTitle != null) emptyTitle.setText("No orders yet");
+                if (emptySubtitle != null) emptySubtitle.setText("When you place an order, it will appear here.");
             }
         } else {
             emptyState.setVisibility(View.GONE);
             ordersList.setVisibility(View.VISIBLE);
             ordersList.removeAllViews();
 
-            for (OrderManager.Order order : orders) {
-                inflateOrderCard(order);
+            for (ApiOrder order : filtered) {
+                OrderCardData data = toCardData(order);
+                View cardView = OrderCardBinder.inflateAndBind(this, ordersList, data, cardListener);
+                ordersList.addView(cardView);
+                UiAnimations.fadeSlideUp(cardView, ordersList.getChildCount() * 40);
             }
         }
     }
 
-    private void inflateOrderCard(OrderManager.Order order) {
-        View card = LayoutInflater.from(this).inflate(R.layout.item_order, ordersList, false);
+    private OrderCardData toCardData(ApiOrder o) {
+        OrderCardData d = new OrderCardData();
+        d.apiOrder = o;
+        d.orderId = String.valueOf(o.id);
+        d.orderNumber = o.getDisplayOrderNumber();
+        d.status = o.status;
+        d.statusLabel = o.getStatusLabel();
+        d.dateText = OrderFormat.date(o.paidAt != null ? o.paidAt : (o.tracking != null && o.tracking.events != null && !o.tracking.events.isEmpty() ? o.tracking.events.get(0).timestamp : null));
+        d.itemCount = o.getTotalItemCount();
+        d.totalText = OrderFormat.money(o.getGrandTotalDouble());
+        d.thumbnailUrls = new ArrayList<>();
 
-        TextView orderId = card.findViewById(R.id.orderIdText);
-        TextView statusBadge = card.findViewById(R.id.orderStatusBadge);
-        TextView dateText = card.findViewById(R.id.orderDateText);
-        TextView itemCountText = card.findViewById(R.id.orderItemCountText);
-        LinearLayout thumbnailStrip = card.findViewById(R.id.orderThumbnailStrip);
-        TextView totalText = card.findViewById(R.id.orderTotalText);
-        View detailsBtn = card.findViewById(R.id.viewDetailsButton);
-
-        // Bind data
-        orderId.setText("Order #" + order.orderId);
-        dateText.setText(order.date);
-
-        int totalItems = order.getTotalItemCount();
-        itemCountText.setText(totalItems + (totalItems == 1 ? " item" : " items"));
-
-        totalText.setText(String.format(Locale.US, "$%.2f", order.totalAmount));
-
-        // Status badge
-        statusBadge.setText(order.status.label);
-        int statusColor = Color.parseColor(order.status.color);
-        statusBadge.setTextColor(statusColor);
-        GradientDrawable badgeBg = new GradientDrawable();
-        badgeBg.setShape(GradientDrawable.RECTANGLE);
-        badgeBg.setCornerRadius(dpToPx(24));
-        badgeBg.setColor(setAlpha(statusColor, 0.12f));
-        statusBadge.setBackground(badgeBg);
-
-        // Thumbnails — show up to 4 product images with improved design
-        thumbnailStrip.removeAllViews();
-        int maxThumbs = Math.min(order.items.size(), 4);
-        for (int i = 0; i < maxThumbs; i++) {
-            ImageView thumb = createThumbnail(order.items.get(i).productImageUrl);
-            thumbnailStrip.addView(thumb);
-        }
-        if (order.items.size() > 4) {
-            TextView moreText = new TextView(this);
-            moreText.setText("+" + (order.items.size() - 4));
-            moreText.setTextColor(getColor(R.color.text_secondary));
-            moreText.setTextSize(14);
-            moreText.setTypeface(null, android.graphics.Typeface.BOLD);
-            ScreenUtils.applyTextSize(moreText, R.dimen.text_size_body);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMarginStart(dpToPx(12));
-            moreText.setLayoutParams(lp);
-            moreText.setGravity(android.view.Gravity.CENTER_VERTICAL);
-            thumbnailStrip.addView(moreText);
+        if (o.items != null) {
+            for (ApiOrderItem it : o.items) {
+                d.thumbnailUrls.add(it.getDisplayImageUrl());
+            }
         }
 
-        // View details tap
-        detailsBtn.setOnClickListener(v -> openOrderDetail(order));
-        card.setOnClickListener(v -> openOrderDetail(order));
-        UiAnimations.pressBounce(card);
+        ApiTracking t = o.tracking;
+        d.steps = new ArrayList<>();
+        if (t != null) {
+            d.provider = t.shippingProvider;
+            d.trackingNumber = t.trackingNumber;
+            if (t.events != null) {
+                for (ApiTrackingEvent e : t.events) {
+                    d.steps.add(new TrackingStep(
+                            e.status,
+                            e.label,
+                            e.completed,
+                            OrderFormat.dateTime(e.timestamp)
+                    ));
+                    if ("payment_confirmed".equals(e.status) && e.completed) {
+                        d.paid = true;
+                    }
+                }
+            }
+        }
 
-        ordersList.addView(card);
-        UiAnimations.fadeSlideUp(card, ordersList.getChildCount() * 40);
+        if (o.paidAt != null || "paid".equalsIgnoreCase(o.paymentStatus) || "completed".equalsIgnoreCase(o.status)) {
+            d.paid = true;
+        }
+
+        d.payOnDelivery = !d.paid && "cod".equalsIgnoreCase(o.paymentMethod);
+        return d;
     }
 
-    private ImageView createThumbnail(String imageUrl) {
-        ImageView thumb = new ImageView(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dpToPx(56), dpToPx(56));
-        lp.setMarginEnd(dpToPx(10));
-        thumb.setLayoutParams(lp);
-        thumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        thumb.setPadding(dpToPx(4), dpToPx(4), dpToPx(4), dpToPx(4));
+    private OrderCardData toCardData(OrderManager.Order o) {
+        OrderCardData d = new OrderCardData();
+        d.mockOrder = o;
+        d.orderId = o.orderId;
+        d.orderNumber = "ORD-" + o.orderId;
+        d.status = o.status.name().toLowerCase();
+        d.statusLabel = o.status.label;
+        d.dateText = o.date;
+        d.itemCount = o.getTotalItemCount();
+        d.totalText = OrderFormat.money(o.totalAmount);
+        d.thumbnailUrls = new ArrayList<>();
 
-        GradientDrawable bg = new GradientDrawable();
-        bg.setShape(GradientDrawable.RECTANGLE);
-        bg.setCornerRadius(dpToPx(12));
-        bg.setColor(getColor(R.color.card_bg_secondary));
-        bg.setStroke(dpToPx(1), getColor(R.color.border_color));
-        thumb.setBackground(bg);
-        thumb.setClipToOutline(true);
+        if (o.items != null) {
+            for (OrderManager.OrderItem it : o.items) {
+                d.thumbnailUrls.add(it.productImageUrl);
+            }
+        }
 
-        Glide.with(this)
-                .load(imageUrl)
-                .placeholder(R.drawable.placeholder_image)
-                .centerCrop()
-                .into(thumb);
+        d.steps = new ArrayList<>();
+        boolean isDelivered = o.status == OrderManager.OrderStatus.DELIVERED;
+        boolean isShipped = o.status == OrderManager.OrderStatus.SHIPPED || isDelivered;
 
-        return thumb;
+        d.steps.add(new TrackingStep("order_created", "Order Confirmed", true, o.date));
+        d.steps.add(new TrackingStep("payment_confirmed", "Payment Confirmed", true, o.date));
+        d.steps.add(new TrackingStep("shipped", "Order Shipped", isShipped, null));
+        d.steps.add(new TrackingStep("delivered", "Order Delivered", isDelivered, null));
+
+        d.paid = true;
+        d.payOnDelivery = false;
+        return d;
     }
 
-    private void openOrderDetail(OrderManager.Order order) {
-        // Pass the order index so OrderDetailActivity can retrieve it
-        List<OrderManager.Order> allOrders = OrderManager.getInstance().getAllOrders();
-        int index = allOrders.indexOf(order);
-        Intent intent = new Intent(this, OrderDetailActivity.class);
-        intent.putExtra("order_index", index);
-        startActivity(intent);
-    }
+    private void displayMockOrders(List<OrderManager.Order> orders) {
+        if (orders.isEmpty()) {
+            emptyState.setVisibility(View.VISIBLE);
+            ordersList.setVisibility(View.GONE);
+        } else {
+            emptyState.setVisibility(View.GONE);
+            ordersList.setVisibility(View.VISIBLE);
+            ordersList.removeAllViews();
 
-    private int dpToPx(int dp) {
-        return (int) (dp * getResources().getDisplayMetrics().density);
-    }
-
-    private int setAlpha(int color, float alpha) {
-        int a = (int) (alpha * 255);
-        return Color.argb(a, Color.red(color), Color.green(color), Color.blue(color));
+            for (OrderManager.Order order : orders) {
+                OrderCardData data = toCardData(order);
+                View cardView = OrderCardBinder.inflateAndBind(this, ordersList, data, cardListener);
+                ordersList.addView(cardView);
+            }
+        }
     }
 }

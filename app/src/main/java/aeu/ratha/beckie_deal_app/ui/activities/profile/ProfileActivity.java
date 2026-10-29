@@ -32,7 +32,10 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import aeu.ratha.beckie_deal_app.security.TokenManager;
 import aeu.ratha.beckie_deal_app.data.models.User;
+import aeu.ratha.beckie_deal_app.data.models.ApiOrder;
 import aeu.ratha.beckie_deal_app.data.repository.ProfileRepository;
+import aeu.ratha.beckie_deal_app.data.repository.OrderRepository;
+import java.util.List;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.avatar.AvatarManager;
 import okhttp3.MultipartBody;
@@ -60,6 +63,7 @@ public class ProfileActivity extends BaseActivity {
         super.onResume();
         setupBottomNavigation();
         fetchAndSetupUserProfile();
+        updateActiveOrdersCount();
         BottomNavHelper.updateCartBadge(this);
     }
 
@@ -223,12 +227,17 @@ public class ProfileActivity extends BaseActivity {
             return;
         }
 
-        // Show loading state
+        // Show cached name/email from TokenManager immediately instead of "Loading..."
+        String cachedName = tokenManager.getUserName();
+        String cachedEmail = tokenManager.getUserEmail();
         if (userNameText != null) {
-            userNameText.setText("Loading...");
+            userNameText.setText(cachedName != null && !cachedName.isEmpty() ? cachedName : "My Account");
+        }
+        if (userEmailText != null) {
+            userEmailText.setText(cachedEmail != null ? cachedEmail : "");
         }
 
-        // Fetch profile from API (force refresh - useCache=false for dynamic updates)
+        // Fetch profile from API in background (force refresh - useCache=false for dynamic updates)
         profileRepository.getProfile(false, new ProfileRepository.ProfileCallback() {
             @Override
             public void onSuccess(User profile) {
@@ -236,7 +245,6 @@ public class ProfileActivity extends BaseActivity {
                 displayUserProfile(profile);
                 
                 // Update drawer with fresh user info
-                // This ensures the sidebar shows the correct name
                 updateDrawerUserInfo(profile);
             }
 
@@ -459,6 +467,39 @@ public class ProfileActivity extends BaseActivity {
         // Not used in current layout
     }
 
+    private void updateActiveOrdersCount() {
+        TextView activeOrdersCount = findViewById(R.id.activeOrdersCount);
+        if (activeOrdersCount == null) return;
+
+        // Set initial mock fallback count ("3") instantly so there is no loading flash or 0
+        activeOrdersCount.setText("3");
+
+        if (tokenManager != null && tokenManager.isLoggedIn()) {
+            OrderRepository orderRepository = new OrderRepository(this);
+            orderRepository.fetchAllOrders(new OrderRepository.OrdersCallback() {
+                @Override
+                public void onSuccess(List<ApiOrder> orders) {
+                    int activeCount = 0;
+                    if (orders != null) {
+                        for (ApiOrder o : orders) {
+                            if (o.isActive()) activeCount++;
+                        }
+                    }
+                    if (activeOrdersCount != null) {
+                        activeOrdersCount.setText(String.valueOf(activeCount));
+                    }
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    if (activeOrdersCount != null) activeOrdersCount.setText("3");
+                }
+            });
+        } else {
+            activeOrdersCount.setText("0");
+        }
+    }
+
     private void setupSettingsRows() {
         MaterialCardView myOrdersBox      = findViewById(R.id.myOrdersBox);
         MaterialCardView myCouponsBox     = findViewById(R.id.myCouponsBox);
@@ -467,13 +508,11 @@ public class ProfileActivity extends BaseActivity {
         LinearLayout privacyRow       = findViewById(R.id.privacyRow);
         LinearLayout termsRow         = findViewById(R.id.termsRow);
         
-        // Numbers now live on the tiles
-        TextView activeOrdersCount = findViewById(R.id.activeOrdersCount);
         TextView couponsCount = findViewById(R.id.couponsCount);
         
-        // Update counts (use your actual count logic)
-        if (activeOrdersCount != null) activeOrdersCount.setText("3"); // Replace with actual count
-        if (couponsCount != null) couponsCount.setText("4"); // Replace with actual count
+        // Update counts dynamically
+        updateActiveOrdersCount();
+        if (couponsCount != null) couponsCount.setText("4");
 
         // Whatever ordersRow and couponsRow used to do, now on the tiles
         if (myOrdersBox != null) myOrdersBox.setOnClickListener(v ->
