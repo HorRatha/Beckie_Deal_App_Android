@@ -111,15 +111,14 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false">
 
-                <!-- Loading ProgressBar -->
-                <ProgressBar
-                    android:id="@+id/loadingProgressBar"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="60dp"
-                    android:visibility="gone"
-                    android:indeterminateTint="@color/primary" />
+                <!-- Skeleton Loading Container -->
+                <LinearLayout
+                    android:id="@+id/skeletonLoadingContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone" />
 
                 <!-- Empty State -->
                 <LinearLayout

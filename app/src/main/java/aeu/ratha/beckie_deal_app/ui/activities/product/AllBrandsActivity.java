@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +33,7 @@ public class AllBrandsActivity extends BaseActivity {
     private static final String TAG = "AllBrandsActivity";
     
     private GridLayout allBrandsGrid;
-    private ProgressBar progressBar;
+    private GridLayout skeletonBrandsGrid;
     private TextView brandCountTextView;
     private BrandApiService brandApiService;
     private List<Brand> brandsList = new ArrayList<>();
@@ -61,7 +60,7 @@ public class AllBrandsActivity extends BaseActivity {
      */
     private void initViews() {
         allBrandsGrid = findViewById(R.id.allBrandsGrid);
-        progressBar = findViewById(R.id.progressBar);
+        skeletonBrandsGrid = findViewById(R.id.skeletonBrandsGrid);
         brandCountTextView = findViewById(R.id.brandCount);
 
         View searchBarContainer = findViewById(R.id.searchBarContainer);
@@ -339,8 +338,20 @@ public class AllBrandsActivity extends BaseActivity {
      * Show or hide loading indicator.
      */
     private void showLoading(boolean show) {
-        if (progressBar != null) {
-            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (skeletonBrandsGrid != null) {
+            if (show) {
+                skeletonBrandsGrid.removeAllViews();
+                LayoutInflater inflater = LayoutInflater.from(this);
+                // Add 12 skeleton brand items (3 rows of 4)
+                for (int i = 0; i < 12; i++) {
+                    View skeletonView = inflater.inflate(R.layout.skeleton_brand_square, skeletonBrandsGrid, false);
+                    skeletonBrandsGrid.addView(skeletonView);
+                }
+                skeletonBrandsGrid.setVisibility(View.VISIBLE);
+            } else {
+                skeletonBrandsGrid.setVisibility(View.GONE);
+                skeletonBrandsGrid.removeAllViews();
+            }
         }
         if (allBrandsGrid != null) {
             allBrandsGrid.setVisibility(show ? View.GONE : View.VISIBLE);

@@ -3,9 +3,9 @@ package aeu.ratha.beckie_deal_app.ui.activities.cart;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +39,7 @@ public class MyOrdersActivity extends BaseActivity {
     private View emptyState;
     private TabLayout tabLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ProgressBar loadingProgressBar;
+    private LinearLayout skeletonLoadingContainer;
 
     private OrderRepository orderRepository;
     private List<ApiOrder> apiOrders = new ArrayList<>();
@@ -90,7 +90,7 @@ public class MyOrdersActivity extends BaseActivity {
         ordersList = findViewById(R.id.ordersList);
         emptyState = findViewById(R.id.emptyState);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        loadingProgressBar = findViewById(R.id.loadingProgressBar);
+        skeletonLoadingContainer = findViewById(R.id.skeletonLoadingContainer);
 
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setColorSchemeResources(R.color.brand_orange);
@@ -151,14 +151,14 @@ public class MyOrdersActivity extends BaseActivity {
     }
 
     private void loadOrders() {
-        if (apiOrders.isEmpty() && loadingProgressBar != null) {
-            loadingProgressBar.setVisibility(View.VISIBLE);
+        if (apiOrders.isEmpty()) {
+            showSkeletonLoading();
         }
 
         orderRepository.fetchAllOrders(new OrderRepository.OrdersCallback() {
             @Override
             public void onSuccess(List<ApiOrder> orders) {
-                if (loadingProgressBar != null) loadingProgressBar.setVisibility(View.GONE);
+                hideSkeletonLoading();
                 if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
 
                 apiOrders = orders != null ? orders : new ArrayList<>();
@@ -175,7 +175,7 @@ public class MyOrdersActivity extends BaseActivity {
 
             @Override
             public void onError(String errorMessage) {
-                if (loadingProgressBar != null) loadingProgressBar.setVisibility(View.GONE);
+                hideSkeletonLoading();
                 if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
 
                 // If API fails or is offline, fallback to local/mock orders if available
@@ -334,6 +334,29 @@ public class MyOrdersActivity extends BaseActivity {
                 View cardView = OrderCardBinder.inflateAndBind(this, ordersList, data, cardListener);
                 ordersList.addView(cardView);
             }
+        }
+    }
+
+    private void showSkeletonLoading() {
+        if (skeletonLoadingContainer == null) return;
+        
+        skeletonLoadingContainer.removeAllViews();
+        skeletonLoadingContainer.setVisibility(View.VISIBLE);
+        ordersList.setVisibility(View.GONE);
+        emptyState.setVisibility(View.GONE);
+
+        // Add 3-4 skeleton order cards
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (int i = 0; i < 4; i++) {
+            View skeletonCard = inflater.inflate(R.layout.skeleton_order_card, skeletonLoadingContainer, false);
+            skeletonLoadingContainer.addView(skeletonCard);
+        }
+    }
+
+    private void hideSkeletonLoading() {
+        if (skeletonLoadingContainer != null) {
+            skeletonLoadingContainer.setVisibility(View.GONE);
+            skeletonLoadingContainer.removeAllViews();
         }
     }
 }

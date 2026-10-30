@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +43,7 @@ public class ProductReviewsFragment extends Fragment implements
     private List<Review> bundledReviews;
 
     // UI components
-    private ProgressBar loadingProgressBar;
+    private LinearLayout skeletonContainer;
     private TextView emptyStateTextView;
     private View reviewsContentContainer;
     private RecyclerView reviewsRecyclerView;
@@ -92,7 +92,7 @@ public class ProductReviewsFragment extends Fragment implements
     }
 
     private void initializeViews(View view) {
-        loadingProgressBar = view.findViewById(R.id.reviews_loading_progress);
+        skeletonContainer = view.findViewById(R.id.reviews_skeleton_container);
         emptyStateTextView = view.findViewById(R.id.reviews_empty_state);
         reviewsContentContainer = view.findViewById(R.id.reviews_content_container);
         reviewsRecyclerView = view.findViewById(R.id.reviews_recycler_view);
@@ -151,13 +151,25 @@ public class ProductReviewsFragment extends Fragment implements
     }
 
     private void showLoadingState() {
-        if (loadingProgressBar != null) loadingProgressBar.setVisibility(View.VISIBLE);
+        if (skeletonContainer != null) {
+            skeletonContainer.removeAllViews();
+            LayoutInflater inflater = LayoutInflater.from(requireContext());
+            // Add 3 skeleton review items
+            for (int i = 0; i < 3; i++) {
+                View skeletonView = inflater.inflate(R.layout.skeleton_review_item, skeletonContainer, false);
+                skeletonContainer.addView(skeletonView);
+            }
+            skeletonContainer.setVisibility(View.VISIBLE);
+        }
         if (emptyStateTextView != null) emptyStateTextView.setVisibility(View.GONE);
         if (reviewsContentContainer != null) reviewsContentContainer.setVisibility(View.GONE);
     }
 
     private void hideLoadingState() {
-        if (loadingProgressBar != null) loadingProgressBar.setVisibility(View.GONE);
+        if (skeletonContainer != null) {
+            skeletonContainer.setVisibility(View.GONE);
+            skeletonContainer.removeAllViews();
+        }
     }
 
     private void showEmptyState() {

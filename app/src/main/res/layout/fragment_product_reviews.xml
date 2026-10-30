@@ -5,13 +5,13 @@
     android:orientation="vertical"
     android:background="@color/background">
 
-    <!-- Loading progress -->
-    <ProgressBar
-        android:id="@+id/reviews_loading_progress"
-        android:layout_width="wrap_content"
+    <!-- Skeleton Loading Container -->
+    <LinearLayout
+        android:id="@+id/reviews_skeleton_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="32dp"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
         android:visibility="gone" />
 
     <!-- Empty state -->

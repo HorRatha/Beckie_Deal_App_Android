@@ -84,14 +84,17 @@
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- Loading Indicator -->
-    <ProgressBar
-        android:id="@+id/wishlistLoadingIndicator"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <!-- Skeleton Loading Container -->
+    <GridLayout
+        android:id="@+id/skeletonWishlistGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:alignmentMode="alignMargins"
+        android:paddingTop="80dp"
+        android:paddingHorizontal="8dp"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

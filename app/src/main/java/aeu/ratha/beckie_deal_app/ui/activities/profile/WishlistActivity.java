@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,7 +45,7 @@ public class WishlistActivity extends BaseActivity {
 
     private static final String TAG = "WishlistActivity";
     private WishlistRepository wishlistRepository;
-    private ProgressBar loadingIndicator;
+    private GridLayout skeletonWishlistGrid;
     private static final List<MainActivity.Product> cachedWishlistProducts = new ArrayList<>();
     private AppDrawerHelper drawerHelper;
 
@@ -56,7 +55,7 @@ public class WishlistActivity extends BaseActivity {
         setContentView(R.layout.activity_wishlist);
 
         wishlistRepository = new WishlistRepository(this);
-        loadingIndicator = findViewById(R.id.wishlistLoadingIndicator);
+        skeletonWishlistGrid = findViewById(R.id.skeletonWishlistGrid);
 
         drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
         // Refresh drawer with latest user data from API to ensure sidebar shows correct user across all pages
@@ -339,8 +338,21 @@ public class WishlistActivity extends BaseActivity {
     }
     
     private void showLoading(boolean show) {
-        if (loadingIndicator != null) {
-            loadingIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (skeletonWishlistGrid != null) {
+            if (show) {
+                skeletonWishlistGrid.removeAllViews();
+                skeletonWishlistGrid.setColumnCount(2);
+                LayoutInflater inflater = LayoutInflater.from(this);
+                // Add 6 skeleton product cards (3 rows of 2)
+                for (int i = 0; i < 6; i++) {
+                    View skeletonView = inflater.inflate(R.layout.skeleton_product_card, skeletonWishlistGrid, false);
+                    skeletonWishlistGrid.addView(skeletonView);
+                }
+                skeletonWishlistGrid.setVisibility(View.VISIBLE);
+            } else {
+                skeletonWishlistGrid.setVisibility(View.GONE);
+                skeletonWishlistGrid.removeAllViews();
+            }
         }
     }
     
