@@ -75,88 +75,17 @@
             android:fillViewport="true"
             android:clipToPadding="false"
             app:layout_constraintTop_toBottomOf="@id/topAppBar"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toTopOf="@id/saveButtonSection">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:paddingBottom="140dp"
+                android:paddingBottom="24dp"
                 android:clipToPadding="false">
 
                 <!-- Profile Avatar Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal"
-                    android:layout_marginBottom="32dp">
-
-                    <FrameLayout
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:layout_marginBottom="16dp">
-
-                        <!-- Avatar Circle Background -->
-                        <View
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:background="@drawable/avatar_circle_bg"
-                            android:backgroundTint="@color/primary_container" />
-
-                        <!-- Avatar Image Placeholder -->
-                        <ImageView
-                            android:id="@+id/profileAvatar"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_person"
-                            android:contentDescription="Profile Avatar"
-                            app:tint="@color/white_fixed" />
-
-                        <!-- Edit Badge -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/editAvatarBadge"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_gravity="bottom|end"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginEnd="2dp"
-                            app:cardCornerRadius="18dp"
-                            app:cardElevation="4dp"
-                            app:cardBackgroundColor="@color/primary">
-
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_edit_profile"
-                                android:contentDescription="Edit Avatar"
-                                app:tint="@color/white_fixed" />
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                    </FrameLayout>
-
-                    <TextView
-                        android:id="@+id/profileNameDisplay"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Postman Updated"
-                        android:textAppearance="@style/TextAppearance.App.SectionHeader"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:id="@+id/profileEmailDisplay"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="updated.postman@example.com"
-                        android:textAppearance="@style/TextAppearance.App.Body"
-                        android:textColor="@color/text_secondary" />
-
-                </LinearLayout>
 
                 <!-- Form Section Title -->
                 <TextView
@@ -558,6 +487,8 @@
             app:cardElevation="0dp"
             app:cardCornerRadius="0dp"
             app:cardBackgroundColor="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/bottomNavGlassHost">
 
             <LinearLayout
