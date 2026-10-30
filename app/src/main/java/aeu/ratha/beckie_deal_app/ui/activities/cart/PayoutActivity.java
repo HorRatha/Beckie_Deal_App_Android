@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -79,6 +81,10 @@ public class PayoutActivity extends BaseActivity {
     // ── Payment method constants (match backend field values exactly) ─────────
     private static final String PAYMENT_ABA = "aba_payway";
     private static final String PAYMENT_COD = "cod";
+
+    // ── Sound ─────────────────────────────────────────────────────────────────
+    private SoundPool soundPool;
+    private int successSoundId;
 
     // ── Data ──────────────────────────────────────────────────────────────────
     private CartRepository cartRepository;
@@ -1498,6 +1504,41 @@ public class PayoutActivity extends BaseActivity {
 
         // Update bottom navigation cart badge
         aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper.updateCartBadge(this);
+        
+        // Play success sound
+        playSuccessSound();
+    }
+
+    /**
+     * Play success sound when order is placed
+     */
+    private void playSuccessSound() {
+        try {
+            // Create AudioAttributes for the sound
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            
+            // Create SoundPool
+            soundPool = new SoundPool.Builder()
+                    .setMaxStreams(1)
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+            
+            // Load the success sound
+            successSoundId = soundPool.load(this, R.raw.google_pay_success, 1);
+            
+            // Set listener for when sound is loaded
+            soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> {
+                if (status == 0) {
+                    // Sound loaded successfully, play it
+                    soundPool.play(successSoundId, 1.0f, 1.0f, 1, 0, 1.0f);
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Error playing success sound: " + e.getMessage());
+        }
     }
 
     @Override
@@ -1641,5 +1682,15 @@ public class PayoutActivity extends BaseActivity {
 
     private int dpToPx(int dp) {
         return Math.round(dp * getResources().getDisplayMetrics().density);
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Clean up SoundPool
+        if (soundPool != null) {
+            soundPool.release();
+            soundPool = null;
+        }
     }
 }

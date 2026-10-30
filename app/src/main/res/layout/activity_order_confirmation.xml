@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/dialog_no_internet_bg"
     android:gravity="center"
-    android:padding="16dp"
-    android:background="@color/white">
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="32dp">
 
     <!-- Progress Loading -->
     <ProgressBar
@@ -17,47 +19,49 @@
         android:visibility="gone"
         android:indeterminate="true" />
 
-    <!-- Success Icon -->
-    <TextView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:text="✓"
-        android:textSize="60sp"
-        android:textColor="@color/green_stock"
-        android:gravity="center"
-        android:layout_marginBottom="16dp" />
+    <!-- Lottie Success Animation -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/successAnimation"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="24dp"
+        app:lottie_rawRes="@raw/add_to_cart"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="false" />
 
     <!-- Confirmation Message -->
     <TextView
         android:id="@+id/text_confirmation_message"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Thank You!"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:layout_marginBottom="12dp"
+        android:text="Order Confirmed!"
+        android:textAppearance="@style/TextAppearance.App.SectionHeader"
         android:textColor="@color/text_primary"
-        android:gravity="center"
-        android:layout_marginBottom="8dp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <!-- Order Number -->
     <TextView
         android:id="@+id/text_order_number"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Order #123456"
-        android:textSize="16sp"
+        android:textAppearance="@style/TextAppearance.App.Label"
         android:textColor="@color/primary"
-        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:layout_marginBottom="24dp"
-        android:textStyle="bold" />
+        android:gravity="center" />
 
     <!-- Order Status Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="2dp">
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,25 +87,45 @@
         android:textSize="12sp"
         android:textColor="@color/text_secondary"
         android:gravity="center"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="32dp" />
 
-    <!-- Track Order Button -->
-    <Button
-        android:id="@+id/btn_track_order"
+    <!-- Action Buttons -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Track Order"
-        android:background="@color/primary"
-        android:textColor="@color/black_fixed"
-        android:textStyle="bold"
-        android:layout_marginBottom="12dp" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
 
-    <!-- Continue Shopping Button -->
-    <Button
-        android:id="@+id/btn_continue_shopping"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Continue Shopping"
-        android:background="@color/input_background"
-        android:textColor="@color/primary" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_track_order"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.5"
+            android:layout_marginEnd="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/button_add_to_cart_glass"
+            android:text="Track Order"
+            android:textAllCaps="false"
+            android:textColor="@color/dark_brown"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_continue_shopping"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.5"
+            android:layout_marginStart="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/button_buy_now_glass"
+            android:text="Continue Shopping"
+            android:textAllCaps="false"
+            android:textColor="@color/white_fixed"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null" />
+    </LinearLayout>
 </LinearLayout>

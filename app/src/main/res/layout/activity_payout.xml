@@ -1309,18 +1309,14 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <FrameLayout
-                android:layout_width="88dp"
-                android:layout_height="88dp"
-                android:background="@drawable/badge_check_orange">
-                <ImageView
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:layout_gravity="center"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_check_bold_24"
-                    app:tint="@color/white_fixed" />
-            </FrameLayout>
+            <!-- Lottie Success Animation -->
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/successAnimation"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                app:lottie_rawRes="@raw/add_to_cart"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="false" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -1429,31 +1425,44 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/viewOrdersButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            <!-- Action Buttons (Side by Side) -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="24dp"
-                android:text="View My Orders"
-                android:textAllCaps="false"
-                android:textColor="@color/text_primary"
-                app:cornerRadius="0dp"
-                app:strokeColor="@color/border_color" />
+                android:baselineAligned="false">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/backToHomeButton"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/brand_bar_gradient"
-                android:text="Back to Home"
-                android:textAllCaps="false"
-                android:textColor="@color/dark_brown"
-                android:textStyle="bold"
-                app:backgroundTint="@null"
-                app:cornerRadius="0dp"
-                app:elevation="0dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/viewOrdersButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="View My Orders"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    app:cornerRadius="0dp"
+                    app:strokeColor="@color/border_color" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/backToHomeButton"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/brand_bar_gradient"
+                    android:text="Back to Home"
+                    android:textAllCaps="false"
+                    android:textColor="@color/dark_brown"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@null"
+                    app:cornerRadius="0dp"
+                    app:elevation="0dp" />
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 

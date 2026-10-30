@@ -1,6 +1,8 @@
 package aeu.ratha.beckie_deal_app.ui.activities;
 
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,8 @@ public class OrderConfirmationActivity extends AppCompatActivity {
     private Button btnContinueShopping;
     
     private long orderId;
+    private SoundPool soundPool;
+    private int soundId;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,9 @@ public class OrderConfirmationActivity extends AppCompatActivity {
         initializeViews();
         displayOrderConfirmation();
         setupClickListeners();
+        
+        // Play success sound
+        playSuccessSound();
     }
     
     /**
@@ -108,6 +115,48 @@ public class OrderConfirmationActivity extends AppCompatActivity {
      */
     private void showProgress(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+    
+    /**
+     * Play success sound using SoundPool
+     */
+    private void playSuccessSound() {
+        try {
+            // Create AudioAttributes for the sound
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            
+            // Create SoundPool
+            soundPool = new SoundPool.Builder()
+                    .setMaxStreams(1)
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+            
+            // Load the success sound
+            soundId = soundPool.load(this, R.raw.google_pay_success, 1);
+            
+            // Set listener for when sound is loaded
+            soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> {
+                if (status == 0) {
+                    // Sound loaded successfully, play it
+                    soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Clean up SoundPool
+        if (soundPool != null) {
+            soundPool.release();
+            soundPool = null;
+        }
     }
     
     @Override
