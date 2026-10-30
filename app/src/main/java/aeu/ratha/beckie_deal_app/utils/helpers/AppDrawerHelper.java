@@ -722,7 +722,17 @@ public class AppDrawerHelper {
         });
         prepareDrawerItem(editProfileItem);
 
-
+        View notifItem = drawerLayout.findViewById(R.id.drawerNotifications);
+        if (notifItem != null) notifItem.setOnClickListener(v -> {
+            closeDrawer();
+            if (!(activity instanceof NotificationsActivity)) {
+                Intent intent = new Intent(activity, NotificationsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(0, 0);
+            }
+        });
+        prepareDrawerItem(notifItem);
 
         View privacyItem = drawerLayout.findViewById(R.id.drawerPrivacy);
         if (privacyItem != null) privacyItem.setOnClickListener(v -> {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Semi-transparent white frosted glass background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#F5F5F5E6" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+</layer-list>
+

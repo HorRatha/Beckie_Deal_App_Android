@@ -335,6 +335,30 @@
             </LinearLayout>
 
             <!-- Notifications -->
+            <LinearLayout
+                android:id="@+id/drawerNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/drawer_item_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_notifications"
+                    android:contentDescription="Notifications"
+                    app:tint="@color/text_secondary" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:text="Notifications"
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
+            </LinearLayout>
 
             <!-- Dark Mode toggle row -->
             <LinearLayout
