@@ -183,7 +183,7 @@
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_edit_profile" />
+                        android:src="@drawable/person_edit_24" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <!-- User Name -->
@@ -245,7 +245,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <!-- Left: My Orders (tall, brand gradient) -->
+                        <!-- Left: My Orders (tall, dark bento card) -->
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/myOrdersBox"
                             android:layout_width="0dp"
@@ -255,49 +255,94 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?attr/selectableItemBackground"
-                            app:cardBackgroundColor="@android:color/transparent"
-                            app:cardCornerRadius="0dp"
+                            app:cardBackgroundColor="#1B1917"
+                            app:cardCornerRadius="24dp"
                             app:cardElevation="0dp"
                             app:strokeWidth="0dp">
 
-                            <LinearLayout
+                            <FrameLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/bg_bento_gradient"
-                                android:gravity="bottom"
-                                android:orientation="vertical"
-                                android:padding="14dp">
+                                android:layout_height="match_parent">
 
-                                <TextView
-                                    android:id="@+id/activeOrdersCount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="3"
-                                    android:textColor="@color/dark_brown"
-                                    android:textSize="40sp"
-                                    android:textStyle="bold" />
+                                <!-- Watermark Shopping Cart Icon -->
+                                <ImageView
+                                    android:layout_width="115dp"
+                                    android:layout_height="115dp"
+                                    android:layout_gravity="bottom|end"
+                                    android:layout_marginEnd="-18dp"
+                                    android:layout_marginBottom="-16dp"
+                                    android:alpha="0.22"
+                                    android:rotation="-12"
+                                    android:src="@drawable/shopping_cart_24"
+                                    app:tint="@color/brand_orange"
+                                    android:importantForAccessibility="no" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:text="My Orders"
-                                    android:textAllCaps="false"
-                                    android:textAppearance="@style/TextAppearance.App.CardProductName"
-                                    android:textColor="@color/dark_brown" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="bottom"
+                                    android:orientation="vertical"
+                                    android:padding="16dp">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="2dp"
-                                    android:alpha="0.8"
-                                    android:text="active now"
-                                    android:textAppearance="@style/TextAppearance.App.Body"
-                                    android:textColor="@color/dark_brown" />
-                            </LinearLayout>
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="top"
+                                        android:gravity="center_vertical"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="My orders"
+                                            android:textColor="@color/white_fixed"
+                                            android:textSize="15sp"
+                                            android:textStyle="bold" />
+
+                                        <com.google.android.material.card.MaterialCardView
+                                            android:layout_width="32dp"
+                                            android:layout_height="32dp"
+                                            app:cardBackgroundColor="@color/brand_orange"
+                                            app:cardCornerRadius="16dp"
+                                            app:cardElevation="0dp"
+                                            app:strokeWidth="0dp">
+                                            <ImageView
+                                                android:layout_width="16dp"
+                                                android:layout_height="16dp"
+                                                android:layout_gravity="center"
+                                                android:src="@drawable/ic_chevron_right"
+                                                app:tint="@color/white_fixed" />
+                                        </com.google.android.material.card.MaterialCardView>
+                                    </LinearLayout>
+
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="0dp"
+                                        android:layout_weight="1" />
+
+                                    <TextView
+                                        android:id="@+id/activeOrdersCount"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="13"
+                                        android:textColor="@color/brand_yellow"
+                                        android:textSize="40sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:alpha="0.8"
+                                        android:text="Active now"
+                                        android:textAppearance="@style/TextAppearance.App.Body"
+                                        android:textColor="@color/white_fixed" />
+                                </LinearLayout>
+                            </FrameLayout>
                         </com.google.android.material.card.MaterialCardView>
 
-                        <!-- Right: Coupons + Edit Profile stacked -->
+                        <!-- Right: Coupons (top) + Reviews (bottom) stacked -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="160dp"
@@ -314,57 +359,59 @@
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:foreground="?attr/selectableItemBackground"
-                                app:cardBackgroundColor="@color/surface"
-                                app:cardCornerRadius="0dp"
+                                app:cardBackgroundColor="@android:color/transparent"
+                                app:cardCornerRadius="24dp"
                                 app:cardElevation="0dp"
-                                app:strokeColor="@color/border_color"
-                                app:strokeWidth="1dp">
+                                app:strokeWidth="0dp">
 
-                                <LinearLayout
+                                <FrameLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal"
-                                    android:paddingHorizontal="12dp">
+                                    android:background="@drawable/bg_bento_gradient">
 
-                                    <TextView
-                                        android:id="@+id/couponsCount"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="4"
-                                        android:textColor="@color/brand_orange"
-                                        android:textSize="26sp"
-                                        android:textStyle="bold" />
+                                    <!-- Watermark Star Shine Icon -->
+                                    <ImageView
+                                        android:layout_width="100dp"
+                                        android:layout_height="100dp"
+                                        android:layout_gravity="bottom|end"
+                                        android:layout_marginEnd="-16dp"
+                                        android:layout_marginBottom="-16dp"
+                                        android:alpha="0.22"
+                                        android:rotation="-12"
+                                        android:src="@drawable/star_shine_24"
+                                        app:tint="@color/dark_brown"
+                                        android:importantForAccessibility="no" />
 
                                     <LinearLayout
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="12dp"
-                                        android:layout_weight="1"
-                                        android:orientation="vertical">
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center_vertical"
+                                        android:orientation="vertical"
+                                        android:paddingHorizontal="16dp">
 
                                         <TextView
+                                            android:id="@+id/couponsCount"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="My Coupons"
-                                            android:textAllCaps="false"
-                                            android:textAppearance="@style/TextAppearance.App.Label"
-                                            android:textColor="@color/text_primary" />
+                                            android:text="4 coupons"
+                                            android:textColor="@color/dark_brown"
+                                            android:textSize="20sp"
+                                            android:textStyle="bold" />
 
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="2dp"
-                                            android:text="available"
+                                            android:text="Available"
                                             android:textAppearance="@style/TextAppearance.App.Body"
-                                            android:textColor="@color/text_secondary" />
+                                            android:textColor="@color/dark_brown" />
                                     </LinearLayout>
-                                </LinearLayout>
+                                </FrameLayout>
                             </com.google.android.material.card.MaterialCardView>
 
-                            <!-- Edit Profile -->
+                            <!-- My Reviews -->
                             <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/editProfileBox"
+                                android:id="@+id/myReviewsCard"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
@@ -372,7 +419,7 @@
                                 android:focusable="true"
                                 android:foreground="?attr/selectableItemBackground"
                                 app:cardBackgroundColor="@color/surface"
-                                app:cardCornerRadius="0dp"
+                                app:cardCornerRadius="24dp"
                                 app:cardElevation="0dp"
                                 app:strokeColor="@color/border_color"
                                 app:strokeWidth="1dp">
@@ -382,27 +429,35 @@
                                     android:layout_height="match_parent"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal"
-                                    android:paddingHorizontal="12dp">
+                                    android:paddingHorizontal="16dp">
 
-                                    <ImageView
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
-                                        android:src="@drawable/ic_edit_profile"
-                                        app:tint="@color/brand_orange" />
-
-                                    <TextView
+                                    <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="12dp"
                                         android:layout_weight="1"
-                                        android:text="Edit Profile"
-                                        android:textAllCaps="false"
-                                        android:textAppearance="@style/TextAppearance.App.Label"
-                                        android:textColor="@color/text_primary" />
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Reviews"
+                                            android:textAppearance="@style/TextAppearance.App.Label"
+                                            android:textColor="@color/text_primary"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/reviewSubtitle"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:text="My reviews"
+                                            android:textAppearance="@style/TextAppearance.App.Body"
+                                            android:textColor="@color/brand_orange" />
+                                    </LinearLayout>
 
                                     <ImageView
-                                        android:layout_width="16dp"
-                                        android:layout_height="16dp"
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
                                         android:src="@drawable/ic_chevron_right"
                                         app:tint="@color/text_secondary" />
                                 </LinearLayout>
@@ -410,50 +465,51 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- My Reviews tile (full width) -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/myReviewsCard"
-                        android:layout_width="match_parent"
+                    <!-- ACCOUNT SECTION -->
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/section_spacing"
+                        android:layout_marginBottom="10dp"
+                        android:letterSpacing="0.08"
+                        android:text="Account"
+                        android:textAllCaps="true"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textColor="@color/text_secondary" />
+
+                    <!-- Edit Profile -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/editProfileBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         app:cardBackgroundColor="@color/surface"
-                        app:cardCornerRadius="0dp"
+                        app:cardCornerRadius="24dp"
                         app:cardElevation="0dp"
                         app:strokeColor="@color/border_color"
                         app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
+                            android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:paddingHorizontal="16dp">
 
-                            <com.google.android.material.card.MaterialCardView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                app:cardBackgroundColor="@android:color/transparent"
-                                app:cardCornerRadius="11dp"
-                                app:cardElevation="0dp"
-                                app:strokeWidth="0dp">
-                                <ImageView
-                                    android:layout_width="22dp"
-                                    android:layout_height="22dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_local_offer"
-                                    android:contentDescription="My Reviews"
-                                    app:tint="@color/brand_orange" />
-                            </com.google.android.material.card.MaterialCardView>
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/person_edit_24"
+                                app:tint="@color/brand_orange" />
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="14dp"
                                 android:layout_weight="1"
-                                android:text="My Reviews"
+                                android:text="Edit Profile"
                                 android:textAppearance="@style/TextAppearance.App.CardProductName"
                                 android:textColor="@color/text_primary" />
 
@@ -461,96 +517,7 @@
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 android:src="@drawable/ic_chevron_right"
-                                android:contentDescription="Navigate"
                                 app:tint="@color/text_secondary" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Notifications tile (full width, same IDs as before) -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/section_spacing"
-                        app:cardBackgroundColor="@color/surface"
-                        app:cardCornerRadius="0dp"
-                        app:cardElevation="0dp"
-                        app:strokeColor="@color/border_color"
-                        app:strokeWidth="1dp">
-
-                        <LinearLayout
-                            android:id="@+id/notificationsRow"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingHorizontal="16dp">
-
-                            <com.google.android.material.card.MaterialCardView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                app:cardBackgroundColor="@android:color/transparent"
-                                app:cardCornerRadius="11dp"
-                                app:cardElevation="0dp"
-                                app:strokeWidth="0dp">
-                                <ImageView
-                                    android:layout_width="22dp"
-                                    android:layout_height="22dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_notifications"
-                                    app:tint="@color/brand_tint_fg_3" />
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="14dp"
-                                android:layout_weight="1"
-                                android:text="Notifications"
-                                android:textAppearance="@style/TextAppearance.App.CardProductName"
-                                android:textColor="@color/text_primary" />
-
-                            <!-- Segmented Pill Toggle (ON / OFF) - unchanged -->
-                            <LinearLayout
-                                android:id="@+id/notifToggleContainer"
-                                android:layout_width="wrap_content"
-                                android:layout_height="36dp"
-                                android:background="@drawable/notification_toggle_bg"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                android:padding="3dp">
-
-                                <FrameLayout
-                                    android:id="@+id/notifOnOption"
-                                    android:layout_width="40dp"
-                                    android:layout_height="30dp"
-                                    android:background="@drawable/notification_pill_active"
-                                    android:clickable="true"
-                                    android:focusable="true">
-                                    <ImageView
-                                        android:id="@+id/notifOnIcon"
-                                        android:layout_width="16dp"
-                                        android:layout_height="16dp"
-                                        android:layout_gravity="center"
-                                        android:src="@drawable/ic_toggle_on"
-                                        app:tint="@color/white_fixed" />
-                                </FrameLayout>
-
-                                <FrameLayout
-                                    android:id="@+id/notifOffOption"
-                                    android:layout_width="40dp"
-                                    android:layout_height="30dp"
-                                    android:background="@drawable/notification_pill_inactive"
-                                    android:clickable="true"
-                                    android:focusable="true">
-                                    <ImageView
-                                        android:id="@+id/notifOffIcon"
-                                        android:layout_width="16dp"
-                                        android:layout_height="16dp"
-                                        android:layout_gravity="center"
-                                        android:src="@drawable/ic_toggle_off"
-                                        app:tint="@color/text_secondary" />
-                                </FrameLayout>
-                            </LinearLayout>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
@@ -621,7 +588,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardBackgroundColor="@color/surface"
-                    app:cardCornerRadius="0dp"
+                    app:cardCornerRadius="24dp"
                     app:cardElevation="0dp"
                     app:strokeColor="@color/border_color"
                     app:strokeWidth="1dp">
@@ -630,6 +597,86 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
+                        <!-- Notifications toggle -->
+                        <LinearLayout
+                            android:id="@+id/notificationsRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                app:cardBackgroundColor="@android:color/transparent"
+                                app:cardCornerRadius="11dp"
+                                app:cardElevation="0dp"
+                                app:strokeWidth="0dp">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_notifications"
+                                    app:tint="@color/brand_tint_fg_3" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="14dp"
+                                android:layout_weight="1"
+                                android:text="Notifications"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                android:textColor="@color/text_primary" />
+
+                            <!-- Segmented Pill Toggle (ON / OFF) -->
+                            <LinearLayout
+                                android:id="@+id/notifToggleContainer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:background="@drawable/notification_toggle_bg"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="3dp">
+
+                                <FrameLayout
+                                    android:id="@+id/notifOnOption"
+                                    android:layout_width="40dp"
+                                    android:layout_height="30dp"
+                                    android:background="@drawable/notification_pill_active"
+                                    android:clickable="true"
+                                    android:focusable="true">
+                                    <ImageView
+                                        android:id="@+id/notifOnIcon"
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_toggle_on"
+                                        app:tint="@color/white_fixed" />
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/notifOffOption"
+                                    android:layout_width="40dp"
+                                    android:layout_height="30dp"
+                                    android:background="@drawable/notification_pill_inactive"
+                                    android:clickable="true"
+                                    android:focusable="true">
+                                    <ImageView
+                                        android:id="@+id/notifOffIcon"
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_toggle_off"
+                                        app:tint="@color/text_secondary" />
+                                </FrameLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:layout_marginHorizontal="16dp" android:background="@color/border_color" />
 
                         <!-- Dark Mode toggle -->
                         <LinearLayout
@@ -727,7 +774,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardBackgroundColor="@color/surface"
-                    app:cardCornerRadius="0dp"
+                    app:cardCornerRadius="24dp"
                     app:cardElevation="0dp"
                     app:strokeColor="@color/border_color"
                     app:strokeWidth="1dp">

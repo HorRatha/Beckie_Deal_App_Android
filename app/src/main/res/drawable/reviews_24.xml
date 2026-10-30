@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Speech Bubble (Weight 100 / Grade -25 / Opsz 20 style) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M20,3.5H4C3.72,3.5 3.5,3.72 3.5,4v12c0,0.28 0.22,0.5 0.5,0.5h2.5L4,19.5l3.5,-3h12.5c0.28,0 0.5,-0.22 0.5,-0.5V4C20.5,3.72 20.28,3.5 20,3.5z" />
+    <!-- Center Star -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M12,6.8l0.9,2.4l2.6,0.1l-2.1,1.5l0.8,2.5L12,11.8l-2.2,1.5l0.8-2.5l-2.1-1.5l2.6-0.1Z" />
+</vector>

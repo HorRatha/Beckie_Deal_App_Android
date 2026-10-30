@@ -242,7 +242,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:text="View All"
-                    android:textColor="@color/primary"
+                    android:textColor="@color/chip_selected_bg"
                     android:textSize="@dimen/text_size_body"
                     android:textStyle="bold" />
             </RelativeLayout>

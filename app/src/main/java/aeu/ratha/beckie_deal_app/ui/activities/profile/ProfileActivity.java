@@ -35,6 +35,8 @@ import aeu.ratha.beckie_deal_app.data.models.User;
 import aeu.ratha.beckie_deal_app.data.models.ApiOrder;
 import aeu.ratha.beckie_deal_app.data.repository.ProfileRepository;
 import aeu.ratha.beckie_deal_app.data.repository.OrderRepository;
+import aeu.ratha.beckie_deal_app.data.repository.ReviewRepository;
+import aeu.ratha.beckie_deal_app.data.models.Review;
 import java.util.List;
 import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.avatar.AvatarManager;
@@ -500,6 +502,35 @@ public class ProfileActivity extends BaseActivity {
         }
     }
 
+    private void updateReviewsCount() {
+        TextView reviewSubtitle = findViewById(R.id.reviewSubtitle);
+        if (reviewSubtitle == null) return;
+
+        reviewSubtitle.setText("My reviews");
+
+        if (tokenManager != null && tokenManager.isLoggedIn()) {
+            ReviewRepository reviewRepository = ReviewRepository.getInstance(this);
+            reviewRepository.getMyReviews(1, 20, new ReviewRepository.ReviewsCallback() {
+                @Override
+                public void onReviewsLoaded(List<Review> reviews) {
+                    int count = reviews != null ? reviews.size() : 0;
+                    if (reviewSubtitle != null) {
+                        reviewSubtitle.setText(count + " written");
+                    }
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    if (reviewSubtitle != null) {
+                        reviewSubtitle.setText("My reviews");
+                    }
+                }
+            });
+        } else {
+            reviewSubtitle.setText("My reviews");
+        }
+    }
+
     private void setupSettingsRows() {
         MaterialCardView myOrdersBox      = findViewById(R.id.myOrdersBox);
         MaterialCardView myCouponsBox     = findViewById(R.id.myCouponsBox);
@@ -513,7 +544,8 @@ public class ProfileActivity extends BaseActivity {
         
         // Update counts dynamically
         updateActiveOrdersCount();
-        if (couponsCount != null) couponsCount.setText("4");
+        updateReviewsCount();
+        if (couponsCount != null) couponsCount.setText("4 coupons");
 
         // Whatever ordersRow and couponsRow used to do, now on the tiles
         if (myOrdersBox != null) myOrdersBox.setOnClickListener(v ->
