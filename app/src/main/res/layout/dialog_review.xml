@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp">
+
+        <!-- Drag handle -->
+        <View
+            android:layout_width="36dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/border_color" />
+
+        <!-- Title + close -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dialog_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:text="Write a review"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/dialog_close"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="-8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Close"
+                android:padding="10dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/text_secondary" />
+        </LinearLayout>
+
+        <!-- Product being reviewed (hidden when no product info is given) -->
+        <LinearLayout
+            android:id="@+id/dialog_product_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@color/card_bg_secondary"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/dialog_product_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@color/surface"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/placeholder_image"
+                android:contentDescription="Product Image" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/dialog_product_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="2"
+                    android:text="Product name"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/dialog_product_sub"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="sans-serif"
+                    android:text="Order #XXXXX"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Rating -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RatingBar
+                android:id="@+id/dialog_rating_bar"
+                style="@style/Widget.App.RatingBar.Big"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="1" />
+
+            <TextView
+                android:id="@+id/dialog_rating_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:text=""
+                android:textColor="@color/orange_dark"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Quick tags (filled from code) -->
+        <TextView
+            android:id="@+id/dialog_tags_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="What did you like?"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/dialog_tags_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:chipSpacingHorizontal="6dp"
+            app:chipSpacingVertical="6dp" />
+
+        <!-- Title -->
+        <EditText
+            android:id="@+id/dialog_title_edit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_review_field"
+            android:fontFamily="sans-serif"
+            android:hint="Review title (optional)"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences"
+            android:maxLines="1"
+            android:paddingHorizontal="12dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_muted"
+            android:textSize="14sp" />
+
+        <!-- Comment -->
+        <EditText
+            android:id="@+id/dialog_comment_edit"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_review_field"
+            android:fontFamily="sans-serif"
+            android:gravity="top|start"
+            android:hint="Share your experience with this product"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLength="500"
+            android:padding="12dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_muted"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/dialog_comment_counter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="end"
+            android:text="0 / 500"
+            android:textColor="@color/text_muted"
+            android:textSize="11sp" />
+
+        <!-- Loading indicator and submit button -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="14dp">
+
+            <ProgressBar
+                android:id="@+id/dialog_submit_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/brand_orange"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dialog_submit_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/brand_bar_gradient"
+                android:fontFamily="sans-serif-medium"
+                android:stateListAnimator="@null"
+                android:text="Submit review"
+                android:textAllCaps="false"
+                android:textColor="@color/dark_brown"
+                android:textSize="15sp"
+                app:backgroundTint="@null" />
+        </FrameLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -504,6 +504,7 @@ public class ProfileActivity extends BaseActivity {
         MaterialCardView myOrdersBox      = findViewById(R.id.myOrdersBox);
         MaterialCardView myCouponsBox     = findViewById(R.id.myCouponsBox);
         MaterialCardView editProfileBox = findViewById(R.id.editProfileBox);
+        View myReviewsCard              = findViewById(R.id.myReviewsCard);
         LinearLayout aboutUsRow       = findViewById(R.id.aboutUsRow);
         LinearLayout privacyRow       = findViewById(R.id.privacyRow);
         LinearLayout termsRow         = findViewById(R.id.termsRow);
@@ -522,6 +523,8 @@ public class ProfileActivity extends BaseActivity {
         if (editProfileBox != null) editProfileBox.setOnClickListener(v -> {
             startActivity(new Intent(this, EditProfileActivity.class));
         });
+        if (myReviewsCard != null) myReviewsCard.setOnClickListener(v ->
+                startActivity(new Intent(this, MyReviewsActivity.class)));
         if (aboutUsRow != null) aboutUsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, AboutActivity.class)));
         if (privacyRow != null) privacyRow.setOnClickListener(v ->
@@ -529,7 +532,7 @@ public class ProfileActivity extends BaseActivity {
         if (termsRow != null) termsRow.setOnClickListener(v ->
                 startActivity(new Intent(this, TermsActivity.class)));
 
-        UiAnimations.pressBounce(myOrdersBox, myCouponsBox, editProfileBox, aboutUsRow, privacyRow, termsRow);
+        UiAnimations.pressBounce(myOrdersBox, myCouponsBox, editProfileBox, myReviewsCard, aboutUsRow, privacyRow, termsRow);
         
         // Show the tiles only when logged in
         View loggedInTiles = findViewById(R.id.loggedInTiles);

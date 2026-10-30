@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Big yellow stars -->
+    <style name="Widget.App.RatingBar.Big" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_bar_stars</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:maxHeight">36dp</item>
+    </style>
+
+    <!-- Flat bottom sheet (square top corners, like the rest of the app) -->
+    <style name="ShapeAppearance.App.Flat" parent="">
+        <item name="cornerSize">0dp</item>
+    </style>
+
+    <style name="Widget.App.BottomSheetFlat" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.App.Flat</item>
+        <item name="backgroundTint">@color/surface</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomSheetFlat" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.App.BottomSheetFlat</item>
+    </style>
+</resources>

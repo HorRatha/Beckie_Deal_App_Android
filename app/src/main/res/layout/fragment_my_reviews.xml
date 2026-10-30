@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/surface">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Reviews"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/reviewsSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 reviews"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+    <!-- Loading progress -->
+    <ProgressBar
+        android:id="@+id/my_reviews_loading_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:visibility="gone" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/my_reviews_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No reviews yet"
+        android:textSize="16sp"
+        android:textColor="@color/text_muted"
+        android:padding="16dp"
+        android:visibility="gone" />
+
+    <!-- Scrollable container holding MyReviewBinder cards -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/reviewsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:clipToPadding="false" />
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

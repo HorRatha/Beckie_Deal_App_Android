@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <!-- Loading progress -->
+    <ProgressBar
+        android:id="@+id/reviews_loading_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:visibility="gone" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/reviews_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No reviews yet"
+        android:textSize="16sp"
+        android:textColor="@color/text_muted"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:visibility="gone" />
+
+    <!-- Reviews content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/reviews_scroll_view">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Review Summary Section -->
+            <LinearLayout
+                android:id="@+id/review_summary_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/surface"
+                android:padding="16dp"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="12dp">
+
+                <!-- Average rating display -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="24dp">
+
+                        <TextView
+                            android:id="@+id/average_rating_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4.5"
+                            android:textSize="32sp"
+                            android:fontFamily="@font/synonym_semibold"
+                            android:textColor="@color/text_primary" />
+
+                        <RatingBar
+                            android:id="@+id/summary_rating_bar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:numStars="5"
+                            android:rating="4.5"
+                            android:stepSize="0.1"
+                            android:isIndicator="true"
+                            android:scaleX="0.7"
+                            android:scaleY="0.7"
+                            style="?android:attr/ratingBarStyleSmall" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/total_reviews_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="128 Reviews"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/synonym_semibold"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Rating breakdown -->
+                        <LinearLayout
+                            android:id="@+id/rating_breakdown_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Write review button -->
+                <Button
+                    android:id="@+id/write_review_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="Write a Review"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_marginTop="8dp" />
+
+            </LinearLayout>
+
+            <!-- Reviews list header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Customer Reviews"
+                android:textSize="16sp"
+                android:fontFamily="@font/synonym_semibold"
+                android:textColor="@color/text_primary"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="12dp" />
+
+            <!-- Reviews RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reviews_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:clipToPadding="false" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

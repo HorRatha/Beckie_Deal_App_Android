@@ -85,6 +85,38 @@ public class OrderDetailActivity extends BaseActivity {
         handleScrollToTracking();
         setupEntranceAnimation();
 
+        View writeReviewCard = findViewById(R.id.writeReviewCard);
+        View btnWriteReview = findViewById(R.id.btnWriteReview);
+        if (writeReviewCard != null && btnWriteReview != null) {
+            View.OnClickListener reviewClick = v -> {
+                String productId = "sample_product_id";
+                long ordId = 1L;
+                if (apiOrder != null) {
+                    ordId = apiOrder.id;
+                    if (apiOrder.items != null && !apiOrder.items.isEmpty()) {
+                        productId = apiOrder.items.get(0).productId;
+                    }
+                } else if (mockOrder != null) {
+                    try {
+                        ordId = Long.parseLong(mockOrder.orderId);
+                    } catch (Exception e) {
+                        ordId = 1L;
+                    }
+                    productId = "prod_" + mockOrder.orderId;
+                }
+
+                aeu.ratha.beckie_deal_app.ui.dialogs.ReviewDialog dialog = 
+                    aeu.ratha.beckie_deal_app.ui.dialogs.ReviewDialog.newInstance(productId, ordId);
+                dialog.setDialogListener(review -> {
+                    android.widget.Toast.makeText(this, "Review submitted successfully!", android.widget.Toast.LENGTH_SHORT).show();
+                });
+                dialog.show(getSupportFragmentManager(), "ReviewDialog");
+            };
+            writeReviewCard.setOnClickListener(reviewClick);
+            btnWriteReview.setOnClickListener(reviewClick);
+            UiAnimations.pressBounce(writeReviewCard);
+        }
+
         BottomNavHelper.setup(this, BottomNavHelper.NavItem.ACCOUNT);
         BottomNavHelper.updateCartBadge(this);
     }

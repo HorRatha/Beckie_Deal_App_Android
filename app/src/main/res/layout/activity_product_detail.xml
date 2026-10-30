@@ -532,6 +532,13 @@
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
+                <!-- ══ PRODUCT REVIEWS SECTION ══ -->
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/productReviewsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

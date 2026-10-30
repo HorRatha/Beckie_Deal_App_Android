@@ -34,7 +34,7 @@
                     android:layout_height="48dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/form_field_background"
+
                     android:padding="12dp"
                     android:src="@drawable/ic_arrow_left"
                     android:contentDescription="Back"
@@ -374,6 +374,70 @@
 
                 </LinearLayout>
 
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Write Review Action Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/writeReviewCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_color"
+                app:cardBackgroundColor="@color/surface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_local_offer"
+                        android:contentDescription="Review"
+                        app:tint="@color/brand_orange"
+                        android:layout_marginEnd="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rate &amp; Review Products"
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Share your feedback for items in this order"
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnWriteReview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Review"
+                        android:textSize="12sp"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/primary"
+                        app:cornerRadius="20dp"
+                        app:elevation="0dp" />
+                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Bottom spacing -->

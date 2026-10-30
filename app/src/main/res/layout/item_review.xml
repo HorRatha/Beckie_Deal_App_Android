@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    item_review.xml
+    Single review item row displayed in product reviews list or my reviews section.
+    Layout: customer avatar | rating + title + comment | verified badge | helpful count
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Header: Customer info and date -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <!-- Customer avatar -->
+        <ImageView
+            android:id="@+id/review_customer_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Customer avatar"
+            android:src="@drawable/ic_profile_placeholder" />
+
+        <!-- Customer name and date -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:id="@+id/review_customer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Customer Name"
+                android:textSize="14sp"
+                android:fontFamily="@font/synonym_medium"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/review_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Oct 29, 2026"
+                android:textSize="12sp"
+                android:fontFamily="@font/synonym_regular"
+                android:textColor="@color/text_muted"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+
+        <!-- Verified badge -->
+        <TextView
+            android:id="@+id/review_verified_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✓ Verified"
+            android:textSize="11sp"
+            android:fontFamily="@font/synonym_medium"
+            android:textColor="@color/green_stock"
+            android:background="@drawable/badge_rect"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- Rating bar -->
+    <RatingBar
+        android:id="@+id/review_rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:rating="4"
+        android:stepSize="1"
+        android:isIndicator="true"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:layout_marginBottom="8dp"
+        style="?android:attr/ratingBarStyleSmall" />
+
+    <!-- Review title -->
+    <TextView
+        android:id="@+id/review_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Great product, highly recommended!"
+        android:textSize="14sp"
+        android:fontFamily="@font/synonym_semibold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Review comment -->
+    <TextView
+        android:id="@+id/review_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This is an excellent review comment describing the product experience in detail..."
+        android:textSize="13sp"
+        android:fontFamily="@font/synonym_regular"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="12dp"
+        android:lineSpacingMultiplier="1.3" />
+
+    <!-- Helpful count -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/review_helpful_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="👍 12 found this helpful"
+            android:textSize="11sp"
+            android:fontFamily="@font/synonym_regular"
+            android:textColor="@color/text_muted"
+            android:visibility="gone" />
+
+        <!-- Action buttons (edit/delete) - shown only for user's own reviews -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/review_edit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit"
+                android:textSize="11sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/review_delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:textSize="11sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/border_color"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>

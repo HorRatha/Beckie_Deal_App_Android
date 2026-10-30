@@ -149,6 +149,10 @@ public class ProductDetailActivity extends BaseActivity {
         String rating    = getIntent().getStringExtra("product_rating");
         String sku       = getIntent().getStringExtra("product_sku");
 
+        if (productId != null && !productId.isEmpty()) {
+            loadProductReviews(productId);
+        }
+
         if (name == null)   name   = "Product";
         if (rating == null) rating = "4.5";
 
@@ -174,6 +178,20 @@ public class ProductDetailActivity extends BaseActivity {
             for (int i = 0; i < 4; i++) imgs.add(fb);
         }
         setupGallery(imgs);
+    }
+
+    private void loadProductReviews(String productId) {
+        if (productId != null && !productId.isEmpty()) {
+            try {
+                if (getSupportFragmentManager().findFragmentById(R.id.productReviewsContainer) == null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.productReviewsContainer, aeu.ratha.beckie_deal_app.ui.fragments.ProductReviewsFragment.newInstance(productId))
+                            .commit();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to load ProductReviewsFragment", e);
+            }
+        }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
