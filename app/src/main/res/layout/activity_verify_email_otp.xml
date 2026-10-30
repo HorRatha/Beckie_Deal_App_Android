@@ -271,17 +271,16 @@
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/verifyButton"
                         android:layout_width="match_parent"
-                        android:layout_height="52dp"
+                        android:layout_height="40dp"
                         android:layout_marginTop="24dp"
                         android:background="@drawable/login_button_rounded_bg"
                         app:backgroundTint="@null"
                         android:text="Verify"
                         android:textAllCaps="false"
                         android:textColor="@color/dark_brown"
-                        android:textSize="16sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"
-                        android:elevation="4dp"
                         android:stateListAnimator="@null" />
 
                     <!-- Resend OTP Section -->

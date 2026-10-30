@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -18,54 +19,59 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import aeu.ratha.beckie_deal_app.R;
-import aeu.ratha.beckie_deal_app.ui.components.AnimatedStepSpinnerView;
 
 /**
- * ForgotPasswordActivity handles the forgot password flow with 2 steps:
+ * ForgotPasswordActivity handles the forgot password flow with 3 steps:
  * Step 1: User enters email to receive reset code
- * Step 2: User verifies OTP and sets new password
+ * Step 2: User verifies OTP code
+ * Step 3: User sets new password
  */
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     // UI Components - Header
     private ImageView backButton;
 
-    // UI Components - Progress Indicator
+    // UI Components - Progress Indicators
     private FrameLayout step1Circle;
     private FrameLayout step2Circle;
-    private View progressLine;
+    private FrameLayout step3Circle;
     private TextView step1Number;
     private TextView step2Number;
-    private ImageView step1CheckIcon;
-    private ImageView step2CheckIcon;
-    private AnimatedStepSpinnerView stepSpinnerView;
+    private TextView step3Number;
+    private View progressLine1;
+    private View progressLine2;
 
     // UI Components - Step 1: Email Form
     private LinearLayout step1EmailForm;
     private EditText emailInput;
     private TextView emailErrorMessage;
     private AppCompatButton sendCodeButton;
-    private TextView backToLoginLink;
 
-    // UI Components - Step 2: OTP & Password Form
+    // UI Components - Step 2: OTP Verification Form
     private LinearLayout step2OtpForm;
     private TextView emailDisplayText;
     private EditText[] otpDigits = new EditText[6];
     private TextView otpErrorMessage;
+    private AppCompatButton verifyCodeButton;
+    private TextView resendOtpLink;
+    private TextView resendTimer;
+    private TextView changeEmailLink;
+
+    // UI Components - Step 3: Password Reset Form
+    private LinearLayout step3PasswordForm;
     private EditText newPasswordInput;
     private EditText confirmPasswordInput;
     private TextView passwordErrorMessage;
     private AppCompatButton resetPasswordButton;
-    private TextView resendOtpLink;
-    private TextView resendTimer;
-    private TextView changeEmailLink;
 
     // UI Components - Progress
     private ProgressBar progressBar;
 
     // Data
     private String currentEmail = "";
+    private String currentOtp = "";
     private boolean isResendCooldown = false;
+    private int currentStep = 1; // Track current step
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,25 +89,21 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         // Header
         backButton = findViewById(R.id.backButton);
 
-        // Progress Indicator
+        // Progress Indicators (3 steps with numbers)
         step1Circle = findViewById(R.id.step1Circle);
         step2Circle = findViewById(R.id.step2Circle);
-        progressLine = findViewById(R.id.progressLine);
+        step3Circle = findViewById(R.id.step3Circle);
         step1Number = findViewById(R.id.step1Number);
         step2Number = findViewById(R.id.step2Number);
-        stepSpinnerView = findViewById(R.id.stepSpinnerView);
-
-        // Attach spinner to Step 1 initially
-        if (step1Circle != null && stepSpinnerView != null) {
-            step1Circle.post(() -> stepSpinnerView.attachToStep(step1Circle, false));
-        }
+        step3Number = findViewById(R.id.step3Number);
+        progressLine1 = findViewById(R.id.progressLine1);
+        progressLine2 = findViewById(R.id.progressLine2);
 
         // Step 1 Form
         step1EmailForm = findViewById(R.id.step1EmailForm);
         emailInput = findViewById(R.id.emailInput);
         emailErrorMessage = findViewById(R.id.emailErrorMessage);
         sendCodeButton = findViewById(R.id.sendCodeButton);
-        backToLoginLink = findViewById(R.id.backToLoginLink);
 
         // Step 2 Form
         step2OtpForm = findViewById(R.id.step2OtpForm);
@@ -114,12 +116,16 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         otpDigits[4] = findViewById(R.id.otpDigit5);
         otpDigits[5] = findViewById(R.id.otpDigit6);
         otpErrorMessage = findViewById(R.id.otpErrorMessage);
+        verifyCodeButton = findViewById(R.id.verifyCodeButton);
+        resendOtpLink = findViewById(R.id.resendOtpLink);
+        resendTimer = findViewById(R.id.resendTimer);
+
+        // Step 3 Form
+        step3PasswordForm = findViewById(R.id.step3PasswordForm);
         newPasswordInput = findViewById(R.id.newPasswordInput);
         confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
         passwordErrorMessage = findViewById(R.id.passwordErrorMessage);
         resetPasswordButton = findViewById(R.id.resetPasswordButton);
-        resendOtpLink = findViewById(R.id.resendOtpLink);
-        resendTimer = findViewById(R.id.resendTimer);
 
         // Progress
         progressBar = findViewById(R.id.progressBar);
@@ -129,21 +135,19 @@ public class ForgotPasswordActivity extends AppCompatActivity {
      * Setup click listeners and text watchers
      */
     private void setupListeners() {
-        // Back button
+        // Back button - go back to previous step or close activity
         backButton.setOnClickListener(v -> onBackPressed());
 
         // Step 1 Listeners
         sendCodeButton.setOnClickListener(v -> sendResetCode());
-        backToLoginLink.setOnClickListener(v -> finish());
 
         // Step 2 Listeners
-        resetPasswordButton.setOnClickListener(v -> resetPassword());
+        verifyCodeButton.setOnClickListener(v -> verifyOtp());
         resendOtpLink.setOnClickListener(v -> resendOtp());
-        
-        // Change email link: go back to step 1
-        if (changeEmailLink != null) {
-            changeEmailLink.setOnClickListener(v -> goBackToStep1());
-        }
+        changeEmailLink.setOnClickListener(v -> goBackToStep1());
+
+        // Step 3 Listeners
+        resetPasswordButton.setOnClickListener(v -> resetPassword());
 
         // OTP digit auto-focus
         setupOtpInputs();
@@ -168,20 +172,160 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             .setDuration(300)
                             .start();
                     
-                    // Reset progress indicator
-                    resetProgressIndicator();
+                    // Update progress indicators (step 1 is active)
+                    updateProgressIndicators(1);
                     
                     // Clear OTP fields
                     for (EditText digit : otpDigits) {
                         digit.setText("");
                     }
                     
-                    // Animate spinner back to Step 1
-                    if (stepSpinnerView != null && step1Circle != null) {
-                        stepSpinnerView.attachToStep(step1Circle, true);
-                    }
+                    currentStep = 1;
                 })
                 .start();
+    }
+
+    /**
+     * Navigate to next step with animation
+     */
+    private void navigateToStep(int nextStep) {
+        final LinearLayout currentForm;
+        final LinearLayout nextForm;
+        
+        switch (currentStep) {
+            case 1:
+                currentForm = step1EmailForm;
+                break;
+            case 2:
+                currentForm = step2OtpForm;
+                break;
+            default:
+                currentForm = null;
+        }
+        
+        switch (nextStep) {
+            case 2:
+                nextForm = step2OtpForm;
+                break;
+            case 3:
+                nextForm = step3PasswordForm;
+                break;
+            default:
+                nextForm = null;
+        }
+        
+        if (currentForm != null && nextForm != null) {
+            // Fade out current form
+            currentForm.animate()
+                    .alpha(0f)
+                    .setDuration(300)
+                    .withEndAction(() -> {
+                        currentForm.setVisibility(View.GONE);
+                        
+                        // Show next form
+                        nextForm.setVisibility(View.VISIBLE);
+                        nextForm.setAlpha(0f);
+                        nextForm.animate()
+                                .alpha(1f)
+                                .setDuration(300)
+                                .start();
+                        
+                        // Update progress indicators
+                        updateProgressIndicators(nextStep);
+                        
+                        currentStep = nextStep;
+                        
+                        // Auto-focus first input of next step
+                        if (nextStep == 2 && otpDigits[0] != null) {
+                            otpDigits[0].requestFocus();
+                            startResendTimer();
+                        } else if (nextStep == 3 && newPasswordInput != null) {
+                            newPasswordInput.requestFocus();
+                        }
+                    })
+                    .start();
+        }
+    }
+
+    /**
+     * Update progress indicators based on current step
+     * Highlights active step with dark brown color and animates the circle with spin effect
+     */
+    private void updateProgressIndicators(int activeStep) {
+        // Step 1
+        if (activeStep >= 1) {
+            step1Circle.setBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(getColor(R.color.dark_brown))
+            );
+            step1Number.setTextColor(getColor(R.color.white));
+            if (activeStep == 1) {
+                animateStepCircle(step1Circle);
+            }
+        } else {
+            step1Circle.setBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(getColor(R.color.button_toggle_inactive))
+            );
+            step1Number.setTextColor(getColor(R.color.dark_brown));
+        }
+        
+        // Step 2
+        if (activeStep >= 2) {
+            step2Circle.setBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(getColor(R.color.dark_brown))
+            );
+            step2Number.setTextColor(getColor(R.color.white));
+            if (activeStep == 2) {
+                animateStepCircle(step2Circle);
+            }
+        } else {
+            step2Circle.setBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(getColor(R.color.button_toggle_inactive))
+            );
+            step2Number.setTextColor(getColor(R.color.dark_brown));
+        }
+        
+        // Step 3
+        if (activeStep >= 3) {
+            step3Circle.setBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(getColor(R.color.dark_brown))
+            );
+            step3Number.setTextColor(getColor(R.color.white));
+            if (activeStep == 3) {
+                animateStepCircle(step3Circle);
+            }
+        } else {
+            step3Circle.setBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(getColor(R.color.button_toggle_inactive))
+            );
+            step3Number.setTextColor(getColor(R.color.dark_brown));
+        }
+        
+        // Update progress lines
+        if (activeStep >= 2) {
+            progressLine1.setBackgroundColor(getColor(R.color.dark_brown));
+        } else {
+            progressLine1.setBackgroundColor(getColor(R.color.button_toggle_inactive));
+        }
+        
+        if (activeStep >= 3) {
+            progressLine2.setBackgroundColor(getColor(R.color.dark_brown));
+        } else {
+            progressLine2.setBackgroundColor(getColor(R.color.button_toggle_inactive));
+        }
+    }
+
+    /**
+     * Animate the step circle with a spinning effect
+     */
+    private void animateStepCircle(FrameLayout circle) {
+        RotateAnimation rotate = new RotateAnimation(
+                0, 360,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f
+        );
+        rotate.setDuration(600);
+        rotate.setRepeatCount(0);
+        circle.startAnimation(rotate);
     }
 
     /**
@@ -226,7 +370,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     /**
      * Step 1: Send reset code to email
-     * This corresponds to the first API response: {"email": "customer@example.com"}
      */
     private void sendResetCode() {
         String email = emailInput.getText().toString().trim();
@@ -252,127 +395,21 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         // Simulate API call
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             progressBar.setVisibility(View.GONE);
-
-            // API Response: {"email": "customer@example.com"}
-            // In real implementation, call your API here
-            moveToStep2();
-
             sendCodeButton.setEnabled(true);
+
+            // Move to Step 2
+            emailDisplayText.setText(currentEmail);
+            navigateToStep(2);
+
             Toast.makeText(this, "Reset code sent to " + email, Toast.LENGTH_SHORT).show();
         }, 1500);
     }
 
     /**
-     * Transition from Step 1 to Step 2
+     * Step 2: Verify OTP code and move to Step 3
      */
-    private void moveToStep2() {
-        // Update email display
-        emailDisplayText.setText(currentEmail);
-
-        // Update progress indicator
-        updateProgressIndicator();
-
-        // Animate spinner to Step 2
-        if (stepSpinnerView != null && step2Circle != null) {
-            stepSpinnerView.attachToStep(step2Circle, true);
-        }
-
-        // Animate transition
-        step1EmailForm.animate()
-                .alpha(0f)
-                .setDuration(300)
-                .withEndAction(() -> {
-                    step1EmailForm.setVisibility(View.GONE);
-                    step2OtpForm.setVisibility(View.VISIBLE);
-                    step2OtpForm.setAlpha(0f);
-                    step2OtpForm.animate()
-                            .alpha(1f)
-                            .setDuration(300)
-                            .start();
-                    otpDigits[0].requestFocus();
-                    startResendTimer();
-                })
-                .start();
-    }
-
-    /**
-     * Update progress indicator to show step 2 is active
-     * Step 1 becomes: Dark brown circle + white checkmark
-     * Step 2 becomes: Golden/primary filled circle + white "2"
-     */
-    private void updateProgressIndicator() {
-        // Step 1: Change to dark brown with white checkmark
-        if (step1Circle != null) {
-            step1Circle.setBackground(getDrawable(R.drawable.step_completed_circle_bg));
-            step1Circle.setBackgroundTintList(null);
-        }
-        
-        if (step1Number != null) {
-            step1Number.setText("✓");
-            step1Number.setTextColor(getColor(R.color.white));
-        }
-        
-        // Step 2: Change background to primary filled circle (same as step 1 but golden)
-        if (step2Circle != null) {
-            step2Circle.setBackground(getDrawable(R.drawable.step_completed_circle_bg));
-            step2Circle.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(getColor(R.color.primary))
-            );
-        }
-        
-        if (step2Number != null) {
-            step2Number.setText("2");
-            step2Number.setTextColor(getColor(R.color.white));
-        }
-        
-        // Progress line: Change to golden
-        if (progressLine != null) {
-            progressLine.setBackgroundColor(getColor(R.color.primary));
-        }
-    }
-
-    /**
-     * Reset progress indicator (when going back to step 1)
-     * Step 1: Dark brown with white "1"
-     * Step 2: Light gray with muted "2"
-     * Line: Light gray
-     */
-    private void resetProgressIndicator() {
-        // Step 1: Keep dark brown, show "1"
-        if (step1Circle != null) {
-            step1Circle.setBackground(getDrawable(R.drawable.step_completed_circle_bg));
-        }
-        
-        if (step1Number != null) {
-            step1Number.setText("1");
-            step1Number.setTextColor(getColor(R.color.white));
-        }
-        
-        // Step 2: Back to light gray with muted text
-        if (step2Circle != null) {
-            step2Circle.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(getColor(R.color.button_toggle_inactive))
-            );
-        }
-        
-        if (step2Number != null) {
-            step2Number.setTextColor(getColor(R.color.text_muted));
-        }
-        
-        // Progress line: Back to light gray
-        if (progressLine != null) {
-            progressLine.setBackgroundColor(getColor(R.color.button_toggle_inactive));
-        }
-    }
-
-    /**
-     * Step 2: Reset password with OTP verification
-     * This corresponds to the second API response: {"email": "customer@example.com", "otp": "123456"}
-     */
-    private void resetPassword() {
+    private void verifyOtp() {
         String otp = getOtpValue();
-        String newPassword = newPasswordInput.getText().toString().trim();
-        String confirmPassword = confirmPasswordInput.getText().toString().trim();
 
         // Validation
         clearErrors();
@@ -381,6 +418,34 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             showOtpError("Please enter the complete 6-digit code");
             return;
         }
+
+        currentOtp = otp;
+
+        // Show progress
+        progressBar.setVisibility(View.VISIBLE);
+        verifyCodeButton.setEnabled(false);
+
+        // Simulate API call
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            progressBar.setVisibility(View.GONE);
+            verifyCodeButton.setEnabled(true);
+
+            // Move to Step 3 (Password Reset)
+            navigateToStep(3);
+
+            Toast.makeText(this, "Code verified successfully!", Toast.LENGTH_SHORT).show();
+        }, 1500);
+    }
+
+    /**
+     * Step 3: Reset password
+     */
+    private void resetPassword() {
+        String newPassword = newPasswordInput.getText().toString().trim();
+        String confirmPassword = confirmPasswordInput.getText().toString().trim();
+
+        // Validation
+        clearErrors();
 
         if (newPassword.isEmpty()) {
             showPasswordError("Please enter a new password");
@@ -405,42 +470,17 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             progressBar.setVisibility(View.GONE);
 
-            // API Response: {"email": "customer@example.com", "otp": "123456"}
-            // In real implementation, call your API here with:
+            // API Call would include:
             // - email: currentEmail
-            // - otp: otp
+            // - otp: currentOtp
             // - newPassword: newPassword
-
-            // Update step 2 circle to green with checkmark
-            updateStep2Completed();
 
             resetPasswordButton.setEnabled(true);
             Toast.makeText(this, "Password reset successfully!", Toast.LENGTH_SHORT).show();
             
             // Close activity after short delay
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                finish();
-            }, 1500);
+            new Handler(Looper.getMainLooper()).postDelayed(this::finish, 1500);
         }, 1500);
-    }
-
-    /**
-     * Update Step 2 circle to show completion when password reset is successful
-     */
-    private void updateStep2Completed() {
-        if (step2Circle != null) {
-            // Change background to green checkmark circle
-            step2Circle.setBackground(getDrawable(R.drawable.step_completed_circle_bg));
-            step2Circle.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(getColor(R.color.green_stock))
-            );
-        }
-        
-        if (step2Number != null) {
-            // Show green checkmark instead of "2"
-            step2Number.setText("✓");
-            step2Number.setTextColor(getColor(R.color.white));
-        }
     }
 
     /**

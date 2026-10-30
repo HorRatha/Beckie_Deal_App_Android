@@ -46,7 +46,13 @@ public class LoginActivity extends BaseActivity {
     private EditText regNameInput;
     private EditText regEmailInput;
     private EditText regPasswordInput;
+    private EditText regConfirmPasswordInput;
     private Button registerButton;
+    
+    // Multi-step registration
+    private View step1Container;
+    private View step2Container;
+    private int currentRegisterStep = 1; // 1 or 2
     
     private boolean isLoginMode = true;
     private AuthApiService authApiService;
@@ -123,7 +129,12 @@ public class LoginActivity extends BaseActivity {
         regNameInput = findViewById(R.id.nameInput);
         regEmailInput = findViewById(R.id.regEmailInput);
         regPasswordInput = findViewById(R.id.regPasswordInput);
+        regConfirmPasswordInput = findViewById(R.id.regConfirmPasswordInput);
         registerButton = findViewById(R.id.registerButton);
+        
+        // Initialize multi-step register views
+        step1Container = findViewById(R.id.step1Container);
+        step2Container = findViewById(R.id.step2Container);
         
         // Apply animations
         UiAnimations.pressBounce(loginButton, registerLink, forgotPassword, registerButton, loginLink);
@@ -142,9 +153,20 @@ public class LoginActivity extends BaseActivity {
             loginButton.setOnClickListener(v -> attemptLogin());
         }
 
-        // Register button click listener
+        // Register button click listener (Sign Up - final step)
         if (registerButton != null) {
             registerButton.setOnClickListener(v -> attemptRegister());
+        }
+
+        // Multi-step register buttons
+        Button nextToPasswordButton = findViewById(R.id.nextToPasswordButton);
+        if (nextToPasswordButton != null) {
+            nextToPasswordButton.setOnClickListener(v -> goToStep2());
+        }
+        
+        Button backToInfoButton = findViewById(R.id.backToInfoButton);
+        if (backToInfoButton != null) {
+            backToInfoButton.setOnClickListener(v -> goBackToStep1());
         }
 
         // Register link click listener
@@ -170,7 +192,7 @@ public class LoginActivity extends BaseActivity {
 
         // Setup password visibility toggles for register form
         setupPasswordVisibilityToggle(regPasswordInput, R.id.toggleRegPasswordVisibility);
-        setupPasswordVisibilityToggle(findViewById(R.id.regConfirmPasswordInput), R.id.toggleRegConfirmPasswordVisibility);
+        setupPasswordVisibilityToggle(regConfirmPasswordInput, R.id.toggleRegConfirmPasswordVisibility);
 
         // Set initial button states (Sign In activated by default)
         if (signInToggle != null) {
@@ -551,6 +573,74 @@ public class LoginActivity extends BaseActivity {
     }
     
     /**
+     * Move to Step 2 (Password fields) in registration.
+     * Validates Step 1 input first.
+     */
+    private void goToStep2() {
+        // Validate Step 1 inputs
+        String name = regNameInput.getText().toString().trim();
+        String email = regEmailInput.getText().toString().trim();
+        
+        if (name.isEmpty()) {
+            regNameInput.setError("Full name is required");
+            regNameInput.requestFocus();
+            return;
+        }
+        
+        if (email.isEmpty()) {
+            regEmailInput.setError("Email is required");
+            regEmailInput.requestFocus();
+            return;
+        }
+        
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            regEmailInput.setError("Please enter a valid email");
+            regEmailInput.requestFocus();
+            return;
+        }
+        
+        // Move to step 2
+        currentRegisterStep = 2;
+        
+        // Animate step transition
+        if (step1Container != null && step2Container != null) {
+            // Slide out step 1 to the left
+            step1Container.startAnimation(android.view.animation.AnimationUtils.loadAnimation(
+                this, R.anim.slide_out_left));
+            
+            // After step 1 slides out, slide in step 2 from right
+            step1Container.postDelayed(() -> {
+                step1Container.setVisibility(View.GONE);
+                step2Container.setVisibility(View.VISIBLE);
+                step2Container.startAnimation(android.view.animation.AnimationUtils.loadAnimation(
+                    this, R.anim.slide_in_right));
+            }, 150);
+        }
+    }
+    
+    /**
+     * Go back to Step 1 (Info fields) in registration.
+     */
+    private void goBackToStep1() {
+        currentRegisterStep = 1;
+        
+        // Animate step transition
+        if (step1Container != null && step2Container != null) {
+            // Slide out step 2 to the right
+            step2Container.startAnimation(android.view.animation.AnimationUtils.loadAnimation(
+                this, R.anim.slide_out_right));
+            
+            // After step 2 slides out, slide in step 1 from left
+            step2Container.postDelayed(() -> {
+                step2Container.setVisibility(View.GONE);
+                step1Container.setVisibility(View.VISIBLE);
+                step1Container.startAnimation(android.view.animation.AnimationUtils.loadAnimation(
+                    this, R.anim.slide_in_left));
+            }, 150);
+        }
+    }
+    
+    /**
      * Attempt to register new user account.
      * Validates input and makes API call.
      */
@@ -559,6 +649,7 @@ public class LoginActivity extends BaseActivity {
         String name = regNameInput.getText().toString().trim();
         String email = regEmailInput.getText().toString().trim();
         String password = regPasswordInput.getText().toString().trim();
+        String confirmPassword = regConfirmPasswordInput.getText().toString().trim();
         
         // Validate input
         if (name.isEmpty()) {
@@ -588,6 +679,18 @@ public class LoginActivity extends BaseActivity {
         if (password.length() < 8) {
             regPasswordInput.setError("Password must be at least 8 characters");
             regPasswordInput.requestFocus();
+            return;
+        }
+        
+        if (confirmPassword.isEmpty()) {
+            regConfirmPasswordInput.setError("Please confirm your password");
+            regConfirmPasswordInput.requestFocus();
+            return;
+        }
+        
+        if (!password.equals(confirmPassword)) {
+            regConfirmPasswordInput.setError("Passwords do not match");
+            regConfirmPasswordInput.requestFocus();
             return;
         }
         
