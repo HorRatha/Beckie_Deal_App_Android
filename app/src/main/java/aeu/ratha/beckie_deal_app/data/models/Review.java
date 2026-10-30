@@ -40,6 +40,21 @@ public class Review {
     
     @SerializedName("customer")
     private ReviewCustomer customer;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("first_name")
+    private String firstName;
+
+    @SerializedName("last_name")
+    private String lastName;
+
+    @SerializedName("user_name")
+    private String userName;
+
+    @SerializedName("username")
+    private String username;
     
     @SerializedName("created_at")
     private String createdAt;
@@ -101,6 +116,31 @@ public class Review {
     
     public ReviewCustomer getCustomer() {
         return customer;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFullName() {
+        if (customer != null && customer.getFullName() != null && !customer.getFullName().trim().isEmpty()) {
+            return customer.getFullName().trim();
+        }
+        if (name != null && !name.trim().isEmpty()) {
+            return name.trim();
+        }
+        if (firstName != null && lastName != null) {
+            return (firstName + " " + lastName).trim();
+        }
+        if (firstName != null && !firstName.trim().isEmpty()) return firstName.trim();
+        if (lastName != null && !lastName.trim().isEmpty()) return lastName.trim();
+        if (userName != null && !userName.trim().isEmpty()) return userName.trim();
+        if (username != null && !username.trim().isEmpty()) return username.trim();
+        return null;
     }
     
     public String getCreatedAt() {

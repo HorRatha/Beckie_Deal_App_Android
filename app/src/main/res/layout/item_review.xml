@@ -85,10 +85,11 @@
         android:rating="4"
         android:stepSize="1"
         android:isIndicator="true"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
-        android:layout_marginBottom="8dp"
-        style="?android:attr/ratingBarStyleSmall" />
+        android:progressTint="@color/yellow_star"
+        android:secondaryProgressTint="@color/yellow_star"
+        android:progressBackgroundTint="#D1D5DB"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_marginBottom="8dp" />
 
     <!-- Review title -->
     <TextView

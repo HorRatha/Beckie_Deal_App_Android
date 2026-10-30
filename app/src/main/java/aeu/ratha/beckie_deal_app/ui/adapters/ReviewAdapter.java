@@ -131,11 +131,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             commentTextView.setText(review.getComment() != null ? review.getComment() : "");
 
             // Customer info
-            if (review.getCustomer() != null && review.getCustomer().getName() != null && !review.getCustomer().getName().isEmpty()) {
-                customerNameTextView.setText(review.getCustomer().getName());
-                loadCustomerAvatar(review.getCustomer().getAvatar());
+            String fullName = review.getFullName();
+            if (fullName != null && !fullName.isEmpty()) {
+                customerNameTextView.setText(fullName);
+                loadCustomerAvatar(review.getCustomer() != null ? review.getCustomer().getAvatar() : null);
             } else {
-                customerNameTextView.setText("Verified Customer");
+                customerNameTextView.setText("Customer");
             }
 
             // Date

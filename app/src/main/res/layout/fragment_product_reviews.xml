@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -34,91 +33,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="visible">
-
-        <!-- Review Summary Section -->
-        <LinearLayout
-            android:id="@+id/review_summary_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/surface"
-            android:padding="16dp"
-            android:layout_margin="16dp">
-
-            <!-- Average rating display -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="24dp">
-
-                    <TextView
-                        android:id="@+id/average_rating_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4.5"
-                        android:textSize="32sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textColor="@color/text_primary" />
-
-                    <RatingBar
-                        android:id="@+id/summary_rating_bar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:numStars="5"
-                        android:rating="4.5"
-                        android:stepSize="0.1"
-                        android:isIndicator="true"
-                        android:scaleX="0.7"
-                        android:scaleY="0.7"
-                        style="?android:attr/ratingBarStyleSmall" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/total_reviews_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="128 Reviews"
-                        android:textSize="14sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="8dp" />
-
-                    <!-- Rating breakdown -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:id="@+id/rating_breakdown_container" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Write review button -->
-            <Button
-                android:id="@+id/write_review_button"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="Write a Review"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_marginTop="8dp" />
-
-        </LinearLayout>
 
         <!-- Reviews list header -->
         <TextView
