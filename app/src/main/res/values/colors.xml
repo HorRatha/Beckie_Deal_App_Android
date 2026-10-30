@@ -127,4 +127,11 @@
 
     <!-- Dashed Divider Color -->
     <color name="divider_dashed">#E3C57B</color>
+
+    <!-- Review items specific colors -->
+    <color name="orange">#F97316</color>
+    <color name="orange_yellow">#F59E0B</color>
+    <color name="star_yellow">#FFC107</color>
+    <color name="star_empty">#CBD5E1</color>
+    <color name="red_delete">#E53935</color>
 </resources>

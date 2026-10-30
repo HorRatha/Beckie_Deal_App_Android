@@ -3,8 +3,13 @@ package aeu.ratha.beckie_deal_app.ui.dialogs;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -12,30 +17,33 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
+
+import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.data.models.ProductDetail;
 import aeu.ratha.beckie_deal_app.data.models.Review;
 import aeu.ratha.beckie_deal_app.data.models.ReviewCreateRequest;
+import aeu.ratha.beckie_deal_app.data.repository.ProductRepository;
 import aeu.ratha.beckie_deal_app.data.repository.ReviewRepository;
+import aeu.ratha.beckie_deal_app.utils.helpers.ImageUrlHelper;
+import aeu.ratha.beckie_deal_app.utils.managers.ProductImageCacheManager;
 
 /**
- * Dialog for creating or editing a product review.
- * Shows rating picker, title field, comment field.
- *
- * Args:
- *  - product_id: String (UUID of product)
- *  - order_id: long (Order ID)
- *  - review: Review (optional, for editing)
+ * BottomSheetDialogFragment for creating or editing a product review.
+ * Modern UI matching the rest of the application.
  */
-public class ReviewDialog extends DialogFragment implements
+public class ReviewDialog extends BottomSheetDialogFragment implements
         ReviewRepository.ReviewCreateCallback {
 
     private static final String TAG = "ReviewDialog";
     private static final String ARG_PRODUCT_ID = "product_id";
     private static final String ARG_ORDER_ID = "order_id";
-    private static final String ARG_REVIEW = "review";
+
+    private static final String[] RATING_WORDS = {"", "Poor", "Fair", "Good", "Very good", "Excellent"};
 
     private String productId;
     private long orderId;
@@ -44,11 +52,15 @@ public class ReviewDialog extends DialogFragment implements
     private ReviewRepository reviewRepository;
     private ReviewDialogListener dialogListener;
 
+    private TextView titleTextView;
+    private View closeButton;
     private RatingBar ratingRatingBar;
+    private TextView ratingLabel;
     private EditText titleEditText;
     private EditText commentEditText;
+    private TextView commentCounter;
     private ProgressBar submitProgressBar;
-    private Button submitButton;
+    private View submitButton;
 
     public static ReviewDialog newInstance(String productId, long orderId) {
         ReviewDialog dialog = new ReviewDialog();
@@ -76,6 +88,7 @@ public class ReviewDialog extends DialogFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.ThemeOverlay_App_BottomSheetFlat);
         if (getArguments() != null) {
             productId = getArguments().getString(ARG_PRODUCT_ID);
             orderId = getArguments().getLong(ARG_ORDER_ID);
@@ -86,102 +99,183 @@ public class ReviewDialog extends DialogFragment implements
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        
-        // Create view
-        android.view.View dialogView = requireActivity().getLayoutInflater()
-                .inflate(R.layout.dialog_review, null);
-        
-        initializeViews(dialogView);
+        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        }
+        dialog.setOnShowListener(d -> {
+            FrameLayout sheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (sheet != null) {
+                BottomSheetBehavior<FrameLayout> b = BottomSheetBehavior.from(sheet);
+                b.setState(BottomSheetBehavior.STATE_EXPANDED);
+                b.setSkipCollapsed(true);
+            }
+        });
+        return dialog;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_review, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initializeViews(view);
         setupListeners();
-        
-        // Populate existing data if editing
+
         if (existingReview != null) {
             populateExistingReview();
         }
-
-        builder.setView(dialogView)
-                .setTitle(existingReview == null ? "Write a Review" : "Edit Review")
-                .setNegativeButton("Cancel", (dialog, which) -> dismiss());
-
-        return builder.create();
     }
 
-    private void initializeViews(android.view.View view) {
+    private void initializeViews(View view) {
+        titleTextView = view.findViewById(R.id.dialog_title);
+        closeButton = view.findViewById(R.id.dialog_close);
         ratingRatingBar = view.findViewById(R.id.dialog_rating_bar);
+        ratingLabel = view.findViewById(R.id.dialog_rating_label);
         titleEditText = view.findViewById(R.id.dialog_title_edit);
         commentEditText = view.findViewById(R.id.dialog_comment_edit);
+        commentCounter = view.findViewById(R.id.dialog_comment_counter);
         submitProgressBar = view.findViewById(R.id.dialog_submit_progress);
         submitButton = view.findViewById(R.id.dialog_submit_button);
+
+        ImageView productImage = view.findViewById(R.id.dialog_product_image);
+        TextView productName = view.findViewById(R.id.dialog_product_name);
+        TextView productSub = view.findViewById(R.id.dialog_product_sub);
+
+        if (titleTextView != null) {
+            titleTextView.setText(existingReview == null ? "Write a review" : "Edit review");
+        }
+
+        if (orderId > 0 && productSub != null) {
+            productSub.setText("Order #" + orderId);
+        }
+
+        if (productId != null) {
+            String cachedImg = ProductImageCacheManager.getCachedImageUrl(requireContext(), productId);
+            if (cachedImg != null && !cachedImg.trim().isEmpty() && productImage != null) {
+                Glide.with(this)
+                        .load(ImageUrlHelper.getImageUrlOrFallback(cachedImg))
+                        .placeholder(R.drawable.placeholder_image)
+                        .error(R.drawable.placeholder_image)
+                        .centerCrop()
+                        .into(productImage);
+            }
+
+            ProductRepository.getInstance(requireContext()).fetchProductDetail(productId, new ProductRepository.SingleProductCallback() {
+                @Override
+                public void onSuccess(ProductDetail detail) {
+                    if (!isAdded() || detail == null) return;
+                    requireActivity().runOnUiThread(() -> {
+                        if (productName != null && detail.getName() != null) {
+                            productName.setText(detail.getName());
+                        }
+                        if (productImage != null && detail.getThumbnail() != null && !detail.getThumbnail().trim().isEmpty()) {
+                            String thumb = ImageUrlHelper.getImageUrlOrFallback(detail.getThumbnail());
+                            ProductImageCacheManager.cacheImageUrl(requireContext(), productId, thumb);
+                            Glide.with(ReviewDialog.this)
+                                    .load(thumb)
+                                    .placeholder(R.drawable.placeholder_image)
+                                    .error(R.drawable.placeholder_image)
+                                    .centerCrop()
+                                    .into(productImage);
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(String error) {}
+            });
+        }
     }
 
     private void setupListeners() {
-        submitButton.setOnClickListener(v -> submitReview());
+        if (closeButton != null) {
+            closeButton.setOnClickListener(v -> dismiss());
+        }
+
+        if (ratingRatingBar != null) {
+            ratingRatingBar.setOnRatingBarChangeListener((bar, rating, fromUser) -> {
+                int r = Math.max(0, Math.min(5, Math.round(rating)));
+                if (ratingLabel != null) {
+                    ratingLabel.setText(RATING_WORDS[r]);
+                }
+            });
+        }
+
+        if (commentEditText != null && commentCounter != null) {
+            commentEditText.addTextChangedListener(new android.text.TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    commentCounter.setText(s.length() + " / 500");
+                }
+                @Override public void afterTextChanged(android.text.Editable s) {}
+            });
+        }
+
+        if (submitButton != null) {
+            submitButton.setOnClickListener(v -> submitReview());
+        }
     }
 
     private void populateExistingReview() {
         if (existingReview == null) return;
-        ratingRatingBar.setRating(existingReview.getRating());
-        titleEditText.setText(existingReview.getTitle());
-        commentEditText.setText(existingReview.getComment());
+        if (ratingRatingBar != null) {
+            ratingRatingBar.setRating(existingReview.getRating());
+            int r = Math.max(0, Math.min(5, existingReview.getRating()));
+            if (ratingLabel != null) {
+                ratingLabel.setText(RATING_WORDS[r]);
+            }
+        }
+        if (titleEditText != null) titleEditText.setText(existingReview.getTitle());
+        if (commentEditText != null) commentEditText.setText(existingReview.getComment());
     }
 
     private void submitReview() {
-        // Validate input
-        int rating = (int) ratingRatingBar.getRating();
-        String title = titleEditText.getText().toString().trim();
-        String comment = commentEditText.getText().toString().trim();
+        int rating = ratingRatingBar != null ? Math.round(ratingRatingBar.getRating()) : 0;
+        String title = titleEditText != null ? titleEditText.getText().toString().trim() : "";
+        String comment = commentEditText != null ? commentEditText.getText().toString().trim() : "";
 
         if (rating == 0) {
-            Toast.makeText(requireContext(), "Please select a rating", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (title.isEmpty()) {
-            titleEditText.setError("Title is required");
-            return;
-        }
-
-        if (comment.isEmpty()) {
-            commentEditText.setError("Comment is required");
+            Toast.makeText(requireContext(), "Please select a star rating", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Show loading
-        submitProgressBar.setVisibility(android.view.View.VISIBLE);
-        submitButton.setEnabled(false);
+        if (submitProgressBar != null) submitProgressBar.setVisibility(View.VISIBLE);
+        if (submitButton != null) submitButton.setVisibility(View.INVISIBLE);
+        setCancelable(false);
 
         ReviewCreateRequest request = new ReviewCreateRequest(
                 productId, orderId, rating, title, comment);
 
         if (existingReview == null) {
-            // Create new review
             reviewRepository.createReview(request, this);
         } else {
-            // Update existing review
             reviewRepository.updateReview(existingReview.getId(), request, this);
         }
     }
 
     private void hideLoading() {
-        submitProgressBar.setVisibility(android.view.View.GONE);
-        submitButton.setEnabled(true);
+        if (submitProgressBar != null) submitProgressBar.setVisibility(View.GONE);
+        if (submitButton != null) submitButton.setVisibility(View.VISIBLE);
+        setCancelable(true);
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // ReviewRepository.ReviewCreateCallback
-    // ─────────────────────────────────────────────────────────────────────────
 
     @Override
     public void onReviewCreated(Review review) {
-        Log.d(TAG, "Review created/updated successfully");
+        Log.d(TAG, "Review submitted successfully");
         hideLoading();
         Toast.makeText(requireContext(), "Review submitted successfully!", Toast.LENGTH_SHORT).show();
-        
+
         if (dialogListener != null) {
             dialogListener.onReviewSubmitted(review);
         }
-        
+
         dismiss();
     }
 
@@ -192,9 +286,6 @@ public class ReviewDialog extends DialogFragment implements
         Toast.makeText(requireContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Callback interface for review dialog events.
-     */
     public interface ReviewDialogListener {
         void onReviewSubmitted(Review review);
     }

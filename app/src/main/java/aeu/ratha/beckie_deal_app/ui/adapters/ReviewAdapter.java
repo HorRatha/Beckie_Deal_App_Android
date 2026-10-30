@@ -105,63 +105,77 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
-            ratingBar = itemView.findViewById(R.id.review_rating_bar);
-            titleTextView = itemView.findViewById(R.id.review_title);
-            commentTextView = itemView.findViewById(R.id.review_comment);
-            customerNameTextView = itemView.findViewById(R.id.review_customer_name);
-            dateTextView = itemView.findViewById(R.id.review_date);
-            customerAvatarImageView = itemView.findViewById(R.id.review_customer_avatar);
-            verifiedBadgeTextView = itemView.findViewById(R.id.review_verified_badge);
-            helpfulCountTextView = itemView.findViewById(R.id.review_helpful_count);
-            editButton = itemView.findViewById(R.id.review_edit_button);
-            deleteButton = itemView.findViewById(R.id.review_delete_button);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            titleTextView = itemView.findViewById(R.id.productName);
+            commentTextView = itemView.findViewById(R.id.comment);
+            customerNameTextView = itemView.findViewById(R.id.productName);
+            dateTextView = null;
+            customerAvatarImageView = itemView.findViewById(R.id.productImage);
+            verifiedBadgeTextView = null;
+            helpfulCountTextView = null;
+            editButton = itemView.findViewById(R.id.moreBtn);
+            deleteButton = null;
         }
 
         public void bind(Review review, int position) {
             // Rating
-            ratingBar.setRating(review.getRating());
+            if (ratingBar != null) {
+                ratingBar.setRating(review.getRating());
+            }
 
             // Title and comment
-            if (review.getTitle() != null && !review.getTitle().isEmpty()) {
-                titleTextView.setVisibility(View.VISIBLE);
-                titleTextView.setText(review.getTitle());
-            } else {
-                titleTextView.setVisibility(View.GONE);
+            if (titleTextView != null) {
+                String nameOrTitle = review.getTitle() != null && !review.getTitle().isEmpty()
+                        ? review.getTitle()
+                        : (review.getFullName() != null ? review.getFullName() : "Review");
+                titleTextView.setText(nameOrTitle);
             }
-            commentTextView.setText(review.getComment() != null ? review.getComment() : "");
+            if (commentTextView != null) {
+                commentTextView.setText(review.getComment() != null ? review.getComment() : "");
+            }
 
             // Customer info
-            String fullName = review.getFullName();
-            if (fullName != null && !fullName.isEmpty()) {
-                customerNameTextView.setText(fullName);
+            if (customerNameTextView != null && titleTextView != customerNameTextView) {
+                String fullName = review.getFullName();
+                if (fullName != null && !fullName.isEmpty()) {
+                    customerNameTextView.setText(fullName);
+                    loadCustomerAvatar(review.getCustomer() != null ? review.getCustomer().getAvatar() : null);
+                } else {
+                    customerNameTextView.setText("Customer");
+                }
+            } else if (customerAvatarImageView != null) {
                 loadCustomerAvatar(review.getCustomer() != null ? review.getCustomer().getAvatar() : null);
-            } else {
-                customerNameTextView.setText("Customer");
             }
 
             // Date
-            String formattedDate = formatDate(review.getCreatedAt());
-            if (formattedDate != null && !formattedDate.isEmpty()) {
-                dateTextView.setVisibility(View.VISIBLE);
-                dateTextView.setText(formattedDate);
-            } else {
-                dateTextView.setVisibility(View.GONE);
+            if (dateTextView != null) {
+                String formattedDate = formatDate(review.getCreatedAt());
+                if (formattedDate != null && !formattedDate.isEmpty()) {
+                    dateTextView.setVisibility(View.VISIBLE);
+                    dateTextView.setText(formattedDate);
+                } else {
+                    dateTextView.setVisibility(View.GONE);
+                }
             }
 
             // Verified purchase badge
-            if (review.isVerifiedPurchase()) {
-                verifiedBadgeTextView.setVisibility(View.VISIBLE);
-                verifiedBadgeTextView.setText("✓ Verified");
-            } else {
-                verifiedBadgeTextView.setVisibility(View.GONE);
+            if (verifiedBadgeTextView != null) {
+                if (review.isVerifiedPurchase()) {
+                    verifiedBadgeTextView.setVisibility(View.VISIBLE);
+                    verifiedBadgeTextView.setText("✓ Verified");
+                } else {
+                    verifiedBadgeTextView.setVisibility(View.GONE);
+                }
             }
 
             // Helpful count
-            if (review.getHelpfulCount() > 0) {
-                helpfulCountTextView.setVisibility(View.VISIBLE);
-                helpfulCountTextView.setText(review.getHelpfulCount() + " helpful");
-            } else {
-                helpfulCountTextView.setVisibility(View.GONE);
+            if (helpfulCountTextView != null) {
+                if (review.getHelpfulCount() > 0) {
+                    helpfulCountTextView.setVisibility(View.VISIBLE);
+                    helpfulCountTextView.setText(review.getHelpfulCount() + " helpful");
+                } else {
+                    helpfulCountTextView.setVisibility(View.GONE);
+                }
             }
 
             // Action buttons (edit/delete)

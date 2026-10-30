@@ -1,171 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    item_review.xml
-    Single review item row displayed in product reviews list or my reviews section.
-    Layout: customer avatar | rating + title + comment | verified badge | helpful count
--->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="@color/white"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp">
 
-    <!-- Header: Customer info and date -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_product_thumb"
+        android:clipToOutline="true"
+        android:contentDescription="Product image"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
+        android:layout_marginStart="12dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/moreBtn"
+        app:layout_constraintStart_toEndOf="@id/productImage"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Customer avatar -->
-        <ImageView
-            android:id="@+id/review_customer_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Customer avatar"
-            android:src="@drawable/ic_profile_placeholder" />
-
-        <!-- Customer name and date -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="12dp">
-
-            <TextView
-                android:id="@+id/review_customer_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Customer Name"
-                android:textSize="14sp"
-                android:fontFamily="@font/synonym_medium"
-                android:textColor="@color/text_primary" />
-
-            <TextView
-                android:id="@+id/review_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Oct 29, 2026"
-                android:textSize="12sp"
-                android:fontFamily="@font/synonym_regular"
-                android:textColor="@color/text_muted"
-                android:layout_marginTop="2dp" />
-
-        </LinearLayout>
-
-        <!-- Verified badge -->
-        <TextView
-            android:id="@+id/review_verified_badge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="✓ Verified"
-            android:textSize="11sp"
-            android:fontFamily="@font/synonym_medium"
-            android:textColor="@color/green_stock"
-            android:background="@drawable/badge_rect"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-    <!-- Rating bar -->
     <RatingBar
-        android:id="@+id/review_rating_bar"
+        android:id="@+id/ratingBar"
+        style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:numStars="5"
-        android:rating="4"
-        android:stepSize="1"
+        android:layout_marginTop="2dp"
         android:isIndicator="true"
-        android:progressTint="@color/yellow_star"
-        android:secondaryProgressTint="@color/yellow_star"
-        android:progressBackgroundTint="#D1D5DB"
-        style="?android:attr/ratingBarStyleSmall"
-        android:layout_marginBottom="8dp" />
+        android:numStars="5"
+        android:progressTint="@color/star_yellow"
+        android:secondaryProgressTint="@color/star_empty"
+        app:layout_constraintStart_toStartOf="@id/productName"
+        app:layout_constraintTop_toBottomOf="@id/productName" />
 
-    <!-- Review title -->
     <TextView
-        android:id="@+id/review_title"
-        android:layout_width="match_parent"
+        android:id="@+id/comment"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Great product, highly recommended!"
-        android:textSize="14sp"
-        android:fontFamily="@font/synonym_semibold"
+        android:layout_marginTop="4dp"
         android:textColor="@color/text_primary"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Review comment -->
-    <TextView
-        android:id="@+id/review_comment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="This is an excellent review comment describing the product experience in detail..."
         android:textSize="13sp"
-        android:fontFamily="@font/synonym_regular"
-        android:textColor="@color/text_secondary"
-        android:layout_marginBottom="12dp"
-        android:lineSpacingMultiplier="1.3" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/productName"
+        app:layout_constraintTop_toBottomOf="@id/ratingBar" />
 
-    <!-- Helpful count -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
-
-        <TextView
-            android:id="@+id/review_helpful_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="👍 12 found this helpful"
-            android:textSize="11sp"
-            android:fontFamily="@font/synonym_regular"
-            android:textColor="@color/text_muted"
-            android:visibility="gone" />
-
-        <!-- Action buttons (edit/delete) - shown only for user's own reviews -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end">
-
-            <Button
-                android:id="@+id/review_edit_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit"
-                android:textSize="11sp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_marginEnd="8dp"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/review_delete_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delete"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:textSize="11sp"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- Divider -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/border_color"
-        android:layout_marginTop="12dp" />
-
-</LinearLayout>
+    <!-- 3 dot, top end -->
+    <ImageButton
+        android:id="@+id/moreBtn"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="More options"
+        android:src="@drawable/ic_more_vert"
+        app:tint="@color/text_secondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
