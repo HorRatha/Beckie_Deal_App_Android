@@ -14,6 +14,7 @@ import java.util.List;
 
 import aeu.ratha.beckie_deal_app.R;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.managers.NotificationStorageManager;
@@ -23,6 +24,7 @@ public class NotificationsActivity extends BaseActivity {
     private LinearLayout notificationsList;
     private View emptyState;
     private List<NotificationItem> allNotifications = new ArrayList<>();
+    private AppDrawerHelper drawerHelper;
 
     // Filter chips
     private TextView chipAll, chipOrders, chipPromos, chipAlerts;
@@ -32,6 +34,9 @@ public class NotificationsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
+
+        drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        drawerHelper.refreshDrawerWithLatestUserData(this);
 
         setupTopBar();
         setupChips();

@@ -29,6 +29,7 @@ import aeu.ratha.beckie_deal_app.ui.orders.OrderCardData;
 import aeu.ratha.beckie_deal_app.ui.orders.OrderFormat;
 import aeu.ratha.beckie_deal_app.ui.orders.TrackingStep;
 import aeu.ratha.beckie_deal_app.utils.animations.UiAnimations;
+import aeu.ratha.beckie_deal_app.utils.helpers.AppDrawerHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
 import aeu.ratha.beckie_deal_app.utils.helpers.BottomNavHelper;
 import aeu.ratha.beckie_deal_app.utils.managers.OrderManager;
@@ -40,6 +41,7 @@ public class MyOrdersActivity extends BaseActivity {
     private TabLayout tabLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout skeletonLoadingContainer;
+    private AppDrawerHelper drawerHelper;
 
     private OrderRepository orderRepository;
     private List<ApiOrder> apiOrders = new ArrayList<>();
@@ -83,6 +85,9 @@ public class MyOrdersActivity extends BaseActivity {
         setContentView(R.layout.activity_my_orders);
 
         orderRepository = new OrderRepository(this);
+
+        drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        drawerHelper.refreshDrawerWithLatestUserData(this);
 
         setupTopBar();
         setupTabs();

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    Side drawer panel â€” used by all activities via AppDrawerHelper.
+    Side drawer panel — used by all activities via AppDrawerHelper.
     Width is fixed at 300dp so it never covers the full screen.
 -->
 <LinearLayout
@@ -14,69 +14,107 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
-    <!-- â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-    <LinearLayout
+    <!-- ── Header Container with Swoosh Art Outside RelativeLayout ──────── -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark_brown"
-        android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="48dp"
-        android:paddingBottom="24dp">
+        android:elevation="4dp">
 
-        <!-- Avatar circle -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/drawerAvatarCard"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="8dp"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="@color/primary">
+        <!-- Header Card Layout with Background and Padding -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sidebar_header_full_bg"
+            android:clipToOutline="true"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="20dp">
 
-            <!-- WebView to display DiceBear SVG avatar -->
-            <WebView
-                android:id="@+id/drawerAvatarWebView"
+            <!-- Horizontal layout: Avatar on left, text on right -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center" />
-        </com.google.android.material.card.MaterialCardView>
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <!-- Welcome back message for logged-in users -->
-        <TextView
-            android:id="@+id/drawerWelcomeBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Welcome back!"
-            android:textAppearance="@style/TextAppearance.App.Label"
-            android:textAllCaps="false"
-            android:textColor="@color/white_fixed"
-            android:visibility="gone" />
+                <!-- Avatar circle -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/drawerAvatarCard"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:cardCornerRadius="30dp"
+                    app:cardElevation="8dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/primary"
+                    app:cardBackgroundColor="@color/dark_brown">
 
-        <TextView
-            android:id="@+id/drawerUserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Guest User"
-            android:textAppearance="@style/TextAppearance.App.CardPrice"
-            android:textColor="@color/white_fixed" />
+                    <!-- WebView to display DiceBear SVG avatar -->
+                    <WebView
+                        android:id="@+id/drawerAvatarWebView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center" />
+                </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/drawerUserEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Sign in to your account"
-            android:textAppearance="@style/TextAppearance.App.Label"
-            android:textAllCaps="false"
-            android:textColor="@color/white_fixed" />
+                <!-- Text container next to avatar -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
 
-    </LinearLayout>
+                    <!-- Welcome back message for logged-in users -->
+                    <TextView
+                        android:id="@+id/drawerWelcomeBack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome back"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white_fixed"
+                        android:alpha="0.8"
+                        android:visibility="gone" />
 
-    <!-- â”€â”€ Scrollable menu items â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+                    <TextView
+                        android:id="@+id/drawerUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Guest User"
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/white_fixed" />
+
+                    <TextView
+                        android:id="@+id/drawerUserEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Sign in to your account"
+                        android:textAppearance="@style/TextAppearance.App.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white_fixed"
+                        android:alpha="0.8" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!-- Background swoosh art placed OUTSIDE the RelativeLayout in top-end corner -->
+        <ImageView
+            android:layout_width="110dp"
+            android:layout_height="71dp"
+            android:layout_gravity="top|end"
+            android:importantForAccessibility="no"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_card_swoosh" />
+
+    </FrameLayout>
+
+    <!-- ── Scrollable menu items ────────────────────────────────────────────── -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -169,7 +207,7 @@
                     android:textAppearance="@style/TextAppearance.App.CardProductName" />
             </LinearLayout>
 
-            <!-- Wishlist -->
+            <!-- My Coupons -->
             <LinearLayout
                 android:id="@+id/drawerWishlist"
                 android:layout_width="match_parent"
@@ -180,17 +218,19 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="12dp">
+
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/ic_favorite"
                     android:contentDescription="Wishlist"
+                    android:src="@drawable/ic_favorite"
                     app:tint="@color/primary" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="14dp"
+                    android:layout_weight="1"
                     android:text="Wishlist"
                     android:textAppearance="@style/TextAppearance.App.CardProductName" />
                 <!-- Live wishlist count badge -->
@@ -207,16 +247,8 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="8dp"
-                android:background="@color/border_color" />
-
-            <!-- Notifications -->
             <LinearLayout
-                android:id="@+id/drawerNotifications"
+                android:id="@+id/drawerCoupons"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:background="@drawable/drawer_item_bg"
@@ -228,17 +260,81 @@
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/ic_notifications"
-                    android:contentDescription="Notifications"
+                    android:src="@drawable/star_shine_24"
+                    android:contentDescription="My Coupons"
+                    app:tint="@color/primary" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:text="My Coupons"
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
+
+            </LinearLayout>
+
+            <!-- My Reviews -->
+            <LinearLayout
+                android:id="@+id/drawerReviews"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/drawer_item_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/reviews_24"
+                    android:contentDescription="My Reviews"
+                    app:tint="@color/primary" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:text="My Reviews"
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
+            </LinearLayout>
+
+            <!-- Wishlist -->
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="8dp"
+                android:background="@color/border_color" />
+
+            <!-- Edit Profile -->
+            <LinearLayout
+                android:id="@+id/drawerEditProfile"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/drawer_item_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/person_edit_24"
+                    android:contentDescription="Edit Profile"
                     app:tint="@color/text_secondary" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
-                    android:text="Notifications"
+                    android:text="Edit Profile"
                     android:textAppearance="@style/TextAppearance.App.CardProductName" />
             </LinearLayout>
+
+            <!-- Notifications -->
 
             <!-- Dark Mode toggle row -->
             <LinearLayout
@@ -277,6 +373,58 @@
                 android:layout_height="1dp"
                 android:layout_marginVertical="8dp"
                 android:background="@color/border_color" />
+
+            <!-- Privacy Policy -->
+            <LinearLayout
+                android:id="@+id/drawerPrivacy"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/drawer_item_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_privacy"
+                    android:contentDescription="Privacy Policy"
+                    app:tint="@color/text_secondary" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:text="Privacy Policy"
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
+            </LinearLayout>
+
+            <!-- Terms of Service -->
+            <LinearLayout
+                android:id="@+id/drawerTerms"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/drawer_item_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_terms"
+                    android:contentDescription="Terms of Service"
+                    app:tint="@color/text_secondary" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:text="Terms of Service"
+                    android:textAppearance="@style/TextAppearance.App.CardProductName" />
+            </LinearLayout>
 
             <!-- About Us -->
             <LinearLayout
@@ -363,7 +511,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- â”€â”€ Footer version tag â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── Footer version tag ─────────────────────────────────────────────── -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="40dp"

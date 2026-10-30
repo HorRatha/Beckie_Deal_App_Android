@@ -27,6 +27,10 @@ import aeu.ratha.beckie_deal_app.ui.activities.cart.MyOrdersActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.WishlistActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.NotificationsActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.profile.AboutActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.CouponsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.MyReviewsActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.PrivacyPolicyActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.profile.TermsActivity;
 import aeu.ratha.beckie_deal_app.data.repository.WishlistRepository;
 import aeu.ratha.beckie_deal_app.data.repository.ProfileRepository;
 import aeu.ratha.beckie_deal_app.data.models.WishlistResponse;
@@ -476,7 +480,12 @@ public class AppDrawerHelper {
     // ── Wire all items inside layout_drawer.xml ──────────────────────────
 
     private void setupDrawerContent() {
-        if (drawerLayout == null) return;
+        if (drawerLayout == null) {
+            android.util.Log.e("AppDrawerHelper", "ERROR: drawerLayout is NULL in setupDrawerContent!");
+            return;
+        }
+        
+        android.util.Log.d("AppDrawerHelper", "Setting up drawer content for: " + activity.getClass().getSimpleName());
 
         // ── Header: populate user info ───────────────────────────────────
         TextView welcomeBack = drawerLayout.findViewById(R.id.drawerWelcomeBack);
@@ -614,27 +623,43 @@ public class AppDrawerHelper {
         // ── Navigation items ─────────────────────────────────────────────
 
         View homeItem = drawerLayout.findViewById(R.id.drawerHome);
-        if (homeItem != null) homeItem.setOnClickListener(v -> {
-            closeDrawer();
-            if (!(activity instanceof MainActivity)) {
-                Intent intent = new Intent(activity, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                activity.startActivity(intent);
-                activity.overridePendingTransition(0, 0);
-            }
-        });
+        if (homeItem != null) {
+            homeItem.setOnClickListener(v -> {
+                android.util.Log.d("AppDrawerHelper", "Home clicked");
+                closeDrawer();
+                if (!(activity instanceof MainActivity)) {
+                    android.util.Log.d("AppDrawerHelper", "Navigating to MainActivity");
+                    Intent intent = new Intent(activity, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    activity.startActivity(intent);
+                    activity.overridePendingTransition(0, 0);
+                } else {
+                    android.util.Log.d("AppDrawerHelper", "Already on MainActivity");
+                }
+            });
+        } else {
+            android.util.Log.e("AppDrawerHelper", "homeItem is NULL!");
+        }
         prepareDrawerItem(homeItem);
 
         View categoriesItem = drawerLayout.findViewById(R.id.drawerCategories);
-        if (categoriesItem != null) categoriesItem.setOnClickListener(v -> {
-            closeDrawer();
-            if (!(activity instanceof CategoriesActivity)) {
-                Intent intent = new Intent(activity, CategoriesActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                activity.startActivity(intent);
-                activity.overridePendingTransition(0, 0);
-            }
-        });
+        if (categoriesItem != null) {
+            categoriesItem.setOnClickListener(v -> {
+                android.util.Log.d("AppDrawerHelper", "Categories clicked");
+                closeDrawer();
+                if (!(activity instanceof CategoriesActivity)) {
+                    android.util.Log.d("AppDrawerHelper", "Navigating to CategoriesActivity");
+                    Intent intent = new Intent(activity, CategoriesActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    activity.startActivity(intent);
+                    activity.overridePendingTransition(0, 0);
+                } else {
+                    android.util.Log.d("AppDrawerHelper", "Already on CategoriesActivity");
+                }
+            });
+        } else {
+            android.util.Log.e("AppDrawerHelper", "categoriesItem is NULL!");
+        }
         prepareDrawerItem(categoriesItem);
 
         View ordersItem = drawerLayout.findViewById(R.id.drawerOrders);
@@ -649,6 +674,30 @@ public class AppDrawerHelper {
         });
         prepareDrawerItem(ordersItem);
 
+        View couponsItem = drawerLayout.findViewById(R.id.drawerCoupons);
+        if (couponsItem != null) couponsItem.setOnClickListener(v -> {
+            closeDrawer();
+            if (!(activity instanceof CouponsActivity)) {
+                Intent intent = new Intent(activity, CouponsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(0, 0);
+            }
+        });
+        prepareDrawerItem(couponsItem);
+
+        View reviewsItem = drawerLayout.findViewById(R.id.drawerReviews);
+        if (reviewsItem != null) reviewsItem.setOnClickListener(v -> {
+            closeDrawer();
+            if (!(activity instanceof MyReviewsActivity)) {
+                Intent intent = new Intent(activity, MyReviewsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(0, 0);
+            }
+        });
+        prepareDrawerItem(reviewsItem);
+
         View wishlistItem = drawerLayout.findViewById(R.id.drawerWishlist);
         if (wishlistItem != null) wishlistItem.setOnClickListener(v -> {
             closeDrawer();
@@ -661,18 +710,51 @@ public class AppDrawerHelper {
         });
         prepareDrawerItem(wishlistItem);
 
-        View notifItem = drawerLayout.findViewById(R.id.drawerNotifications);
-        if (notifItem != null) notifItem.setOnClickListener(v -> {
+        View editProfileItem = drawerLayout.findViewById(R.id.drawerEditProfile);
+        if (editProfileItem != null) editProfileItem.setOnClickListener(v -> {
             closeDrawer();
-            activity.startActivity(new Intent(activity, NotificationsActivity.class));
+            if (!(activity instanceof ProfileActivity)) {
+                Intent intent = new Intent(activity, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(0, 0);
+            }
         });
-        prepareDrawerItem(notifItem);
+        prepareDrawerItem(editProfileItem);
+
+
+
+        View privacyItem = drawerLayout.findViewById(R.id.drawerPrivacy);
+        if (privacyItem != null) privacyItem.setOnClickListener(v -> {
+            closeDrawer();
+            if (!(activity instanceof PrivacyPolicyActivity)) {
+                Intent intent = new Intent(activity, PrivacyPolicyActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(0, 0);
+            }
+        });
+        prepareDrawerItem(privacyItem);
+
+        View termsItem = drawerLayout.findViewById(R.id.drawerTerms);
+        if (termsItem != null) termsItem.setOnClickListener(v -> {
+            closeDrawer();
+            if (!(activity instanceof TermsActivity)) {
+                Intent intent = new Intent(activity, TermsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(0, 0);
+            }
+        });
+        prepareDrawerItem(termsItem);
 
         View aboutItem = drawerLayout.findViewById(R.id.drawerAbout);
         if (aboutItem != null) aboutItem.setOnClickListener(v -> {
             closeDrawer();
             if (!(activity instanceof AboutActivity)) {
-                activity.startActivity(new Intent(activity, AboutActivity.class));
+                Intent intent = new Intent(activity, AboutActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
             }
         });
