@@ -235,6 +235,19 @@ public class ProductDetailActivity extends BaseActivity {
     private void populateFromDetail(ProductDetail detail) {
         this.productDetail = detail;
 
+        if (detail.getId() != null && !detail.getId().isEmpty()) {
+            loadProductReviews(detail.getId());
+        }
+
+        androidx.fragment.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.productReviewsContainer);
+        if (fragment instanceof aeu.ratha.beckie_deal_app.ui.fragments.ProductReviewsFragment) {
+            java.util.List<aeu.ratha.beckie_deal_app.data.models.Review> bundledReviews = detail.getReviews();
+            aeu.ratha.beckie_deal_app.data.models.ReviewSummary summary = new aeu.ratha.beckie_deal_app.data.models.ReviewSummary();
+            summary.setAverageRating(detail.getAverageRatingAsFloat());
+            summary.setTotalReviews(bundledReviews != null ? bundledReviews.size() : 0);
+            ((aeu.ratha.beckie_deal_app.ui.fragments.ProductReviewsFragment) fragment).setReviews(bundledReviews, summary);
+        }
+
         // ── Name & price ──────────────────────────────────────────────────
         setTextSafe(R.id.detailProductName, detail.getName());
         setTextSafe(R.id.detailProductPrice, detail.getFormattedPrice());

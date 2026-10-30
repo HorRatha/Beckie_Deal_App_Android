@@ -19,20 +19,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import aeu.ratha.beckie_deal_app.R;
 import aeu.ratha.beckie_deal_app.data.models.Review;
+import aeu.ratha.beckie_deal_app.data.models.ReviewCreateRequest;
 import aeu.ratha.beckie_deal_app.data.models.ReviewSummary;
 import aeu.ratha.beckie_deal_app.data.repository.ReviewRepository;
 import aeu.ratha.beckie_deal_app.ui.adapters.ReviewAdapter;
+import aeu.ratha.beckie_deal_app.ui.reviews.ReviewSheet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * Fragment for displaying product reviews.
- * Shows review summary (average rating, breakdown) and paginated list of reviews.
- * Typically displayed in product detail page.
- *
- * Args:
- *  - product_id: String (UUID of the product)
+ * Fragment for displaying product reviews on the product detail page.
  */
 public class ProductReviewsFragment extends Fragment implements
         ReviewAdapter.ReviewActionListener,
@@ -47,17 +45,20 @@ public class ProductReviewsFragment extends Fragment implements
     private int currentPage = 1;
     private boolean isLoadingMore = false;
 
+    private List<Review> bundledReviews;
+    private ReviewSummary bundledSummary;
+
     // UI components
     private ProgressBar loadingProgressBar;
     private TextView emptyStateTextView;
+    private View reviewsContentContainer;
     private RecyclerView reviewsRecyclerView;
     private LinearLayout reviewSummaryContainer;
     private RatingBar summaryRatingBar;
     private TextView averageRatingTextView;
     private TextView totalReviewsTextView;
-
-    // Rating breakdown views
     private LinearLayout ratingBreakdownContainer;
+    private View writeReviewButton;
 
     public static ProductReviewsFragment newInstance(String productId) {
         ProductReviewsFragment fragment = new ProductReviewsFragment();
@@ -65,6 +66,14 @@ public class ProductReviewsFragment extends Fragment implements
         args.putString(ARG_PRODUCT_ID, productId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setReviews(List<Review> reviews, ReviewSummary summary) {
+        this.bundledReviews = reviews;
+        this.bundledSummary = summary;
+        if (isAdded() && getView() != null) {
+            applyBundledReviews();
+        }
     }
 
     @Override
@@ -87,18 +96,26 @@ public class ProductReviewsFragment extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
         initializeViews(view);
         setupRecyclerView();
-        loadReviews();
+        setupWriteReviewButton();
+
+        if (bundledReviews != null) {
+            applyBundledReviews();
+        } else {
+            loadReviews();
+        }
     }
 
     private void initializeViews(View view) {
         loadingProgressBar = view.findViewById(R.id.reviews_loading_progress);
         emptyStateTextView = view.findViewById(R.id.reviews_empty_state);
+        reviewsContentContainer = view.findViewById(R.id.reviews_content_container);
         reviewsRecyclerView = view.findViewById(R.id.reviews_recycler_view);
         reviewSummaryContainer = view.findViewById(R.id.review_summary_container);
         summaryRatingBar = view.findViewById(R.id.summary_rating_bar);
         averageRatingTextView = view.findViewById(R.id.average_rating_text);
         totalReviewsTextView = view.findViewById(R.id.total_reviews_text);
         ratingBreakdownContainer = view.findViewById(R.id.rating_breakdown_container);
+        writeReviewButton = view.findViewById(R.id.write_review_button);
     }
 
     private void setupRecyclerView() {
@@ -107,7 +124,6 @@ public class ProductReviewsFragment extends Fragment implements
         reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         reviewsRecyclerView.setAdapter(reviewAdapter);
 
-        // Add pagination listener
         reviewsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -116,13 +132,68 @@ public class ProductReviewsFragment extends Fragment implements
                 if (layoutManager != null) {
                     int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                     int totalItemCount = layoutManager.getItemCount();
-                    // Load more when near the bottom
-                    if (lastVisibleItem >= totalItemCount - 3 && !isLoadingMore) {
+                    if (lastVisibleItem >= totalItemCount - 3 && !isLoadingMore && bundledReviews == null) {
                         loadMoreReviews();
                     }
                 }
             }
         });
+    }
+
+    private void setupWriteReviewButton() {
+        if (writeReviewButton != null) {
+            writeReviewButton.setOnClickListener(v -> {
+                ReviewSheet.Data d = new ReviewSheet.Data();
+                d.productName = "Product";
+                d.subText = "Write your review";
+                ReviewSheet.show(requireActivity(), d, (sheet, rating, title, comment, tags) -> {
+                    sheet.setLoading(true);
+                    String finalComment = ReviewSheet.commentWithTags(comment, tags);
+                    ReviewCreateRequest request = new ReviewCreateRequest(
+                            productId, 0L, rating, title, finalComment);
+                    ReviewRepository.getInstance(requireContext()).createReview(request, new ReviewRepository.ReviewCreateCallback() {
+                        @Override
+                        public void onReviewCreated(Review review) {
+                            if (isAdded()) {
+                                requireActivity().runOnUiThread(() -> {
+                                    sheet.dismiss();
+                                    Toast.makeText(requireContext(), "Review submitted successfully! Pending approval.", Toast.LENGTH_LONG).show();
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            if (isAdded()) {
+                                requireActivity().runOnUiThread(() -> {
+                                    sheet.setLoading(false);
+                                    Toast.makeText(requireContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+        }
+    }
+
+    private void applyBundledReviews() {
+        if (bundledReviews != null && !bundledReviews.isEmpty()) {
+            reviewAdapter.setReviews(bundledReviews);
+            showReviewsState();
+            if (bundledSummary != null) {
+                onReviewSummary(productId, bundledSummary);
+            } else {
+                double sum = 0;
+                for (Review r : bundledReviews) sum += r.getRating();
+                double avg = sum / bundledReviews.size();
+                averageRatingTextView.setText(String.format(Locale.US, "%.1f", avg));
+                totalReviewsTextView.setText(bundledReviews.size() + " Reviews");
+                summaryRatingBar.setRating((float) avg);
+            }
+        } else {
+            showEmptyState();
+        }
     }
 
     private void loadReviews() {
@@ -147,33 +218,31 @@ public class ProductReviewsFragment extends Fragment implements
     }
 
     private void showLoadingState() {
-        loadingProgressBar.setVisibility(View.VISIBLE);
-        emptyStateTextView.setVisibility(View.GONE);
-        reviewsRecyclerView.setVisibility(View.GONE);
+        if (loadingProgressBar != null) loadingProgressBar.setVisibility(View.VISIBLE);
+        if (emptyStateTextView != null) emptyStateTextView.setVisibility(View.GONE);
+        if (reviewsContentContainer != null) reviewsContentContainer.setVisibility(View.GONE);
     }
 
     private void hideLoadingState() {
-        loadingProgressBar.setVisibility(View.GONE);
+        if (loadingProgressBar != null) loadingProgressBar.setVisibility(View.GONE);
     }
 
     private void showEmptyState() {
         hideLoadingState();
-        emptyStateTextView.setVisibility(View.VISIBLE);
-        reviewsRecyclerView.setVisibility(View.GONE);
-        reviewSummaryContainer.setVisibility(View.GONE);
-        emptyStateTextView.setText("No reviews yet. Be the first to review this product!");
+        if (emptyStateTextView != null) {
+            emptyStateTextView.setVisibility(View.VISIBLE);
+            emptyStateTextView.setText("No reviews yet. Be the first to review this product!");
+        }
+        if (reviewsContentContainer != null) reviewsContentContainer.setVisibility(View.GONE);
     }
 
     private void showReviewsState() {
         hideLoadingState();
-        emptyStateTextView.setVisibility(View.GONE);
-        reviewsRecyclerView.setVisibility(View.VISIBLE);
-        reviewSummaryContainer.setVisibility(View.VISIBLE);
+        if (emptyStateTextView != null) emptyStateTextView.setVisibility(View.GONE);
+        if (reviewsContentContainer != null) reviewsContentContainer.setVisibility(View.VISIBLE);
+        if (reviewsRecyclerView != null) reviewsRecyclerView.setVisibility(View.VISIBLE);
+        if (reviewSummaryContainer != null) reviewSummaryContainer.setVisibility(View.VISIBLE);
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // ReviewRepository.ProductReviewsCallback
-    // ─────────────────────────────────────────────────────────────────────────
 
     @Override
     public void onProductReviewsLoaded(String productId, List<Review> reviews) {
@@ -194,19 +263,18 @@ public class ProductReviewsFragment extends Fragment implements
 
     @Override
     public void onReviewSummary(String productId, ReviewSummary summary) {
-        if (summary == null) return;
+        if (summary == null || summaryRatingBar == null) return;
 
-        // Set average rating and total reviews
         float avgRating = (float) summary.getAverageRating();
         summaryRatingBar.setRating(avgRating);
-        averageRatingTextView.setText(String.format("%.1f", avgRating));
+        averageRatingTextView.setText(String.format(Locale.US, "%.1f", avgRating));
         totalReviewsTextView.setText(summary.getTotalReviews() + " Reviews");
 
-        // Display rating breakdown
         displayRatingBreakdown(summary);
     }
 
     private void displayRatingBreakdown(ReviewSummary summary) {
+        if (ratingBreakdownContainer == null) return;
         ratingBreakdownContainer.removeAllViews();
 
         if (summary.getRatingBreakdown() == null) return;
@@ -219,29 +287,24 @@ public class ProductReviewsFragment extends Fragment implements
             breakdownRow.setOrientation(LinearLayout.HORIZONTAL);
             breakdownRow.setPadding(0, 4, 0, 4);
 
-            // Star count
             TextView starCountText = new TextView(requireContext());
             starCountText.setText(rating.getRating() + " ★");
             starCountText.setLayoutParams(new LinearLayout.LayoutParams(40, LinearLayout.LayoutParams.WRAP_CONTENT));
             starCountText.setTextSize(12);
             breakdownRow.addView(starCountText);
 
-            // Progress bar (percentage)
             ProgressBar progressBar = new ProgressBar(requireContext(), null,
                     android.R.attr.progressBarStyleHorizontal);
-            LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(0,
-                    20, 1);
+            LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(0, 20, 1);
             progressParams.setMarginStart(8);
             progressParams.setMarginEnd(8);
             progressBar.setLayoutParams(progressParams);
             progressBar.setProgress(rating.getPercentage());
             breakdownRow.addView(progressBar);
 
-            // Percentage text
             TextView percentText = new TextView(requireContext());
             percentText.setText(rating.getPercentage() + "%");
-            percentText.setLayoutParams(new LinearLayout.LayoutParams(50,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            percentText.setLayoutParams(new LinearLayout.LayoutParams(50, LinearLayout.LayoutParams.WRAP_CONTENT));
             percentText.setTextSize(12);
             breakdownRow.addView(percentText);
 
@@ -257,19 +320,13 @@ public class ProductReviewsFragment extends Fragment implements
         Toast.makeText(requireContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // ReviewAdapter.ReviewActionListener
-    // ─────────────────────────────────────────────────────────────────────────
-
     @Override
     public void onEditReview(Review review) {
-        // TODO: Open edit review dialog/activity
         Toast.makeText(requireContext(), "Edit review: " + review.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDeleteReview(Review review) {
-        // TODO: Show confirmation dialog and delete
         Toast.makeText(requireContext(), "Delete review: " + review.getTitle(), Toast.LENGTH_SHORT).show();
     }
 }

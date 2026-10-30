@@ -1,7 +1,6 @@
 package aeu.ratha.beckie_deal_app.ui.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import java.util.Locale;
  */
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
-    private static final String TAG = "ReviewAdapter";
     private final Context context;
     private final List<Review> reviews;
     private ReviewActionListener actionListener;
@@ -124,24 +122,35 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             ratingBar.setRating(review.getRating());
 
             // Title and comment
-            titleTextView.setText(review.getTitle());
-            commentTextView.setText(review.getComment());
+            if (review.getTitle() != null && !review.getTitle().isEmpty()) {
+                titleTextView.setVisibility(View.VISIBLE);
+                titleTextView.setText(review.getTitle());
+            } else {
+                titleTextView.setVisibility(View.GONE);
+            }
+            commentTextView.setText(review.getComment() != null ? review.getComment() : "");
 
             // Customer info
-            if (review.getCustomer() != null) {
+            if (review.getCustomer() != null && review.getCustomer().getName() != null && !review.getCustomer().getName().isEmpty()) {
                 customerNameTextView.setText(review.getCustomer().getName());
                 loadCustomerAvatar(review.getCustomer().getAvatar());
             } else {
-                customerNameTextView.setText("Anonymous");
+                customerNameTextView.setText("Verified Customer");
             }
 
             // Date
-            dateTextView.setText(formatDate(review.getCreatedAt()));
+            String formattedDate = formatDate(review.getCreatedAt());
+            if (formattedDate != null && !formattedDate.isEmpty()) {
+                dateTextView.setVisibility(View.VISIBLE);
+                dateTextView.setText(formattedDate);
+            } else {
+                dateTextView.setVisibility(View.GONE);
+            }
 
             // Verified purchase badge
             if (review.isVerifiedPurchase()) {
                 verifiedBadgeTextView.setVisibility(View.VISIBLE);
-                verifiedBadgeTextView.setText("✓ Verified Purchase");
+                verifiedBadgeTextView.setText("✓ Verified");
             } else {
                 verifiedBadgeTextView.setVisibility(View.GONE);
             }
@@ -154,18 +163,22 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                 helpfulCountTextView.setVisibility(View.GONE);
             }
 
-            // Action buttons (edit/delete) - typically hidden unless it's the user's own review
-            editButton.setOnClickListener(v -> {
-                if (actionListener != null) {
-                    actionListener.onEditReview(review);
-                }
-            });
+            // Action buttons (edit/delete)
+            if (editButton != null) {
+                editButton.setOnClickListener(v -> {
+                    if (actionListener != null) {
+                        actionListener.onEditReview(review);
+                    }
+                });
+            }
 
-            deleteButton.setOnClickListener(v -> {
-                if (actionListener != null) {
-                    actionListener.onDeleteReview(review);
-                }
-            });
+            if (deleteButton != null) {
+                deleteButton.setOnClickListener(v -> {
+                    if (actionListener != null) {
+                        actionListener.onDeleteReview(review);
+                    }
+                });
+            }
         }
 
         private void loadCustomerAvatar(String avatarUrl) {
@@ -194,7 +207,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                 SimpleDateFormat displayFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
                 return displayFormat.format(date);
             } catch (Exception e) {
-                Log.e(TAG, "Error formatting date: " + dateString, e);
                 return dateString;
             }
         }

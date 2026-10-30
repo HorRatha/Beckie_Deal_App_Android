@@ -113,6 +113,9 @@ public class ProductDetail {
     @SerializedName("images")
     private List<ProductImage> images;
 
+    @SerializedName("reviews")
+    private List<Review> reviews;
+
     public ProductDetail() {}
 
     // ── Getters ────────────────────────────────────────────────────────────
@@ -154,6 +157,8 @@ public class ProductDetail {
     public Brand getBrand() { return brand; }
     public List<ProductVariant> getVariants() { return variants; }
     public List<ProductImage> getImages() { return images; }
+    public List<Review> getReviews() { return reviews; }
+    public void setReviews(List<Review> reviews) { this.reviews = reviews; }
 
     // ── Helpers ────────────────────────────────────────────────────────────
 
