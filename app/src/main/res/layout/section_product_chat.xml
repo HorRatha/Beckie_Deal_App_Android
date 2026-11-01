@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="20dp"
+    android:paddingHorizontal="16dp"
     android:paddingVertical="16dp">
 
     <!-- Header with icon and text -->
@@ -76,8 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:spacing="8dp">
+        android:gravity="center">
 
         <!-- Facebook Button with SVG icon -->
         <com.google.android.material.button.MaterialButton
@@ -85,18 +84,23 @@
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="1"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="3dp"
             android:background="@drawable/button_facebook"
             android:text="Facebook"
             android:textAllCaps="false"
             android:textColor="@color/white_fixed"
             android:textSize="11sp"
             android:textStyle="bold"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:paddingHorizontal="2dp"
+            app:cornerRadius="22dp"
             app:backgroundTint="@null"
             app:icon="@drawable/facebook"
             app:iconTint="@color/white_fixed"
             app:iconGravity="textStart"
-            app:iconPadding="4dp"
+            app:iconPadding="3dp"
             app:iconSize="16dp" />
 
         <!-- Facebook Messenger Button with SVG icon -->
@@ -105,18 +109,23 @@
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="1"
-            android:layout_marginHorizontal="4dp"
+            android:layout_marginHorizontal="3dp"
             android:background="@drawable/button_facebook_messenger"
             android:text="Messenger"
             android:textAllCaps="false"
             android:textColor="@color/white_fixed"
             android:textSize="11sp"
             android:textStyle="bold"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:paddingHorizontal="2dp"
+            app:cornerRadius="22dp"
             app:backgroundTint="@null"
             app:icon="@drawable/messenger"
             app:iconTint="@color/white_fixed"
             app:iconGravity="textStart"
-            app:iconPadding="4dp"
+            app:iconPadding="3dp"
             app:iconSize="16dp" />
 
         <!-- Telegram Button with SVG icon -->
@@ -125,18 +134,23 @@
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="1"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="3dp"
             android:background="@drawable/button_telegram"
             android:text="Telegram"
             android:textAllCaps="false"
             android:textColor="@color/white_fixed"
             android:textSize="11sp"
             android:textStyle="bold"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:paddingHorizontal="2dp"
+            app:cornerRadius="22dp"
             app:backgroundTint="@null"
             app:icon="@drawable/telegram"
             app:iconTint="@color/white_fixed"
             app:iconGravity="textStart"
-            app:iconPadding="4dp"
+            app:iconPadding="3dp"
             app:iconSize="16dp" />
     </LinearLayout>
 </LinearLayout>

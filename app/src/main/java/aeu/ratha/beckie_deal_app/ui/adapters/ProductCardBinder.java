@@ -169,6 +169,7 @@ public class ProductCardBinder {
         if (product.specs == null || product.specs.isEmpty()) return "";
         // Return the last spec line which typically holds memory/storage/colour
         String[] lines = product.specs.split("\n");
-        return lines[lines.length - 1].replaceFirst("^-", "").trim();
+        String rawLine = lines[lines.length - 1].replaceFirst("^-", "").trim();
+        return aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatVariantString(rawLine);
     }
 }

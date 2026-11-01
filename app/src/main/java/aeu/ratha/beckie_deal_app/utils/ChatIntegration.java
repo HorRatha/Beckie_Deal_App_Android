@@ -8,139 +8,93 @@ import android.widget.Toast;
 
 /**
  * Chat Integration Utility
- * Handles opening Facebook, Facebook Messenger, and Telegram conversations
+ * Handles opening Facebook, Facebook Messenger, and Telegram conversations.
  */
 public class ChatIntegration {
     
     private static final String TAG = "ChatIntegration";
     
-    // Facebook Configuration
-    public static final String FACEBOOK_PAGE_URL = "https://www.facebook.com/YOUR_PAGE_NAME";
-    public static final String FACEBOOK_PAGE_ID = "YOUR_PAGE_ID_HERE";
+    // Facebook Page URL
+    public static final String FACEBOOK_PAGE_URL = "https://www.facebook.com/share/1SWPzaY49M/?mibextid=wwXIfr";
     
-    // Facebook Messenger Configuration
-    public static final String FACEBOOK_MESSENGER_URL = "https://m.me/YOUR_PAGE_ID_HERE";
+    // Facebook Messenger URL
+    public static final String FACEBOOK_MESSENGER_URL = "https://m.me/beckiedealmac";
     
-    // Telegram Configuration
-    public static final String TELEGRAM_BOT_USERNAME = "YOUR_BOT_USERNAME_HERE";
+    // Telegram URL
+    public static final String TELEGRAM_URL = "https://t.me/beckiedealsale";
     
     /**
-     * Open Facebook page
+     * Open Facebook page URL.
      * 
      * @param activity The current activity context
      */
     public static void openFacebook(Activity activity) {
+        if (activity == null) return;
         try {
-            // Try to open via Facebook app
-            Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
-            facebookIntent.setData(Uri.parse("fb://page/" + FACEBOOK_PAGE_ID));
-            
-            // Check if Facebook app is installed
+            Uri uri = Uri.parse(FACEBOOK_PAGE_URL);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             if (isPackageInstalled(activity, "com.facebook.katana")) {
-                facebookIntent.setPackage("com.facebook.katana");
-                activity.startActivity(facebookIntent);
-                Log.d(TAG, "Opened Facebook app");
-            } else {
-                // Fallback to browser
-                Intent webIntent = new Intent(Intent.ACTION_VIEW);
-                webIntent.setData(Uri.parse(FACEBOOK_PAGE_URL));
-                activity.startActivity(webIntent);
-                Log.d(TAG, "Opened Facebook via browser");
+                intent.setPackage("com.facebook.katana");
             }
-            
-            logChatInteraction("facebook", "Visit page");
-            
+            activity.startActivity(intent);
+            logChatInteraction("facebook", FACEBOOK_PAGE_URL);
         } catch (Exception e) {
-            Log.e(TAG, "Error opening Facebook: " + e.getMessage());
-            try {
-                // Fallback: Open web version
-                Intent webIntent = new Intent(Intent.ACTION_VIEW);
-                webIntent.setData(Uri.parse(FACEBOOK_PAGE_URL));
-                activity.startActivity(webIntent);
-            } catch (Exception ex) {
-                Toast.makeText(activity, "Unable to open Facebook. Please check your connection.", 
-                    Toast.LENGTH_SHORT).show();
-            }
+            Log.e(TAG, "Error opening Facebook app, trying browser fallback: " + e.getMessage());
+            openInBrowser(activity, FACEBOOK_PAGE_URL, "Facebook");
         }
     }
     
     /**
-     * Open Facebook Messenger conversation with a page
+     * Open Facebook Messenger conversation.
      * 
      * @param activity The current activity context
-     * @param productName Optional product name for context
+     * @param productName Optional product name for context logging
      */
     public static void openFacebookMessenger(Activity activity, String productName) {
+        if (activity == null) return;
         try {
-            // Try to open via Facebook Messenger app
-            Intent messengerIntent = new Intent(Intent.ACTION_VIEW);
-            messengerIntent.setData(Uri.parse("https://m.me/" + FACEBOOK_PAGE_ID));
-            
-            // Check if package is installed
+            Uri uri = Uri.parse(FACEBOOK_MESSENGER_URL);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             if (isPackageInstalled(activity, "com.facebook.orca")) {
-                messengerIntent.setPackage("com.facebook.orca");
-                activity.startActivity(messengerIntent);
-                Log.d(TAG, "Opened Facebook Messenger app");
-            } else {
-                // Fallback to browser
-                activity.startActivity(messengerIntent);
-                Log.d(TAG, "Opened Facebook Messenger via browser");
+                intent.setPackage("com.facebook.orca");
             }
-            
-            logChatInteraction("facebook_messenger", productName);
-            
+            activity.startActivity(intent);
+            logChatInteraction("facebook_messenger", productName != null ? productName : FACEBOOK_MESSENGER_URL);
         } catch (Exception e) {
-            Log.e(TAG, "Error opening Facebook Messenger: " + e.getMessage());
-            // Fallback: Open web version
-            try {
-                Intent webIntent = new Intent(Intent.ACTION_VIEW);
-                webIntent.setData(Uri.parse("https://m.facebook.com/" + FACEBOOK_PAGE_ID));
-                activity.startActivity(webIntent);
-            } catch (Exception ex) {
-                Toast.makeText(activity, "Unable to open Messenger. Please install it from Play Store.", 
-                    Toast.LENGTH_SHORT).show();
-            }
+            Log.e(TAG, "Error opening Messenger app, trying browser fallback: " + e.getMessage());
+            openInBrowser(activity, FACEBOOK_MESSENGER_URL, "Messenger");
         }
     }
     
     /**
-     * Open Telegram conversation with bot or group
+     * Open Telegram channel or chat.
      * 
      * @param activity The current activity context
-     * @param productName Optional product name for context
+     * @param productName Optional product name for context logging
      */
     public static void openTelegram(Activity activity, String productName) {
+        if (activity == null) return;
         try {
-            // Try to open via Telegram app
-            Intent telegramIntent = new Intent(Intent.ACTION_VIEW);
-            
-            // Direct to bot
-            telegramIntent.setData(Uri.parse("https://t.me/" + TELEGRAM_BOT_USERNAME));
-            
-            // Check if package is installed
+            Uri uri = Uri.parse(TELEGRAM_URL);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             if (isPackageInstalled(activity, "org.telegram.messenger")) {
-                telegramIntent.setPackage("org.telegram.messenger");
-                activity.startActivity(telegramIntent);
-                Log.d(TAG, "Opened Telegram app");
-            } else {
-                // Fallback to browser
-                activity.startActivity(telegramIntent);
-                Log.d(TAG, "Opened Telegram via browser");
+                intent.setPackage("org.telegram.messenger");
             }
-            
-            logChatInteraction("telegram", productName);
-            
+            activity.startActivity(intent);
+            logChatInteraction("telegram", productName != null ? productName : TELEGRAM_URL);
         } catch (Exception e) {
-            Log.e(TAG, "Error opening Telegram: " + e.getMessage());
-            // Fallback: Open web version
-            try {
-                Intent webIntent = new Intent(Intent.ACTION_VIEW);
-                webIntent.setData(Uri.parse("https://t.me/" + TELEGRAM_BOT_USERNAME));
-                activity.startActivity(webIntent);
-            } catch (Exception ex) {
-                Toast.makeText(activity, "Unable to open Telegram. Please install it from Play Store.", 
-                    Toast.LENGTH_SHORT).show();
-            }
+            Log.e(TAG, "Error opening Telegram app, trying browser fallback: " + e.getMessage());
+            openInBrowser(activity, TELEGRAM_URL, "Telegram");
+        }
+    }
+
+    private static void openInBrowser(Activity activity, String url, String serviceName) {
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            activity.startActivity(browserIntent);
+        } catch (Exception ex) {
+            Log.e(TAG, "Error opening browser for " + serviceName + ": " + ex.getMessage());
+            Toast.makeText(activity, "Unable to open " + serviceName + ". Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -161,8 +115,6 @@ public class ChatIntegration {
      */
     private static void logChatInteraction(String platform, String context) {
         Log.d(TAG, "Chat interaction - Platform: " + platform + ", Context: " + context);
-        // TODO: Add Firebase Analytics or other tracking here
-        // FirebaseAnalytics.getInstance(context).logEvent("chat_opened", bundle);
     }
     
     /**

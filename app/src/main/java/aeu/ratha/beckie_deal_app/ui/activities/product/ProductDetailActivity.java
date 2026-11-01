@@ -273,7 +273,7 @@ public class ProductDetailActivity extends BaseActivity {
                 if (grandParent instanceof com.google.android.material.card.MaterialCardView) {
                     ((com.google.android.material.card.MaterialCardView) grandParent)
                             .setCardBackgroundColor(ContextCompat.getColor(this,
-                                    detail.isInStock() ? R.color.primary : R.color.red_error));
+                                    detail.isInStock() ? R.color.status_delivered : R.color.red_error));
                 }
             }
         }
@@ -293,7 +293,7 @@ public class ProductDetailActivity extends BaseActivity {
         }
 
         // ── Description ───────────────────────────────────────────────────
-        setTextSafe(R.id.detailProductDescription, detail.getBestDescription());
+        setHtmlTextSafe(R.id.detailProductDescription, detail.getBestDescription());
 
         // ── Spec tags (pill chips) ────────────────────────────────────────
         List<String> tags = new ArrayList<>();
@@ -323,11 +323,30 @@ public class ProductDetailActivity extends BaseActivity {
         setupSpecCards(specCards);
 
         // ── Spec rows (table) ─────────────────────────────────────────────
+        ProductVariant initialVariant = detail.getDefaultVariant();
+        if (selectedVariantIndex >= 0 && detail.getVariants() != null && selectedVariantIndex < detail.getVariants().size()) {
+            initialVariant = detail.getVariants().get(selectedVariantIndex);
+        }
+        setupSpecRows(buildSpecRows(detail, initialVariant));
+
+        // ── Variants ──────────────────────────────────────────────────────
+        setupVariants(detail.getVariants());
+
+        Log.d(TAG, "✓ UI populated from API detail for: " + detail.getName());
+    }
+
+    private Map<String, String> buildSpecRows(ProductDetail detail, ProductVariant activeVariant) {
         Map<String, String> specRows = new LinkedHashMap<>();
         if (detail.getSku()     != null && !detail.getSku().isEmpty())     specRows.put("SKU",     detail.getSku());
         if (detail.getBarcode() != null && !detail.getBarcode().isEmpty()) specRows.put("Barcode", detail.getBarcode());
         if (detail.getBrand()   != null) specRows.put("Brand",    detail.getBrand().getName());
         if (detail.getCategory()!= null) specRows.put("Category", detail.getCategory().getName());
+
+        if (activeVariant != null) {
+            Map<String, String> vAttrs = activeVariant.getFormattedAttributesMap();
+            specRows.putAll(vAttrs);
+        }
+
         if (detail.getWeight()  != null && !detail.getWeight().isEmpty())  specRows.put("Weight",  detail.getWeight() + " kg");
         if (detail.getLength()  != null && !detail.getLength().isEmpty())  specRows.put("Length",  detail.getLength() + " cm");
         if (detail.getWidth()   != null && !detail.getWidth().isEmpty())   specRows.put("Width",   detail.getWidth()  + " cm");
@@ -345,12 +364,7 @@ public class ProductDetailActivity extends BaseActivity {
         specRows.put("Warranty",      "1 Year Manufacturer Warranty");
         specRows.put("Shipping",      detail.isDigital() ? "Instant Delivery" : "Free shipping on orders over $50");
         specRows.put("Return Policy", "30-day money back guarantee");
-        setupSpecRows(specRows);
-
-        // ── Variants ──────────────────────────────────────────────────────
-        setupVariants(detail.getVariants());
-
-        Log.d(TAG, "✓ UI populated from API detail for: " + detail.getName());
+        return specRows;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -365,7 +379,7 @@ public class ProductDetailActivity extends BaseActivity {
 
         String description = "Quality product with excellent features and reliable performance.";
         if (sku != null && !sku.isEmpty()) description += " SKU: " + sku + ".";
-        setTextSafe(R.id.detailProductDescription, description);
+        setHtmlTextSafe(R.id.detailProductDescription, description);
 
         List<String> tags = new ArrayList<>();
         tags.add("Premium Quality"); tags.add("Fast Shipping");
@@ -449,6 +463,10 @@ public class ProductDetailActivity extends BaseActivity {
                 // Update displayed price
                 setTextSafe(R.id.detailProductPrice,
                         "$" + String.format("%.2f", variant.getPriceAsDouble()));
+                // Dynamically update Technical Specifications table for selected variant
+                if (productDetail != null) {
+                    setupSpecRows(buildSpecRows(productDetail, variant));
+                }
                 Log.d(TAG, "Variant selected: " + variant.getName());
             });
 
@@ -460,23 +478,34 @@ public class ProductDetailActivity extends BaseActivity {
             if (v.isDefault()) {
                 setTextSafe(R.id.detailProductPrice,
                         "$" + String.format("%.2f", v.getPriceAsDouble()));
+                if (productDetail != null) {
+                    setupSpecRows(buildSpecRows(productDetail, v));
+                }
                 break;
             }
         }
     }
 
     private void applyVariantChipStyle(TextView chip, boolean selected) {
+        int hPad = dpToPx(14), vPad = dpToPx(8);
+        chip.setPadding(hPad, vPad, hPad, vPad);
+
+        android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
+        gd.setCornerRadius(dpToPx(16));
+
         if (selected) {
+            gd.setColor(ContextCompat.getColor(this, R.color.primary));
             chip.setTextColor(Color.WHITE);
-            chip.setBackground(ContextCompat.getDrawable(this, R.drawable.badge_rect));
-            chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                    ContextCompat.getColor(this, R.color.primary)));
+            chip.setTypeface(null, android.graphics.Typeface.BOLD);
+            chip.setElevation(dpToPx(2));
         } else {
-            chip.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
-            chip.setBackground(ContextCompat.getDrawable(this, R.drawable.badge_rect));
-            chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                    Color.parseColor("#F0F0F0")));
+            gd.setColor(Color.parseColor("#F8F9FA"));
+            gd.setStroke(dpToPx(1), Color.parseColor("#E5E7EB"));
+            chip.setTextColor(Color.parseColor("#374151"));
+            chip.setTypeface(null, android.graphics.Typeface.NORMAL);
+            chip.setElevation(0);
         }
+        chip.setBackground(gd);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -605,40 +634,56 @@ public class ProductDetailActivity extends BaseActivity {
 
     private void setupSpecTags(List<String> tags) {
         LinearLayout row = findViewById(R.id.specTagsRow);
-        if (row == null) return;
+        if (row == null || tags == null || tags.isEmpty()) return;
         row.removeAllViews();
 
-        LinearLayout line1 = newHorizontalRow(6);
-        LinearLayout line2 = newHorizontalRow(0);
-        row.addView(line1);
-        row.addView(line2);
+        android.widget.HorizontalScrollView tagScroll = new android.widget.HorizontalScrollView(this);
+        tagScroll.setHorizontalScrollBarEnabled(false);
+        tagScroll.setOverScrollMode(View.OVER_SCROLL_NEVER);
+
+        LinearLayout tagRow = new LinearLayout(this);
+        tagRow.setOrientation(LinearLayout.HORIZONTAL);
+        tagRow.setPadding(0, dpToPx(2), 0, dpToPx(2));
 
         for (int i = 0; i < tags.size(); i++) {
+            String rawTag = tags.get(i);
+            String formattedTag = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatTag(rawTag);
+
             TextView chip = new TextView(this);
-            chip.setText(tags.get(i));
+            chip.setText(formattedTag);
             ScreenUtils.applyTextSize(chip, R.dimen.text_size_caption);
-            chip.setTextColor(Color.parseColor("#F97316"));
-            chip.setBackground(ContextCompat.getDrawable(this, R.drawable.badge_rect));
-            chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                    Color.parseColor("#FFF0E6")));
+            chip.setTypeface(null, android.graphics.Typeface.NORMAL);
+
+            android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
+            gd.setCornerRadius(dpToPx(12));
+
+            String lower = formattedTag.toLowerCase();
+            if (lower.contains("featured") || lower.contains("% off")) {
+                gd.setColor(Color.parseColor("#FEF3C7"));
+                gd.setStroke(dpToPx(1), Color.parseColor("#FDE68A"));
+                chip.setTextColor(Color.parseColor("#B45309"));
+            } else if (lower.startsWith("sku:")) {
+                gd.setColor(Color.parseColor("#F3F4F6"));
+                gd.setStroke(dpToPx(1), Color.parseColor("#E5E7EB"));
+                chip.setTextColor(Color.parseColor("#374151"));
+            } else {
+                gd.setColor(Color.parseColor("#EFF6FF"));
+                gd.setStroke(dpToPx(1), Color.parseColor("#DBEAFE"));
+                chip.setTextColor(Color.parseColor("#1D4ED8"));
+            }
+
             int h = dpToPx(10), v = dpToPx(5);
             chip.setPadding(h, v, h, v);
             LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             cp.setMarginEnd(dpToPx(8));
             chip.setLayoutParams(cp);
-            (i < 2 ? line1 : line2).addView(chip);
-        }
-    }
 
-    private LinearLayout newHorizontalRow(int bottomMarginDp) {
-        LinearLayout ll = new LinearLayout(this);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.bottomMargin = dpToPx(bottomMarginDp);
-        ll.setLayoutParams(lp);
-        return ll;
+            tagRow.addView(chip);
+        }
+
+        tagScroll.addView(tagRow);
+        row.addView(tagScroll);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -1021,6 +1066,13 @@ public class ProductDetailActivity extends BaseActivity {
     private void setTextSafe(int id, String text) {
         TextView tv = findViewById(id);
         if (tv != null && text != null) tv.setText(text);
+    }
+
+    private void setHtmlTextSafe(int id, String text) {
+        TextView tv = findViewById(id);
+        if (tv != null && text != null) {
+            tv.setText(aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatHtmlDescription(text));
+        }
     }
 
     private int dpToPx(int dp) {

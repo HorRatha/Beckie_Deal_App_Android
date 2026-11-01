@@ -117,7 +117,7 @@ public class ProductMapper {
         
         // Add short description if available
         if (apiProduct.getShortDescription() != null && !apiProduct.getShortDescription().isEmpty()) {
-            String desc = apiProduct.getShortDescription();
+            String desc = SpecFormatter.stripHtml(apiProduct.getShortDescription());
             // Truncate if too long
             if (desc.length() > 100) {
                 desc = desc.substring(0, 97) + "...";

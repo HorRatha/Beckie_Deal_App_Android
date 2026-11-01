@@ -97,13 +97,48 @@ public class ProductVariant {
 
     /** Helper: get a formatted attribute string like "16GB · 1TB · Eclipse Gray". */
     public String getAttributeSummary() {
-        if (attributes == null || attributes.isEmpty()) return name != null ? name : "";
-        StringBuilder sb = new StringBuilder();
-        for (String value : attributes.values()) {
-            if (sb.length() > 0) sb.append(" · ");
-            sb.append(value);
+        if (attributes != null && !attributes.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, String> entry : attributes.entrySet()) {
+                String key = entry.getKey();
+                String val = entry.getValue();
+                String formatted = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatAttributeValue(key, val);
+                if (formatted != null && !formatted.isEmpty()) {
+                    if (sb.length() > 0) sb.append(" · ");
+                    sb.append(formatted);
+                }
+            }
+            if (sb.length() > 0) {
+                return sb.toString();
+            }
         }
-        return sb.toString();
+        if (name != null && !name.trim().isEmpty()) {
+            return aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatVariantString(name);
+        }
+        return "";
+    }
+
+    /**
+     * Returns a map of formatted attribute keys and values for specs display.
+     * e.g. {"RAM": "512GB", "Storage": "1TB", "Color": "Midnight Blue"}
+     */
+    public Map<String, String> getFormattedAttributesMap() {
+        Map<String, String> map = new java.util.LinkedHashMap<>();
+        if (attributes != null && !attributes.isEmpty()) {
+            for (Map.Entry<String, String> entry : attributes.entrySet()) {
+                String k = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatAttributeKey(entry.getKey());
+                String v = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatAttributeValue(entry.getKey(), entry.getValue());
+                if (!k.isEmpty() && !v.isEmpty()) {
+                    map.put(k, v);
+                }
+            }
+        } else if (name != null && !name.trim().isEmpty()) {
+            String summary = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatVariantString(name);
+            if (!summary.isEmpty()) {
+                map.put("Variant Spec", summary);
+            }
+        }
+        return map;
     }
 
     public double getPriceAsDouble() {
