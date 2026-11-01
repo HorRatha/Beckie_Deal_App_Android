@@ -34,7 +34,7 @@ public class ProductVariant {
     private String salePrice;
 
     @SerializedName("stock_quantity")
-    private int stockQuantity;
+    private Integer stockQuantity;
 
     @SerializedName("in_stock")
     private boolean inStock;
@@ -82,8 +82,12 @@ public class ProductVariant {
     public String getBarcode() { return barcode; }
     public String getPrice() { return price; }
     public String getSalePrice() { return salePrice; }
-    public int getStockQuantity() { return stockQuantity; }
-    public boolean isInStock() { return inStock; }
+    public int getStockQuantity() { return stockQuantity != null ? stockQuantity : 0; }
+    public boolean isInStock() {
+        if (!inStock) return false;
+        if (stockQuantity != null && stockQuantity <= 0) return false;
+        return true;
+    }
     public boolean isTrackInventory() { return trackInventory; }
     public String getWeight() { return weight; }
     public String getLength() { return length; }
@@ -102,8 +106,9 @@ public class ProductVariant {
             for (Map.Entry<String, String> entry : attributes.entrySet()) {
                 String key = entry.getKey();
                 String val = entry.getValue();
+                if (val == null || "null".equalsIgnoreCase(val.trim())) continue;
                 String formatted = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatAttributeValue(key, val);
-                if (formatted != null && !formatted.isEmpty()) {
+                if (formatted != null && !formatted.isEmpty() && !"null".equalsIgnoreCase(formatted.trim())) {
                     if (sb.length() > 0) sb.append(" · ");
                     sb.append(formatted);
                 }
@@ -112,7 +117,7 @@ public class ProductVariant {
                 return sb.toString();
             }
         }
-        if (name != null && !name.trim().isEmpty()) {
+        if (name != null && !name.trim().isEmpty() && !"null".equalsIgnoreCase(name.trim())) {
             return aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatVariantString(name);
         }
         return "";
@@ -126,15 +131,16 @@ public class ProductVariant {
         Map<String, String> map = new java.util.LinkedHashMap<>();
         if (attributes != null && !attributes.isEmpty()) {
             for (Map.Entry<String, String> entry : attributes.entrySet()) {
+                if (entry.getValue() == null || "null".equalsIgnoreCase(entry.getValue().trim())) continue;
                 String k = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatAttributeKey(entry.getKey());
                 String v = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatAttributeValue(entry.getKey(), entry.getValue());
-                if (!k.isEmpty() && !v.isEmpty()) {
+                if (!k.isEmpty() && !v.isEmpty() && !"null".equalsIgnoreCase(v.trim())) {
                     map.put(k, v);
                 }
             }
-        } else if (name != null && !name.trim().isEmpty()) {
+        } else if (name != null && !name.trim().isEmpty() && !"null".equalsIgnoreCase(name.trim())) {
             String summary = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.formatVariantString(name);
-            if (!summary.isEmpty()) {
+            if (!summary.isEmpty() && !"null".equalsIgnoreCase(summary.trim())) {
                 map.put("Variant Spec", summary);
             }
         }

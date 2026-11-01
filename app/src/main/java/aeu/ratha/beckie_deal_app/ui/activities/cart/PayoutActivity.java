@@ -201,6 +201,28 @@ public class PayoutActivity extends BaseActivity {
         UiAnimations.fadeSlideUp(findViewById(R.id.bottomActionLayout), 200);
 
         renderStep(1, false);
+
+        // Check if opened in Buy Now mode from Product Detail
+        boolean isBuyNow = getIntent().getBooleanExtra("buy_now_mode", false);
+        if (isBuyNow) {
+            double buyNowPrice = getIntent().getDoubleExtra("buy_now_price", 0.0);
+            int buyNowQty = getIntent().getIntExtra("buy_now_qty", 1);
+            if (buyNowPrice > 0) {
+                double buyNowSubtotal = buyNowPrice * buyNowQty;
+                double shipping = calculateShippingFee(buyNowSubtotal);
+                double total = Math.max(0.0, buyNowSubtotal + shipping);
+                if (summarySubtotalText != null)
+                    summarySubtotalText.setText(String.format(Locale.US, "$%.2f", buyNowSubtotal));
+                if (summaryTotalText != null)
+                    summaryTotalText.setText(String.format(Locale.US, "$%.2f", total));
+                if (bottomTotalText != null)
+                    bottomTotalText.setText(String.format(Locale.US, "$%.2f", total));
+            }
+        } else if (aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity.cachedCart != null) {
+            currentCart = aeu.ratha.beckie_deal_app.ui.activities.cart.CartActivity.cachedCart;
+            updateOrderSummary();
+        }
+
         loadCartFromAPI();
         loadShippingMethods(); // pre-fetch so Step 2 is ready when user arrives
         loadPaymentOptions();  // fetch payment options from API (/payments/options?platform=mobile)
@@ -336,6 +358,7 @@ public class PayoutActivity extends BaseActivity {
                 forward ? R.anim.slide_out_left : R.anim.slide_out_right);
         currentStep = target;
         renderStep(target, true);
+        updateOrderSummary();
         androidx.core.widget.NestedScrollView scroll = findViewById(R.id.payoutContentScroll);
         if (scroll != null) scroll.smoothScrollTo(0, 0);
     }
@@ -988,7 +1011,41 @@ public class PayoutActivity extends BaseActivity {
     }
 
     private void updateOrderSummary() {
-        if (currentCart == null) return;
+        if (currentCart == null) {
+            boolean isBuyNow = getIntent().getBooleanExtra("buy_now_mode", false);
+            if (isBuyNow) {
+                double buyNowPrice = getIntent().getDoubleExtra("buy_now_price", 0.0);
+                int buyNowQty = getIntent().getIntExtra("buy_now_qty", 1);
+                if (buyNowPrice > 0) {
+                    double buyNowSubtotal = buyNowPrice * buyNowQty;
+                    double shipping = (currentStep >= 2) ? calculateShippingFee(buyNowSubtotal) : 0.0;
+                    double displayTotal = (currentStep >= 2) ? Math.max(0.0, buyNowSubtotal + shipping) : buyNowSubtotal;
+
+                    if (summarySubtotalText != null)
+                        summarySubtotalText.setText(String.format(Locale.US, "$%.2f", buyNowSubtotal));
+                    if (summaryTotalText != null)
+                        summaryTotalText.setText(String.format(Locale.US, "$%.2f", displayTotal));
+                    if (bottomTotalText != null)
+                        bottomTotalText.setText(String.format(Locale.US, "$%.2f", displayTotal));
+
+                    TextView shippingView = findViewById(R.id.summaryShipping);
+                    if (shippingView != null) {
+                        if (currentStep < 2) {
+                            shippingView.setText("Calculated in Step 2");
+                            shippingView.setTextColor(getColor(R.color.text_muted));
+                        } else if (shipping == 0.0) {
+                            shippingView.setText("FREE");
+                            shippingView.setTextColor(getColor(R.color.green_stock));
+                        } else {
+                            shippingView.setText(String.format(Locale.US, "$%.2f", shipping));
+                            shippingView.setTextColor(getColor(R.color.text_primary));
+                        }
+                    }
+                    return;
+                }
+            }
+            return;
+        }
 
         double subtotal = currentCart.getSubtotalFromAPI();
         if (subtotal == 0.0) subtotal = currentCart.getTotalPrice();
@@ -1003,8 +1060,10 @@ public class PayoutActivity extends BaseActivity {
             couponCode = CouponManager.getInstance().getAppliedCouponCode();
         }
 
-        double shipping = calculateShippingFee(subtotal);
-        double total = Math.max(0.0, subtotal - discount + shipping);
+        // At Step 1, shipping is not yet added to the total (shows items original price).
+        // At Step 2 and Step 3, shipping method cost is added to the total.
+        double shipping = (currentStep >= 2) ? calculateShippingFee(subtotal) : 0.0;
+        double displayTotal = (currentStep >= 2) ? Math.max(0.0, subtotal - discount + shipping) : Math.max(0.0, subtotal - discount);
 
         if (summarySubtotalText != null)
             summarySubtotalText.setText(String.format(Locale.US, "$%.2f", subtotal));
@@ -1029,7 +1088,10 @@ public class PayoutActivity extends BaseActivity {
 
         TextView shippingView = findViewById(R.id.summaryShipping);
         if (shippingView != null) {
-            if (shipping == 0.0) {
+            if (currentStep < 2) {
+                shippingView.setText("Calculated in Step 2");
+                shippingView.setTextColor(getColor(R.color.text_muted));
+            } else if (shipping == 0.0) {
                 shippingView.setText("FREE");
                 shippingView.setTextColor(getColor(R.color.green_stock));
             } else {
@@ -1039,10 +1101,10 @@ public class PayoutActivity extends BaseActivity {
         }
 
         if (summaryTotalText != null)
-            summaryTotalText.setText(String.format(Locale.US, "$%.2f", total));
+            summaryTotalText.setText(String.format(Locale.US, "$%.2f", displayTotal));
 
         if (bottomTotalText != null)
-            bottomTotalText.setText(String.format(Locale.US, "$%.2f", total));
+            bottomTotalText.setText(String.format(Locale.US, "$%.2f", displayTotal));
     }
 
     private double calculateShippingFee(double total) {

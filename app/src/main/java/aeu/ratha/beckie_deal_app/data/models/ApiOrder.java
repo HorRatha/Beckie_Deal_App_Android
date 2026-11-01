@@ -143,24 +143,29 @@ public class ApiOrder implements Serializable {
     }
 
     public String getStatusLabel() {
+        if (status != null && !status.trim().isEmpty()) {
+            switch (status.toLowerCase()) {
+                case "completed":
+                case "delivered":
+                    return "Completed";
+                case "shipped":
+                    return "Shipped";
+                case "processing":
+                case "paid":
+                    return "Processing";
+                case "cancelled":
+                case "canceled":
+                    return "Cancelled";
+                case "pending":
+                    return "Pending";
+                default:
+                    return aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.toTitleCase(status.replace("_", " "));
+            }
+        }
         if (tracking != null && tracking.statusLabel != null && !tracking.statusLabel.trim().isEmpty()) {
             return tracking.statusLabel;
         }
-        if (status == null) return "Pending";
-        switch (status.toLowerCase()) {
-            case "completed":
-            case "delivered":
-                return "Completed";
-            case "shipped":
-                return "Shipped";
-            case "processing":
-            case "paid":
-                return "Processing";
-            case "cancelled":
-                return "Cancelled";
-            default:
-                return "Pending";
-        }
+        return "Pending";
     }
 
     public String getFormattedDate() {

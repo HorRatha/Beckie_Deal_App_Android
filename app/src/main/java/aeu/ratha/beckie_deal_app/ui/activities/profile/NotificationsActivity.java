@@ -35,7 +35,7 @@ public class NotificationsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
 
-        drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, R.id.menuIcon);
+        drawerHelper = AppDrawerHelper.attach(this, R.id.drawerLayout, 0);
         drawerHelper.refreshDrawerWithLatestUserData(this);
 
         setupTopBar();

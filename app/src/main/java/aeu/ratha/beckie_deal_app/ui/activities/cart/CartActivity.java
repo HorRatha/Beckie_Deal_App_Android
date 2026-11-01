@@ -139,7 +139,7 @@ public class CartActivity extends BaseActivity {
         }
     }
 
-    private static Cart cachedCart = null;
+    public static Cart cachedCart = null;
 
     /**
      * Clear the static cart cache (call this after successful checkout).

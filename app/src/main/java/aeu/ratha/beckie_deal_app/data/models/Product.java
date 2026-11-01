@@ -45,7 +45,7 @@ public class Product {
     private String costPrice;
     
     @SerializedName("stock_quantity")
-    private int stockQuantity;
+    private Integer stockQuantity;
     
     @SerializedName("min_stock_alert")
     private int minStockAlert;
@@ -198,7 +198,7 @@ public class Product {
     }
     
     public int getStockQuantity() {
-        return stockQuantity;
+        return stockQuantity != null ? stockQuantity : 0;
     }
     
     public int getMinStockAlert() {
@@ -210,7 +210,9 @@ public class Product {
     }
     
     public boolean isInStock() {
-        return inStock;
+        if (!inStock) return false;
+        if (stockQuantity != null && stockQuantity <= 0) return false;
+        return true;
     }
     
     public String getWeight() {

@@ -13,7 +13,7 @@ public class SpecFormatter {
      * and bullet points.
      */
     public static CharSequence formatHtmlDescription(String rawText) {
-        if (rawText == null || rawText.trim().isEmpty()) {
+        if (rawText == null || rawText.trim().isEmpty() || "null".equalsIgnoreCase(rawText.trim())) {
             return "No description available.";
         }
 
@@ -47,7 +47,7 @@ public class SpecFormatter {
             StringBuilder sb = new StringBuilder();
             for (String line : lines) {
                 String l = line.trim();
-                if (l.isEmpty()) continue;
+                if (l.isEmpty() || "null".equalsIgnoreCase(l)) continue;
                 if (l.startsWith(">-") || l.startsWith("> -")) {
                     l = "• " + l.substring(l.indexOf('-') + 1).trim();
                 } else if (l.startsWith("- ")) {
@@ -64,7 +64,7 @@ public class SpecFormatter {
      * Strips all HTML tags and unescapes HTML entities to return plain text.
      */
     public static String stripHtml(String input) {
-        if (input == null || input.trim().isEmpty()) return "";
+        if (input == null || input.trim().isEmpty() || "null".equalsIgnoreCase(input.trim())) return "";
         String cleaned = input.trim();
         if (cleaned.contains("<") && cleaned.contains(">")) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -95,7 +95,7 @@ public class SpecFormatter {
      * Formats a raw attribute key into a user-friendly label.
      */
     public static String formatAttributeKey(String key) {
-        if (key == null || key.trim().isEmpty()) return "";
+        if (key == null || key.trim().isEmpty() || "null".equalsIgnoreCase(key.trim())) return "";
         String trimmed = key.trim().toLowerCase();
         switch (trimmed) {
             case "ram":
@@ -142,7 +142,7 @@ public class SpecFormatter {
      * Formats an attribute value depending on its key context.
      */
     public static String formatAttributeValue(String key, String val) {
-        if (val == null || val.trim().isEmpty()) return "";
+        if (val == null || val.trim().isEmpty() || "null".equalsIgnoreCase(val.trim())) return "";
         String raw = val.trim();
         String lowerKey = key != null ? key.trim().toLowerCase() : "";
 
@@ -168,16 +168,19 @@ public class SpecFormatter {
 
     /**
      * Formats multi-spec variant names or summaries like "12gb Gddr6x - Oc · 301mm" -> "12GB GDDR6X · OC · 301mm"
+     * Filters out null or "null" entries completely.
      */
     public static String formatVariantString(String text) {
-        if (text == null || text.trim().isEmpty()) return "";
+        if (text == null || text.trim().isEmpty() || "null".equalsIgnoreCase(text.trim())) return "";
         String trimmed = text.trim();
         if (trimmed.contains("/") || trimmed.contains("|") || trimmed.contains("·") || trimmed.contains(" - ")) {
             String[] parts = trimmed.split("(?<=^|[^a-zA-Z0-9])[\\/|·]|\\s+-\\s+");
             StringBuilder sb = new StringBuilder();
             for (String part : parts) {
-                String formatted = formatGenericValue(part.trim());
-                if (!formatted.isEmpty()) {
+                String cleanedPart = part.trim();
+                if (cleanedPart.isEmpty() || "null".equalsIgnoreCase(cleanedPart)) continue;
+                String formatted = formatGenericValue(cleanedPart);
+                if (!formatted.isEmpty() && !"null".equalsIgnoreCase(formatted.trim())) {
                     if (sb.length() > 0) sb.append(" · ");
                     sb.append(formatted);
                 }
@@ -191,7 +194,7 @@ public class SpecFormatter {
      * Formats spec tags like "sku: as-tuf-4070s" -> "SKU: AS-TUF-4070S"
      */
     public static String formatTag(String tag) {
-        if (tag == null || tag.trim().isEmpty()) return "";
+        if (tag == null || tag.trim().isEmpty() || "null".equalsIgnoreCase(tag.trim())) return "";
         String trimmed = tag.trim();
         if (trimmed.toLowerCase().startsWith("sku:")) {
             String skuVal = trimmed.substring(4).trim().toUpperCase();
@@ -204,7 +207,7 @@ public class SpecFormatter {
      * Memory / Storage specific formatting.
      */
     private static String formatMemoryOrStorage(String val, String type) {
-        if (val == null || val.trim().isEmpty()) return "";
+        if (val == null || val.trim().isEmpty() || "null".equalsIgnoreCase(val.trim())) return "";
         String cleaned = val.trim();
         String lower = cleaned.toLowerCase();
 
@@ -244,7 +247,7 @@ public class SpecFormatter {
      * Formats generic values (handles tech acronyms, units, GPU/RAM specs, colors, etc.)
      */
     public static String formatGenericValue(String val) {
-        if (val == null || val.trim().isEmpty()) return "";
+        if (val == null || val.trim().isEmpty() || "null".equalsIgnoreCase(val.trim())) return "";
         String cleaned = val.trim();
 
         // 12gb -> 12GB, 16gb -> 16GB, 1tb -> 1TB, 301mm -> 301mm, 6000mhz -> 6000MHz
@@ -291,11 +294,11 @@ public class SpecFormatter {
     }
 
     public static String toTitleCase(String input) {
-        if (input == null || input.isEmpty()) return "";
+        if (input == null || input.isEmpty() || "null".equalsIgnoreCase(input.trim())) return "";
         String[] words = input.split("\\s+");
         StringBuilder sb = new StringBuilder();
         for (String word : words) {
-            if (word.isEmpty()) continue;
+            if (word.isEmpty() || "null".equalsIgnoreCase(word)) continue;
             if (sb.length() > 0) sb.append(" ");
             sb.append(formatWord(word));
         }
@@ -307,7 +310,7 @@ public class SpecFormatter {
      * e.g. "gddr6x" -> "GDDR6X", "oc" -> "OC", "tuf" -> "TUF", "rtx" -> "RTX", "pcie" -> "PCIe", "nvme" -> "NVMe"
      */
     private static String formatWord(String word) {
-        if (word == null || word.isEmpty()) return "";
+        if (word == null || word.isEmpty() || "null".equalsIgnoreCase(word.trim())) return "";
 
         // Check if hyphenated (e.g. AS-TUF-4070S or PCIe-4.0)
         if (word.contains("-") && !word.startsWith("-")) {
@@ -401,5 +404,63 @@ public class SpecFormatter {
         // Default Title Case
         if (word.length() == 1) return word.toUpperCase();
         return Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase();
+    }
+
+    /**
+     * Maps product variant text/attributes to a real color HEX integer or null if no color detected.
+     */
+    public static Integer getColorForName(String text) {
+        if (text == null || text.trim().isEmpty() || "null".equalsIgnoreCase(text.trim())) return null;
+        String lower = text.toLowerCase().trim();
+
+        if (lower.contains("rose gold")) return android.graphics.Color.parseColor("#E8A7A1");
+        if (lower.contains("starlight")) return android.graphics.Color.parseColor("#ECE3CE");
+        if (lower.contains("gold")) return android.graphics.Color.parseColor("#E5C158");
+        if (lower.contains("silver")) return android.graphics.Color.parseColor("#D1D5DB");
+        if (lower.contains("space black")) return android.graphics.Color.parseColor("#18181B");
+        if (lower.contains("space gray") || lower.contains("space grey")) return android.graphics.Color.parseColor("#52525B");
+        if (lower.contains("eclipse gray") || lower.contains("dark grey") || lower.contains("dark gray")) return android.graphics.Color.parseColor("#4B5563");
+        if (lower.contains("midnight blue")) return android.graphics.Color.parseColor("#1E3A8A");
+        if (lower.contains("midnight")) return android.graphics.Color.parseColor("#1E293B");
+        if (lower.contains("black")) return android.graphics.Color.parseColor("#18181B");
+        if (lower.contains("white")) return android.graphics.Color.parseColor("#F9FAFB");
+        if (lower.contains("pacific blue") || lower.contains("sky blue") || lower.contains("blue")) return android.graphics.Color.parseColor("#2563EB");
+        if (lower.contains("alpine green") || lower.contains("olive") || lower.contains("green")) return android.graphics.Color.parseColor("#16A34A");
+        if (lower.contains("deep purple") || lower.contains("purple")) return android.graphics.Color.parseColor("#7C3AED");
+        if (lower.contains("red")) return android.graphics.Color.parseColor("#DC2626");
+        if (lower.contains("yellow")) return android.graphics.Color.parseColor("#EAB308");
+        if (lower.contains("pink")) return android.graphics.Color.parseColor("#EC4899");
+        if (lower.contains("orange")) return android.graphics.Color.parseColor("#F97316");
+        if (lower.contains("bronze")) return android.graphics.Color.parseColor("#CD7F32");
+        if (lower.contains("gray") || lower.contains("grey")) return android.graphics.Color.parseColor("#6B7280");
+        if (lower.contains("citrus")) return android.graphics.Color.parseColor("#EAB308");
+        if (lower.contains("blush")) return android.graphics.Color.parseColor("#FB7185");
+        if (lower.contains("indigo")) return android.graphics.Color.parseColor("#4F46E5");
+        if (lower.contains("teal")) return android.graphics.Color.parseColor("#0D9488");
+        if (lower.contains("cyan")) return android.graphics.Color.parseColor("#06B6D4");
+        if (lower.contains("lavender")) return android.graphics.Color.parseColor("#C084FC");
+        if (lower.contains("coral")) return android.graphics.Color.parseColor("#FB923C");
+        if (lower.contains("mint")) return android.graphics.Color.parseColor("#34D399");
+        if (lower.contains("cream")) return android.graphics.Color.parseColor("#FEF08A");
+        if (lower.contains("beige")) return android.graphics.Color.parseColor("#E5E7EB");
+        if (lower.contains("champagne")) return android.graphics.Color.parseColor("#FDE68A");
+        if (lower.contains("graphite")) return android.graphics.Color.parseColor("#4B5563");
+        if (lower.contains("charcoal")) return android.graphics.Color.parseColor("#1F2937");
+        if (lower.contains("titanium")) return android.graphics.Color.parseColor("#71717A");
+
+        return null;
+    }
+
+    /**
+     * Creates a circular swatch drawable with a subtle border for real color indicators.
+     */
+    public static android.graphics.drawable.Drawable createColorSwatchDrawable(int colorInt, int sizePx) {
+        android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
+        gd.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+        gd.setColor(colorInt);
+        gd.setStroke(1, android.graphics.Color.parseColor("#9CA3AF"));
+        gd.setSize(sizePx, sizePx);
+        gd.setBounds(0, 0, sizePx, sizePx);
+        return gd;
     }
 }

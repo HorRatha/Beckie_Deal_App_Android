@@ -260,23 +260,9 @@ public class ProductDetailActivity extends BaseActivity {
         setTextSafe(R.id.reviewCount,
                 "(" + detail.getSalesCount() + " sold · " + detail.getViewsCount() + " views)");
 
-        // ── Stock status ──────────────────────────────────────────────────
-        // The stockLabel lives inside a MaterialCardView that has its own green background.
-        // We update the parent card's background colour so the pill changes colour properly.
-        TextView stockLabel = findViewById(R.id.stockLabel);
-        if (stockLabel != null) {
-            stockLabel.setText(detail.isInStock() ? "In Stock" : "Out of Stock");
-            // Walk up to the parent MaterialCardView and change its background
-            android.view.View parent = (android.view.View) stockLabel.getParent(); // LinearLayout
-            if (parent != null) {
-                android.view.View grandParent = (android.view.View) parent.getParent(); // MaterialCardView
-                if (grandParent instanceof com.google.android.material.card.MaterialCardView) {
-                    ((com.google.android.material.card.MaterialCardView) grandParent)
-                            .setCardBackgroundColor(ContextCompat.getColor(this,
-                                    detail.isInStock() ? R.color.status_delivered : R.color.red_error));
-                }
-            }
-        }
+        // ── Stock status & Action Buttons ─────────────────────────────────
+        boolean isStock = detail.isInStock() && (detail.getStockQuantity() > 0 || !detail.isTrackInventory());
+        updateStockAndButtonState(isStock);
 
         // ── Gallery — real images from API ────────────────────────────────
         List<String> galleryUrls = detail.getGalleryUrls();
@@ -361,8 +347,15 @@ public class ProductDetailActivity extends BaseActivity {
         }
         if (detail.getMetaTitle() != null && !detail.getMetaTitle().isEmpty())
             specRows.put("Meta Title", detail.getMetaTitle());
-        specRows.put("Warranty",      "1 Year Manufacturer Warranty");
-        specRows.put("Shipping",      detail.isDigital() ? "Instant Delivery" : "Free shipping on orders over $50");
+        String shippingText;
+        if (detail.isDigital()) {
+            shippingText = "Instant Digital Delivery";
+        } else if (detail.getEffectivePrice() >= 50.0) {
+            shippingText = "Free Standard Shipping (Order qualifies for $50+ free shipping)";
+        } else {
+            shippingText = "Standard Shipping (Free on orders over $50)";
+        }
+        specRows.put("Shipping", shippingText);
         specRows.put("Return Policy", "30-day money back guarantee");
         return specRows;
     }
@@ -435,11 +428,23 @@ public class ProductDetailActivity extends BaseActivity {
             final int idx = i;
             final ProductVariant variant = sorted.get(i);
 
+            String summary = variant.getAttributeSummary();
             TextView chip = new TextView(this);
-            chip.setText(variant.getAttributeSummary());
+            chip.setText(summary);
             ScreenUtils.applyTextSize(chip, R.dimen.text_size_caption);
 
-            int hPad = dpToPx(10), vPad = dpToPx(6);
+            // Real color swatch indicator
+            Integer colorInt = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.getColorForName(summary);
+            if (colorInt != null) {
+                int dotSize = dpToPx(12);
+                android.graphics.drawable.Drawable swatch = aeu.ratha.beckie_deal_app.utils.helpers.SpecFormatter.createColorSwatchDrawable(colorInt, dotSize);
+                chip.setCompoundDrawablesWithIntrinsicBounds(swatch, null, null, null);
+                chip.setCompoundDrawablePadding(dpToPx(8));
+            } else {
+                chip.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+
+            int hPad = dpToPx(14), vPad = dpToPx(8);
             chip.setPadding(hPad, vPad, hPad, vPad);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -467,13 +472,16 @@ public class ProductDetailActivity extends BaseActivity {
                 if (productDetail != null) {
                     setupSpecRows(buildSpecRows(productDetail, variant));
                 }
+                // Dynamically update Stock badge and Action buttons for variant
+                boolean vStock = variant.isInStock() && (variant.getStockQuantity() > 0 || !variant.isTrackInventory());
+                updateStockAndButtonState(vStock);
                 Log.d(TAG, "Variant selected: " + variant.getName());
             });
 
             variantRow.addView(chip);
         }
 
-        // Select default variant's price on load
+        // Select default variant's price and stock state on load
         for (ProductVariant v : sorted) {
             if (v.isDefault()) {
                 setTextSafe(R.id.detailProductPrice,
@@ -481,9 +489,16 @@ public class ProductDetailActivity extends BaseActivity {
                 if (productDetail != null) {
                     setupSpecRows(buildSpecRows(productDetail, v));
                 }
+                boolean vStock = v.isInStock() && (v.getStockQuantity() > 0 || !v.isTrackInventory());
+                updateStockAndButtonState(vStock);
                 break;
             }
         }
+    }
+
+    private boolean isDarkMode() {
+        int nightModeFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES;
     }
 
     private void applyVariantChipStyle(TextView chip, boolean selected) {
@@ -493,15 +508,16 @@ public class ProductDetailActivity extends BaseActivity {
         android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
         gd.setCornerRadius(dpToPx(16));
 
+        boolean dark = isDarkMode();
         if (selected) {
             gd.setColor(ContextCompat.getColor(this, R.color.primary));
-            chip.setTextColor(Color.WHITE);
+            chip.setTextColor(ContextCompat.getColor(this, R.color.black_fixed));
             chip.setTypeface(null, android.graphics.Typeface.BOLD);
             chip.setElevation(dpToPx(2));
         } else {
-            gd.setColor(Color.parseColor("#F8F9FA"));
-            gd.setStroke(dpToPx(1), Color.parseColor("#E5E7EB"));
-            chip.setTextColor(Color.parseColor("#374151"));
+            gd.setColor(ContextCompat.getColor(this, dark ? R.color.input_background : R.color.chip_unselected_bg));
+            gd.setStroke(dpToPx(1), ContextCompat.getColor(this, R.color.border_color));
+            chip.setTextColor(ContextCompat.getColor(this, dark ? R.color.text_primary : R.color.text_secondary));
             chip.setTypeface(null, android.graphics.Typeface.NORMAL);
             chip.setElevation(0);
         }
@@ -618,7 +634,8 @@ public class ProductDetailActivity extends BaseActivity {
                     thumbCards[i].setVisibility(View.VISIBLE);
                     thumbCards[i].setStrokeWidth(i == currentImageIndex ? dpToPx(2) : dpToPx(1));
                     thumbCards[i].setStrokeColor(i == currentImageIndex
-                            ? Color.parseColor("#F97316") : Color.parseColor("#EEEEEE"));
+                            ? ContextCompat.getColor(this, R.color.primary)
+                            : ContextCompat.getColor(this, R.color.border_color));
                 }
             } else {
                 // Hide dot/thumbnail if we don't have this image
@@ -657,19 +674,20 @@ public class ProductDetailActivity extends BaseActivity {
             android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
             gd.setCornerRadius(dpToPx(12));
 
+            boolean dark = isDarkMode();
             String lower = formattedTag.toLowerCase();
             if (lower.contains("featured") || lower.contains("% off")) {
-                gd.setColor(Color.parseColor("#FEF3C7"));
-                gd.setStroke(dpToPx(1), Color.parseColor("#FDE68A"));
-                chip.setTextColor(Color.parseColor("#B45309"));
+                gd.setColor(ContextCompat.getColor(this, dark ? R.color.badge_bg : R.color.chip_green_bg));
+                gd.setStroke(dpToPx(1), ContextCompat.getColor(this, dark ? R.color.primary : R.color.chip_green_fg));
+                chip.setTextColor(ContextCompat.getColor(this, dark ? R.color.primary : R.color.chip_green_fg));
             } else if (lower.startsWith("sku:")) {
-                gd.setColor(Color.parseColor("#F3F4F6"));
-                gd.setStroke(dpToPx(1), Color.parseColor("#E5E7EB"));
-                chip.setTextColor(Color.parseColor("#374151"));
+                gd.setColor(ContextCompat.getColor(this, dark ? R.color.input_background : R.color.chip_unselected_bg));
+                gd.setStroke(dpToPx(1), ContextCompat.getColor(this, R.color.border_color));
+                chip.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
             } else {
-                gd.setColor(Color.parseColor("#EFF6FF"));
-                gd.setStroke(dpToPx(1), Color.parseColor("#DBEAFE"));
-                chip.setTextColor(Color.parseColor("#1D4ED8"));
+                gd.setColor(ContextCompat.getColor(this, dark ? R.color.brand_tint_bg_1 : R.color.brand_tint_fg_1));
+                gd.setStroke(dpToPx(1), ContextCompat.getColor(this, R.color.brand_tint_fg_1));
+                chip.setTextColor(ContextCompat.getColor(this, R.color.white_fixed));
             }
 
             int h = dpToPx(10), v = dpToPx(5);
@@ -744,7 +762,7 @@ public class ProductDetailActivity extends BaseActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(1));
                 dp.setMarginStart(dpToPx(16)); dp.setMarginEnd(dpToPx(16));
                 divider.setLayoutParams(dp);
-                divider.setBackgroundColor(Color.parseColor("#F0F0F0"));
+                divider.setBackgroundColor(ContextCompat.getColor(this, R.color.border_color));
                 container.addView(divider);
             }
             View r = LayoutInflater.from(this).inflate(R.layout.item_spec_row, container, false);
@@ -787,6 +805,10 @@ public class ProductDetailActivity extends BaseActivity {
         // ── Add to Cart ───────────────────────────────────────────────────
         View addToCart = findViewById(R.id.addToCartButton);
         if (addToCart != null) addToCart.setOnClickListener(v -> {
+            if (!isCurrentProductInStock()) {
+                Toast.makeText(this, "Sorry, this item is currently out of stock.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (!AuthHelper.requireAuthForCart(this)) return;
             String pid = resolveProductId();
             if (pid == null) {
@@ -824,17 +846,28 @@ public class ProductDetailActivity extends BaseActivity {
         // ── Buy Now ───────────────────────────────────────────────────────
         View buyNow = findViewById(R.id.buyNowButton);
         if (buyNow != null) buyNow.setOnClickListener(v -> {
+            if (!isCurrentProductInStock()) {
+                Toast.makeText(this, "Sorry, this item is currently out of stock.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (!AuthHelper.requireAuthForPurchase(this)) return;
             String pid = resolveProductId();
             if (pid == null) {
                 Toast.makeText(this, "Product info missing. Please try again.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            double unitPrice = productDetail != null ? productDetail.getEffectivePrice() : 0.0;
+            String prodName = productDetail != null ? productDetail.getName() : "Product";
+
             cartRepository.addToCart(pid, selectedQuantity, new CartRepository.CartItemCallback() {
                 @Override public void onSuccess(CartItemResponse response) {
                     runOnUiThread(() -> {
                         Intent intent = new Intent(ProductDetailActivity.this, PayoutActivity.class);
                         intent.putExtra("buy_now_mode", true);
+                        intent.putExtra("buy_now_price", unitPrice);
+                        intent.putExtra("buy_now_qty", selectedQuantity);
+                        intent.putExtra("buy_now_name", prodName);
                         startActivity(intent);
                     });
                 }
@@ -1058,6 +1091,57 @@ public class ProductDetailActivity extends BaseActivity {
             rotationAnimator.setDuration(350);
             rotationAnimator.setInterpolator(new android.view.animation.DecelerateInterpolator());
             rotationAnimator.start();
+        }
+    }
+
+    // ── Stock & Out-of-Stock Handling ─────────────────────────────────────────
+
+    private boolean isCurrentProductInStock() {
+        if (productDetail == null) return true;
+        if (selectedVariantIndex >= 0 && productDetail.getVariants() != null
+                && selectedVariantIndex < productDetail.getVariants().size()) {
+            ProductVariant v = productDetail.getVariants().get(selectedVariantIndex);
+            return v.isInStock() && (v.getStockQuantity() > 0 || !v.isTrackInventory());
+        }
+        return productDetail.isInStock() && (productDetail.getStockQuantity() > 0 || !productDetail.isTrackInventory());
+    }
+
+    private void updateStockAndButtonState(boolean isInStock) {
+        // 1. Stock Pill Badge
+        TextView stockLabel = findViewById(R.id.stockLabel);
+        if (stockLabel != null) {
+            stockLabel.setText(isInStock ? "In Stock" : "Out of Stock");
+            android.view.View parent = (android.view.View) stockLabel.getParent(); // LinearLayout
+            if (parent != null) {
+                android.view.View grandParent = (android.view.View) parent.getParent(); // MaterialCardView
+                if (grandParent instanceof com.google.android.material.card.MaterialCardView) {
+                    ((com.google.android.material.card.MaterialCardView) grandParent)
+                            .setCardBackgroundColor(ContextCompat.getColor(this,
+                                    isInStock ? R.color.status_delivered : R.color.red_error));
+                }
+            }
+        }
+
+        // 2. Quantity controls (- / +)
+        View decrement = findViewById(R.id.quantityDecrement);
+        View increment = findViewById(R.id.quantityIncrement);
+        if (decrement != null) decrement.setEnabled(isInStock);
+        if (increment != null) increment.setEnabled(isInStock);
+
+        // 3. Add to Cart Button
+        com.google.android.material.button.MaterialButton addToCart = findViewById(R.id.addToCartButton);
+        if (addToCart != null) {
+            addToCart.setEnabled(isInStock);
+            addToCart.setAlpha(isInStock ? 1.0f : 0.5f);
+            addToCart.setText(isInStock ? "Add to Cart" : "Out of Stock");
+        }
+
+        // 4. Buy Now Button
+        com.google.android.material.button.MaterialButton buyNow = findViewById(R.id.buyNowButton);
+        if (buyNow != null) {
+            buyNow.setEnabled(isInStock);
+            buyNow.setAlpha(isInStock ? 1.0f : 0.5f);
+            buyNow.setText(isInStock ? "Buy Now" : "Out of Stock");
         }
     }
 

@@ -572,27 +572,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingHorizontal="8dp"
+            android:paddingHorizontal="10dp"
             android:paddingTop="10dp"
             android:paddingBottom="12dp">
 
             <LinearLayout
                 android:id="@+id/quantityStepper"
                 android:layout_width="wrap_content"
-                android:layout_height="52dp"
+                android:layout_height="44dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:background="@drawable/form_field_background"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="6dp"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="4dp"
                 android:clickable="true"
                 android:focusable="true">
 
                 <ImageView
                     android:id="@+id/quantityDecrement"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="12dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="8dp"
                     android:src="@drawable/ic_minus_24"
                     android:scaleType="fitCenter"
                     app:tint="@color/text_secondary"
@@ -603,19 +603,19 @@
 
                 <TextView
                     android:id="@+id/quantityValue"
-                    android:layout_width="40dp"
+                    android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="1"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary" />
 
                 <ImageView
                     android:id="@+id/quantityIncrement"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="12dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="8dp"
                     android:src="@drawable/ic_plus_24"
                     android:scaleType="fitCenter"
                     app:tint="@color/text_secondary"
@@ -625,13 +625,11 @@
                     android:background="?attr/selectableItemBackgroundBorderless" />
             </LinearLayout>
 
-
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/addToCartButton"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="6dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_add_to_cart_glass"
                 android:text="Add to Cart"
@@ -639,13 +637,14 @@
                 android:textColor="@color/dark_brown"
                 android:textSize="12sp"
                 android:textStyle="bold"
+                android:singleLine="true"
                 android:maxLines="1"
-                android:ellipsize="none"
+                android:paddingHorizontal="4dp"
                 app:backgroundTint="@null"
                 app:icon="@drawable/add_shopping_cart_24"
                 app:iconTint="@color/dark_brown"
                 app:iconGravity="textStart"
-                app:iconPadding="2dp"
+                app:iconPadding="3dp"
                 app:iconSize="16dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -660,11 +659,15 @@
                 android:textColor="@color/white_fixed"
                 android:textSize="12sp"
                 android:textStyle="bold"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:paddingHorizontal="4dp"
                 app:backgroundTint="@null"
                 app:icon="@drawable/ic_shopping_bag_24"
                 app:iconTint="@color/white_fixed"
                 app:iconGravity="textStart"
-                app:iconPadding="2dp" />
+                app:iconPadding="3dp"
+                app:iconSize="16dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
