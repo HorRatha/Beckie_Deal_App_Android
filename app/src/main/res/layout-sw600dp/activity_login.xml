@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_radial_gradient_bg"
+    android:fitsSystemWindows="true"
+    tools:context=".LoginActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="540dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <!-- Header Section with Logo -->
+            <FrameLayout
+                android:id="@+id/loginHeaderWave"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+
+                <!-- Back button -->
+                <ImageView
+                    android:id="@+id/backButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/login_logo_circle_bg"
+                    android:contentDescription="Back"
+                    android:elevation="4dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_left"
+                    app:tint="@color/primary" />
+
+                <!-- Logo - Small and Wide Format -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center_horizontal"
+                        android:contentDescription="Beckie Deal Logo"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/logo_light" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- Login/Register Toggle Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/button_toggle_container_bg"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <!-- Sign In Button - Uses activated state -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/signInToggle"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/button_toggle_signin_selector"
+                    app:backgroundTint="@null"
+                    android:text="Sign In"
+                    android:textColor="@color/button_toggle_text_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:stateListAnimator="@null" />
+
+                <!-- Register Button - Uses activated state -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/registerToggle"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/button_toggle_register_selector"
+                    app:backgroundTint="@null"
+                    android:text="Register"
+                    android:textColor="@color/button_toggle_text_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:stateListAnimator="@null" />
+
+            </LinearLayout>
+
+            <!-- Form Card Section with FrameLayout for animated transitions -->
+            <FrameLayout
+                android:id="@+id/formContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:paddingBottom="16dp">
+
+                <!-- Login Form -->
+
+                <!-- Register Form (Initially Hidden) -->
+                <LinearLayout
+                    android:id="@+id/loginFormSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="644dp"
+                    android:elevation="5dp"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="24dp">
+
+                    <!-- Login Title -->
+
+                    <!-- Subtitle with icon -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="4dp"
+                            android:background="@drawable/login_logo_circle_bg"
+                            android:backgroundTint="@color/primary" />
+
+                    </LinearLayout>
+
+                    <!-- Login Animation -->
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/loginAnimation"
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/login" />
+
+                    <!-- Email Field -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Email"
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/dark_brown" />
+
+                    <EditText
+                        android:id="@+id/emailInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/login_input_background_white"
+                        android:drawableStart="@drawable/ic_email"
+                        android:drawablePadding="14dp"
+                        android:drawableTint="@color/primary"
+                        android:hint="Enter your email"
+                        android:inputType="textEmailAddress"
+                        android:paddingHorizontal="18dp"
+                        android:textAppearance="@style/TextAppearance.App.CardProductName"
+                        android:textColorHint="@color/text_muted" />
+
+                    <!-- Password Field -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="Password"
+                        android:textAppearance="@style/TextAppearance.App.CardPrice"
+                        android:textColor="@color/dark_brown" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="8dp">
+
+                        <EditText
+                            android:id="@+id/passwordInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/login_input_background_white"
+                            android:drawableStart="@drawable/ic_lock"
+                            android:drawablePadding="13dp"
+                            android:drawableTint="@color/primary"
+                            android:hint="Enter your password"
+                            android:inputType="textPassword"
+                            android:paddingHorizontal="18dp"
+                            android:paddingEnd="50dp"
+                            android:textAppearance="@style/TextAppearance.App.CardProductName"
+                            android:textColorHint="@color/text_muted" />
+
+                        <ImageView
+                            android:id="@+id/togglePasswordVisibility"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Toggle password visibility"
+                            android:padding="12dp"
+                            android:src="@drawable/ic_password_hidden"
+                            app:tint="@color/primary" />
+
+                    </FrameLayout>
+
+                    <!-- Remember me + Forgot password row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/rememberMe"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:button="@drawable/login_checkbox_selector"
+                            android:paddingStart="8dp"
+                            android:text="Remember me"
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_secondary" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/forgotPassword"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Forgot Password?"
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/dark_brown" />
+
+                    </LinearLayout>
+
+                    <!-- Login Button -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/loginButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/login_button_rounded_bg"
+                        android:stateListAnimator="@null"
+                        android:text="Login"
+                        android:textAllCaps="false"
+                        android:textColor="@color/dark_brown"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05"
+                        app:backgroundTint="@null" />
+
+                    <!-- Register link -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Don't have an account? "
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/registerLink"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Register"
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/dark_brown" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Multi-Step Register Form -->
+                <LinearLayout
+                    android:id="@+id/registerFormSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:elevation="8dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="24dp"
+                    android:visibility="gone">
+
+                    <!-- Register Animation -->
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/registerAnimation"
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        app:lottie_rawRes="@raw/register"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true" />
+
+                    <!-- STEP 1: Name and Email -->
+                    <FrameLayout
+                        android:id="@+id/step1Container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <!-- Step 1 Title -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Let's get started"
+                                android:textSize="18sp"
+                                android:textColor="@color/dark_brown"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="4dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Enter your basic information"
+                                android:textSize="13sp"
+                                android:textColor="@color/text_muted"
+                                android:layout_marginBottom="16dp" />
+
+                            <!-- Name Field -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Full Name"
+                                android:textAppearance="@style/TextAppearance.App.CardPrice"
+                                android:textColor="@color/dark_brown" />
+
+                            <EditText
+                                android:id="@+id/nameInput"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/login_input_background_white"
+                                android:drawableStart="@drawable/ic_account"
+                                android:drawableTint="@color/primary"
+                                android:drawablePadding="14dp"
+                                android:hint="Enter your full name"
+                                android:inputType="textPersonName"
+                                android:paddingHorizontal="18dp"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName" />
+
+                            <!-- Email Field -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="14dp"
+                                android:text="Email"
+                                android:textAppearance="@style/TextAppearance.App.CardPrice"
+                                android:textColor="@color/dark_brown" />
+
+                            <EditText
+                                android:id="@+id/regEmailInput"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/login_input_background_white"
+                                android:drawableStart="@drawable/ic_email"
+                                android:drawableTint="@color/primary"
+                                android:drawablePadding="14dp"
+                                android:hint="Enter your email"
+                                android:inputType="textEmailAddress"
+                                android:paddingHorizontal="18dp"
+                                android:textAppearance="@style/TextAppearance.App.CardProductName" />
+
+                            <!-- Next Button (Step 1) -->
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/nextToPasswordButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="24dp"
+                                android:background="@drawable/login_button_rounded_bg"
+                                android:text="Next"
+                                android:textAllCaps="false"
+                                android:textColor="@color/dark_brown"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.05"
+                                android:stateListAnimator="@null"
+                                app:backgroundTint="@null" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <!-- STEP 2: Password and Confirm Password -->
+                    <FrameLayout
+                        android:id="@+id/step2Container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!-- Step 2 Title -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Secure your account"
+                                android:textSize="18sp"
+                                android:textColor="@color/dark_brown"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="4dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Create a strong password"
+                                android:textSize="13sp"
+                                android:textColor="@color/text_muted"
+                                android:layout_marginBottom="16dp" />
+
+                            <!-- Password Field -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Password"
+                                android:textAppearance="@style/TextAppearance.App.CardPrice"
+                                android:textColor="@color/dark_brown" />
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginTop="8dp">
+
+                                <EditText
+                                    android:id="@+id/regPasswordInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/login_input_background_white"
+                                    android:drawableStart="@drawable/ic_lock"
+                                    android:drawableTint="@color/primary"
+                                    android:drawablePadding="14dp"
+                                    android:hint="Min. 8 characters"
+                                    android:inputType="textPassword"
+                                    android:paddingHorizontal="18dp"
+                                    android:paddingEnd="50dp"
+                                    android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                    android:textColorHint="@color/text_muted" />
+
+                                <ImageView
+                                    android:id="@+id/toggleRegPasswordVisibility"
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:layout_gravity="end|center_vertical"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="Toggle password visibility"
+                                    android:padding="12dp"
+                                    android:src="@drawable/ic_password_hidden"
+                                    app:tint="@color/primary" />
+
+                            </FrameLayout>
+
+                            <!-- Confirm Password Field -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="14dp"
+                                android:text="Confirm Password"
+                                android:textAppearance="@style/TextAppearance.App.CardPrice"
+                                android:textColor="@color/dark_brown" />
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginTop="8dp">
+
+                                <EditText
+                                    android:id="@+id/regConfirmPasswordInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/login_input_background_white"
+                                    android:drawableStart="@drawable/ic_lock"
+                                    android:drawableTint="@color/primary"
+                                    android:drawablePadding="14dp"
+                                    android:hint="Confirm your password"
+                                    android:inputType="textPassword"
+                                    android:paddingHorizontal="18dp"
+                                    android:paddingEnd="50dp"
+                                    android:textAppearance="@style/TextAppearance.App.CardProductName"
+                                    android:textColorHint="@color/text_muted" />
+
+                                <ImageView
+                                    android:id="@+id/toggleRegConfirmPasswordVisibility"
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:layout_gravity="end|center_vertical"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="Toggle password visibility"
+                                    android:padding="12dp"
+                                    android:src="@drawable/ic_password_hidden"
+                                    app:tint="@color/primary" />
+
+                            </FrameLayout>
+
+                            <!-- Button Row: Back and Sign Up -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="24dp"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/backToInfoButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="1"
+                                    android:layout_marginEnd="4dp"
+                                    android:background="@drawable/login_input_background_white"
+                                    android:text="Back"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/dark_brown"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    android:letterSpacing="0.05"
+                                    android:stateListAnimator="@null"
+                                    app:backgroundTint="@null" />
+
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/registerButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="4dp"
+                                    android:background="@drawable/login_button_rounded_bg"
+                                    android:text="Sign Up"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/dark_brown"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    android:letterSpacing="0.05"
+                                    android:stateListAnimator="@null"
+                                    app:backgroundTint="@null" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <!-- Login link -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Already have an account? "
+                            android:textAppearance="@style/TextAppearance.App.Body"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/loginLink"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Login"
+                            android:textAppearance="@style/TextAppearance.App.CardPrice"
+                            android:textColor="@color/dark_brown" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/loginProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

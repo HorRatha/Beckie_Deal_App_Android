@@ -7,6 +7,7 @@ import aeu.ratha.beckie_deal_app.data.models.CartResponse;
 import aeu.ratha.beckie_deal_app.data.models.ShippingMethod;
 import aeu.ratha.beckie_deal_app.data.repository.CartRepository;
 import aeu.ratha.beckie_deal_app.data.repository.ShippingMethodRepository;
+import aeu.ratha.beckie_deal_app.ui.activities.payment.KhqrPaymentActivity;
 import aeu.ratha.beckie_deal_app.ui.activities.payment.PaymentWebViewActivity;
 import aeu.ratha.beckie_deal_app.utils.helpers.AuthHelper;
 import aeu.ratha.beckie_deal_app.utils.helpers.BaseActivity;
@@ -21,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
@@ -303,8 +305,16 @@ public class PayoutActivity extends BaseActivity {
         }
         if (stepNextButton != null) {
             stepNextButton.setOnClickListener(v -> {
-                if (currentStep == 3) processCheckout();
-                else if (validateCurrentStep()) goToStep(currentStep + 1);
+                if (currentStep == 3) {
+                    processCheckout();
+                } else if (validateCurrentStep()) {
+                    if (currentStep == 2 && PAYMENT_ABA.equals(selectedPaymentMethod)) {
+                        // Skip step 3 (Review) and process checkout directly for ABA KHQR popup!
+                        processCheckout();
+                    } else {
+                        goToStep(currentStep + 1);
+                    }
+                }
             });
             UiAnimations.pressBounce(stepNextButton);
         }
@@ -1180,6 +1190,10 @@ public class PayoutActivity extends BaseActivity {
         checkoutData.put("notes",          "");
         checkoutData.put("metadata",       new HashMap<String, Object>()); // required by backend
 
+        if (PAYMENT_ABA.equals(selectedPaymentMethod)) {
+            checkoutData.put("return_url", "beckiedeal://payment/success");
+        }
+
         // Include coupon_code if available
         String appliedCoupon = CouponManager.getInstance().getAppliedCouponCode();
         if ((appliedCoupon == null || appliedCoupon.isEmpty()) && currentCart != null) {
@@ -1322,6 +1336,54 @@ public class PayoutActivity extends BaseActivity {
         // Unwrap nested "data" if present
         Map<String, Object> data = extractMap(response, "data");
         Map<String, Object> src  = (data != null) ? data : response;
+
+        // Extract nested payment map if present
+        Map<String, Object> paymentMap = extractMap(src, "payment");
+        if (paymentMap == null) paymentMap = extractMap(response, "payment");
+
+        String qrString = null;
+        String qrImage = null;
+        String abapayDeeplink = null;
+
+        if (paymentMap != null) {
+            qrString = extractString(paymentMap, "qrString", extractString(paymentMap, "qr_string", extractString(paymentMap, "qr_code_data", null)));
+            qrImage = extractString(paymentMap, "qrImage", extractString(paymentMap, "qr_image", extractString(paymentMap, "qr_code_url", null)));
+            abapayDeeplink = extractString(paymentMap, "abapay_deeplink", extractString(paymentMap, "abapayDeeplink", null));
+        }
+
+        if (qrString == null) qrString = extractString(src, "qr_string", extractString(src, "qr_code_data", extractString(response, "qr_string", null)));
+        if (qrImage == null) qrImage = extractString(src, "qr_image", extractString(src, "qr_code_url", extractString(response, "qr_image", null)));
+        if (abapayDeeplink == null) abapayDeeplink = extractString(src, "abapay_deeplink", extractString(response, "abapay_deeplink", null));
+
+        // If ABA payment method is selected, launch KhqrPaymentActivity directly to pop up QR code
+        if (PAYMENT_ABA.equals(selectedPaymentMethod)) {
+            String orderIdStr = extractString(src, "order_number", extractString(src, "order_id", extractString(src, "id", "127")));
+            long orderId = 127L;
+            try {
+                orderId = Long.parseLong(orderIdStr.replaceAll("\\D+", ""));
+            } catch (Exception e) {
+                orderId = 127L;
+            }
+
+            Double amountObj = extractDouble(src, "grand_total");
+            if (amountObj == null) amountObj = extractDouble(src, "total_amount");
+            if (amountObj == null && currentCart != null) amountObj = currentCart.getGrandTotal();
+            double amount = (amountObj != null) ? amountObj : 77.00;
+
+            String transactionId = extractString(src, "transaction_id", null);
+
+            Intent intent = new Intent(this, KhqrPaymentActivity.class);
+            intent.putExtra(KhqrPaymentActivity.EXTRA_ORDER_ID, orderId);
+            intent.putExtra(KhqrPaymentActivity.EXTRA_AMOUNT, amount);
+            if (transactionId != null) intent.putExtra(KhqrPaymentActivity.EXTRA_TRANSACTION_ID, transactionId);
+            if (qrString != null) intent.putExtra("qr_string", qrString);
+            if (qrImage != null) intent.putExtra("qr_image", qrImage);
+            if (abapayDeeplink != null) intent.putExtra("abapay_deeplink", abapayDeeplink);
+
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // Check for a redirect payment URL (ABA PayWay online flow)
         String paymentUrl = extractString(src, "payment_url", null);
@@ -1511,16 +1573,36 @@ public class PayoutActivity extends BaseActivity {
 
     /**
      * Play success sound when order is placed
+     * Improved to work on tablets and handle audio focus
      */
     private void playSuccessSound() {
         try {
-            // Create AudioAttributes for the sound
+            // Get AudioManager and set volume to maximum
+            AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+            if (audioManager != null) {
+                // Set STREAM_MUSIC volume to maximum for best audibility
+                int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume, AudioManager.FLAG_SHOW_UI);
+                
+                // Request audio focus with STREAM_MUSIC
+                int focusResult = audioManager.requestAudioFocus(
+                        null,
+                        AudioManager.STREAM_MUSIC,
+                        AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
+                );
+                
+                if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    Log.w(TAG, "Could not gain audio focus");
+                }
+            }
+            
+            // Create AudioAttributes for the sound using STREAM_MUSIC
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build();
             
-            // Create SoundPool
+            // Create SoundPool with optimized settings
             soundPool = new SoundPool.Builder()
                     .setMaxStreams(1)
                     .setAudioAttributes(audioAttributes)
@@ -1532,10 +1614,30 @@ public class PayoutActivity extends BaseActivity {
             // Set listener for when sound is loaded
             soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> {
                 if (status == 0) {
-                    // Sound loaded successfully, play it
-                    soundPool.play(successSoundId, 1.0f, 1.0f, 1, 0, 1.0f);
+                    try {
+                        // Sound loaded successfully, play it with maximum volume (1.0f, 1.0f)
+                        int streamId = soundPool.play(sampleId, 1.0f, 1.0f, 1, 0, 1.0f);
+                        Log.d(TAG, "Success sound played with stream ID: " + streamId + " at maximum volume");
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error playing sound: " + e.getMessage());
+                    }
+                } else {
+                    Log.e(TAG, "Error loading sound, status: " + status);
                 }
             });
+            
+            // Set a timeout to play sound if loading takes too long
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (soundPool != null && successSoundId > 0) {
+                    try {
+                        soundPool.play(successSoundId, 1.0f, 1.0f, 1, 0, 1.0f);
+                        Log.d(TAG, "Success sound played (fallback timeout) at maximum volume");
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error in fallback sound play: " + e.getMessage());
+                    }
+                }
+            }, 500); // Try to play after 500ms if not loaded yet
+            
         } catch (Exception e) {
             Log.e(TAG, "Error playing success sound: " + e.getMessage());
         }

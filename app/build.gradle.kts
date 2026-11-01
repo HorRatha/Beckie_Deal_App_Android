@@ -67,6 +67,8 @@ dependencies {
 
     // Add CardView for product cards
     implementation("androidx.cardview:cardview:1.0.0")
+    // ZXing for local QR code generation from backend qr_string
+    implementation("com.google.zxing:core:3.5.4")
 
     // RecyclerView for efficient scrolling product grids
     implementation("androidx.recyclerview:recyclerview:1.3.2")

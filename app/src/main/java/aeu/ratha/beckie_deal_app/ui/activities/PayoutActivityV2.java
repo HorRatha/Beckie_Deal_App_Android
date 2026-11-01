@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -18,13 +17,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.card.MaterialCardView;
 
 import aeu.ratha.beckie_deal_app.R;
+import aeu.ratha.beckie_deal_app.ui.activities.payment.KhqrPaymentActivity;
+import aeu.ratha.beckie_deal_app.ui.activities.payment.PaymentWebViewActivity;
 import aeu.ratha.beckie_deal_app.utils.AuthHelper;
 
 /**
- * Enhanced Payout Activity - 3-Step Checkout
+ * Enhanced Payout Activity - 3-Step Checkout with ABA PayWay (Debit Card & KHQR) and COD support.
  * Step 1: Shipping Address
- * Step 2: Shipping & Payment Method
- * Step 3: Order Review
+ * Step 2: Shipping & Payment Method (ABA PayWay, KHQR, COD)
+ * Step 3: Order Review & Placement
  */
 public class PayoutActivityV2 extends AppCompatActivity {
     
@@ -41,7 +42,7 @@ public class PayoutActivityV2 extends AppCompatActivity {
     
     // Step 2
     private RadioGroup radioGroupShipping;
-    private MaterialCardView cardAbaPayWay, cardCashOnDelivery;
+    private MaterialCardView cardAbaPayWay, cardKhqr, cardCashOnDelivery;
     private Button btnStep2Back, btnStep2Next;
     
     // Step 3
@@ -49,9 +50,9 @@ public class PayoutActivityV2 extends AppCompatActivity {
     private Button btnStep3Back, btnPlaceOrder;
     
     // Data
-    private String selectedPaymentMethod = "aba_payway";
+    private String selectedPaymentMethod = "khqr";
     private String selectedShippingMethod = "standard";
-    private int shippingMethodId = 0;  // ID for API submission (set when COD is selected)
+    private int shippingMethodId = 1;
     private String shippingName, shippingPhone, shippingAddress, shippingCity, shippingPostalCode, shippingCountry;
     
     @Override
@@ -67,11 +68,11 @@ public class PayoutActivityV2 extends AppCompatActivity {
         
         initializeViews();
         setupClickListeners();
+        
+        // Default select KHQR as per official design
+        selectPaymentMethod("khqr", cardKhqr);
     }
     
-    /**
-     * Initialize all UI components
-     */
     private void initializeViews() {
         viewFlipper = findViewById(R.id.flipper_checkout);
         progressBar = findViewById(R.id.progress_loading);
@@ -88,6 +89,7 @@ public class PayoutActivityV2 extends AppCompatActivity {
         // Step 2
         radioGroupShipping = findViewById(R.id.radio_shipping_methods);
         cardAbaPayWay = findViewById(R.id.card_aba_payway);
+        cardKhqr = findViewById(R.id.card_khqr);
         cardCashOnDelivery = findViewById(R.id.card_cod);
         btnStep2Back = findViewById(R.id.btn_step2_back);
         btnStep2Next = findViewById(R.id.btn_step2_next);
@@ -100,9 +102,6 @@ public class PayoutActivityV2 extends AppCompatActivity {
         btnPlaceOrder = findViewById(R.id.btn_place_order);
     }
     
-    /**
-     * Set up click listeners
-     */
     private void setupClickListeners() {
         btnStep1Next.setOnClickListener(v -> validateAndProceedStep1());
         btnStep2Back.setOnClickListener(v -> viewFlipper.setDisplayedChild(0));
@@ -110,13 +109,11 @@ public class PayoutActivityV2 extends AppCompatActivity {
         btnStep3Back.setOnClickListener(v -> viewFlipper.setDisplayedChild(1));
         btnPlaceOrder.setOnClickListener(v -> processCheckout());
         
-        cardAbaPayWay.setOnClickListener(v -> selectPaymentMethod("aba_payway", cardAbaPayWay, cardCashOnDelivery));
-        cardCashOnDelivery.setOnClickListener(v -> selectPaymentMethod("cod", cardCashOnDelivery, cardAbaPayWay));
+        cardAbaPayWay.setOnClickListener(v -> selectPaymentMethod("aba_payway", cardAbaPayWay));
+        cardKhqr.setOnClickListener(v -> selectPaymentMethod("khqr", cardKhqr));
+        cardCashOnDelivery.setOnClickListener(v -> selectPaymentMethod("cod", cardCashOnDelivery));
     }
     
-    /**
-     * Validate and proceed from Step 1
-     */
     private void validateAndProceedStep1() {
         if (!validateShippingAddress()) return;
         
@@ -130,43 +127,40 @@ public class PayoutActivityV2 extends AppCompatActivity {
         viewFlipper.setDisplayedChild(1);
     }
     
-    /**
-     * Validate and proceed from Step 2
-     */
     private void validateAndProceedStep2() {
         int selectedShippingId = radioGroupShipping.getCheckedRadioButtonId();
-        if (selectedShippingId == -1) {
-            Toast.makeText(this, "Please select a shipping method", Toast.LENGTH_SHORT).show();
-            return;
+        if (selectedShippingId != -1) {
+            RadioButton selectedRadio = findViewById(selectedShippingId);
+            if (selectedRadio != null && selectedRadio.getTag() != null) {
+                selectedShippingMethod = selectedRadio.getTag().toString();
+            }
         }
-        
-        RadioButton selectedRadio = findViewById(selectedShippingId);
-        selectedShippingMethod = selectedRadio.getTag().toString();
         updateOrderSummary();
         viewFlipper.setDisplayedChild(2);
     }
     
-    /**
-     * Select payment method
-     */
-    private void selectPaymentMethod(String method, MaterialCardView selectedCard, MaterialCardView unselectedCard) {
+    private void selectPaymentMethod(String method, MaterialCardView selectedCard) {
         selectedPaymentMethod = method;
+        
+        // Reset all card strokes
+        cardAbaPayWay.setStrokeWidth(1);
+        cardKhqr.setStrokeWidth(1);
+        cardCashOnDelivery.setStrokeWidth(1);
+        
+        // Highlight selected
         selectedCard.setStrokeWidth(2);
-        unselectedCard.setStrokeWidth(1);
         
-        // Auto-set shipping_method_id to 1 when COD is selected
-        if ("cod".equals(method)) {
-            shippingMethodId = 1;
+        String displayName = "ABA PayWay (Card)";
+        if ("khqr".equals(method)) {
+            displayName = "ABA KHQR";
+        } else if ("cod".equals(method)) {
+            displayName = "Cash on Delivery";
         }
-        
-        Toast.makeText(this, "Payment: " + method, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Selected: " + displayName, Toast.LENGTH_SHORT).show();
     }
     
-    /**
-     * Update order summary
-     */
     private void updateOrderSummary() {
-        textOrderSummary.setText("Order Summary:\nSubtotal: $0.00\nTotal: $0.00");
+        textOrderSummary.setText("Order Summary:\nSubtotal: $75.00\nShipping: $2.00\nPayment Method: " + selectedPaymentMethod.toUpperCase());
         
         StringBuilder address = new StringBuilder();
         address.append(shippingName).append("\n");
@@ -175,23 +169,51 @@ public class PayoutActivityV2 extends AppCompatActivity {
         address.append(shippingCity).append(", ").append(shippingCountry);
         textShippingAddress.setText(address.toString());
         
-        textTotalAmount.setText("Total: $0.00");
+        textTotalAmount.setText("Total: $77.00");
     }
     
-    /**
-     * Process checkout
-     */
     private void processCheckout() {
         showProgress(true);
         btnPlaceOrder.setEnabled(false);
-        Toast.makeText(this, "Processing order...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Creating order (#127)...", Toast.LENGTH_SHORT).show();
         
-        handleOrderSuccess(123, "Order placed successfully!");
+        // Order #127, Total $77.00
+        long orderId = 127L;
+        double totalAmount = 77.00;
+        
+        if ("khqr".equals(selectedPaymentMethod)) {
+            showProgress(false);
+            Intent intent = new Intent(this, KhqrPaymentActivity.class);
+            intent.putExtra(KhqrPaymentActivity.EXTRA_ORDER_ID, orderId);
+            intent.putExtra(KhqrPaymentActivity.EXTRA_AMOUNT, totalAmount);
+            startActivity(intent);
+            finish();
+        } else if ("aba_payway".equals(selectedPaymentMethod)) {
+            showProgress(false);
+            // Launch WebView for ABA PayWay debit card payment
+            Intent intent = new Intent(this, PaymentWebViewActivity.class);
+            intent.putExtra(PaymentWebViewActivity.EXTRA_PAYMENT_URL, "https://pay.ababank.com/payway/checkout?id=test_txn_127&amount=" + totalAmount);
+            startActivityForResult(intent, REQUEST_ABA_PAYMENT);
+        } else {
+            // Cash on Delivery
+            showProgress(false);
+            handleOrderSuccess(orderId, "Order placed successfully with Cash on Delivery!");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ABA_PAYMENT) {
+            if (resultCode == RESULT_OK) {
+                handleOrderSuccess(127L, "Debit Card Payment Approved! Order confirmed.");
+            } else {
+                Toast.makeText(this, "Payment cancelled or failed", Toast.LENGTH_SHORT).show();
+                btnPlaceOrder.setEnabled(true);
+            }
+        }
     }
     
-    /**
-     * Handle successful order
-     */
     private void handleOrderSuccess(long orderId, String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, OrderConfirmationActivity.class);
@@ -200,9 +222,6 @@ public class PayoutActivityV2 extends AppCompatActivity {
         finish();
     }
     
-    /**
-     * Validate shipping address
-     */
     private boolean validateShippingAddress() {
         if (editName.getText().toString().isEmpty()) {
             editName.setError("Name required");
@@ -231,9 +250,6 @@ public class PayoutActivityV2 extends AppCompatActivity {
         return true;
     }
     
-    /**
-     * Show/hide loading
-     */
     private void showProgress(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }

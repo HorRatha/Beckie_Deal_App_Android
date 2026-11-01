@@ -78,6 +78,9 @@
             android:name=".ui.activities.cart.PayoutActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activities.PayoutActivityV2"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.cart.MyOrdersActivity"
             android:exported="false" />
         <activity
@@ -97,6 +100,10 @@
                 <data android:scheme="beckiedeal" android:host="payment" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activities.payment.KhqrPaymentActivity"
+            android:exported="false" />
 
         <!-- Profile Activities -->
         <activity

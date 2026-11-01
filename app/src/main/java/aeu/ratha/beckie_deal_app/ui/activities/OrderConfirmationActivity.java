@@ -2,8 +2,10 @@ package aeu.ratha.beckie_deal_app.ui.activities;
 
 import android.content.Intent;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -119,16 +121,36 @@ public class OrderConfirmationActivity extends AppCompatActivity {
     
     /**
      * Play success sound using SoundPool
+     * Improved to work on tablets with maximum volume
      */
     private void playSuccessSound() {
         try {
-            // Create AudioAttributes for the sound
+            // Get AudioManager and set volume to maximum
+            AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+            if (audioManager != null) {
+                // Set STREAM_MUSIC volume to maximum for best audibility
+                int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume, AudioManager.FLAG_SHOW_UI);
+                
+                // Request audio focus with STREAM_MUSIC
+                int focusResult = audioManager.requestAudioFocus(
+                        null,
+                        AudioManager.STREAM_MUSIC,
+                        AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
+                );
+                
+                if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    Log.w(TAG, "Could not gain audio focus");
+                }
+            }
+            
+            // Create AudioAttributes for the sound using STREAM_MUSIC
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build();
             
-            // Create SoundPool
+            // Create SoundPool with optimized settings
             soundPool = new SoundPool.Builder()
                     .setMaxStreams(1)
                     .setAudioAttributes(audioAttributes)
@@ -140,11 +162,32 @@ public class OrderConfirmationActivity extends AppCompatActivity {
             // Set listener for when sound is loaded
             soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> {
                 if (status == 0) {
-                    // Sound loaded successfully, play it
-                    soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+                    try {
+                        // Sound loaded successfully, play it with maximum volume (1.0f, 1.0f)
+                        int streamId = soundPool.play(sampleId, 1.0f, 1.0f, 1, 0, 1.0f);
+                        Log.d(TAG, "Success sound played with stream ID: " + streamId + " at maximum volume");
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error playing sound: " + e.getMessage());
+                    }
+                } else {
+                    Log.e(TAG, "Error loading sound, status: " + status);
                 }
             });
+            
+            // Set a timeout to play sound if loading takes too long
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                if (soundPool != null && soundId > 0) {
+                    try {
+                        soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+                        Log.d(TAG, "Success sound played (fallback timeout) at maximum volume");
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error in fallback sound play: " + e.getMessage());
+                    }
+                }
+            }, 500); // Try to play after 500ms if not loaded yet
+            
         } catch (Exception e) {
+            Log.e(TAG, "Error initializing sound: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -101,10 +101,9 @@ public class ShippingMethodRepository {
                         if (response.isSuccessful()
                                 && response.body() != null
                                 && response.body().isSuccess()
-                                && response.body().getData() != null
-                                && response.body().getData().getMethods() != null) {
+                                && response.body().getMethods() != null) {
 
-                            List<ShippingMethod> methods = response.body().getData().getMethods();
+                            List<ShippingMethod> methods = response.body().getMethods();
                             // Keep only active methods, sorted by sort_order
                             List<ShippingMethod> active = filterActive(methods);
                             cache = active;

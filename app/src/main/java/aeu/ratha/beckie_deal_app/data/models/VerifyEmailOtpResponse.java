@@ -8,8 +8,11 @@ import com.google.gson.annotations.SerializedName;
  */
 public class VerifyEmailOtpResponse {
     
+    @SerializedName("status")
+    private String status;
+
     @SerializedName("success")
-    private boolean success;
+    private Boolean successBoolean;
     
     @SerializedName("message")
     private String message;
@@ -20,11 +23,18 @@ public class VerifyEmailOtpResponse {
     public VerifyEmailOtpResponse() {}
 
     public boolean isSuccess() {
-        return success;
+        if ("success".equalsIgnoreCase(status)) {
+            return true;
+        }
+        return successBoolean != null && successBoolean;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public String getMessage() {
