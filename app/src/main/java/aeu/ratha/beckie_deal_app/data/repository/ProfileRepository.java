@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import aeu.ratha.beckie_deal_app.data.api.ProfileApiService;
+import aeu.ratha.beckie_deal_app.data.models.ProfileApiResponse;
 import aeu.ratha.beckie_deal_app.data.models.User;
 import aeu.ratha.beckie_deal_app.network.RetrofitClient;
 
@@ -122,15 +123,22 @@ public class ProfileRepository {
                             @NonNull AvatarUploadCallback callback) {
         Log.d(TAG, "Uploading avatar image");
         
-        apiService.uploadAvatar(imageFile).enqueue(new Callback<User>() {
+        apiService.uploadAvatar(imageFile).enqueue(new Callback<ProfileApiResponse>() {
             @Override
-            public void onResponse(@NonNull Call<User> call,
-                                   @NonNull Response<User> response) {
+            public void onResponse(@NonNull Call<ProfileApiResponse> call,
+                                   @NonNull Response<ProfileApiResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    User profile = response.body();
-                    cachedProfile = profile; // Update cache with new profile
-                    Log.d(TAG, "Avatar uploaded successfully");
-                    callback.onSuccess(profile);
+                    ProfileApiResponse res = response.body();
+                    if (res.isSuccess() && res.hasData()) {
+                        User profile = res.getData();
+                        cachedProfile = profile; // Update cache with new profile
+                        Log.d(TAG, "Avatar uploaded successfully");
+                        callback.onSuccess(profile);
+                    } else {
+                        String errorMsg = res.getMessage() != null ? res.getMessage() : "Avatar upload failed";
+                        Log.e(TAG, "Avatar upload error: " + errorMsg);
+                        callback.onFailure(new Exception(errorMsg));
+                    }
                 } else {
                     String errorMsg = "HTTP " + response.code() + ": " + response.message();
                     Log.e(TAG, "Avatar upload error: " + errorMsg);
@@ -139,7 +147,7 @@ public class ProfileRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ProfileApiResponse> call, @NonNull Throwable t) {
                 Log.e(TAG, "Avatar upload network error: " + t.getMessage(), t);
                 callback.onFailure(new Exception("Network error: " + t.getMessage(), t));
             }

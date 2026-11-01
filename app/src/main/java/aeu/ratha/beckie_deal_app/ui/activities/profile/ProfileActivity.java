@@ -45,10 +45,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.bumptech.glide.Glide;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import androidx.core.app.ActivityCompat;
 
 public class ProfileActivity extends BaseActivity {
     
     private static final int REQUEST_CODE_PICK_IMAGE = 100;
+    private static final int REQUEST_CODE_CROP_IMAGE = 101;
+    private static final int PERMISSION_REQUEST_CODE_MEDIA_IMAGES = 102;
     
     private TokenManager tokenManager;
     private ProfileRepository profileRepository;
@@ -128,11 +134,64 @@ public class ProfileActivity extends BaseActivity {
 
     /**
      * Open image picker for avatar selection.
+     * Checks for necessary permissions before launching the picker.
      */
     private void openImagePicker() {
+        // Check if we need to request permissions (Android 13+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+: Request READ_MEDIA_IMAGES
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Permission not granted, request it
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                        PERMISSION_REQUEST_CODE_MEDIA_IMAGES);
+                return;
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android 6+ (below 13): Request READ_EXTERNAL_STORAGE
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Permission not granted, request it
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PERMISSION_REQUEST_CODE_MEDIA_IMAGES);
+                return;
+            }
+        }
+        
+        // Permission granted (or not needed), launch image picker
+        launchImagePicker();
+    }
+    
+    /**
+     * Launch the image picker intent.
+     * Called after permissions are verified.
+     */
+    private void launchImagePicker() {
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+    }
+
+    private void startImageCrop(android.net.Uri sourceUri) {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(sourceUri, "image/*");
+            cropIntent.putExtra("crop", "true");
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 512);
+            cropIntent.putExtra("outputY", 512);
+            cropIntent.putExtra("return-data", true);
+            cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            cropIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            startActivityForResult(cropIntent, REQUEST_CODE_CROP_IMAGE);
+        } catch (Exception e) {
+            // Fallback: If system crop intent is not available on device, use automatic square crop & upload
+            android.util.Log.w("ProfileActivity", "System crop not available, using automatic center crop: " + e.getMessage());
+            uploadAvatarImage(sourceUri);
+        }
     }
 
     @Override
@@ -142,25 +201,106 @@ public class ProfileActivity extends BaseActivity {
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK && data != null) {
             android.net.Uri selectedImage = data.getData();
             if (selectedImage != null) {
-                uploadAvatarImage(selectedImage);
+                startImageCrop(selectedImage);
+            }
+        } else if (requestCode == REQUEST_CODE_CROP_IMAGE && resultCode == RESULT_OK && data != null) {
+            android.os.Bundle extras = data.getExtras();
+            if (extras != null && extras.get("data") instanceof android.graphics.Bitmap) {
+                android.graphics.Bitmap croppedBitmap = (android.graphics.Bitmap) extras.get("data");
+                uploadAvatarBitmap(croppedBitmap);
+            } else if (data.getData() != null) {
+                uploadAvatarImage(data.getData());
             }
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        
+        if (requestCode == PERMISSION_REQUEST_CODE_MEDIA_IMAGES) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, launch image picker
+                launchImagePicker();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Permission required to access photos", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void uploadAvatarBitmap(android.graphics.Bitmap bitmap) {
+        try {
+            android.graphics.Bitmap scaledBitmap = scaleBitmap(bitmap, 512);
+            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+            scaledBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 85, baos);
+            byte[] imageBytes = baos.toByteArray();
+
+            okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(
+                    imageBytes,
+                    okhttp3.MediaType.parse("image/jpeg")
+            );
+
+            okhttp3.MultipartBody.Part imagePart = okhttp3.MultipartBody.Part.createFormData(
+                    "image",
+                    "avatar.jpg",
+                    requestBody
+            );
+
+            Toast.makeText(this, "Uploading cropped avatar...", Toast.LENGTH_SHORT).show();
+
+            profileRepository.uploadAvatar(imagePart, new ProfileRepository.AvatarUploadCallback() {
+                @Override
+                public void onSuccess(User profile) {
+                    android.util.Log.d("ProfileActivity", "Avatar uploaded successfully");
+                    displayUserProfile(profile);
+                    if (drawerHelper != null) {
+                        drawerHelper.refreshDrawerContent();
+                    }
+                    Toast.makeText(ProfileActivity.this, "Avatar updated successfully", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Exception error) {
+                    android.util.Log.e("ProfileActivity", "Avatar upload failed: " + error.getMessage());
+                    Toast.makeText(ProfileActivity.this, "Failed to upload avatar: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            android.util.Log.e("ProfileActivity", "Error preparing bitmap upload: " + e.getMessage(), e);
+            Toast.makeText(this, "Error preparing image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
-     * Upload selected avatar image to server.
+     * Upload selected avatar image to server with automatic 1:1 square crop and compression.
      */
     private void uploadAvatarImage(android.net.Uri imageUri) {
         try {
-            // Get file from URI
             java.io.InputStream inputStream = getContentResolver().openInputStream(imageUri);
             if (inputStream == null) {
                 Toast.makeText(this, "Unable to read image", Toast.LENGTH_SHORT).show();
                 return;
             }
+            android.graphics.Bitmap bitmap = android.graphics.BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+            if (bitmap == null) {
+                Toast.makeText(this, "Unable to decode image", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            // Create request body from input stream
-            byte[] imageBytes = readInputStreamBytes(inputStream);
+            // 1. Crop to 1:1 square (center crop)
+            android.graphics.Bitmap squareBitmap = cropToSquare(bitmap);
+
+            // 2. Scale down to max 512x512 pixels for optimal profile upload size
+            android.graphics.Bitmap scaledBitmap = scaleBitmap(squareBitmap, 512);
+
+            // 3. Compress to JPEG bytes (quality 85)
+            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+            scaledBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 85, baos);
+            byte[] imageBytes = baos.toByteArray();
+
+            // Create request body from compressed bytes
             okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(
                     imageBytes,
                     okhttp3.MediaType.parse("image/jpeg")
@@ -174,7 +314,7 @@ public class ProfileActivity extends BaseActivity {
             );
 
             // Show loading
-            Toast.makeText(this, "Uploading avatar...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Uploading cropped avatar...", Toast.LENGTH_SHORT).show();
 
             // Upload avatar
             profileRepository.uploadAvatar(imagePart, new ProfileRepository.AvatarUploadCallback() {
@@ -202,6 +342,31 @@ public class ProfileActivity extends BaseActivity {
             android.util.Log.e("ProfileActivity", "Error preparing avatar upload: " + e.getMessage(), e);
             Toast.makeText(this, "Error preparing image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private android.graphics.Bitmap cropToSquare(android.graphics.Bitmap source) {
+        int width = source.getWidth();
+        int height = source.getHeight();
+        int newSize = Math.min(width, height);
+        int x = (width - newSize) / 2;
+        int y = (height - newSize) / 2;
+        return android.graphics.Bitmap.createBitmap(source, x, y, newSize, newSize);
+    }
+
+    private android.graphics.Bitmap scaleBitmap(android.graphics.Bitmap source, int maxDim) {
+        int width = source.getWidth();
+        int height = source.getHeight();
+        if (width <= maxDim && height <= maxDim) return source;
+        float ratio = (float) width / height;
+        int newWidth, newHeight;
+        if (ratio > 1) {
+            newWidth = maxDim;
+            newHeight = Math.round(maxDim / ratio);
+        } else {
+            newHeight = maxDim;
+            newWidth = Math.round(maxDim * ratio);
+        }
+        return android.graphics.Bitmap.createScaledBitmap(source, newWidth, newHeight, true);
     }
 
     /**
@@ -582,21 +747,6 @@ public class ProfileActivity extends BaseActivity {
     }
 
     /**
-     * Read all bytes from an InputStream in a way that's compatible with older Android API levels.
-     * Avoids using readAllBytes() which requires API 33.
-     */
-    private byte[] readInputStreamBytes(java.io.InputStream inputStream) throws java.io.IOException {
-        java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
-        int nRead;
-        byte[] data = new byte[16384]; // 16KB buffer
-        while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
-            buffer.write(data, 0, nRead);
-        }
-        buffer.flush();
-        return buffer.toByteArray();
-    }
-
-    /**
      * Load avatar image using WebView to display DiceBear SVG avatars.
      * WebView renders SVG perfectly and supports all parameters.
      * 
@@ -617,6 +767,12 @@ public class ProfileActivity extends BaseActivity {
             // Set WebViewClient to prevent opening browser
             avatarWebView.setWebViewClient(new WebViewClient());
             
+            // Cache bust query parameter so new image displays immediately
+            String cacheBustUrl = avatarUrl;
+            if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                cacheBustUrl += (avatarUrl.contains("?") ? "&" : "?") + "v=" + System.currentTimeMillis();
+            }
+
             // Load HTML with SVG that scales to fill the entire WebView
             // Avatar is positioned slightly lower and zoomed in
             String htmlContent = "<!DOCTYPE html>" +
@@ -629,7 +785,7 @@ public class ProfileActivity extends BaseActivity {
                 "  img { width: 110%; height: 110%; object-fit: contain; max-width: none; max-height: none; }" +
                 "</style>" +
                 "</head><body>" +
-                "  <img src=\"" + avatarUrl + "\" alt=\"avatar\"/>" +
+                "  <img src=\"" + cacheBustUrl + "\" alt=\"avatar\"/>" +
                 "</body></html>";
             
             // Load the HTML content with proper base URL handling

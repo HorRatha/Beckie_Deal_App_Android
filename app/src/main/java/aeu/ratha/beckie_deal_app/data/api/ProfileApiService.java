@@ -46,7 +46,7 @@ public interface ProfileApiService {
      */
     @Multipart
     @POST("profile/avatar")
-    Call<User> uploadAvatar(@Part MultipartBody.Part imageFile);
+    Call<ProfileApiResponse> uploadAvatar(@Part MultipartBody.Part imageFile);
     
     /**
      * Get user's purchased/ordered products.
