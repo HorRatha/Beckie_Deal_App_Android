@@ -17,26 +17,70 @@
 <table>
   <tr>
     <td align="center">
-      <img src="assets/home1.png" alt="Home Screen" width="250" style="border-radius: 20px;"/>
+      <img src="assets/home.png" alt="Home Screen" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Home & Discover</b>
+      <b>Home</b>
     </td>
     <td align="center">
-      <img src="assets/home2.png" alt="Explore Screen" width="250" style="border-radius: 20px;"/>
+      <img src="assets/home2.png" alt="Explore Screen" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Browse & Explore</b>
+      <b>Explore</b>
+    </td>
+    <td align="center">
+      <img src="assets/category.png" alt="Category" width="180" style="border-radius: 20px;"/>
+      <br/>
+      <b>Category</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="assets/wishlist.png" alt="Wishlist" width="250" style="border-radius: 20px;"/>
+      <img src="assets/wishlist.png" alt="Wishlist" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Wishlist & Favorites</b>
+      <b>Wishlist</b>
     </td>
     <td align="center">
-      <img src="assets/profile.png" alt="Profile" width="250" style="border-radius: 20px;"/>
+      <img src="assets/profile.png" alt="Profile" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Profile & Account</b>
+      <b>Profile</b>
+    </td>
+    <td align="center">
+      <img src="assets/signin.png" alt="Sign In" width="180" style="border-radius: 20px;"/>
+      <br/>
+      <b>Sign In</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/add_to_cart.png" alt="Add to Cart" width="180" style="border-radius: 20px;"/>
+      <br/>
+      <b>Add to Cart</b>
+    </td>
+    <td align="center">
+      <img src="assets/category_stack_wallet.png" alt="Wallet" width="180" style="border-radius: 20px;"/>
+      <br/>
+      <b>Payment</b>
+    </td>
+    <td align="center">
+      <img src="assets/sidebar_dark_mode.png" alt="Dark Mode" width="180" style="border-radius: 20px;"/>
+      <br/>
+      <b>Settings</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/regsiter.png" alt="Register" width="180" style="border-radius: 20px;"/>
+      <br/>
+      <b>Register</b>
+    </td>
+    <td align="center">
+      <img src="assets/forget_pwd.png" alt="Forgot Password" width="180" style="border-radius: 20px;"/>
+      <br/>
+      <b>Forgot Password</b>
+    </td>
+    <td align="center">
+      <img src="assets/lost_internet.png" alt="No Internet" width="180" style="border-radius: 20px;"/>
+      <br/>
+      <b>No Internet</b>
     </td>
   </tr>
 </table>
