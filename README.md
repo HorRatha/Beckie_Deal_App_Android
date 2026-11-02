@@ -27,26 +27,26 @@
       <b>Explore</b>
     </td>
     <td align="center">
-      <img src="assets/category.png" alt="Category" width="180" style="border-radius: 20px;"/>
+      <img src="assets/sidebar_dark_mode.png" alt="Sidebar" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Category</b>
+      <b>Sidebar</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="assets/wishlist.png" alt="Wishlist" width="180" style="border-radius: 20px;"/>
+      <img src="assets/category.png" alt="Category" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Wishlist</b>
+      <b>Category</b>
     </td>
     <td align="center">
-      <img src="assets/profile.png" alt="Profile" width="180" style="border-radius: 20px;"/>
+      <img src="assets/category_stack_wallet.png" alt="Wallet" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Profile</b>
+      <b>Payment</b>
     </td>
     <td align="center">
-      <img src="assets/signin.png" alt="Sign In" width="180" style="border-radius: 20px;"/>
+      <img src="assets/category_stack_wallet2.png" alt="Wallet Option 2" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Sign In</b>
+      <b>Payment Options</b>
     </td>
   </tr>
   <tr>
@@ -56,17 +56,22 @@
       <b>Add to Cart</b>
     </td>
     <td align="center">
-      <img src="assets/category_stack_wallet.png" alt="Wallet" width="180" style="border-radius: 20px;"/>
+      <img src="assets/profile.png" alt="Profile" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Payment</b>
+      <b>Profile</b>
     </td>
     <td align="center">
-      <img src="assets/sidebar_dark_mode.png" alt="Dark Mode" width="180" style="border-radius: 20px;"/>
+      <img src="assets/lost_internet.png" alt="No Internet" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Settings</b>
+      <b>No Internet</b>
     </td>
   </tr>
   <tr>
+    <td align="center">
+      <img src="assets/signin.png" alt="Sign In" width="180" style="border-radius: 20px;"/>
+      <br/>
+      <b>Sign In</b>
+    </td>
     <td align="center">
       <img src="assets/regsiter.png" alt="Register" width="180" style="border-radius: 20px;"/>
       <br/>
@@ -76,11 +81,6 @@
       <img src="assets/forget_pwd.png" alt="Forgot Password" width="180" style="border-radius: 20px;"/>
       <br/>
       <b>Forgot Password</b>
-    </td>
-    <td align="center">
-      <img src="assets/lost_internet.png" alt="No Internet" width="180" style="border-radius: 20px;"/>
-      <br/>
-      <b>No Internet</b>
     </td>
   </tr>
 </table>
