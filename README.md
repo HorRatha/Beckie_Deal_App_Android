@@ -22,14 +22,14 @@
       <b>Home</b>
     </td>
     <td align="center">
-      <img src="assets/home2.png" alt="Explore Screen" width="180" style="border-radius: 20px;"/>
+      <img src="assets/home2.png" alt="Home 2" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Explore</b>
+      <b>Home 2</b>
     </td>
     <td align="center">
-      <img src="assets/sidebar_dark_mode.png" alt="Sidebar" width="180" style="border-radius: 20px;"/>
+      <img src="assets/sidebar_dark_mode.png" alt="Sidebar Dark Mode" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Sidebar</b>
+      <b>Sidebar Dark Mode</b>
     </td>
   </tr>
   <tr>
@@ -39,14 +39,14 @@
       <b>Category</b>
     </td>
     <td align="center">
-      <img src="assets/category_stack_wallet.png" alt="Wallet" width="180" style="border-radius: 20px;"/>
+      <img src="assets/category_stack_wallet.png" alt="Category Stack Wallet" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Payment</b>
+      <b>Stack Wallet</b>
     </td>
     <td align="center">
-      <img src="assets/category_stack_wallet2.png" alt="Wallet Option 2" width="180" style="border-radius: 20px;"/>
+      <img src="assets/category_stack_wallet2.png" alt="Category Stack Wallet 2" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Payment Options</b>
+      <b>Stack Wallet 2</b>
     </td>
   </tr>
   <tr>
@@ -61,9 +61,9 @@
       <b>Profile</b>
     </td>
     <td align="center">
-      <img src="assets/lost_internet.png" alt="No Internet" width="180" style="border-radius: 20px;"/>
+      <img src="assets/lost_internet.png" alt="Lost Internet" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>No Internet</b>
+      <b>Lost Internet</b>
     </td>
   </tr>
   <tr>
@@ -78,9 +78,9 @@
       <b>Register</b>
     </td>
     <td align="center">
-      <img src="assets/forget_pwd.png" alt="Forgot Password" width="180" style="border-radius: 20px;"/>
+      <img src="assets/forget_pwd.png" alt="Forget Password" width="180" style="border-radius: 20px;"/>
       <br/>
-      <b>Forgot Password</b>
+      <b>Forget Password</b>
     </td>
   </tr>
 </table>
